@@ -1,0 +1,36 @@
+name: r-type_actions
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+    branches: [ "*" ]
+
+jobs:
+  check_all:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up vcpkg
+      run: |
+        cd build
+        git clone https://github.com/microsoft/vcpkg.git
+
+    - name: Check compilation
+      run: |
+        echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
+        {
+          set +e
+          make
+          if [ $? -ne 0 ]; then
+            echo "- ### Compilation failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Compilation failed."
+            exit 1
+          else
+            echo "- ### Compilation succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }
