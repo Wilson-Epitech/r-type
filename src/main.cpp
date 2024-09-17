@@ -1,3 +1,10 @@
+/*
+** R_TYPE PROJECT, 2024
+** r-type
+** File description:
+** main
+*/
+
 #include <iostream>
 
 /**
