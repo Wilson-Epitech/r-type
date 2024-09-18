@@ -15,8 +15,6 @@
     #include <string>
     #include <functional>
 
-    #include <iostream>
-
 namespace RType {
     class Error : public std::exception
     {
@@ -84,7 +82,7 @@ class registry {
             auto typeId = std::type_index(typeid(Component));
             auto it = _components_arrays.find(typeId);
             if (it == _components_arrays.end())
-                _components_arrays[typeId] = std::make_unique<sparse_array<Component>>;
+                _components_arrays[typeId] = sparse_array<Component>();
 
                 auto erase_func = [](registry &reg, entity_t const &ent) {
                     auto sparse_array = reg.get_components<Component>();
@@ -92,7 +90,7 @@ class registry {
                 };
                 _erase_entity[typeId] = erase_func;
 
-            return std::any_cast<std::unique_ptr<sparse_array<Component>>>(_components_arrays[typeId]);
+            return std::any_cast<sparse_array<Component>&>(_components_arrays[typeId]);
         };
 
         template <class Component>
@@ -101,7 +99,7 @@ class registry {
             auto it = _components_arrays.find(typeId);
             if (it == _components_arrays.end())
                 throw RType::Error("Component not found");
-            return std::any_cast<std::unique_ptr<sparse_array<Component>>>(it->second);
+            return std::any_cast<sparse_array<Component>&>(it->second);
         };
 
         template <class Component>
@@ -110,7 +108,7 @@ class registry {
             auto it = _components_arrays.find(typeId);
             if (it == _components_arrays.end())
                 throw RType::Error("Component not found");
-            return std::any_cast<std::unique_ptr<sparse_array<Component>>>(it->second);
+            return std::any_cast<sparse_array<Component>>(it->second);
         };
 
     private:

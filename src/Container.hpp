@@ -35,15 +35,11 @@ class sparse_array {
         sparse_array & operator=(sparse_array &&) noexcept = default; // move assignment operator
 
         reference_type operator[](size_t idx) {
-            if (idx < size())
-                return _data[idx];
-            return std::nullopt;
+            return _data[idx];
         };
 
         const_reference_type operator[](size_t idx) const {
-            if (idx < size())
-                return _data[idx];
-            return std::nullopt;
+            return _data[idx];
         };
 
         iterator begin() {
