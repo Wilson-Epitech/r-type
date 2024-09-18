@@ -15,6 +15,8 @@
     #include <string>
     #include <functional>
 
+    using entity_t = std::size_t;
+
 namespace RType {
     class Error : public std::exception
     {
@@ -32,9 +34,8 @@ namespace RType {
 
 class registry {
     public:
-        using entity_t = std::size_t;
 
-        entity_t spawn_entity () {
+        entity_t spawn_entity() {
             _alive_entities++;
             entity_t entity = _alive_entities;
 
