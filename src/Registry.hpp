@@ -36,8 +36,7 @@ class registry {
     public:
 
         entity_t spawn_entity() {
-            _alive_entities++;
-            entity_t entity = _alive_entities;
+            entity_t entity = ++_alive_entities;
 
             if (!_dead_entities_index.empty()) {
                 std::size_t index = _dead_entities_index.back();
@@ -50,8 +49,6 @@ class registry {
         }
 
         void kill_entity(entity_t const &e) {
-            if (_erase_entity.empty())
-                return;
             for (auto &it : _erase_entity) {
                 it.second(*this, e);
             }
@@ -67,15 +64,14 @@ class registry {
         entity_t entity_from_index(std::size_t idx) {
             auto it = _index_to_entities.find(idx);
             if (it == _index_to_entities.end())
-                throw RType::Error("entity not found at this index");
+                throw RType::Error("no entity found at this index");
             return it->second;
         }
 
         template <typename Component>
         void remove_component(entity_t const &from) {
-            auto components = get_components<Component>();
-
-            components.erase(from);
+            sparse_array<Component> &component = get_components<Component>();
+            component.erase(from);
         }
 
         template <class Component>
@@ -86,8 +82,8 @@ class registry {
                 _components_arrays[typeId] = sparse_array<Component>();
 
                 auto erase_func = [](registry &reg, entity_t const &ent) {
-                    auto sparse_array = reg.get_components<Component>();
-                    sparse_array.erase(ent);
+                    sparse_array<Component> &component = reg.get_components<Component>();
+                    component.erase(ent);
                 };
                 _erase_entity[typeId] = erase_func;
 

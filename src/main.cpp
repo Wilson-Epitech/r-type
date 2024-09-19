@@ -97,10 +97,8 @@ void position_system(registry& reg, sparse_array<component::Position> &positions
     }
 }
 
-void load_all_textures(registry& reg)
+void load_all_textures(registry& reg, sparse_array<component::Drawable> &drawables)
 {
-    auto& drawables = reg.get_components<component::Drawable>();
-
     for (std::size_t i = 0; i < drawables.size(); ++i) {
         if (drawables[i]) {
             if (drawables[i]->spritePath.length() > 0) {
@@ -120,9 +118,9 @@ int main()
     auto &drawable_array = reg.register_component<component::Drawable>();
     auto &controllable_array = reg.register_component<component::Controllable>();
 
+    entity_t player = reg.spawn_entity();
     entity_t movableEntity1 = reg.spawn_entity();
     entity_t movableEntity2 = reg.spawn_entity();
-    entity_t player = reg.spawn_entity();
 
     position_array.insert_at(player, component::Position{100, 100});
     velocity_array.insert_at(player, component::Velocity{0, 0});
@@ -137,13 +135,12 @@ int main()
     velocity_array.insert_at(movableEntity2, component::Velocity{-0.3f, 0});
     drawable_array.insert_at(movableEntity2, component::Drawable{"../assets/r-typesheet30a.gif"});
 
-
     SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
     MaximizeWindow();
 
-    load_all_textures(reg);
+    load_all_textures(reg, drawable_array);
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
