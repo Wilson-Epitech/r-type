@@ -52,11 +52,9 @@ namespace component {
     };
 }
 
-void draw_system(registry& reg)
+void draw_system(registry& reg, sparse_array<component::Drawable> const &drawables,
+    sparse_array<component::Position> const &positions)
 {
-    auto& drawables = reg.get_components<component::Drawable>();
-    auto& positions = reg.get_components<component::Position>();
-
     for (std::size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
         if (drawables[i] && positions[i]) {
             if (drawables[i]->spritePath.length() > 0) {
@@ -66,11 +64,9 @@ void draw_system(registry& reg)
     }
 }
 
-void control_system(registry& reg)
+void control_system(registry& reg, sparse_array<component::Controllable> const &controllables,
+    sparse_array<component::Velocity> &velocities)
 {
-    auto& controllables = reg.get_components<component::Controllable>();
-    auto& velocities = reg.get_components<component::Velocity>();
-
     for (std::size_t i = 0; i < controllables.size() && i < velocities.size(); ++i) {
         if (controllables[i] && velocities[i]) {
             if (*controllables[i]->keyPressed == component::key::UP) {
@@ -90,11 +86,9 @@ void control_system(registry& reg)
     }
 }
 
-void position_system(registry& reg)
+void position_system(registry& reg, sparse_array<component::Position> &positions,
+    sparse_array<component::Velocity> const &velocities)
 {
-    auto& positions = reg.get_components<component::Position>();
-    auto& velocities = reg.get_components<component::Velocity>();
-
     for (std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
         if (positions[i] && velocities[i]) {
             positions[i]->x += velocities[i]->vx;
@@ -153,7 +147,6 @@ int main()
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        draw_system(reg);
         if (IsKeyPressed(KEY_UP))
             *keyPressed = component::key::UP;
         if (IsKeyPressed(KEY_DOWN))
@@ -162,8 +155,9 @@ int main()
             *keyPressed = component::key::LEFT;
         if (IsKeyPressed(KEY_RIGHT))
             *keyPressed = component::key::RIGHT;
-        control_system(reg);
-        position_system(reg);
+        control_system(reg, controllable_array, velocity_array);
+        position_system(reg, position_array, velocity_array);
+        draw_system(reg, drawable_array, position_array);
         DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
         EndDrawing();
     }
