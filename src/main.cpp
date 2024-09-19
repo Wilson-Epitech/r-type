@@ -5,6 +5,9 @@
 ** main
 */
 
+#include <raylib.h>
+#include <raymath.h>
+#include <rlgl.h>
 #include <iostream>
 #include <memory>
 #include "Registry.hpp"
@@ -15,6 +18,12 @@
  * @return int
  */
 
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+#define MARGIN_LEFT 10
+#define MARGIN_TOP 10
+#define FPS_MARGIN 100
+
 namespace component {
 
     enum key {
@@ -23,6 +32,11 @@ namespace component {
         DOWN,
         LEFT,
         RIGHT
+    };
+
+    struct Drawable {
+        std::string spritePath;
+        Texture2D texture;
     };
 
     struct Controllable {
@@ -36,6 +50,20 @@ namespace component {
     struct Velocity {
         float vx, vy;
     };
+}
+
+void draw_system(registry& reg)
+{
+    auto& drawables = reg.get_components<component::Drawable>();
+    auto& positions = reg.get_components<component::Position>();
+
+    for (std::size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
+        if (drawables[i] && positions[i]) {
+            if (drawables[i]->spritePath.length() > 0) {
+                DrawTexture(drawables[i]->texture, positions[i]->x, positions[i]->y, RAYWHITE);
+            }
+        }
+    }
 }
 
 void control_system(registry& reg)
@@ -75,7 +103,69 @@ void position_system(registry& reg)
     }
 }
 
+void load_all_textures(registry& reg)
+{
+    auto& drawables = reg.get_components<component::Drawable>();
+
+    for (std::size_t i = 0; i < drawables.size(); ++i) {
+        if (drawables[i]) {
+            if (drawables[i]->spritePath.length() > 0) {
+                drawables[i]->texture = LoadTexture(drawables[i]->spritePath.c_str());
+            }
+        }
+    }
+}
+
 int main()
 {
+    registry reg;
+    std::shared_ptr<component::key> keyPressed = std::make_shared<component::key>(component::key::NO_KEY);
+
+    auto &position_array = reg.register_component<component::Position>();
+    auto &velocity_array = reg.register_component<component::Velocity>();
+    auto &drawable_array = reg.register_component<component::Drawable>();
+    auto &controllable_array = reg.register_component<component::Controllable>();
+
+    entity_t movableEntity1 = reg.spawn_entity();
+    entity_t movableEntity2 = reg.spawn_entity();
+    entity_t player = reg.spawn_entity();
+
+    position_array.insert_at(player, component::Position{100, 100});
+    velocity_array.insert_at(player, component::Velocity{0, 0});
+    controllable_array.insert_at(player, component::Controllable{keyPressed});
+    drawable_array.insert_at(player, component::Drawable{"../assets/r-typesheet39.gif"});
+
+    position_array.insert_at(movableEntity1, component::Position{1500, 700});
+    velocity_array.insert_at(movableEntity1, component::Velocity{-0.4f, 0});
+    drawable_array.insert_at(movableEntity1, component::Drawable{"../assets/r-typesheet30a.gif"});
+
+    position_array.insert_at(movableEntity2, component::Position{2000, 300});
+    velocity_array.insert_at(movableEntity2, component::Velocity{-0.3f, 0});
+    drawable_array.insert_at(movableEntity2, component::Drawable{"../assets/r-typesheet30a.gif"});
+
+
+    SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
+    MaximizeWindow();
+
+    load_all_textures(reg);
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(RAYWHITE);
+        draw_system(reg);
+        if (IsKeyPressed(KEY_UP))
+            *keyPressed = component::key::UP;
+        if (IsKeyPressed(KEY_DOWN))
+            *keyPressed = component::key::DOWN;
+        if (IsKeyPressed(KEY_LEFT))
+            *keyPressed = component::key::LEFT;
+        if (IsKeyPressed(KEY_RIGHT))
+            *keyPressed = component::key::RIGHT;
+        control_system(reg);
+        position_system(reg);
+        DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
+        EndDrawing();
+    }
     return 0;
 }
