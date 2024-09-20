@@ -1,55 +1,24 @@
 /*
 ** R_TYPE PROJECT, 2024
-** bs
+** r-type
 ** File description:
-** Container
+** Registry
 */
 
 #ifndef REGISTRY_HPP_
     #define REGISTRY_HPP_
 
+    #include "Error.hpp"
     #include "Container.hpp"
     #include <unordered_map>
     #include <typeindex>
     #include <any>
-    #include <string>
     #include <functional>
-    #include <tuple>
 
     using entity_t = std::size_t;
 
-namespace RType {
-    class Error : public std::exception
-    {
-        public:
-            Error(const std::string& error_message):
-            _error_message(error_message) {}
-            const char *what() const noexcept
-            {
-                return this->_error_message.c_str();
-            }
-        private:
-            std::string _error_message;
-    };
-}
-
 class registry {
     public:
-
-        template <class... Components, typename Function>
-        void add_system(Function const &f) {
-            auto lambda = [f](registry &reg) {
-                std::tuple components_list = std::make_tuple(std::ref(reg.get_components<Components>())...);
-                std::apply(f, components_list);
-            };
-            _systems.push_back(lambda);
-        }
-
-        void run_systems() {
-            for (std::size_t i = 0; i < _systems.size(); i++) {
-                _systems[i](*this);
-            }
-        }
 
         entity_t spawn_entity() {
             entity_t entity = ++_alive_entities;
@@ -80,7 +49,7 @@ class registry {
         entity_t entity_from_index(std::size_t idx) {
             auto it = _index_to_entities.find(idx);
             if (it == _index_to_entities.end())
-                throw RType::Error("no entity found at this index");
+                throw rtype::Error("no entity found at this index");
             return it->second;
         }
 
@@ -111,7 +80,7 @@ class registry {
             auto typeId = std::type_index(typeid(Component));
             auto it = _components_arrays.find(typeId);
             if (it == _components_arrays.end())
-                throw RType::Error("Component not found");
+                throw rtype::Error("Component not found");
             return std::any_cast<sparse_array<Component>&>(it->second);
         };
 
@@ -120,9 +89,20 @@ class registry {
             auto typeId = std::type_index(typeid(Component));
             auto it = _components_arrays.find(typeId);
             if (it == _components_arrays.end())
-                throw RType::Error("Component not found");
+                throw rtype::Error("Component not found");
             return std::any_cast<sparse_array<Component>>(it->second);
         };
+
+        template <class... Components, typename Function>
+        void add_system(Function const &f) {
+            _systems.push_back(f);
+        }
+
+        void run_systems() {
+            for (std::size_t i = 0; i < _systems.size(); i++) {
+                _systems[i](*this);
+            }
+        }
 
     private:
         std::size_t _alive_entities = 0;

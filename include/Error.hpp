@@ -1,0 +1,28 @@
+/*
+** R_TYPE PROJECT, 2024
+** r-type
+** File description:
+** Error
+*/
+
+
+#ifndef ERROR_HPP_
+    #define ERROR_HPP_
+
+    #include <string>
+
+namespace rtype {
+    class Error : public std::exception
+    {
+        public:
+            Error(const std::string& error_message): _error_message(error_message) {}
+            const char *what() const noexcept
+            {
+                return this->_error_message.c_str();
+            }
+        private:
+            std::string _error_message;
+    };
+}
+
+#endif /* !ERROR_HPP_ */
