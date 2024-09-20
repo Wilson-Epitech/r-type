@@ -14,6 +14,7 @@
     #include <any>
     #include <string>
     #include <functional>
+    #include <tuple>
 
     using entity_t = std::size_t;
 
@@ -21,19 +22,34 @@ namespace RType {
     class Error : public std::exception
     {
         public:
-            Error(const std::string& errorMessage):
-            _errorMessage(errorMessage) {}
+            Error(const std::string& error_message):
+            _error_message(error_message) {}
             const char *what() const noexcept
             {
-                return this->_errorMessage.c_str();
+                return this->_error_message.c_str();
             }
         private:
-            std::string _errorMessage;
+            std::string _error_message;
     };
 }
 
 class registry {
     public:
+
+        template <class... Components, typename Function>
+        void add_system(Function const &f) {
+            auto lambda = [f](registry &reg) {
+                std::tuple components_list = std::make_tuple(std::ref(reg.get_components<Components>())...);
+                std::apply(f, components_list);
+            };
+            _systems.push_back(lambda);
+        }
+
+        void run_systems() {
+            for (std::size_t i = 0; i < _systems.size(); i++) {
+                _systems[i](*this);
+            }
+        }
 
         entity_t spawn_entity() {
             entity_t entity = ++_alive_entities;
@@ -110,6 +126,7 @@ class registry {
 
     private:
         std::size_t _alive_entities = 0;
+        std::vector<std::function<void(registry &)>> _systems;
         std::vector<std::size_t> _dead_entities_index;
         std::unordered_map<std::type_index, std::any> _components_arrays;
         std::unordered_map<std::type_index, std::function<void(registry &, entity_t const &)>> _erase_entity;
