@@ -102,13 +102,9 @@ namespace ecs
             }
 
             void runSystems() {
-                for (std::size_t i = 0; i < _systems.size() - 1; i++) {
+                for (std::size_t i = 0; i < _systems.size(); i++) {
                     _systems[i](*this);
                 }
-            }
-
-            void runDraw() {
-                _systems[_systems.size() - 1](*this);
             }
 
         private:

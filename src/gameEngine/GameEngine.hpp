@@ -18,6 +18,7 @@
     #define MARGIN_TOP 10
     #define FPS_MARGIN 100
     #define WAIT_DURATION 0.016
+    #define FPS_LIMIT 60
 
 class GameEngine
 {
@@ -31,41 +32,29 @@ class GameEngine
         ~GameEngine() = default;
 
         void run() {
-            double previousTimer = GetTime();
-            double timeElapsed = 0.0;
-            double waitTime = 0.0;
             KeyPressed add = KeyPressed::NO_KEY;
-
+            SetTargetFPS(FPS_LIMIT);
             while (!WindowShouldClose()) {
-                previousTimer = GetTime();
-                waitTime = previousTimer - timeElapsed;
                 *_key = KeyPressed::NO_KEY;
                 if (IsKeyPressed(KEY_SPACE)) {
                     add = KeyPressed::SPACE;
                 }
 
                 BeginDrawing();
-                if (waitTime >= WAIT_DURATION) {
-                    ClearBackground(RAYWHITE);
-                    timeElapsed = previousTimer;
-                    if (IsKeyDown(KEY_UP))
-                        *_key = KeyPressed::UP;
-                    if (IsKeyDown(KEY_DOWN))
-                        *_key = KeyPressed::DOWN;
-                    if (IsKeyDown(KEY_LEFT))
-                        *_key = KeyPressed::LEFT;
-                    if (IsKeyDown(KEY_RIGHT))
-                        *_key = KeyPressed::RIGHT;
-                    if (add != KeyPressed::NO_KEY) {
-                        *_key = add;
-                        add = KeyPressed::NO_KEY;
-                    }
-                    _reg.runSystems();
-                    _reg.runDraw();
-                } else {
-                    ClearBackground(RAYWHITE);
-                    _reg.runDraw();
+                ClearBackground(RAYWHITE);
+                if (IsKeyDown(KEY_UP))
+                    *_key = KeyPressed::UP;
+                if (IsKeyDown(KEY_DOWN))
+                    *_key = KeyPressed::DOWN;
+                if (IsKeyDown(KEY_LEFT))
+                    *_key = KeyPressed::LEFT;
+                if (IsKeyDown(KEY_RIGHT))
+                    *_key = KeyPressed::RIGHT;
+                if (add != KeyPressed::NO_KEY) {
+                    *_key = add;
+                    add = KeyPressed::NO_KEY;
                 }
+                _reg.runSystems();
                 EndDrawing();
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
             }
