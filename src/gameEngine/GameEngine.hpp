@@ -36,12 +36,6 @@ class GameEngine
             SetTargetFPS(FPS_LIMIT);
             while (!WindowShouldClose()) {
                 *_key = KeyPressed::NO_KEY;
-                if (IsKeyPressed(KEY_SPACE)) {
-                    add = KeyPressed::SPACE;
-                }
-
-                BeginDrawing();
-                ClearBackground(RAYWHITE);
                 if (IsKeyDown(KEY_UP))
                     *_key = KeyPressed::UP;
                 if (IsKeyDown(KEY_DOWN))
@@ -50,10 +44,11 @@ class GameEngine
                     *_key = KeyPressed::LEFT;
                 if (IsKeyDown(KEY_RIGHT))
                     *_key = KeyPressed::RIGHT;
-                if (add != KeyPressed::NO_KEY) {
-                    *_key = add;
-                    add = KeyPressed::NO_KEY;
-                }
+                if (IsKeyPressed(KEY_SPACE))
+                    *_key = KeyPressed::SPACE;
+
+                BeginDrawing();
+                ClearBackground(RAYWHITE);
                 _reg.runSystems();
                 EndDrawing();
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
