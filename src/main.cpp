@@ -17,7 +17,7 @@
 int main()
 {
     game::RTypeGame rtype;
-    GameEngine engine(rtype.getRegister(), rtype.getKey());
+    GameEngine engine(rtype.getRegister());
 
     engine.run();
     return 0;

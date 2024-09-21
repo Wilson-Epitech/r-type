@@ -22,7 +22,6 @@ namespace game
             virtual void addComponentsToEntities() = 0;
             virtual void addSystemsToRegister() = 0;
             virtual ecs::Registry &getRegister() = 0;
-            virtual std::shared_ptr<KeyPressed> &getKey() = 0;
     };
 }
 

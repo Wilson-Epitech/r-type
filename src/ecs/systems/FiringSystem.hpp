@@ -29,7 +29,9 @@ namespace ecs
 
                     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
                         if (controllables[i] && positions[i]) {
-                            if (*controllables[i]->key == KeyPressed::SPACE) {
+                            if (!controllables[i]->isControllable)
+                                continue;
+                            if (IsKeyPressed(KEY_SPACE)) {
                                 addShot(reg.spawnEntity(), positions[i]->x, positions[i]->y, reg);
                             }
                         }

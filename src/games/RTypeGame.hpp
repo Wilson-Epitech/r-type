@@ -21,7 +21,7 @@ namespace game
     class RTypeGame : virtual public game::AGame
     {
         public:
-            RTypeGame() : game::AGame() {
+            RTypeGame() {
                 initializeGame();
             };
             ~RTypeGame() = default;
@@ -52,13 +52,14 @@ namespace game
 
                 positions.insertAt(_stringToEntity["player"], ecs::component::Position{100, 100});
                 velocities.insertAt(_stringToEntity["player"], ecs::component::Velocity{0, 0});
-                controllables.insertAt(_stringToEntity["player"], ecs::component::Controllable{_key});
+                controllables.insertAt(_stringToEntity["player"], ecs::component::Controllable{});
                 drawables.insertAt(_stringToEntity["player"], ecs::component::Drawable{"../assets/r-typesheet39.gif"});
                 types.insertAt(_stringToEntity["player"], ecs::component::Type{"player"});
                 lives.insertAt(_stringToEntity["player"], ecs::component::Lives{3});
 
                 positions.insertAt(_stringToEntity["movableEntity1"], ecs::component::Position{1500, 700});
                 velocities.insertAt(_stringToEntity["movableEntity1"], ecs::component::Velocity{-0.4f, 0});
+                controllables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Controllable{false});
                 drawables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
                 types.insertAt(_stringToEntity["movableEntity1"], ecs::component::Type{"enemy"});
                 lives.insertAt(_stringToEntity["movableEntity1"], ecs::component::Lives{1});
@@ -87,10 +88,6 @@ namespace game
 
             ecs::Registry &getRegister() override {
                 return _reg;
-            }
-
-            std::shared_ptr<KeyPressed> &getKey() {
-                return _key;
             }
     };
 }
