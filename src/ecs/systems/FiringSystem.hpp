@@ -48,7 +48,7 @@ namespace ecs
                     positions.insertAt(entity, ecs::component::Position{x, y});
                     velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
                     drawables.insertAt(entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                    types.insertAt(entity, ecs::component::Type{"player shot"});
+                    types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
                     lives.insertAt(entity, ecs::component::Lives{1});
                 }
         };

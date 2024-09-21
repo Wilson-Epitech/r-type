@@ -54,26 +54,26 @@ namespace game
                 velocities.insertAt(_stringToEntity["player"], ecs::component::Velocity{0, 0});
                 controllables.insertAt(_stringToEntity["player"], ecs::component::Controllable{});
                 drawables.insertAt(_stringToEntity["player"], ecs::component::Drawable{"../assets/r-typesheet39.gif"});
-                types.insertAt(_stringToEntity["player"], ecs::component::Type{"player"});
+                types.insertAt(_stringToEntity["player"], ecs::component::Type{ecs::entityType::PLAYER});
                 lives.insertAt(_stringToEntity["player"], ecs::component::Lives{3});
 
                 positions.insertAt(_stringToEntity["movableEntity1"], ecs::component::Position{1500, 700});
                 velocities.insertAt(_stringToEntity["movableEntity1"], ecs::component::Velocity{-0.4f, 0});
                 controllables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Controllable{false});
                 drawables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity1"], ecs::component::Type{"enemy"});
+                types.insertAt(_stringToEntity["movableEntity1"], ecs::component::Type{ecs::entityType::ENEMY});
                 lives.insertAt(_stringToEntity["movableEntity1"], ecs::component::Lives{1});
 
                 positions.insertAt(_stringToEntity["movableEntity2"], ecs::component::Position{1800, 300});
                 velocities.insertAt(_stringToEntity["movableEntity2"], ecs::component::Velocity{-0.3f, 0});
                 drawables.insertAt(_stringToEntity["movableEntity2"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity2"], ecs::component::Type{"enemy"});
+                types.insertAt(_stringToEntity["movableEntity2"], ecs::component::Type{ecs::entityType::ENEMY});
                 lives.insertAt(_stringToEntity["movableEntity2"], ecs::component::Lives{1});
 
                 positions.insertAt(_stringToEntity["movableEntity3"], ecs::component::Position{1000, 300});
                 velocities.insertAt(_stringToEntity["movableEntity3"], ecs::component::Velocity{-0.3f, 0});
                 drawables.insertAt(_stringToEntity["movableEntity3"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity3"], ecs::component::Type{"enemy"});
+                types.insertAt(_stringToEntity["movableEntity3"], ecs::component::Type{ecs::entityType::ENEMY});
                 lives.insertAt(_stringToEntity["movableEntity3"], ecs::component::Lives{1});
             };
 

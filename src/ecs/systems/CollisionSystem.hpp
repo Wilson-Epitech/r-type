@@ -56,9 +56,9 @@ namespace ecs
                        float(drawables[index]->spriteTexture.width), float(drawables[index]->spriteTexture.height)};
                     }
 
-                bool isPlayerAndPlayerShot(std::string &firstType, std::string &secondType) {
-                    return (firstType == "player" && secondType == "player shot" ||
-                        firstType == "player shot" && secondType == "player");
+                bool isPlayerAndPlayerShot(ecs::entityType &firstType, ecs::entityType &secondType) {
+                    return (firstType == ecs::entityType::PLAYER && secondType == ecs::entityType::PLAYERSHOT ||
+                        firstType == ecs::entityType::PLAYERSHOT && secondType == ecs::entityType::PLAYER);
                 }
         };
     }

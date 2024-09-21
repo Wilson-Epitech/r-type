@@ -14,6 +14,12 @@
 
 namespace ecs
 {
+    enum entityType {
+        PLAYER,
+        PLAYERSHOT,
+        ENEMY
+    };
+
     namespace component
     {
         struct Drawable {
@@ -35,7 +41,7 @@ namespace ecs
         };
 
         struct Type {
-            std::string type;
+            ecs::entityType type;
         };
 
         struct Lives {
