@@ -38,14 +38,18 @@ namespace ecs
                     }
                 }
             private:
-                void addShot(entity_t Entity, float x, float y, Registry &reg) {
+                void addShot(entity_t entity, float x, float y, Registry &reg) {
                     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
                     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
                     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
+                    SparseArray<component::Lives> &lives = reg.getComponents<component::Lives>();
+                    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
-                    positions.insertAt(Entity, ecs::component::Position{x, y});
-                    velocities.insertAt(Entity, ecs::component::Velocity{3.0f, 0});
-                    drawables.insertAt(Entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                    positions.insertAt(entity, ecs::component::Position{x, y});
+                    velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
+                    drawables.insertAt(entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                    types.insertAt(entity, ecs::component::Type{"player shot"});
+                    lives.insertAt(entity, ecs::component::Lives{1});
                 }
         };
     }
