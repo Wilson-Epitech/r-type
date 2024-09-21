@@ -23,7 +23,7 @@
 class GameEngine
 {
     public:
-        GameEngine(ecs::Registry &reg, std::shared_ptr<KeyPressed> &key) : _reg(reg), _key(key) {
+        GameEngine(ecs::Registry &reg) : _reg(reg) {
             SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
             SetConfigFlags(FLAG_WINDOW_RESIZABLE);
             InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
@@ -33,18 +33,9 @@ class GameEngine
 
         void run() {
             SetTargetFPS(FPS_LIMIT);
-           while (!WindowShouldClose()) {
+            while (!WindowShouldClose()) {
                 BeginDrawing();
                 ClearBackground(RAYWHITE);
-                *_key = KeyPressed::NO_KEY;
-                if (IsKeyDown(KEY_UP))
-                    *_key = KeyPressed::UP;
-                if (IsKeyDown(KEY_DOWN))
-                    *_key = KeyPressed::DOWN;
-                if (IsKeyDown(KEY_LEFT))
-                    *_key = KeyPressed::LEFT;
-                if (IsKeyDown(KEY_RIGHT))
-                    *_key = KeyPressed::RIGHT;
                 _reg.runSystems();
                 EndDrawing();
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
@@ -53,7 +44,6 @@ class GameEngine
 
     private:
         ecs::Registry _reg;
-        std::shared_ptr<KeyPressed> _key;
 };
 
 #endif /* !GAMEENGINE_HPP_ */

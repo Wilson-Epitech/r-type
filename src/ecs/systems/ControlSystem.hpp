@@ -30,16 +30,18 @@ namespace ecs
 
                     for (std::size_t i = 0; i < controllables.size() && i < velocities.size(); ++i) {
                         if (controllables[i] && velocities[i]) {
-                            if (*controllables[i]->key == KeyPressed::UP) {
+                            if (!controllables[i]->isControllable)
+                                continue;
+                            if (IsKeyDown(KEY_UP)) {
                                 velocities[i]->vx = 0;
                                 velocities[i]->vy = NEGATIVE_VELOCITY;
-                            } else if (*controllables[i]->key == KeyPressed::DOWN) {
+                            } else if (IsKeyDown(KEY_DOWN)) {
                                 velocities[i]->vx = 0;
                                 velocities[i]->vy = POSITIVE_VELOCITY;
-                            } else if (*controllables[i]->key == KeyPressed::LEFT) {
+                            } else if (IsKeyDown(KEY_LEFT)) {
                                 velocities[i]->vx = NEGATIVE_VELOCITY;
                                 velocities[i]->vy = 0;
-                            } else if (*controllables[i]->key == KeyPressed::RIGHT) {
+                            } else if (IsKeyDown(KEY_RIGHT)) {
                                 velocities[i]->vx = POSITIVE_VELOCITY;
                                 velocities[i]->vy = 0;
                             } else {

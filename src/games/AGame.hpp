@@ -17,9 +17,7 @@ namespace game
     class AGame : virtual public game::IGame
     {
         public:
-            AGame() {
-                _key = std::make_shared<KeyPressed>(KeyPressed::NO_KEY);
-            }
+            AGame() = default;
             ~AGame() = default;
 
             virtual void initializeGame() override {
@@ -32,7 +30,6 @@ namespace game
         protected:
             ecs::Registry _reg;
             std::unordered_map<std::string, entity_t> _stringToEntity;
-            std::shared_ptr<KeyPressed> _key;
     };
 }
 

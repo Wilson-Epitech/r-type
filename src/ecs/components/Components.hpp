@@ -12,15 +12,6 @@
     #include <memory>
     #include <raylib.h>
 
-enum KeyPressed
-{
-    NO_KEY,
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
-
 namespace ecs
 {
     namespace component
@@ -31,7 +22,7 @@ namespace ecs
         };
 
         struct Controllable {
-            std::shared_ptr<KeyPressed> key;
+            bool isControllable = true;
         };
 
         struct Position {
