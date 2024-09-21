@@ -41,6 +41,14 @@ namespace ecs
         struct Velocity {
             float vx, vy;
         };
+
+        struct Type {
+            std::string type;
+        };
+
+        struct Lives {
+            std::size_t nbLives;
+        };
     }
 }
 

@@ -8,9 +8,9 @@
 #ifndef GAMEENGINE_HPP_
     #define GAMEENGINE_HPP_
 
-    #include <raylib.h>
     #include "Registry.hpp"
     #include "Components.hpp"
+    #include <raylib.h>
 
     #define SCREEN_WIDTH 1920
     #define SCREEN_HEIGHT 1080
@@ -32,15 +32,16 @@ class GameEngine
 
         void run() {
             double previousTimer = GetTime();
-            double timeElapse = 0.0;
+            double timeElapsed = 0.0;
             double waitTime = 0.0;
+
             while (!WindowShouldClose()) {
                 previousTimer = GetTime();
-                waitTime = previousTimer - timeElapse;
+                waitTime = previousTimer - timeElapsed;
                 BeginDrawing();
                 if (waitTime >= WAIT_DURATION) {
                     ClearBackground(RAYWHITE);
-                    timeElapse = previousTimer;
+                    timeElapsed = previousTimer;
                     *_key = KeyPressed::NO_KEY;
                     if (IsKeyDown(KEY_UP))
                         *_key = KeyPressed::UP;
@@ -60,6 +61,7 @@ class GameEngine
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
             }
         }
+
     private:
         ecs::Registry _reg;
         std::shared_ptr<KeyPressed> _key;
