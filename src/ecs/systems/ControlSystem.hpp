@@ -14,9 +14,12 @@
     #define NEGATIVE_VELOCITY -5
     #define POSITIVE_VELOCITY 5
 
-namespace ecs {
-    namespace system {
-        class ControlSystem : virtual public ecs::system::ISystem {
+namespace ecs
+{
+    namespace system
+    {
+        class ControlSystem : virtual public ecs::system::ISystem
+        {
             public:
                 ControlSystem() = default;
                 ~ControlSystem() = default;

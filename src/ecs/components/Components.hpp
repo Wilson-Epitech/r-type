@@ -12,7 +12,8 @@
     #include <memory>
     #include <raylib.h>
 
-enum KeyPressed {
+enum KeyPressed
+{
     NO_KEY,
     UP,
     DOWN,
@@ -20,9 +21,10 @@ enum KeyPressed {
     RIGHT
 };
 
-namespace ecs {
-    namespace component {
-
+namespace ecs
+{
+    namespace component
+    {
         struct Drawable {
             std::string spritePath;
             Texture2D spriteTexture;

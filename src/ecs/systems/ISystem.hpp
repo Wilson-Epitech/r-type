@@ -10,9 +10,12 @@
 
     #include "Registry.hpp"
 
-namespace ecs {
-    namespace system {
-        class ISystem {
+namespace ecs
+{
+    namespace system
+    {
+        class ISystem
+        {
             public:
                 ISystem() = default;
                 ~ISystem() = default;

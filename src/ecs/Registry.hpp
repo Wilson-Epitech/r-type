@@ -17,8 +17,10 @@
 
     using entity_t = std::size_t;
 
-namespace ecs {
-    class Registry {
+namespace ecs
+{
+    class Registry
+    {
         public:
 
             entity_t spawnEntity() {

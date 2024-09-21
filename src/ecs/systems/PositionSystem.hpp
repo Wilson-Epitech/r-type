@@ -11,9 +11,12 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
-namespace ecs {
-    namespace system {
-        class PositionSystem : virtual public ecs::system::ISystem {
+namespace ecs
+{
+    namespace system
+    {
+        class PositionSystem : virtual public ecs::system::ISystem
+        {
             public:
                 PositionSystem() = default;
                 ~PositionSystem() = default;

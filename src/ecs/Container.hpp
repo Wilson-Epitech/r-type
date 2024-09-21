@@ -12,9 +12,11 @@
     #include <memory>
     #include <optional>
 
-namespace ecs {
+namespace ecs
+{
     template <typename Component>
-    class SparseArray {
+    class SparseArray
+    {
         public:
             using value_type = std::optional<Component>;
             using reference_type = value_type &;
