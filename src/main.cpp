@@ -53,9 +53,9 @@ int main()
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
     MaximizeWindow();
 
-    reg.addSystem(ecs::ControlSystem());
-    reg.addSystem(ecs::PositionSystem());
-    reg.addSystem(ecs::DrawSystem());
+    reg.addSystem(ecs::system::ControlSystem());
+    reg.addSystem(ecs::system::PositionSystem());
+    reg.addSystem(ecs::system::DrawSystem());
 
     while (!WindowShouldClose()) {
         BeginDrawing();

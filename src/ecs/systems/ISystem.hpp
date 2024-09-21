@@ -11,12 +11,14 @@
     #include "Registry.hpp"
 
 namespace ecs {
-    class ISystem {
-        public:
-            ISystem() = default;
-            ~ISystem() = default;
-            virtual void operator()(Registry &reg) = 0;
-    };
+    namespace system {
+        class ISystem {
+            public:
+                ISystem() = default;
+                ~ISystem() = default;
+                virtual void operator()(Registry &reg) = 0;
+        };
+    }
 }
 
 #endif /* !ISYSTEM_HPP_ */

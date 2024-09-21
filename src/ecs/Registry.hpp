@@ -16,6 +16,7 @@
     #include <functional>
 
     using entity_t = std::size_t;
+
 namespace ecs {
     class Registry {
         public:
