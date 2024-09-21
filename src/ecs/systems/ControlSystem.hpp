@@ -11,8 +11,8 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
-    #define NEGATIVE_VELOCITY -0.2
-    #define POSITIVE_VELOCITY 0.2
+    #define NEGATIVE_VELOCITY -5
+    #define POSITIVE_VELOCITY 5
 
 namespace ecs {
     namespace system {
@@ -38,6 +38,9 @@ namespace ecs {
                                 velocities[i]->vy = 0;
                             } else if (*controllables[i]->key == KeyPressed::RIGHT) {
                                 velocities[i]->vx = POSITIVE_VELOCITY;
+                                velocities[i]->vy = 0;
+                            } else {
+                                velocities[i]->vx = 0;
                                 velocities[i]->vy = 0;
                             }
                         }

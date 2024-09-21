@@ -18,6 +18,7 @@
 #define MARGIN_LEFT 10
 #define MARGIN_TOP 10
 #define FPS_MARGIN 100
+#define WAIT_DURATION 0.016
 
 int main()
 {
@@ -26,25 +27,41 @@ int main()
     auto &key = rtype.getKey();
     auto &reg = rtype.getRegister();
 
+    double previousTimer = GetTime();
+    double timeElapse = 0.0;
+    double waitTime = 0.0;
+
     SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
     MaximizeWindow();
+    // SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
+        previousTimer = GetTime();
+        waitTime = previousTimer - timeElapse;
+
         BeginDrawing();
-        ClearBackground(RAYWHITE);
-        if (IsKeyPressed(KEY_UP))
-            *key = KeyPressed::UP;
-        if (IsKeyPressed(KEY_DOWN))
-            *key = KeyPressed::DOWN;
-        if (IsKeyPressed(KEY_LEFT))
-            *key = KeyPressed::LEFT;
-        if (IsKeyPressed(KEY_RIGHT))
-            *key = KeyPressed::RIGHT;
-        reg.runSystems();
-        DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
+        if (waitTime >= WAIT_DURATION) {
+            ClearBackground(RAYWHITE);
+            timeElapse = previousTimer;
+            *key = KeyPressed::NO_KEY;
+            if (IsKeyDown(KEY_UP))
+                *key = KeyPressed::UP;
+            if (IsKeyDown(KEY_DOWN))
+                *key = KeyPressed::DOWN;
+            if (IsKeyDown(KEY_LEFT))
+                *key = KeyPressed::LEFT;
+            if (IsKeyDown(KEY_RIGHT))
+                *key = KeyPressed::RIGHT;
+            reg.runSystems();
+            reg.runDraw();
+        } else {
+            ClearBackground(RAYWHITE);
+            reg.runDraw();
+        }
         EndDrawing();
+        DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
     }
     return 0;
 }
