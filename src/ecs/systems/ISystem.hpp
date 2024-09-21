@@ -10,14 +10,12 @@
 
     #include "Registry.hpp"
 
-namespace rtype
-{
-    class ISystem
-    {
+namespace ecs {
+    class ISystem {
         public:
             ISystem() = default;
             ~ISystem() = default;
-            virtual void operator()(registry &reg) = 0;
+            virtual void operator()(Registry &reg) = 0;
     };
 }
 

@@ -11,17 +11,15 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
-namespace rtype
-{
-    class PositionSystem : virtual public rtype::ISystem
-    {
+namespace ecs {
+    class PositionSystem : virtual public ecs::ISystem {
         public:
             PositionSystem() = default;
             ~PositionSystem() = default;
-            void operator()(registry &reg) override
+            void operator()(Registry &reg) override
             {
-                sparse_array<component::Position> &positions = reg.get_components<component::Position>();
-                sparse_array<component::Velocity> &velocities = reg.get_components<component::Velocity>();
+                SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+                SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
 
                 for (std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
                     if (positions[i] && velocities[i]) {

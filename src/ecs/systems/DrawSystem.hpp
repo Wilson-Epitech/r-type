@@ -11,42 +11,40 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
-namespace rtype
-{
-    class DrawSystem : virtual public rtype::ISystem
-    {
+namespace ecs {
+    class DrawSystem : virtual public ecs::ISystem {
         public:
             DrawSystem() = default;
             ~DrawSystem() = default;
-            void operator()(registry &reg) override
+            void operator()(Registry &reg) override
             {
-                sparse_array<component::Position> &positions = reg.get_components<component::Position>();
-                sparse_array<component::Drawable> &drawables = reg.get_components<component::Drawable>();
+                SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+                SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
 
-                load_all_textures(drawables);
+                loadTextures(drawables);
                 for (std::size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
                     if (drawables[i] && positions[i]) {
-                        if (drawables[i]->sprite_path.length() > 0) {
-                            DrawTexture(drawables[i]->sprite_texture, positions[i]->x, positions[i]->y, RAYWHITE);
+                        if (drawables[i]->spritePath.length() > 0) {
+                            DrawTexture(drawables[i]->spriteTexture, positions[i]->x, positions[i]->y, RAYWHITE);
                         }
                     }
                 }
             };
 
-            void load_all_textures(sparse_array<component::Drawable> &drawables)
+            void loadTextures(SparseArray<component::Drawable> &drawables)
             {
-                static bool is_loaded = false;
+                static bool isLoaded = false;
 
-                if (is_loaded)
+                if (isLoaded)
                     return;
                 for (std::size_t i = 0; i < drawables.size(); ++i) {
                     if (drawables[i]) {
-                        if (drawables[i]->sprite_path.length() > 0) {
-                            drawables[i]->sprite_texture = LoadTexture(drawables[i]->sprite_path.c_str());
+                        if (drawables[i]->spritePath.length() > 0) {
+                            drawables[i]->spriteTexture = LoadTexture(drawables[i]->spritePath.c_str());
                         }
                     }
                 }
-                is_loaded = true;
+                isLoaded = true;
             }
     };
 }

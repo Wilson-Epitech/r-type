@@ -14,17 +14,15 @@
     #define NEGATIVE_VELOCITY -0.2
     #define POSITIVE_VELOCITY 0.2
 
-namespace rtype
-{
-    class ControlSystem : virtual public rtype::ISystem
-    {
+namespace ecs {
+    class ControlSystem : virtual public ecs::ISystem {
         public:
             ControlSystem() = default;
             ~ControlSystem() = default;
-            void operator()(registry &reg) override
+            void operator()(Registry &reg) override
             {
-                sparse_array<component::Controllable> &controllables = reg.get_components<component::Controllable>();
-                sparse_array<component::Velocity> &velocities = reg.get_components<component::Velocity>();
+                SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
+                SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
 
                 for (std::size_t i = 0; i < controllables.size() && i < velocities.size(); ++i) {
                     if (controllables[i] && velocities[i]) {

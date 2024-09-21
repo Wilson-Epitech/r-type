@@ -16,101 +16,102 @@
     #include <functional>
 
     using entity_t = std::size_t;
+namespace ecs {
+    class Registry {
+        public:
 
-class registry {
-    public:
+            entity_t spawnEntity() {
+                entity_t entity = ++_aliveEntities;
 
-        entity_t spawn_entity() {
-            entity_t entity = ++_alive_entities;
-
-            if (!_dead_entities_index.empty()) {
-                std::size_t index = _dead_entities_index.back();
-                _dead_entities_index.pop_back();
-                _index_to_entities[index] = entity;
-            } else {
-                _index_to_entities[_alive_entities] = entity;
+                if (!_deadEntitiesIndex.empty()) {
+                    std::size_t index = _deadEntitiesIndex.back();
+                    _deadEntitiesIndex.pop_back();
+                    _indexToEntities[index] = entity;
+                } else {
+                    _indexToEntities[_aliveEntities] = entity;
+                }
+                return entity;
             }
-            return entity;
-        }
 
-        void kill_entity(entity_t const &e) {
-            for (auto &it : _erase_entity) {
-                it.second(*this, e);
+            void killEntity(entity_t const &e) {
+                for (auto &it : _eraseEntity) {
+                    it.second(*this, e);
+                }
+                for (auto &it : _indexToEntities) {
+                    if (it.second == e) {
+                        _deadEntitiesIndex.push_back(it.first);
+                        it.second = 0;
+                    }
+                }
+                _aliveEntities--;
+            };
+
+            entity_t entityFromIndex(std::size_t idx) {
+                auto it = _indexToEntities.find(idx);
+                if (it == _indexToEntities.end())
+                    throw Error("no entity found at this index");
+                return it->second;
             }
-            for (auto &it : _index_to_entities) {
-                if (it.second == e) {
-                    _dead_entities_index.push_back(it.first);
-                    it.second = 0;
+
+            template <typename Component>
+            void removeComponent(entity_t const &from) {
+                SparseArray<Component> &component = getComponents<Component>();
+                component.erase(from);
+            }
+
+            template <class Component>
+            SparseArray<Component> &registerComponent() {
+                auto typeId = std::type_index(typeid(Component));
+                auto it = _componentsArrays.find(typeId);
+                if (it == _componentsArrays.end())
+                    _componentsArrays[typeId] = SparseArray<Component>();
+
+                    auto erase_func = [](Registry &reg, entity_t const &ent) {
+                        SparseArray<Component> &component = reg.getComponents<Component>();
+                        component.erase(ent);
+                    };
+                    _eraseEntity[typeId] = erase_func;
+
+                return std::any_cast<SparseArray<Component>&>(_componentsArrays[typeId]);
+            };
+
+            template <class Component>
+            SparseArray<Component> &getComponents() {
+                auto typeId = std::type_index(typeid(Component));
+                auto it = _componentsArrays.find(typeId);
+                if (it == _componentsArrays.end())
+                    throw Error("Component not found");
+                return std::any_cast<SparseArray<Component>&>(it->second);
+            };
+
+            template <class Component>
+            SparseArray<Component> const &getComponents() const {
+                auto typeId = std::type_index(typeid(Component));
+                auto it = _componentsArrays.find(typeId);
+                if (it == _componentsArrays.end())
+                    throw Error("Component not found");
+                return std::any_cast<SparseArray<Component>>(it->second);
+            };
+
+            template <class... Components, typename Function>
+            void addSystem(Function const &f) {
+                _systems.push_back(f);
+            }
+
+            void runSystems() {
+                for (std::size_t i = 0; i < _systems.size(); i++) {
+                    _systems[i](*this);
                 }
             }
-            _alive_entities--;
-        };
 
-        entity_t entity_from_index(std::size_t idx) {
-            auto it = _index_to_entities.find(idx);
-            if (it == _index_to_entities.end())
-                throw rtype::Error("no entity found at this index");
-            return it->second;
-        }
-
-        template <typename Component>
-        void remove_component(entity_t const &from) {
-            sparse_array<Component> &component = get_components<Component>();
-            component.erase(from);
-        }
-
-        template <class Component>
-        sparse_array<Component> &register_component() {
-            auto typeId = std::type_index(typeid(Component));
-            auto it = _components_arrays.find(typeId);
-            if (it == _components_arrays.end())
-                _components_arrays[typeId] = sparse_array<Component>();
-
-                auto erase_func = [](registry &reg, entity_t const &ent) {
-                    sparse_array<Component> &component = reg.get_components<Component>();
-                    component.erase(ent);
-                };
-                _erase_entity[typeId] = erase_func;
-
-            return std::any_cast<sparse_array<Component>&>(_components_arrays[typeId]);
-        };
-
-        template <class Component>
-        sparse_array<Component> &get_components() {
-            auto typeId = std::type_index(typeid(Component));
-            auto it = _components_arrays.find(typeId);
-            if (it == _components_arrays.end())
-                throw rtype::Error("Component not found");
-            return std::any_cast<sparse_array<Component>&>(it->second);
-        };
-
-        template <class Component>
-        sparse_array<Component> const &get_components() const {
-            auto typeId = std::type_index(typeid(Component));
-            auto it = _components_arrays.find(typeId);
-            if (it == _components_arrays.end())
-                throw rtype::Error("Component not found");
-            return std::any_cast<sparse_array<Component>>(it->second);
-        };
-
-        template <class... Components, typename Function>
-        void add_system(Function const &f) {
-            _systems.push_back(f);
-        }
-
-        void run_systems() {
-            for (std::size_t i = 0; i < _systems.size(); i++) {
-                _systems[i](*this);
-            }
-        }
-
-    private:
-        std::size_t _alive_entities = 0;
-        std::vector<std::function<void(registry &)>> _systems;
-        std::vector<std::size_t> _dead_entities_index;
-        std::unordered_map<std::type_index, std::any> _components_arrays;
-        std::unordered_map<std::type_index, std::function<void(registry &, entity_t const &)>> _erase_entity;
-        std::unordered_map<std::size_t, entity_t> _index_to_entities;
-};
+        private:
+            std::size_t _aliveEntities = 0;
+            std::vector<std::function<void(Registry &)>> _systems;
+            std::vector<std::size_t> _deadEntitiesIndex;
+            std::unordered_map<std::type_index, std::any> _componentsArrays;
+            std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>> _eraseEntity;
+            std::unordered_map<std::size_t, entity_t> _indexToEntities;
+    };
+}
 
 #endif
