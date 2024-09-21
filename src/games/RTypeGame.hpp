@@ -11,6 +11,8 @@
     #include "AGame.hpp"
     #include "ControlSystem.hpp"
     #include "PositionSystem.hpp"
+    #include "CollisionSystem.hpp"
+    #include "LifeSystem.hpp"
     #include "DrawSystem.hpp"
 
 namespace game
@@ -27,6 +29,7 @@ namespace game
                 _stringToEntity["player"] =  _reg.spawnEntity();
                 _stringToEntity["movableEntity1"] =  _reg.spawnEntity();
                 _stringToEntity["movableEntity2"] =  _reg.spawnEntity();
+                _stringToEntity["movableEntity3"] =  _reg.spawnEntity();
             };
 
             virtual void registerComponents() override {
@@ -34,6 +37,8 @@ namespace game
                 _reg.registerComponent<ecs::component::Velocity>();
                 _reg.registerComponent<ecs::component::Drawable>();
                 _reg.registerComponent<ecs::component::Controllable>();
+                _reg.registerComponent<ecs::component::Type>();
+                _reg.registerComponent<ecs::component::Lives>();
             };
 
             virtual void addComponentsToEntities() override {
@@ -41,24 +46,40 @@ namespace game
                 ecs::SparseArray<ecs::component::Velocity> &velocities = _reg.getComponents<ecs::component::Velocity>();
                 ecs::SparseArray<ecs::component::Drawable> &drawables = _reg.getComponents<ecs::component::Drawable>();
                 ecs::SparseArray<ecs::component::Controllable> &controllables = _reg.getComponents<ecs::component::Controllable>();
+                ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
+                ecs::SparseArray<ecs::component::Lives> &lives = _reg.getComponents<ecs::component::Lives>();
 
                 positions.insertAt(_stringToEntity["player"], ecs::component::Position{100, 100});
                 velocities.insertAt(_stringToEntity["player"], ecs::component::Velocity{0, 0});
                 controllables.insertAt(_stringToEntity["player"], ecs::component::Controllable{_key});
                 drawables.insertAt(_stringToEntity["player"], ecs::component::Drawable{"../assets/r-typesheet39.gif"});
+                types.insertAt(_stringToEntity["player"], ecs::component::Type{"player"});
+                lives.insertAt(_stringToEntity["player"], ecs::component::Lives{3});
 
                 positions.insertAt(_stringToEntity["movableEntity1"], ecs::component::Position{1500, 700});
                 velocities.insertAt(_stringToEntity["movableEntity1"], ecs::component::Velocity{-0.4f, 0});
                 drawables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                types.insertAt(_stringToEntity["movableEntity1"], ecs::component::Type{"enemy"});
+                lives.insertAt(_stringToEntity["movableEntity1"], ecs::component::Lives{1});
 
-                positions.insertAt(_stringToEntity["movableEntity2"], ecs::component::Position{2000, 300});
+                positions.insertAt(_stringToEntity["movableEntity2"], ecs::component::Position{1800, 300});
                 velocities.insertAt(_stringToEntity["movableEntity2"], ecs::component::Velocity{-0.3f, 0});
                 drawables.insertAt(_stringToEntity["movableEntity2"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                types.insertAt(_stringToEntity["movableEntity2"], ecs::component::Type{"enemy"});
+                lives.insertAt(_stringToEntity["movableEntity2"], ecs::component::Lives{1});
+
+                positions.insertAt(_stringToEntity["movableEntity3"], ecs::component::Position{1000, 300});
+                velocities.insertAt(_stringToEntity["movableEntity3"], ecs::component::Velocity{-0.3f, 0});
+                drawables.insertAt(_stringToEntity["movableEntity3"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                types.insertAt(_stringToEntity["movableEntity3"], ecs::component::Type{"enemy"});
+                lives.insertAt(_stringToEntity["movableEntity3"], ecs::component::Lives{1});
             };
 
             virtual void addSystemsToRegister() override {
                 _reg.addSystem(ecs::system::ControlSystem());
                 _reg.addSystem(ecs::system::PositionSystem());
+                _reg.addSystem(ecs::system::CollisionSystem());
+                _reg.addSystem(ecs::system::LifeSystem());
                 _reg.addSystem(ecs::system::DrawSystem());
             };
 
