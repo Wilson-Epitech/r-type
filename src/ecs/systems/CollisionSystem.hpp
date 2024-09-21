@@ -26,7 +26,7 @@ namespace ecs
                     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
                     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
                     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-                    SparseArray<component::Lives> &lives = reg.getComponents<component::Lives>();
+                    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
                     Rectangle rec1 = {0};
                     Rectangle rec2 = {0};
 

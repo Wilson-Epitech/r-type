@@ -44,7 +44,7 @@ namespace ecs
             ecs::entityType type;
         };
 
-        struct Lives {
+        struct Life {
             std::size_t nbLives;
         };
     }

@@ -42,14 +42,14 @@ namespace ecs
                     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
                     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
                     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
-                    SparseArray<component::Lives> &lives = reg.getComponents<component::Lives>();
+                    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
                     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
                     positions.insertAt(entity, ecs::component::Position{x, y});
                     velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
                     drawables.insertAt(entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
                     types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
-                    lives.insertAt(entity, ecs::component::Lives{1});
+                    lives.insertAt(entity, ecs::component::Life{1});
                 }
         };
     }
