@@ -14,13 +14,13 @@
 class Error : public std::exception
 {
     public:
-        Error(const std::string& error_message): _error_message(error_message) {}
+        Error(const std::string& error_message): _errorMessage(error_message) {}
         const char *what() const noexcept
         {
-            return this->_error_message.c_str();
+            return this->_errorMessage.c_str();
         }
     private:
-        std::string _error_message;
+        std::string _errorMessage;
 };
 
 #endif /* !ERROR_HPP_ */

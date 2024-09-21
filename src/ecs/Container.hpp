@@ -12,7 +12,6 @@
     #include <memory>
     #include <optional>
 
-
 namespace ecs {
     template <typename Component>
     class SparseArray {
