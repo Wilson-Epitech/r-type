@@ -18,6 +18,7 @@
     #define MARGIN_TOP 10
     #define FPS_MARGIN 100
     #define WAIT_DURATION 0.016
+    #define FPS_LIMIT 60
 
 class GameEngine
 {
@@ -31,32 +32,20 @@ class GameEngine
         ~GameEngine() = default;
 
         void run() {
-            double previousTimer = GetTime();
-            double timeElapsed = 0.0;
-            double waitTime = 0.0;
-
-            while (!WindowShouldClose()) {
-                previousTimer = GetTime();
-                waitTime = previousTimer - timeElapsed;
+            SetTargetFPS(FPS_LIMIT);
+           while (!WindowShouldClose()) {
                 BeginDrawing();
-                if (waitTime >= WAIT_DURATION) {
-                    ClearBackground(RAYWHITE);
-                    timeElapsed = previousTimer;
-                    *_key = KeyPressed::NO_KEY;
-                    if (IsKeyDown(KEY_UP))
-                        *_key = KeyPressed::UP;
-                    if (IsKeyDown(KEY_DOWN))
-                        *_key = KeyPressed::DOWN;
-                    if (IsKeyDown(KEY_LEFT))
-                        *_key = KeyPressed::LEFT;
-                    if (IsKeyDown(KEY_RIGHT))
-                        *_key = KeyPressed::RIGHT;
-                    _reg.runSystems();
-                    _reg.runDraw();
-                } else {
-                    ClearBackground(RAYWHITE);
-                    _reg.runDraw();
-                }
+                ClearBackground(RAYWHITE);
+                *_key = KeyPressed::NO_KEY;
+                if (IsKeyDown(KEY_UP))
+                    *_key = KeyPressed::UP;
+                if (IsKeyDown(KEY_DOWN))
+                    *_key = KeyPressed::DOWN;
+                if (IsKeyDown(KEY_LEFT))
+                    *_key = KeyPressed::LEFT;
+                if (IsKeyDown(KEY_RIGHT))
+                    *_key = KeyPressed::RIGHT;
+                _reg.runSystems();
                 EndDrawing();
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
             }
