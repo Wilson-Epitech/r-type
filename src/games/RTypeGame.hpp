@@ -2,7 +2,7 @@
 ** EPrtypeTECH PROJECT, 2024
 ** r-type
 ** File description:
-** rtypeGame
+** RTypeGame
 */
 
 #ifndef RTYPEGAME_HPP_
@@ -15,13 +15,13 @@
 
 namespace game
 {
-    class rtypeGame : virtual public game::AGame
+    class RTypeGame : virtual public game::AGame
     {
         public:
-            rtypeGame() : game::AGame() {
+            RTypeGame() : game::AGame() {
                 initializeGame();
             };
-            ~rtypeGame() = default;
+            ~RTypeGame() = default;
 
             virtual void spawnEntities() override {
                 _stringToEntity["player"] =  _reg.spawnEntity();
