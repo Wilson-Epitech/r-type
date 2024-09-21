@@ -37,18 +37,14 @@ namespace ecs
 
                 void loadTextures(SparseArray<component::Drawable> &drawables)
                 {
-                    static bool isLoaded = false;
-
-                    if (isLoaded)
-                        return;
                     for (std::size_t i = 0; i < drawables.size(); ++i) {
-                        if (drawables[i]) {
+                        if (drawables[i]->isLoaded == false) {
                             if (drawables[i]->spritePath.length() > 0) {
                                 drawables[i]->spriteTexture = LoadTexture(drawables[i]->spritePath.c_str());
                             }
+                            drawables[i]->isLoaded = true;
                         }
                     }
-                    isLoaded = true;
                 }
         };
     }
