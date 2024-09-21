@@ -18,7 +18,8 @@ enum KeyPressed
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    SPACE
 };
 
 namespace ecs
@@ -28,6 +29,7 @@ namespace ecs
         struct Drawable {
             std::string spritePath;
             Texture2D spriteTexture;
+            bool isLoaded = false;
         };
 
         struct Controllable {

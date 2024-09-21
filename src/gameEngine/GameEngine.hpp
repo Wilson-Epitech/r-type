@@ -34,15 +34,20 @@ class GameEngine
             double previousTimer = GetTime();
             double timeElapsed = 0.0;
             double waitTime = 0.0;
+            KeyPressed add = KeyPressed::NO_KEY;
 
             while (!WindowShouldClose()) {
                 previousTimer = GetTime();
                 waitTime = previousTimer - timeElapsed;
+                *_key = KeyPressed::NO_KEY;
+                if (IsKeyPressed(KEY_SPACE)) {
+                    add = KeyPressed::SPACE;
+                }
+
                 BeginDrawing();
                 if (waitTime >= WAIT_DURATION) {
                     ClearBackground(RAYWHITE);
                     timeElapsed = previousTimer;
-                    *_key = KeyPressed::NO_KEY;
                     if (IsKeyDown(KEY_UP))
                         *_key = KeyPressed::UP;
                     if (IsKeyDown(KEY_DOWN))
@@ -51,6 +56,10 @@ class GameEngine
                         *_key = KeyPressed::LEFT;
                     if (IsKeyDown(KEY_RIGHT))
                         *_key = KeyPressed::RIGHT;
+                    if (add != KeyPressed::NO_KEY) {
+                        *_key = add;
+                        add = KeyPressed::NO_KEY;
+                    }
                     _reg.runSystems();
                     _reg.runDraw();
                 } else {
