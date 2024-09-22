@@ -49,19 +49,19 @@ void game::RTypeGame::addComponentsToEntities()
     positions.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Position{1500, 700});
     velocities.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0});
     controllables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Controllable{false});
-    drawables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH});
+    drawables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH, 3});
     types.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
     lives.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Life{1});
 
     positions.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Position{1800, 300});
     velocities.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
-    drawables.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH});
+    drawables.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH, 3});
     types.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
     lives.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Life{1});
 
     positions.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Position{1000, 300});
     velocities.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
-    drawables.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH});
+    drawables.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Drawable{TMP_PLAYERSHOT_PATH, 3});
     types.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
     lives.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Life{1});
 }
