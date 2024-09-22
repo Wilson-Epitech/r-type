@@ -10,6 +10,7 @@
 
     #include "ISystem.hpp"
     #include "Components.hpp"
+    #include "AssetsPath.hpp"
     #include <iostream>
 
 namespace ecs
@@ -47,7 +48,7 @@ namespace ecs
 
                     positions.insertAt(entity, ecs::component::Position{x, y});
                     velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
-                    drawables.insertAt(entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
+                    drawables.insertAt(entity, ecs::component::Drawable{TMP_PLAYERSHOT_PATH});
                     types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
                     lives.insertAt(entity, ecs::component::Life{1});
                 }

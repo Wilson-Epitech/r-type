@@ -14,21 +14,20 @@
 
     #define SCREEN_WIDTH 1920
     #define SCREEN_HEIGHT 1080
-    #define MARGIN_LEFT 10
     #define MARGIN_TOP 10
     #define FPS_MARGIN 100
-    #define WAIT_DURATION 0.016
     #define FPS_LIMIT 60
+    #define GAME_NAME
 
 class GameEngine
 {
     public:
-        GameEngine(ecs::Registry &reg) : _reg(reg) {
+        GameEngine(ecs::Registry &reg, std::string &gameName) : _reg(reg) {
             SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
             SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-            InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "R-Type");
+            InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, gameName.c_str());
             MaximizeWindow();
-        }
+        };
         ~GameEngine() = default;
 
         void run() {
@@ -40,7 +39,7 @@ class GameEngine
                 DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
                 _reg.runSystems();
             }
-        }
+        };
 
     private:
         ecs::Registry _reg;

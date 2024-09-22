@@ -14,7 +14,7 @@
 class Error : public std::exception
 {
     public:
-        Error(const std::string& error_message): _errorMessage(error_message) {}
+        Error(const std::string& errorMessage): _errorMessage(errorMessage) {}
         const char *what() const noexcept
         {
             return this->_errorMessage.c_str();
