@@ -11,9 +11,11 @@
     #include "Error.hpp"
     #include "Container.hpp"
     #include <unordered_map>
-    #include <typeindex>
-    #include <any>
     #include <functional>
+    #include <typeindex>
+    #include <list>
+    #include <map>
+    #include <any>
 
     using entity_t = std::size_t;
 
@@ -24,14 +26,19 @@ namespace ecs
         public:
 
             entity_t spawnEntity() {
-                entity_t entity = ++_aliveEntities;
+                entity_t entity = _indexToEntities.size() + 1;
 
-                if (!_deadEntitiesIndex.empty()) {
-                    std::size_t index = _deadEntitiesIndex.back();
-                    _deadEntitiesIndex.pop_back();
-                    _indexToEntities[index] = entity;
+                if (!_deadEntities.empty()) {
+                    entity = _deadEntities.front();
+                    _deadEntities.pop_front();
+                    for (auto &it : _indexToEntities) {
+                        if (it.second == 0) {
+                            _indexToEntities[it.first] = entity;
+                            break;
+                        }
+                    }
                 } else {
-                    _indexToEntities[_aliveEntities] = entity;
+                    _indexToEntities[entity] = entity;
                 }
                 return entity;
             };
@@ -42,15 +49,15 @@ namespace ecs
                 }
                 for (auto &it : _indexToEntities) {
                     if (it.second == e) {
-                        _deadEntitiesIndex.push_back(it.first);
+                        _deadEntities.push_back(std::size_t(it.second));
                         it.second = 0;
                     }
                 }
-                _aliveEntities--;
             };
 
             entity_t entityFromIndex(std::size_t idx) {
                 auto it = _indexToEntities.find(idx);
+
                 if (it == _indexToEntities.end())
                     throw Error("No entity found at this index");
                 return it->second;
@@ -108,12 +115,12 @@ namespace ecs
             };
 
         private:
-            std::size_t _aliveEntities = 0;
+            std::size_t _totalEntities = 0;
             std::vector<std::function<void(Registry &)>> _systems;
-            std::vector<std::size_t> _deadEntitiesIndex;
+            std::list<std::size_t> _deadEntities;
+            std::map<std::size_t, entity_t> _indexToEntities;
             std::unordered_map<std::type_index, std::any> _componentsArrays;
             std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>> _eraseEntity;
-            std::unordered_map<std::size_t, entity_t> _indexToEntities;
     };
 }
 
