@@ -19,6 +19,7 @@ namespace ecs
             public:
                 ISystem() = default;
                 ~ISystem() = default;
+
                 virtual void operator()(Registry &reg) = 0;
         };
     }

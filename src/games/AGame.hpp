@@ -1,5 +1,5 @@
 /*
-** EPATECH PROJECT, 2024
+** R_TYPE PROJECT, 2024
 ** r-type
 ** File description:
 ** AGame

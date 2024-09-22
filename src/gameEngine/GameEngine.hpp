@@ -1,5 +1,5 @@
 /*
-** EPATECH PROJECT, 2024
+** R_TYPE PROJECT, 2024
 ** r-type
 ** File description:
 ** GameEngine
@@ -17,29 +17,14 @@
     #define MARGIN_TOP 10
     #define FPS_MARGIN 100
     #define FPS_LIMIT 60
-    #define GAME_NAME
 
 class GameEngine
 {
     public:
-        GameEngine(ecs::Registry &reg, std::string &gameName) : _reg(reg) {
-            SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
-            SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-            InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, gameName.c_str());
-            MaximizeWindow();
-        };
+        GameEngine(ecs::Registry &reg, std::string &gameName);
         ~GameEngine() = default;
 
-        void run() {
-            SetTargetFPS(FPS_LIMIT);
-            while (!WindowShouldClose()) {
-                BeginDrawing();
-                ClearBackground(RAYWHITE);
-                EndDrawing();
-                DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
-                _reg.runSystems();
-            }
-        };
+        void run();
 
     private:
         ecs::Registry _reg;
