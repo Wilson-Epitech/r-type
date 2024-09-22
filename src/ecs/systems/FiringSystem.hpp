@@ -1,8 +1,8 @@
 /*
 ** R_TYPE PROJECT, 2024
-** src
+** r-type
 ** File description:
-** firingSystem
+** FiringSystem
 */
 
 #ifndef FIRINGSYSTEM_HPP_
@@ -10,6 +10,7 @@
 
     #include "ISystem.hpp"
     #include "Components.hpp"
+    #include "AssetsPath.hpp"
     #include <iostream>
 
 namespace ecs
@@ -22,35 +23,9 @@ namespace ecs
                 FiringSystem() = default;
                 ~FiringSystem() = default;
 
-                void operator()(Registry &reg) override
-                {
-                    SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
-                    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-
-                    for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
-                        if (controllables[i] && positions[i]) {
-                            if (!controllables[i]->isControllable)
-                                continue;
-                            if (IsKeyPressed(KEY_SPACE)) {
-                                addShot(reg.spawnEntity(), positions[i]->x, positions[i]->y, reg);
-                            }
-                        }
-                    }
-                }
+                void operator()(Registry &reg) override;
             private:
-                void addShot(entity_t entity, float x, float y, Registry &reg) {
-                    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
-                    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-                    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
-                    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-                    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-
-                    positions.insertAt(entity, ecs::component::Position{x, y});
-                    velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
-                    drawables.insertAt(entity, ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                    types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
-                    lives.insertAt(entity, ecs::component::Life{1});
-                }
+                void addShot(entity_t entity, float x, float y, Registry &reg);
         };
     }
 }

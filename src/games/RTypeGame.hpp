@@ -1,5 +1,5 @@
-        /*
-** EPrtypeTECH PROJECT, 2024
+/*
+** R_TYPE PROJECT, 2024
 ** r-type
 ** File description:
 ** RTypeGame
@@ -16,79 +16,25 @@
     #include "DrawSystem.hpp"
     #include "FiringSystem.hpp"
 
+    #define PLAYER_NAME "player"
+    #define FIRST_ENEMY_NAME "enemy1"
+    #define SECOND_ENEMY_NAME "enemy2"
+    #define THIRD_ENEMY_NAME "enemy3"
+
 namespace game
 {
     class RTypeGame : virtual public game::AGame
     {
         public:
-            RTypeGame() {
-                initializeGame();
-            };
+            RTypeGame(const std::string gameName = "R-Type");
             ~RTypeGame() = default;
 
-            virtual void spawnEntities() override {
-                _stringToEntity["player"] =  _reg.spawnEntity();
-                _stringToEntity["movableEntity1"] =  _reg.spawnEntity();
-                _stringToEntity["movableEntity2"] =  _reg.spawnEntity();
-                _stringToEntity["movableEntity3"] =  _reg.spawnEntity();
-            };
-
-            virtual void registerComponents() override {
-                _reg.registerComponent<ecs::component::Position>();
-                _reg.registerComponent<ecs::component::Velocity>();
-                _reg.registerComponent<ecs::component::Drawable>();
-                _reg.registerComponent<ecs::component::Controllable>();
-                _reg.registerComponent<ecs::component::Type>();
-                _reg.registerComponent<ecs::component::Life>();
-            };
-
-            virtual void addComponentsToEntities() override {
-                ecs::SparseArray<ecs::component::Position> &positions = _reg.getComponents<ecs::component::Position>();
-                ecs::SparseArray<ecs::component::Velocity> &velocities = _reg.getComponents<ecs::component::Velocity>();
-                ecs::SparseArray<ecs::component::Drawable> &drawables = _reg.getComponents<ecs::component::Drawable>();
-                ecs::SparseArray<ecs::component::Controllable> &controllables = _reg.getComponents<ecs::component::Controllable>();
-                ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
-                ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
-
-                positions.insertAt(_stringToEntity["player"], ecs::component::Position{100, 100});
-                velocities.insertAt(_stringToEntity["player"], ecs::component::Velocity{0, 0});
-                controllables.insertAt(_stringToEntity["player"], ecs::component::Controllable{});
-                drawables.insertAt(_stringToEntity["player"], ecs::component::Drawable{"../assets/r-typesheet39.gif"});
-                types.insertAt(_stringToEntity["player"], ecs::component::Type{ecs::entityType::PLAYER});
-                lives.insertAt(_stringToEntity["player"], ecs::component::Life{3});
-
-                positions.insertAt(_stringToEntity["movableEntity1"], ecs::component::Position{1500, 700});
-                velocities.insertAt(_stringToEntity["movableEntity1"], ecs::component::Velocity{-0.4f, 0});
-                controllables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Controllable{false});
-                drawables.insertAt(_stringToEntity["movableEntity1"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity1"], ecs::component::Type{ecs::entityType::ENEMY});
-                lives.insertAt(_stringToEntity["movableEntity1"], ecs::component::Life{1});
-
-                positions.insertAt(_stringToEntity["movableEntity2"], ecs::component::Position{1800, 300});
-                velocities.insertAt(_stringToEntity["movableEntity2"], ecs::component::Velocity{-0.3f, 0});
-                drawables.insertAt(_stringToEntity["movableEntity2"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity2"], ecs::component::Type{ecs::entityType::ENEMY});
-                lives.insertAt(_stringToEntity["movableEntity2"], ecs::component::Life{1});
-
-                positions.insertAt(_stringToEntity["movableEntity3"], ecs::component::Position{1000, 300});
-                velocities.insertAt(_stringToEntity["movableEntity3"], ecs::component::Velocity{-0.3f, 0});
-                drawables.insertAt(_stringToEntity["movableEntity3"], ecs::component::Drawable{"../assets/r-typesheet30a.gif"});
-                types.insertAt(_stringToEntity["movableEntity3"], ecs::component::Type{ecs::entityType::ENEMY});
-                lives.insertAt(_stringToEntity["movableEntity3"], ecs::component::Life{1});
-            };
-
-            virtual void addSystemsToRegister() override {
-                _reg.addSystem(ecs::system::ControlSystem());
-                _reg.addSystem(ecs::system::PositionSystem());
-                _reg.addSystem(ecs::system::CollisionSystem());
-                _reg.addSystem(ecs::system::LifeSystem());
-                _reg.addSystem(ecs::system::FiringSystem());
-                _reg.addSystem(ecs::system::DrawSystem());
-            };
-
-            ecs::Registry &getRegister() override {
-                return _reg;
-            }
+            void spawnEntities() override;
+            void registerComponents() override;
+            void addComponentsToEntities() override;
+            void addSystemsToRegister() override;
+            ecs::Registry &getRegister() override;
+            std::string &getGameName() override;
     };
 }
 

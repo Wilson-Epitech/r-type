@@ -34,7 +34,7 @@ namespace ecs
                     _indexToEntities[_aliveEntities] = entity;
                 }
                 return entity;
-            }
+            };
 
             void killEntity(entity_t const &e) {
                 for (auto &it : _eraseEntity) {
@@ -52,15 +52,15 @@ namespace ecs
             entity_t entityFromIndex(std::size_t idx) {
                 auto it = _indexToEntities.find(idx);
                 if (it == _indexToEntities.end())
-                    throw Error("no entity found at this index");
+                    throw Error("No entity found at this index");
                 return it->second;
-            }
+            };
 
             template <typename Component>
             void removeComponent(entity_t const &from) {
                 SparseArray<Component> &component = getComponents<Component>();
                 component.erase(from);
-            }
+            };
 
             template <class Component>
             SparseArray<Component> &registerComponent() {
@@ -99,13 +99,13 @@ namespace ecs
             template <class... Components, typename Function>
             void addSystem(Function const &f) {
                 _systems.push_back(f);
-            }
+            };
 
             void runSystems() {
                 for (std::size_t i = 0; i < _systems.size(); i++) {
                     _systems[i](*this);
                 }
-            }
+            };
 
         private:
             std::size_t _aliveEntities = 0;
