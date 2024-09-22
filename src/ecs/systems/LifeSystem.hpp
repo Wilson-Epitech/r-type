@@ -23,7 +23,7 @@ namespace ecs
                 ~LifeSystem() = default;
                 void operator()(Registry &reg) override
                 {
-                    SparseArray<component::Lives> &lives = reg.getComponents<component::Lives>();
+                    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
 
                     for (std::size_t i = 0; i < lives.size(); ++i) {
                         if (lives[i]) {
