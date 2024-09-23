@@ -7,14 +7,6 @@
 
 #include "GameEngine.hpp"
 
-GameEngine::GameEngine(ecs::Registry &reg, std::string &gameName) : _reg(reg)
-{
-    SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
-    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, gameName.c_str());
-    MaximizeWindow();
-}
-
 void GameEngine::run()
 {
     SetTargetFPS(FPS_LIMIT);
@@ -24,5 +16,7 @@ void GameEngine::run()
         EndDrawing();
         DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
         _reg.runSystems();
+        if (_gameState(_reg) != game::GameStatus::PLAYING)
+            CloseWindow();
     }
 }

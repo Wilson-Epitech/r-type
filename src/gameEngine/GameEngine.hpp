@@ -10,7 +10,9 @@
 
     #include "Registry.hpp"
     #include "Components.hpp"
+    #include "IGame.hpp"
     #include <raylib.h>
+    #include <functional>
 
     #define SCREEN_WIDTH 1920
     #define SCREEN_HEIGHT 1080
@@ -21,13 +23,22 @@
 class GameEngine
 {
     public:
-        GameEngine(ecs::Registry &reg, std::string &gameName);
+        template <typename Function>
+        GameEngine(ecs::Registry &reg, std::string &gameName,
+            Function const &gameState) : _reg(reg), _gameState(gameState)
+        {
+            SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
+            SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+            InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, gameName.c_str());
+            MaximizeWindow();
+        }
         ~GameEngine() = default;
 
         void run();
 
     private:
         ecs::Registry _reg;
+        std::function <game::GameStatus (ecs::Registry &)> _gameState;
 };
 
 #endif /* !GAMEENGINE_HPP_ */

@@ -109,3 +109,30 @@ std::string &game::RTypeGame::getGameName()
 {
     return _gameName;
 }
+
+game::GameStatus game::RTypeGame::gameState(ecs::Registry &reg)
+{
+    ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
+    ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+    entity_t entity = _stringToEntity[PLAYER_NAME];
+    game::GameStatus status = game::GameStatus::WON;
+
+    if (!lives[entity]) {
+        status = game::GameStatus::LOOSE;
+        return status;
+    }
+    for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
+        if (lives[i] && types[i]) {
+           if (types[i]->type == ecs::EntityType::ENEMY) {
+                status = game::GameStatus::PLAYING;
+                break;
+           }
+        }
+    }
+    return status;
+}
+
+game::GameStatus game::RTypeGame::operator()(ecs::Registry &reg)
+{
+    return gameState(reg);
+}

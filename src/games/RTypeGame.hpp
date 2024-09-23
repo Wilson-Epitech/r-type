@@ -25,6 +25,8 @@ namespace game
             RTypeGame(const std::string gameName = "R-Type");
             ~RTypeGame() = default;
 
+            GameStatus operator()(ecs::Registry &reg) override;
+            GameStatus gameState(ecs::Registry &reg) override;
             void spawnEntities() override;
             void registerComponents() override;
             void addComponentsToEntities() override;
