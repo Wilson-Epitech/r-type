@@ -92,7 +92,7 @@ void game::RTypeGame::addComponentsToEntities()
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
     drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{BACKGROUND_PATH, 1, 0, 0.625, true});
 
-    enemySpawnes.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, 1, 3, 1930, 1920, 1070, 10});
+    enemySpawnes.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, 3, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, 1, 1930, 1920, 1070, 10});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0.0});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
 }

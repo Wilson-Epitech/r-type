@@ -58,10 +58,10 @@ namespace ecs
 
         struct EnemySpawn {
             std::string spritePath;
+            float timeBeforeSpawn;
             std::size_t patternNb = 1;
             std::size_t firstPattern = 0;
             float scaleFactor = 1.0;
-            float timeBeforeSpawn;
             int maxSpawnWidth = SCREEN_WIDTH;
             int minSpawnWidth = 0;
             int maxSpawnHeight = SCREEN_HEIGHT;
