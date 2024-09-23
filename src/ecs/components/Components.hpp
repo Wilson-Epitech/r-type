@@ -45,7 +45,7 @@ namespace ecs
         };
 
         struct Velocity {
-            float vx, vy;
+            float vx, vy, possibleVelocity = 0;
         };
 
         struct Type {
