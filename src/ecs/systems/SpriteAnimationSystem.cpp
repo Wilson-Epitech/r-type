@@ -7,8 +7,6 @@
 
 #include "SpriteAnimationSystem.hpp"
 
-#define SPRITE_UPDATE_TIME 0.1
-
 void ecs::system::SpriteAnimationSystem::operator()(Registry &reg)
 {
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
