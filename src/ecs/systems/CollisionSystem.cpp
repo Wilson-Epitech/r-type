@@ -43,9 +43,9 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
         float(drawables[index]->spriteRect.width), float(drawables[index]->spriteRect.height)};
 }
 
-bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::entityType &firstType,
-    ecs::entityType &secondType)
+bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::EntityType &firstType,
+    ecs::EntityType &secondType)
 {
-    return (firstType == ecs::entityType::PLAYER && secondType == ecs::entityType::PLAYERSHOT ||
-        firstType == ecs::entityType::PLAYERSHOT && secondType == ecs::entityType::PLAYER);
+    return (firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT ||
+        firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER);
 }

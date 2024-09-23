@@ -41,6 +41,6 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg)
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
     drawables.insertAt(entity, ecs::component::Drawable{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
-    types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
+    types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
 }

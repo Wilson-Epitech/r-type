@@ -14,7 +14,7 @@
 
 namespace ecs
 {
-    enum entityType {
+    enum EntityType {
         PLAYER,
         PLAYERSHOT,
         ENEMY
@@ -45,7 +45,7 @@ namespace ecs
         };
 
         struct Type {
-            ecs::entityType type;
+            ecs::EntityType type;
         };
 
         struct Life {
