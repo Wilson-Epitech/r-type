@@ -54,7 +54,7 @@ void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, co
     int posX = 0;
     int posY = 0;
     int nbrRepeatX = getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH);
-    
+
     changeBackgroundPos(velocities, drawables, positions);
     for (int i = 0; i < getNbrRepeatBackground(drawables, spriteHeight, SCREEN_HEIGHT); i++) {
         for (int k = 0; k < nbrRepeatX; k++) {
