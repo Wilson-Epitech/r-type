@@ -30,17 +30,35 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg)
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    std::pair<ecs::component::PlayerShoot, ecs::component::Velocity> playerShootAndVelocities = getPlayerShoot(reg);
+    ecs::component::PlayerShoot playerShoot = playerShootAndVelocities.first;
+    ecs::component::Velocity playerShootVelocities = playerShootAndVelocities.second;
     entity_t entity = reg.spawnEntity();
-    Texture2D shotTexture = LoadTexture(PLAYERSHOT_PATH);
-    float offset = float(shotTexture.width)/PLAYERSHOT_SPRITE_NB_PATTERN;
+    Texture2D shotTexture = LoadTexture(playerShoot.spritePath.c_str());
+    float offset = float(shotTexture.width)/playerShoot.patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
     float shotX = positions[playerIndex]->x + float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width);
     float shotY = positions[playerIndex]->y + (float(drawables[playerIndex]->spriteRect.height)/2 -
         float(drawables[playerIndex]->spriteRect.height)/3) + (float(shotSpriteRect.height)/2);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
-    drawables.insertAt(entity, ecs::component::Drawable{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
+    velocities.insertAt(entity, ecs::component::Velocity(playerShootVelocities));
+    drawables.insertAt(entity, ecs::component::Drawable{playerShoot.spritePath.c_str(), playerShoot.patternNb, playerShoot.firstPattern, playerShoot.scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
+}
+
+std::pair<ecs::component::PlayerShoot, ecs::component::Velocity> ecs::system::FiringSystem::getPlayerShoot(Registry &reg)
+{
+    SparseArray<component::PlayerShoot> &playerShoot = reg.getComponents<component::PlayerShoot>();
+    SparseArray<component::Velocity> &playerShootVelocities = reg.getComponents<component::Velocity>();
+
+    for (std::size_t i = 0; i < playerShoot.size() && i < playerShootVelocities.size(); ++i) {
+        if (playerShoot[i] && playerShootVelocities[i]) {
+            if (playerShoot[i]->spritePath.length() > 0) {
+                return {*playerShoot[i], *playerShootVelocities[i]};
+            }
+        }
+    }
+    throw Error("Component PlayerShoot not found have you initialized it ?");
 }

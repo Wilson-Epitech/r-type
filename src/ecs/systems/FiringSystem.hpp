@@ -26,6 +26,7 @@ namespace ecs
                 void operator()(Registry &reg) override;
             private:
                 void addShot(std::size_t index, Registry &reg);
+                std::pair<component::PlayerShoot,component::Velocity> getPlayerShoot(Registry &reg);
         };
     }
 }
