@@ -23,7 +23,7 @@ namespace ecs
 
                 void operator()(Registry &reg) override;
             private:
-                void createNewEnemy(component::EnemySpawn enemySpawn, component::Velocity enemyVelocities, component::Life enemyLives, Registry &reg);
+                void createNewEnemy(component::EnemySpawn enemySpawn, component::Velocity enemyVelocities, component::Life enemyLives, component::SpriteInfos enemySpriteInfos, Registry &reg);
         };
     }
 }
