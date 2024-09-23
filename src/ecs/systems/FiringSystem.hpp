@@ -10,7 +10,7 @@
 
     #include "ISystem.hpp"
     #include "Components.hpp"
-    #include "AssetsPath.hpp"
+    #include "Assets.hpp"
     #include <iostream>
 
 namespace ecs

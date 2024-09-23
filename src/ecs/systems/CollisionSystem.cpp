@@ -40,7 +40,7 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
     SparseArray<component::Drawable> &drawables, std::size_t index)
 {
     return Rectangle {positions[index]->x, positions[index]->y,
-        float(drawables[index]->spriteTexture.width), float(drawables[index]->spriteTexture.height)};
+        float(drawables[index]->spriteRect.width), float(drawables[index]->spriteRect.height)};
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::entityType &firstType,

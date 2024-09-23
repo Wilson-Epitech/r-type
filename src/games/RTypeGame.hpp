@@ -15,11 +15,7 @@
     #include "LifeSystem.hpp"
     #include "DrawSystem.hpp"
     #include "FiringSystem.hpp"
-
-    #define PLAYER_NAME "player"
-    #define FIRST_ENEMY_NAME "enemy1"
-    #define SECOND_ENEMY_NAME "enemy2"
-    #define THIRD_ENEMY_NAME "enemy3"
+    #include "SpriteAnimationSystem.hpp"
 
 namespace game
 {

@@ -24,8 +24,12 @@ namespace ecs
     {
         struct Drawable {
             std::string spritePath;
-            Texture2D spriteTexture;
+            std::size_t patternNb = 1;
+            std::size_t firstPattern = 0;
+            float scaleFactor = 1.0;
             bool isLoaded = false;
+            Texture2D spriteTexture;
+            Rectangle spriteRect;
         };
 
         struct Controllable {

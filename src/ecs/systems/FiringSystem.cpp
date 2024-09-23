@@ -32,7 +32,7 @@ void ecs::system::FiringSystem::addShot(entity_t entity, float x, float y, Regis
 
     positions.insertAt(entity, ecs::component::Position{x, y});
     velocities.insertAt(entity, ecs::component::Velocity{3.0f, 0});
-    drawables.insertAt(entity, ecs::component::Drawable{TMP_PLAYERSHOT_PATH});
+    drawables.insertAt(entity, ecs::component::Drawable{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
     types.insertAt(entity, ecs::component::Type{ecs::entityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
 }
