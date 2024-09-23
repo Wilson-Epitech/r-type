@@ -10,12 +10,21 @@
 
 namespace game
 {
+    enum GameStatus
+    {
+        PLAYING,
+        WON,
+        LOOSE
+    };
+
     class IGame
     {
         public:
             IGame() = default;
             ~IGame() = default;
 
+            virtual GameStatus operator()(ecs::Registry &reg) = 0;
+            virtual GameStatus gameState(ecs::Registry &reg) = 0;
             virtual void initializeGame() = 0;
             virtual void spawnEntities() = 0;
             virtual void registerComponents() = 0;
