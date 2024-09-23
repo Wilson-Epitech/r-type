@@ -8,6 +8,7 @@
 #include "RTypeGame.hpp"
 
 #define PLAYER_NAME "player"
+#define BACKGROUND_NAME "background"
 #define FIRST_ENEMY_NAME "enemy1"
 #define SECOND_ENEMY_NAME "enemy2"
 #define THIRD_ENEMY_NAME "enemy3"
@@ -29,6 +30,7 @@ game::RTypeGame::RTypeGame(const std::string gameName) : AGame(gameName)
 
 void game::RTypeGame::spawnEntities()
 {
+    _stringToEntity[BACKGROUND_NAME] =  _reg.spawnEntity();
     _stringToEntity[PLAYER_NAME] =  _reg.spawnEntity();
     _stringToEntity[FIRST_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[SECOND_ENEMY_NAME] =  _reg.spawnEntity();
@@ -81,6 +83,10 @@ void game::RTypeGame::addComponentsToEntities()
     drawables.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Drawable{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
     types.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
     lives.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Life{1});
+
+    positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
+    velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
+    drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{BACKGROUND_PATH, 1, 0, 0.625, true});
 }
 
 void game::RTypeGame::addSystemsToRegister()
