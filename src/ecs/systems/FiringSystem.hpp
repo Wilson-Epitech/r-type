@@ -25,7 +25,7 @@ namespace ecs
 
                 void operator()(Registry &reg) override;
             private:
-                void addShot(entity_t entity, float x, float y, Registry &reg);
+                void addShot(std::size_t index, Registry &reg);
         };
     }
 }
