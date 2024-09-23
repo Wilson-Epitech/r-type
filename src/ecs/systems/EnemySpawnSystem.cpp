@@ -15,8 +15,6 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
     static double time0 = GetTime();
     double time1 = GetTime();
     double timeElapsed = time1 - time0;
-    float offset = 0.0;
-    float firstPatternLocation = 0.0;
     float spawnInterval = 0;
 
     for (std::size_t i = 0; i < enemySpawn.size() && i < enemyVelocities.size() && i < enemyLives.size(); ++i) {

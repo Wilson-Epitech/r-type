@@ -22,7 +22,19 @@
 #define SECOND_ENEMY_SPRITE_FIRST_PATTERN 0
 
 #define PLAYER_SPRITE_SCALE_FACTOR 2.3
-#define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.0
+#define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.07
+
+#define MAX_SPAWN_HEIGHT 1070
+#define MIN_SPAWN_HEIGHT 10
+#define MAX_SPAWN_WIDTH 1930
+#define MIN_SPAWN_WIDTH 1920
+#define ENEMY_LIVES 1
+#define TIME_BEFORE_SPAWN_ENEMY 3
+#define ENEMY_VX -0.4
+#define ENEMY_VY 0.0
+
+
+//FIRST_ENEMY_PATH, TIME_BEFORE_SPAWN_ENEMY, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_LIVES, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT
 
 game::RTypeGame::RTypeGame(const std::string gameName) : AGame(gameName)
 {
@@ -58,7 +70,7 @@ void game::RTypeGame::addComponentsToEntities()
     ecs::SparseArray<ecs::component::Controllable> &controllables = _reg.getComponents<ecs::component::Controllable>();
     ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
-    ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawnes = _reg.getComponents<ecs::component::EnemySpawn>();
+    ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
 
     positions.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Position{100, 100});
     velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0});
@@ -92,8 +104,9 @@ void game::RTypeGame::addComponentsToEntities()
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
     drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{BACKGROUND_PATH, 1, 0, 0.625, true});
 
-    enemySpawnes.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, 3, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, 1, 1930, 1920, 1070, 10});
-    velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0.0});
+    enemySpawns.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, TIME_BEFORE_SPAWN_ENEMY,
+        FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_LIVES, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+    velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
 }
 
