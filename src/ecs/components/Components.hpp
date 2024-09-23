@@ -27,6 +27,7 @@ namespace ecs
             std::size_t patternNb = 1;
             std::size_t firstPattern = 0;
             float scaleFactor = 1.0;
+            bool isBackground = false;
             bool isLoaded = false;
             Texture2D spriteTexture;
             Rectangle spriteRect;

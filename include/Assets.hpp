@@ -13,6 +13,7 @@
 #define PLAYERSHOT_PATH "../assets/r-typesheet30a.gif"
 #define FIRST_ENEMY_PATH "../assets/r-typesheet17.gif"
 #define SECOND_ENEMY_PATH "../assets/r-typesheet3.gif"
+#define BACKGROUND_PATH "../assets/background.png"
 
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3
 
