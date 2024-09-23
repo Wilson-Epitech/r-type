@@ -11,7 +11,7 @@ void ecs::system::DrawSystem::operator()(Registry &reg)
 {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
-    SparseArray<component::Velocity> &velocity = reg.getComponents<component::Velocity>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
 
     loadTextures(drawables);
     for (std::size_t i = 0; i < drawables.size() && i < positions.size(); ++i) {
@@ -22,7 +22,7 @@ void ecs::system::DrawSystem::operator()(Registry &reg)
                     drawables[i]->spriteRect.height * drawables[i]->scaleFactor};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
             } else if (drawables[i]->isLoaded && drawables[i]->isBackground) {
-                drawBackground(*velocity[i], *drawables[i], *positions[i]);
+                drawBackground(*velocities[i], *drawables[i], *positions[i]);
             }
         }
     }
@@ -46,24 +46,24 @@ void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &dra
     }
 }
 
-void ecs::system::DrawSystem::drawBackground(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions)
+void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions)
 {
-    Vector2 backgroundNewPos;
+    Vector2 backgroundNewPos = {positions.x, positions.y};
     int posX = 0;
     int posY = 0;
     float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
     float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
 
-    changeBackgroundPos(velocity, drawables, positions);
-    for (int i = 0; i < getNbrRepeatBackgroundY(drawables); i++) {
-        for (int k = 0; k < getNbrRepeatBackgroundX(drawables); k++) {
+    changeBackgroundPos(velocities, drawables, positions);
+    for (int i = 0; i < getNbrRepeatBackground(drawables, spriteHeight, SCREEN_HEIGHT); i++) {
+        for (int k = 0; k < getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH); k++) {
             backgroundNewPos = {positions.x, positions.y};
-            for (int j = 0; j < getNbrRepeatBackgroundX(drawables); j++) {
+            for (int j = 0; j < getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH); j++) {
                 Rectangle destRec = {backgroundNewPos.x + posX, backgroundNewPos.y + posY,
                     drawables.spriteRect.width * drawables.scaleFactor,
                     drawables.spriteRect.height * drawables.scaleFactor};
                 DrawTexturePro(drawables.spriteTexture, drawables.spriteRect, destRec, {0, 0}, 0, RAYWHITE);
-                backgroundNewPos = changeNewBackgroundPos(velocity, drawables, positions, j);
+                backgroundNewPos = changeNewBackgroundPos(velocities, drawables, positions, j);
             }
             posX += spriteWidth;
         }
@@ -72,67 +72,53 @@ void ecs::system::DrawSystem::drawBackground(component::Velocity &velocity, comp
     }
 }
 
-int ecs::system::DrawSystem::getNbrRepeatBackgroundX(component::Drawable &drawables)
+int ecs::system::DrawSystem::getNbrRepeatBackground(component::Drawable &drawables, float spriteSize, int screenSize)
 {
-    float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
     int result = 0;
     float totalSize = 0;
 
-    while (totalSize < SCREEN_WIDTH) {
-        totalSize += spriteWidth;
+    while (totalSize < screenSize) {
+        totalSize += spriteSize;
         result += 1;
     }
     return result + 1;
 }
 
-int ecs::system::DrawSystem::getNbrRepeatBackgroundY(component::Drawable &drawables)
-{
-    float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
-    int result = 0;
-    float totalSize = 0;
-
-    while (totalSize < SCREEN_HEIGHT) {
-        totalSize += spriteHeight;
-        result += 1;
-    }
-    return result + 1;
-}
-
-Vector2 ecs::system::DrawSystem::changeNewBackgroundPos(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions, int i)
+Vector2 ecs::system::DrawSystem::changeNewBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, int i)
 {
     float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
     float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
     Vector2 backgroundNewPos = {0, 0};
 
-    if (velocity.vx > 0.000) {
+    if (velocities.vx > 0.000) {
         backgroundNewPos.x = positions.x - spriteWidth * (i + 1);
-    } else if (velocity.vx < 0.000) {
+    } else if (velocities.vx < 0.000) {
         backgroundNewPos.x = positions.x + spriteWidth * (i + 1);
     }
-    if (velocity.vy > 0.000) {
+    if (velocities.vy > 0.000) {
         backgroundNewPos.y = positions.y - spriteHeight * (i + 1);
-    } else if (velocity.vy < 0.000) {
+    } else if (velocities.vy < 0.000) {
         backgroundNewPos.y = positions.y + spriteHeight * (i + 1);
     }
 
     return backgroundNewPos;
 }
 
-void ecs::system::DrawSystem::changeBackgroundPos(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions)
+void ecs::system::DrawSystem::changeBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions)
 {
     float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
     float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
 
-    if (velocity.vx < 0.000 && positions.x + spriteWidth <= 1) {
+    if (velocities.vx < 0.000 && positions.x + spriteWidth <= 1) {
         positions.x = positions.x + spriteWidth;
     }
-    if (velocity.vx > 0.000 && positions.x >= SCREEN_WIDTH) {
+    if (velocities.vx > 0.000 && positions.x >= SCREEN_WIDTH) {
         positions.x = SCREEN_WIDTH - spriteWidth;
     }
-    if (velocity.vy < 0.000 && positions.y + spriteHeight <= 1) {
+    if (velocities.vy < 0.000 && positions.y + spriteHeight <= 1) {
         positions.y = positions.y + spriteHeight;
     }
-    if (velocity.vy > 0.000 && positions.y >= SCREEN_HEIGHT) {
+    if (velocities.vy > 0.000 && positions.y >= SCREEN_HEIGHT) {
         positions.y = SCREEN_HEIGHT - spriteHeight;
     }
 }

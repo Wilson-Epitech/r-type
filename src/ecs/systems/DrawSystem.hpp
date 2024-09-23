@@ -27,11 +27,10 @@ namespace ecs
                 void operator()(Registry &reg) override;
             private:
                 void loadTextures(SparseArray<component::Drawable> &drawables);
-                void drawBackground(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions);
-                void changeBackgroundPos(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions);
-                Vector2 changeNewBackgroundPos(component::Velocity &velocity, component::Drawable &drawables, component::Position &positions, int i);
-                int getNbrRepeatBackgroundX(component::Drawable &drawables);
-                int getNbrRepeatBackgroundY(component::Drawable &drawables);
+                void drawBackground(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions);
+                void changeBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions);
+                Vector2 changeNewBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, int i);
+                int getNbrRepeatBackground(component::Drawable &drawables, float spriteSize, int screenSize);
         };
     }
 }
