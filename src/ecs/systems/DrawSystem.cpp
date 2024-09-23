@@ -53,12 +53,13 @@ void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, co
     float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
     int posX = 0;
     int posY = 0;
-
+    int nbrRepeatX = getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH);
+    
     changeBackgroundPos(velocities, drawables, positions);
     for (int i = 0; i < getNbrRepeatBackground(drawables, spriteHeight, SCREEN_HEIGHT); i++) {
-        for (int k = 0; k < getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH); k++) {
+        for (int k = 0; k < nbrRepeatX; k++) {
             backgroundNewPos = {positions.x, positions.y};
-            for (int j = 0; j < getNbrRepeatBackground(drawables, spriteWidth, SCREEN_WIDTH); j++) {
+            for (int j = 0; j < nbrRepeatX; j++) {
                 Rectangle destRec = {backgroundNewPos.x + posX, backgroundNewPos.y + posY,
                     drawables.spriteRect.width * drawables.scaleFactor,
                     drawables.spriteRect.height * drawables.scaleFactor};
