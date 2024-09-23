@@ -13,6 +13,7 @@
 #define FIRST_ENEMY_NAME "enemy1"
 #define SECOND_ENEMY_NAME "enemy2"
 #define THIRD_ENEMY_NAME "enemy3"
+#define PLAYER_SHOOT "player_shoot"
 
 #define PLAYER_SPRITE_NB_PATTERN 16
 #define FIRST_ENEMY_SPRITE_NB_PATTERN 8
@@ -46,6 +47,7 @@ void game::RTypeGame::spawnEntities()
     _stringToEntity[SECOND_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[THIRD_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[SPAWN_ENEMY_NAME] =  _reg.spawnEntity();
+    _stringToEntity[PLAYER_SHOOT] =  _reg.spawnEntity();
 }
 
 void game::RTypeGame::registerComponents()
@@ -57,6 +59,7 @@ void game::RTypeGame::registerComponents()
     _reg.registerComponent<ecs::component::Type>();
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
+    _reg.registerComponent<ecs::component::PlayerShoot>();
 }
 
 void game::RTypeGame::addComponentsToEntities()
@@ -68,6 +71,7 @@ void game::RTypeGame::addComponentsToEntities()
     ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
+    ecs::SparseArray<ecs::component::PlayerShoot> &playerShoot = _reg.getComponents<ecs::component::PlayerShoot>();
 
     positions.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Position{100, 100});
     velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0});
@@ -105,6 +109,9 @@ void game::RTypeGame::addComponentsToEntities()
         FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
+
+    velocities.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Velocity{10, 0});
+    playerShoot.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::PlayerShoot{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
 }
 
 void game::RTypeGame::addSystemsToRegister()

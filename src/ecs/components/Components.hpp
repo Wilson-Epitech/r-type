@@ -67,6 +67,13 @@ namespace ecs
             int maxSpawnHeight = SCREEN_HEIGHT;
             int minSpawnHeight = 0;
         };
+
+        struct PlayerShoot {
+            std::string spritePath;
+            std::size_t patternNb = 1;
+            std::size_t firstPattern = 0;
+            float scaleFactor = 1.0;
+        };
     }
 }
 
