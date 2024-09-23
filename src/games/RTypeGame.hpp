@@ -16,6 +16,7 @@
     #include "DrawSystem.hpp"
     #include "FiringSystem.hpp"
     #include "SpriteAnimationSystem.hpp"
+    #include "EnemySpawnSystem.hpp"
 
 namespace game
 {

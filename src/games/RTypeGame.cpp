@@ -9,6 +9,7 @@
 
 #define PLAYER_NAME "player"
 #define BACKGROUND_NAME "background"
+#define SPAWN_ENEMY_NAME "enemy"
 #define FIRST_ENEMY_NAME "enemy1"
 #define SECOND_ENEMY_NAME "enemy2"
 #define THIRD_ENEMY_NAME "enemy3"
@@ -35,6 +36,7 @@ void game::RTypeGame::spawnEntities()
     _stringToEntity[FIRST_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[SECOND_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[THIRD_ENEMY_NAME] =  _reg.spawnEntity();
+    _stringToEntity[SPAWN_ENEMY_NAME] =  _reg.spawnEntity();
 }
 
 void game::RTypeGame::registerComponents()
@@ -45,6 +47,7 @@ void game::RTypeGame::registerComponents()
     _reg.registerComponent<ecs::component::Controllable>();
     _reg.registerComponent<ecs::component::Type>();
     _reg.registerComponent<ecs::component::Life>();
+    _reg.registerComponent<ecs::component::EnemySpawn>();
 }
 
 void game::RTypeGame::addComponentsToEntities()
@@ -55,6 +58,7 @@ void game::RTypeGame::addComponentsToEntities()
     ecs::SparseArray<ecs::component::Controllable> &controllables = _reg.getComponents<ecs::component::Controllable>();
     ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
+    ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawnes = _reg.getComponents<ecs::component::EnemySpawn>();
 
     positions.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Position{100, 100});
     velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0});
@@ -87,6 +91,10 @@ void game::RTypeGame::addComponentsToEntities()
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
     drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{BACKGROUND_PATH, 1, 0, 0.625, true});
+
+    enemySpawnes.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, 1, 3, 1930, 1920, 1070, 10});
+    velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0.0});
+    lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
 }
 
 void game::RTypeGame::addSystemsToRegister()
@@ -96,6 +104,7 @@ void game::RTypeGame::addSystemsToRegister()
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::FiringSystem());
+    _reg.addSystem(ecs::system::EnemySpawnSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
 }

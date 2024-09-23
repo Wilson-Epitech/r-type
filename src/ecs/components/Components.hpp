@@ -52,6 +52,18 @@ namespace ecs
         struct Life {
             std::size_t nbLives;
         };
+
+        struct EnemySpawn {
+            std::string spritePath;
+            std::size_t patternNb = 1;
+            std::size_t firstPattern = 0;
+            float scaleFactor = 1.0;
+            float timeBeforeSpawn;
+                int maxSpawnWidth = 1920;
+                int minSpawnWidth = 0;
+                int maxSpawnHeight = 1080;
+                int minSpawnHeight = 0;
+        };
     }
 }
 
