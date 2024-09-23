@@ -12,6 +12,9 @@
     #include <memory>
     #include <raylib.h>
 
+    #define SCREEN_WIDTH 1920
+    #define SCREEN_HEIGHT 1080
+
 namespace ecs
 {
     enum EntityType {
@@ -51,6 +54,18 @@ namespace ecs
 
         struct Life {
             std::size_t nbLives;
+        };
+
+        struct EnemySpawn {
+            std::string spritePath;
+            float timeBeforeSpawn;
+            std::size_t patternNb = 1;
+            std::size_t firstPattern = 0;
+            float scaleFactor = 1.0;
+            int maxSpawnWidth = SCREEN_WIDTH;
+            int minSpawnWidth = 0;
+            int maxSpawnHeight = SCREEN_HEIGHT;
+            int minSpawnHeight = 0;
         };
     }
 }
