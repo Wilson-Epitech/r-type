@@ -16,22 +16,16 @@ void ecs::system::ControlSystem::operator()(Registry &reg)
         if (controllables[i] && velocities[i]) {
             if (!controllables[i]->isControllable)
                 continue;
-            if (IsKeyDown(KEY_UP)) {
-                velocities[i]->vx = 0;
+            velocities[i]->vx = 0;
+            velocities[i]->vy = 0;
+            if (IsKeyDown(KEY_UP))
                 velocities[i]->vy = -velocities[i]->possibleVelocity;
-            } else if (IsKeyDown(KEY_DOWN)) {
-                velocities[i]->vx = 0;
+            if (IsKeyDown(KEY_DOWN))
                 velocities[i]->vy = velocities[i]->possibleVelocity;
-            } else if (IsKeyDown(KEY_LEFT)) {
+            if (IsKeyDown(KEY_LEFT))
                 velocities[i]->vx = -velocities[i]->possibleVelocity;
-                velocities[i]->vy = 0;
-            } else if (IsKeyDown(KEY_RIGHT)) {
+            if (IsKeyDown(KEY_RIGHT))
                 velocities[i]->vx = velocities[i]->possibleVelocity;
-                velocities[i]->vy = 0;
-            } else {
-                velocities[i]->vx = 0;
-                velocities[i]->vy = 0;
-            }
         }
     }
 }
