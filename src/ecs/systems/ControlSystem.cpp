@@ -18,15 +18,15 @@ void ecs::system::ControlSystem::operator()(Registry &reg)
                 continue;
             if (IsKeyDown(KEY_UP)) {
                 velocities[i]->vx = 0;
-                velocities[i]->vy = NEGATIVE_VELOCITY;
+                velocities[i]->vy = -velocities[i]->possibleVelocity;
             } else if (IsKeyDown(KEY_DOWN)) {
                 velocities[i]->vx = 0;
-                velocities[i]->vy = POSITIVE_VELOCITY;
+                velocities[i]->vy = velocities[i]->possibleVelocity;
             } else if (IsKeyDown(KEY_LEFT)) {
-                velocities[i]->vx = NEGATIVE_VELOCITY;
+                velocities[i]->vx = -velocities[i]->possibleVelocity;
                 velocities[i]->vy = 0;
             } else if (IsKeyDown(KEY_RIGHT)) {
-                velocities[i]->vx = POSITIVE_VELOCITY;
+                velocities[i]->vx = velocities[i]->possibleVelocity;
                 velocities[i]->vy = 0;
             } else {
                 velocities[i]->vx = 0;

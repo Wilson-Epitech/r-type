@@ -11,9 +11,6 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
-    #define NEGATIVE_VELOCITY -5
-    #define POSITIVE_VELOCITY 5
-
 namespace ecs
 {
     namespace system

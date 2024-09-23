@@ -11,6 +11,8 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
+    #define SPRITE_UPDATE_TIME 0.1
+
 namespace ecs
 {
     namespace system
