@@ -23,12 +23,12 @@
 
 #define PLAYER_SPRITE_SCALE_FACTOR 2.3
 #define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.0
+#define ENEMY_SCALE_FACTOR 1
 
 #define MAX_SPAWN_HEIGHT 1070
 #define MIN_SPAWN_HEIGHT 10
 #define MAX_SPAWN_WIDTH 1930
 #define MIN_SPAWN_WIDTH 1920
-#define ENEMY_LIVES 1
 #define TIME_BEFORE_SPAWN_ENEMY 3
 #define ENEMY_VX -0.4
 #define ENEMY_VY 0.0
@@ -102,7 +102,7 @@ void game::RTypeGame::addComponentsToEntities()
     drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{BACKGROUND_PATH, 1, 0, 0.625, true});
 
     enemySpawns.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{FIRST_ENEMY_PATH, TIME_BEFORE_SPAWN_ENEMY,
-        FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_LIVES, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+        FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
 }
