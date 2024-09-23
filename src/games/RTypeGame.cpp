@@ -74,7 +74,7 @@ void game::RTypeGame::addComponentsToEntities()
     ecs::SparseArray<ecs::component::PlayerShoot> &playerShoot = _reg.getComponents<ecs::component::PlayerShoot>();
 
     positions.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Position{100, 100});
-    velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0});
+    velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0, 5});
     controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{});
     drawables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Drawable{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN,
         PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
