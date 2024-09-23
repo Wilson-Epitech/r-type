@@ -26,7 +26,7 @@ namespace ecs
             private:
                 Rectangle spriteHitbox(SparseArray<component::Position> &positions,
                     SparseArray<component::Drawable> &drawables, std::size_t index);
-                bool isPlayerAndPlayerShot(ecs::entityType &firstType, ecs::entityType &secondType);
+                bool isPlayerAndPlayerShot(ecs::EntityType &firstType, ecs::EntityType &secondType);
         };
     }
 }

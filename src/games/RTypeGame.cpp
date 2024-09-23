@@ -61,27 +61,27 @@ void game::RTypeGame::addComponentsToEntities()
     controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{});
     drawables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Drawable{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN,
         PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
-    types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::entityType::PLAYER});
+    types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
 
     positions.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Position{1500, 700});
     velocities.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0});
     controllables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Controllable{false});
     drawables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Drawable{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN});
-    types.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
+    types.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Life{1});
 
     positions.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Position{1800, 300});
     velocities.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
     drawables.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Drawable{SECOND_ENEMY_PATH,
         SECOND_ENEMY_SPRITE_NB_PATTERN, SECOND_ENEMY_SPRITE_FIRST_PATTERN, SECOND_ENEMY_SPRITE_SCALE_FACTOR});
-    types.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
+    types.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Life{1});
 
     positions.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Position{1000, 300});
     velocities.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
     drawables.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Drawable{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
-    types.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Type{ecs::entityType::ENEMY});
+    types.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Life{1});
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
