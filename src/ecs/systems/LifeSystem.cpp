@@ -14,7 +14,7 @@ void ecs::system::LifeSystem::operator()(Registry &reg)
     for (std::size_t i = 0; i < lives.size(); ++i) {
         if (lives[i]) {
             if (lives[i]->nbLives == 0) {
-                reg.killEntity(reg.entityFromIndex(i));
+                reg.killEntity(i);
             }
         }
     }
