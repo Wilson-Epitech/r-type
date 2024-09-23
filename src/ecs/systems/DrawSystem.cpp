@@ -49,10 +49,10 @@ void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &dra
 void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions)
 {
     Vector2 backgroundNewPos = {positions.x, positions.y};
+    float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
+    float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
     int posX = 0;
     int posY = 0;
-    float spriteHeight = drawables.spriteTexture.height * drawables.scaleFactor;
-    float spriteWidth = drawables.spriteTexture.width * drawables.scaleFactor;
 
     changeBackgroundPos(velocities, drawables, positions);
     for (int i = 0; i < getNbrRepeatBackground(drawables, spriteHeight, SCREEN_HEIGHT); i++) {
