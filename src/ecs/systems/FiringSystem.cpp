@@ -61,24 +61,26 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg)
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    std::pair<ecs::component::SpriteInfos, ecs::component::Velocity> playerShootAndVelocities = getPlayerShoot(reg);
+    std::size_t playerShootIndex = getPlayerShootIndex(reg);
     entity_t entity = reg.spawnEntity();
-    Texture2D shotTexture = LoadTexture(playerShootAndVelocities.first.spritePath.c_str());
-    float offset = float(shotTexture.width)/playerShootAndVelocities.first.patternNb;
+    Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
+    float offset = float(shotTexture.width)/spriteInfos[playerShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
     float shotX = positions[playerIndex]->x + float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width);
     float shotY = positions[playerIndex]->y + (float(drawables[playerIndex]->spriteRect.height)/2 -
         float(drawables[playerIndex]->spriteRect.height)/3) + (float(shotSpriteRect.height)/2);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity(playerShootAndVelocities.second));
-    spriteInfos.insertAt(entity, ecs::component::SpriteInfos(playerShootAndVelocities.first));
+    velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx,
+        velocities[playerShootIndex]->vy, velocities[playerShootIndex]->possibleVelocity});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[playerShootIndex]->spritePath,
+        spriteInfos[playerShootIndex]->patternNb, spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
 }
 
-std::pair<ecs::component::SpriteInfos, ecs::component::Velocity> ecs::system::FiringSystem::getPlayerShoot(Registry &reg)
+std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg)
 {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Velocity> &playerShootVelocities = reg.getComponents<component::Velocity>();
@@ -87,7 +89,7 @@ std::pair<ecs::component::SpriteInfos, ecs::component::Velocity> ecs::system::Fi
     for (std::size_t i = 0; i < spriteInfos.size() && i < playerShootVelocities.size() && i < types.size(); ++i) {
         if (spriteInfos[i] && playerShootVelocities[i] && types[i]) {
             if (spriteInfos[i]->spritePath.length() > 0 && types[i]->type == ecs::EntityType::PLAYERSHOT) {
-                return {*spriteInfos[i], *playerShootVelocities[i]};
+                return i;
             }
         }
     }

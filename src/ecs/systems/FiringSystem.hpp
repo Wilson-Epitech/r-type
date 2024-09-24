@@ -27,7 +27,7 @@ namespace ecs
                 void operator()(Registry &reg) override;
             private:
                 void addShot(std::size_t index, Registry &reg);
-                std::pair<component::SpriteInfos,component::Velocity> getPlayerShoot(Registry &reg);
+                std::size_t getPlayerShootIndex(Registry &reg);
                 bool IsGamepadTriggerButtonDown(int &gamepad);
                 void playSound(Registry &reg);
         };

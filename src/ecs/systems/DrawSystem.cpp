@@ -24,7 +24,7 @@ void ecs::system::DrawSystem::operator()(Registry &reg)
                     drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
             } else if (drawables[i]->isLoaded && drawables[i]->isBackground) {
-                drawBackground(*velocities[i], *drawables[i], *positions[i], *spriteInfos[i]);
+                drawBackground(velocities, drawables, positions, spriteInfos, i);
             }
         }
     }
@@ -50,26 +50,27 @@ void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &dra
     }
 }
 
-void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos)
+void ecs::system::DrawSystem::drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index)
 {
-    Vector2 backgroundNewPos = {positions.x, positions.y};
-    float spriteWidth = drawables.spriteTexture.width * spriteInfos.scaleFactor;
-    float spriteHeight = drawables.spriteTexture.height * spriteInfos.scaleFactor;
+    Vector2 backgroundNewPos = {positions[index]->x, positions[index]->y};
+    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
+    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
     int posX = 0;
     int posY = 0;
     int nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
     Vector2 screenRatio = Lib::getScreenRatio();
 
-    changeBackgroundPos(velocities, drawables, positions, spriteInfos);
+    changeBackgroundPos(velocities, drawables, positions, spriteInfos, index);
     for (int i = 0; i < getNbrRepeatBackground(spriteHeight, Lib::getScreenHeight()); i++) {
         for (int k = 0; k < nbrRepeatX; k++) {
-            backgroundNewPos = {positions.x, positions.y};
+            backgroundNewPos = {positions[index]->x, positions[index]->y};
             for (int j = 0; j < nbrRepeatX; j++) {
                 Rectangle destRec = {(backgroundNewPos.x + posX) / screenRatio.x, (backgroundNewPos.y + posY) / screenRatio.y,
-                    drawables.spriteRect.width * (spriteInfos.scaleFactor / screenRatio.x),
-                    drawables.spriteRect.height * (spriteInfos.scaleFactor / screenRatio.y)};
-                DrawTexturePro(drawables.spriteTexture, drawables.spriteRect, destRec, {0, 0}, 0, RAYWHITE);
-                backgroundNewPos = changeNewBackgroundPos(velocities, drawables, positions, spriteInfos, j);
+                    drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x),
+                    drawables[index]->spriteRect.height * (spriteInfos[index]->scaleFactor / screenRatio.y)};
+                DrawTexturePro(drawables[index]->spriteTexture, drawables[index]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
+                backgroundNewPos = changeNewBackgroundPos(velocities, drawables, positions, spriteInfos, index, j);
             }
             posX += spriteWidth;
         }
@@ -90,41 +91,43 @@ int ecs::system::DrawSystem::getNbrRepeatBackground(float spriteSize, int screen
     return result + 1;
 }
 
-Vector2 ecs::system::DrawSystem::changeNewBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos, int i)
+Vector2 ecs::system::DrawSystem::changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+                    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index, int j)
 {
-    float spriteWidth = drawables.spriteTexture.width * spriteInfos.scaleFactor;
-    float spriteHeight = drawables.spriteTexture.height * spriteInfos.scaleFactor;
+    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
+    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
     Vector2 backgroundNewPos = {0, 0};
 
-    if (velocities.vx > 0.000) {
-        backgroundNewPos.x = positions.x - spriteWidth * (i + 1);
-    } else if (velocities.vx < 0.000) {
-        backgroundNewPos.x = positions.x + spriteWidth * (i + 1);
+    if (velocities[index]->vx > 0.000) {
+        backgroundNewPos.x = positions[index]->x - spriteWidth * (j + 1);
+    } else if (velocities[index]->vx < 0.000) {
+        backgroundNewPos.x = positions[index]->x + spriteWidth * (j + 1);
     }
-    if (velocities.vy > 0.000) {
-        backgroundNewPos.y = positions.y - spriteHeight * (i + 1);
-    } else if (velocities.vy < 0.000) {
-        backgroundNewPos.y = positions.y + spriteHeight * (i + 1);
+    if (velocities[index]->vy > 0.000) {
+        backgroundNewPos.y = positions[index]->y - spriteHeight * (j + 1);
+    } else if (velocities[index]->vy < 0.000) {
+        backgroundNewPos.y = positions[index]->y + spriteHeight * (j + 1);
     }
 
     return backgroundNewPos;
 }
 
-void ecs::system::DrawSystem::changeBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos)
+void ecs::system::DrawSystem::changeBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index)
 {
-    float spriteWidth = drawables.spriteTexture.width * spriteInfos.scaleFactor;
-    float spriteHeight = drawables.spriteTexture.height * spriteInfos.scaleFactor;
+    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
+    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
 
-    if (velocities.vx < 0.000 && positions.x + spriteWidth <= 1) {
-        positions.x = positions.x + spriteWidth;
+    if (velocities[index]->vx < 0.000 && positions[index]->x + spriteWidth <= 1) {
+        positions[index]->x = positions[index]->x + spriteWidth;
     }
-    if (velocities.vx > 0.000 && positions.x >= Lib::getScreenWidth()) {
-        positions.x = Lib::getScreenWidth() - spriteWidth;
+    if (velocities[index]->vx > 0.000 && positions[index]->x >= Lib::getScreenWidth()) {
+        positions[index]->x = Lib::getScreenWidth() - spriteWidth;
     }
-    if (velocities.vy < 0.000 && positions.y + spriteHeight <= 1) {
-        positions.y = positions.y + spriteHeight;
+    if (velocities[index]->vy < 0.000 && positions[index]->y + spriteHeight <= 1) {
+        positions[index]->y = positions[index]->y + spriteHeight;
     }
-    if (velocities.vy > 0.000 && positions.y >= Lib::getScreenHeight()) {
-        positions.y = Lib::getScreenHeight() - spriteHeight;
+    if (velocities[index]->vy > 0.000 && positions[index]->y >= Lib::getScreenHeight()) {
+        positions[index]->y = Lib::getScreenHeight() - spriteHeight;
     }
 }
