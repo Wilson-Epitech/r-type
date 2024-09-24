@@ -13,9 +13,9 @@ void GameEngine::run()
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        EndDrawing();
-        DrawFPS(SCREEN_WIDTH - FPS_MARGIN, MARGIN_TOP);
         _reg.runSystems();
+        DrawFPS(50, 50);
+        EndDrawing();
         if (_gameState(_reg) != game::GameStatus::PLAYING)
             CloseWindow();
     }
