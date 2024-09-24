@@ -11,15 +11,29 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
 {
     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    static double time0 = GetTime();
+    static bool canShoot = true;
+    double time1 = GetTime();
+    double timeElapsed = time1 - time0;
+    float spawnInterval = SHOOT_RATE;
 
     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
         if (controllables[i] && positions[i]) {
             if (!controllables[i]->isControllable)
                 continue;
-            if (IsKeyPressed(KEY_SPACE)) {
+            if (!IsKeyDown(KEY_SPACE)) {
+                canShoot = true;
+                time0 = GetTime();
+            }
+            if (IsKeyDown(KEY_SPACE) && canShoot) {
                 addShot(i, reg);
+                canShoot = false;
             }
         }
+    }
+    if (timeElapsed >= spawnInterval) {
+        canShoot = true;
+        time0 = GetTime();
     }
 }
 
