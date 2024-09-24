@@ -59,4 +59,4 @@ doc:
 	@$(DOXYGEN) $(DOXYFILE) > /dev/null
 	@printf "[\033[0;36mdoc built\033[0m]\n"
 
-fclean: clean cleanvcpkg re
+fclean: clean cleanvcpkg
