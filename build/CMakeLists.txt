@@ -1,20 +1,67 @@
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.14)
 project(r-type)
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-Wall -Wextra -Werror)
+set(CMAKE_TOOLCHAIN_FILE $ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake CACHE STRING "")
 
-include_directories(include)
+find_package(raylib CONFIG REQUIRED)
 
-set(SRC
-    ../src/main.cpp
+include_directories(
+    ../include
+    ../src/ecs
+    ../src/ecs/components
+    ../src/ecs/systems
+    ../src/games
+    ../src/gameEngine
 )
 
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_BINARY_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake"
-    CACHE STRING "Vcpkg toolchain file")
+file(GLOB_RECURSE SRC
+    ../src/main.cpp
+    ../src/gameEngine/GameEngine.cpp
+    ../src/games/RTypeGame.cpp
+    ../src/ecs/systems/CollisionSystem.cpp
+    ../src/ecs/systems/ControlSystem.cpp
+    ../src/ecs/systems/DrawSystem.cpp
+    ../src/ecs/systems/FiringSystem.cpp
+    ../src/ecs/systems/LifeSystem.cpp
+    ../src/ecs/systems/EnemySpawnSystem.cpp
+    ../src/ecs/systems/PositionSystem.cpp
+    ../src/ecs/systems/SpriteAnimationSystem.cpp
+    ../src/ecs/systems/CollisionSystem.cpp
+    ../src/ecs/systems/FiringSystem.cpp
+    ../src/ecs/systems/SpriteAnimationSystem.cpp
+    ../src/ecs/systems/ControlSystem.cpp
+    ../src/ecs/systems/LifeSystem.cpp
+    ../src/ecs/systems/DrawSystem.cpp
+    ../src/ecs/systems/PositionSystem.cpp
+)
 
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build/cmakefiles)
+add_executable(r-type ${SRC})
 
-add_executable(r-type_server ${SRC})
+# macOS #
+if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    target_link_libraries(r-type
+        PRIVATE raylib
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework IOKit"
+        "-framework CoreVideo"
+        "-framework GLUT"
+    )
+
+# Linux #
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    target_link_libraries(r-type
+        raylib
+        GL
+        m
+        pthread
+        dl
+        rt
+        X11
+    )
+else()
+    message(FATAL_ERROR "Unsupported OS")
+endif()
