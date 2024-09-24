@@ -28,7 +28,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg)
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
                 continue;
             rec2 = spriteHitbox(positions, drawables, j);
-            if (CheckCollisionRecs(rec1, rec2) && !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
+            if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) && !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
             }

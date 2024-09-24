@@ -21,10 +21,8 @@
     #define PLAYER_NAME "player"
     #define BACKGROUND_NAME "background"
     #define SPAWN_ENEMY_NAME "enemy"
-    #define FIRST_ENEMY_NAME "enemy1"
-    #define SECOND_ENEMY_NAME "enemy2"
-    #define THIRD_ENEMY_NAME "enemy3"
     #define PLAYER_SHOOT "player_shoot"
+    #define SPAWN_BOSS_NAME "boss"
 
     #define PLAYER_SPRITE_NB_PATTERN 16
     #define FIRST_ENEMY_SPRITE_NB_PATTERN 8
@@ -36,14 +34,19 @@
     #define PLAYER_SPRITE_SCALE_FACTOR 2.3
     #define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.0
     #define ENEMY_SCALE_FACTOR 1
+    #define BOSS_SCALE_FACTOR 1.5
 
-    #define MAX_SPAWN_HEIGHT 1070
-    #define MIN_SPAWN_HEIGHT 10
-    #define MAX_SPAWN_WIDTH 1930
+    #define MAX_SPAWN_HEIGHT 1040
+    #define MIN_SPAWN_HEIGHT 30
+    #define MAX_SPAWN_WIDTH 2420
     #define MIN_SPAWN_WIDTH 1920
-    #define TIME_BEFORE_SPAWN_ENEMY 3
-    #define ENEMY_VX -0.4
+    #define TIME_BEFORE_SPAWN_ENEMY 10
+    #define ENEMY_WAVE_SIZE 8
+    #define ENEMY_VX -1
     #define ENEMY_VY 0.0
+
+    #define BOSS_WAVE_SIZE 1
+    #define TIME_BEFORE_SPAWN_BOSS 15
 
 namespace game
 {

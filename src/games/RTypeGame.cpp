@@ -16,11 +16,9 @@ void game::RTypeGame::spawnEntities()
 {
     _stringToEntity[BACKGROUND_NAME] =  _reg.spawnEntity();
     _stringToEntity[PLAYER_NAME] =  _reg.spawnEntity();
-    _stringToEntity[FIRST_ENEMY_NAME] =  _reg.spawnEntity();
-    _stringToEntity[SECOND_ENEMY_NAME] =  _reg.spawnEntity();
-    _stringToEntity[THIRD_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[SPAWN_ENEMY_NAME] =  _reg.spawnEntity();
     _stringToEntity[PLAYER_SHOOT] =  _reg.spawnEntity();
+    _stringToEntity[SPAWN_BOSS_NAME] =  _reg.spawnEntity();
 }
 
 void game::RTypeGame::registerComponents()
@@ -55,38 +53,20 @@ void game::RTypeGame::addComponentsToEntities()
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
 
-    positions.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Position{1500, 700});
-    velocities.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Velocity{-0.4f, 0});
-    controllables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Controllable{false});
-    drawables.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Drawable{});
-    spriteInfos.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN});
-    types.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(_stringToEntity[FIRST_ENEMY_NAME], ecs::component::Life{1});
-
-    positions.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Position{1800, 300});
-    velocities.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
-    drawables.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Drawable{});
-    spriteInfos.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::SpriteInfos{SECOND_ENEMY_PATH,
-        SECOND_ENEMY_SPRITE_NB_PATTERN, SECOND_ENEMY_SPRITE_FIRST_PATTERN, SECOND_ENEMY_SPRITE_SCALE_FACTOR});
-    types.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(_stringToEntity[SECOND_ENEMY_NAME], ecs::component::Life{1});
-
-    positions.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Position{1000, 300});
-    velocities.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Velocity{-0.3f, 0});
-    drawables.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Drawable{});
-    spriteInfos.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
-    types.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(_stringToEntity[THIRD_ENEMY_NAME], ecs::component::Life{1});
-
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
     drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{true});
     spriteInfos.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::SpriteInfos{BACKGROUND_PATH, 1, 0, 0.625});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
-    enemySpawns.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+    enemySpawns.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, ENEMY_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
+
+    spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
+    enemySpawns.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_BOSS, BOSS_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+    velocities.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
+    lives.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Life{10});
 
     velocities.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Velocity{10, 0});
     spriteInfos.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
