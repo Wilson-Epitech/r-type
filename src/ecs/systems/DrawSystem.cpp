@@ -57,11 +57,11 @@ void ecs::system::DrawSystem::drawBackground(component::Velocity &velocities, co
     float spriteHeight = drawables.spriteTexture.height * spriteInfos.scaleFactor;
     int posX = 0;
     int posY = 0;
-    int nbrRepeatX = getNbrRepeatBackground(spriteWidth, SCREEN_WIDTH);
+    int nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
     Vector2 screenRatio = Lib::getScreenRatio();
 
     changeBackgroundPos(velocities, drawables, positions, spriteInfos);
-    for (int i = 0; i < getNbrRepeatBackground(spriteHeight, SCREEN_HEIGHT); i++) {
+    for (int i = 0; i < getNbrRepeatBackground(spriteHeight, Lib::getScreenHeight()); i++) {
         for (int k = 0; k < nbrRepeatX; k++) {
             backgroundNewPos = {positions.x, positions.y};
             for (int j = 0; j < nbrRepeatX; j++) {
@@ -118,13 +118,13 @@ void ecs::system::DrawSystem::changeBackgroundPos(component::Velocity &velocitie
     if (velocities.vx < 0.000 && positions.x + spriteWidth <= 1) {
         positions.x = positions.x + spriteWidth;
     }
-    if (velocities.vx > 0.000 && positions.x >= SCREEN_WIDTH) {
-        positions.x = SCREEN_WIDTH - spriteWidth;
+    if (velocities.vx > 0.000 && positions.x >= Lib::getScreenWidth()) {
+        positions.x = Lib::getScreenWidth() - spriteWidth;
     }
     if (velocities.vy < 0.000 && positions.y + spriteHeight <= 1) {
         positions.y = positions.y + spriteHeight;
     }
-    if (velocities.vy > 0.000 && positions.y >= SCREEN_HEIGHT) {
-        positions.y = SCREEN_HEIGHT - spriteHeight;
+    if (velocities.vy > 0.000 && positions.y >= Lib::getScreenHeight()) {
+        positions.y = Lib::getScreenHeight() - spriteHeight;
     }
 }

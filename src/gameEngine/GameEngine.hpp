@@ -11,11 +11,10 @@
     #include "Registry.hpp"
     #include "Components.hpp"
     #include "IGame.hpp"
+    #include "Lib.hpp"
     #include <raylib.h>
     #include <functional>
 
-    #define SCREEN_WIDTH 1920
-    #define SCREEN_HEIGHT 1080
     #define MARGIN_TOP 10
     #define FPS_MARGIN 100
     #define FPS_LIMIT 60
@@ -29,7 +28,7 @@ class GameEngine
         {
             SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
             SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-            InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, gameName.c_str());
+            InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
             MaximizeWindow();
         }
         ~GameEngine() = default;

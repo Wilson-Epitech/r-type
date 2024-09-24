@@ -37,7 +37,7 @@ file(GLOB_RECURSE SRC
     ../src/ecs/systems/LifeSystem.cpp
     ../src/ecs/systems/DrawSystem.cpp
     ../src/ecs/systems/PositionSystem.cpp
-    ../lib/lib.cpp
+    ../lib/Lib.cpp
 )
 
 add_executable(r-type ${SRC})

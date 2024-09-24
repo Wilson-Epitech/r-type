@@ -19,6 +19,8 @@ class Lib {
         ~Lib() = default;
 
         static Vector2 getScreenRatio();
+        static int getScreenHeight();
+        static int getScreenWidth();
 
     private:
 };
