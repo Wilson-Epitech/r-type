@@ -43,10 +43,8 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
 }
 
 bool ecs::system::FiringSystem::IsGamepadTriggerButtonDown(int &gamepad) {
-    return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
-            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
-            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) ||
-            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));
+    return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
+            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));
 }
 
 void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) {
@@ -69,9 +67,9 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
                                                          velocities[playerShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{
-                                     spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
-                                     spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
+    spriteInfos.insertAt(
+        entity, ecs::component::SpriteInfos{spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
+                                            spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});

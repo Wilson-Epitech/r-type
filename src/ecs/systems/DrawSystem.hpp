@@ -26,12 +26,11 @@ namespace ecs {
                                 SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
                                 const std::size_t &index);
             void changeBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                     SparseArray<component::Position> &positions,
-                                     SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
-            Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities,
-                                           SparseArray<component::Drawable> &drawables,
-                                           SparseArray<component::Position> &positions,
-                                           SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index, int j);
+                                     SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
+                                     const std::size_t &index);
+            Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+                                           SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
+                                           const std::size_t &index, int j);
             int getNbrRepeatBackground(float spriteSize, int screenSize);
         };
     }

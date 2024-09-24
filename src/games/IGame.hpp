@@ -11,7 +11,11 @@
 #include "Registry.hpp"
 
 namespace game {
-    enum GameStatus { PLAYING, WON, LOOSE };
+    enum GameStatus {
+        PLAYING,
+        WON,
+        LOOSE
+    };
 
     class IGame {
       public:

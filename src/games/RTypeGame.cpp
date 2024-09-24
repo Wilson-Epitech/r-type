@@ -44,9 +44,9 @@ void game::RTypeGame::addComponentsToEntities() {
     velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0, 5});
     controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{});
     drawables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Drawable{});
-    spriteInfos.insertAt(_stringToEntity[PLAYER_NAME],
-                         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN,
-                                                     PLAYER_SPRITE_SCALE_FACTOR});
+    spriteInfos.insertAt(
+        _stringToEntity[PLAYER_NAME],
+        ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
 
@@ -72,8 +72,7 @@ void game::RTypeGame::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Life{10});
 
     velocities.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Velocity{10, 0});
-    spriteInfos.insertAt(_stringToEntity[PLAYER_SHOOT],
-                         ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
+    spriteInfos.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
     types.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT});
 }
 

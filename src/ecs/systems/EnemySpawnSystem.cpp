@@ -20,8 +20,8 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     float spawnInterval = 0;
     bool isTimerSet = false;
 
-    for (std::size_t i = 0;
-         i < enemySpawn.size() && i < enemyVelocities.size() && i < enemyLives.size() && i < enemySpriteInfos.size(); ++i) {
+    for (std::size_t i = 0; i < enemySpawn.size() && i < enemyVelocities.size() && i < enemyLives.size() && i < enemySpriteInfos.size();
+         ++i) {
         if (enemySpawn[i] && enemyVelocities[i] && enemyLives[i] && enemySpriteInfos[i]) {
             if (timer.size() > 0) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -70,11 +70,10 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
 
     positions.insertAt(entity, ecs::component::Position{x, y});
-    velocities.insertAt(
-        entity, ecs::component::Velocity{enemyVelocities[i]->vx, enemyVelocities[i]->vy, enemyVelocities[i]->possibleVelocity});
-    spriteInfos.insertAt(entity,
-                         ecs::component::SpriteInfos{enemySpriteInfos[i]->spritePath, enemySpriteInfos[i]->patternNb,
-                                                     enemySpriteInfos[i]->firstPattern, enemySpriteInfos[i]->scaleFactor});
+    velocities.insertAt(entity,
+                        ecs::component::Velocity{enemyVelocities[i]->vx, enemyVelocities[i]->vy, enemyVelocities[i]->possibleVelocity});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{enemySpriteInfos[i]->spritePath, enemySpriteInfos[i]->patternNb,
+                                                             enemySpriteInfos[i]->firstPattern, enemySpriteInfos[i]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});

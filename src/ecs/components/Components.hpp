@@ -14,7 +14,11 @@
 #include <string>
 
 namespace ecs {
-    enum EntityType { PLAYER, PLAYERSHOT, ENEMY };
+    enum EntityType {
+        PLAYER,
+        PLAYERSHOT,
+        ENEMY
+    };
 
     namespace component {
         struct Drawable {
