@@ -73,14 +73,14 @@ namespace ecs
             SparseArray<Component> &registerComponent() {
                 auto typeId = std::type_index(typeid(Component));
                 auto it = _componentsArrays.find(typeId);
+
                 if (it == _componentsArrays.end())
                     _componentsArrays[typeId] = SparseArray<Component>();
-
-                    auto erase_func = [](Registry &reg, entity_t const &ent) {
-                        SparseArray<Component> &component = reg.getComponents<Component>();
-                        component.erase(ent);
-                    };
-                    _eraseEntity[typeId] = erase_func;
+                auto erase_func = [](Registry &reg, entity_t const &ent) {
+                    SparseArray<Component> &component = reg.getComponents<Component>();
+                    component.erase(ent);
+                };
+                _eraseEntity[typeId] = erase_func;
 
                 return std::any_cast<SparseArray<Component>&>(_componentsArrays[typeId]);
             };

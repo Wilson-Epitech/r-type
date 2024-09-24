@@ -17,7 +17,7 @@ void ecs::system::DrawSystem::operator()(Registry &reg)
 
     loadTextures(drawables, spriteInfos);
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size(); ++i) {
-        if (drawables[i] && positions[i] && spriteInfos[i]) {
+        if (drawables[i] && positions[i] && spriteInfos[i] && velocities[i]) {
             if (drawables[i]->isLoaded && !drawables[i]->isBackground) {
                 Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
                     drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),

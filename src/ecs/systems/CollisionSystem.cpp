@@ -13,8 +13,8 @@ void ecs::system::CollisionSystem::operator()(Registry &reg)
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    Rectangle rec1 = {0};
-    Rectangle rec2 = {0};
+    Rectangle rec1 = {0, 0, 0, 0};
+    Rectangle rec2 = {0, 0, 0, 0};
 
     for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size(); ++i) {
         if (!positions[i] || !drawables[i] || !types[i] || !lives[i])
@@ -22,7 +22,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg)
         if (lives[i]->nbLives == 0)
             continue;
         rec1 = spriteHitbox(positions, drawables, i);
-        for (std::size_t j = 0; j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size(); ++j) {
+        for (std::size_t j = i; j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size(); ++j) {
             if (!positions[j] || !drawables[j] || !types[j] || !lives[j])
                 continue;
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
@@ -46,6 +46,6 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::EntityType &firstType,
     ecs::EntityType &secondType)
 {
-    return (firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT ||
-        firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER);
+    return ((firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT) ||
+        (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER));
 }
