@@ -136,8 +136,3 @@ game::GameStatus game::RTypeGame::gameState(ecs::Registry &reg)
     }
     return status;
 }
-
-game::GameStatus game::RTypeGame::operator()(ecs::Registry &reg)
-{
-    return gameState(reg);
-}

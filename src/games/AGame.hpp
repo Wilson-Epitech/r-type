@@ -20,6 +20,9 @@ namespace game
             AGame(const std::string &gameName) : _gameName(gameName) {};
             ~AGame() = default;
 
+            GameStatus operator()(ecs::Registry &reg) override {
+                return gameState(reg);
+            }
             void initializeGame() override {
                 spawnEntities();
                 registerComponents();
