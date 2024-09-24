@@ -11,9 +11,7 @@
     #include <string>
     #include <memory>
     #include <raylib.h>
-
-    #define SCREEN_WIDTH 1920
-    #define SCREEN_HEIGHT 1080
+    #include "Lib.hpp"
 
 namespace ecs
 {
@@ -61,9 +59,9 @@ namespace ecs
 
         struct EnemySpawn {
             float timeBeforeSpawn;
-            int maxSpawnWidth = SCREEN_WIDTH;
+            int maxSpawnWidth = Lib::getScreenWidth();
             int minSpawnWidth = 0;
-            int maxSpawnHeight = SCREEN_HEIGHT;
+            int maxSpawnHeight = Lib::getScreenHeight();
             int minSpawnHeight = 0;
         };
     }

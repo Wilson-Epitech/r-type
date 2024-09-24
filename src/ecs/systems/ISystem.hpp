@@ -9,6 +9,7 @@
     #define ISYSTEM_HPP_
 
     #include "Registry.hpp"
+    #include "Lib.hpp"
 
 namespace ecs
 {
