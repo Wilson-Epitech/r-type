@@ -15,7 +15,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
     static bool canShoot = true;
     double time1 = GetTime();
     double timeElapsed = time1 - time0;
-    float spawnInterval = SHOOT_RATE;
+    float spawnInterval = 0.3;
 
     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
         if (controllables[i] && positions[i]) {
