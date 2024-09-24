@@ -16,18 +16,24 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
     double time1 = GetTime();
     double timeElapsed = time1 - time0;
     float spawnInterval = SHOOT_RATE;
+    int gamepad = 0;
 
     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
         if (controllables[i] && positions[i]) {
             if (!controllables[i]->isControllable)
                 continue;
-            if (!IsKeyDown(KEY_SPACE)) {
+            if (!IsKeyDown(KEY_SPACE) && !IsGamepadTriggerButtonDown(gamepad)) {
                 canShoot = true;
                 time0 = GetTime();
             }
             if (IsKeyDown(KEY_SPACE) && canShoot) {
                 addShot(i, reg);
                 canShoot = false;
+            } else if (IsGamepadAvailable(gamepad)) {
+                if (IsGamepadTriggerButtonDown(gamepad) && canShoot) {
+                    addShot(i, reg);
+                    canShoot = false;
+                }
             }
         }
     }
@@ -35,6 +41,14 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
         canShoot = true;
         time0 = GetTime();
     }
+}
+
+bool ecs::system::FiringSystem::IsGamepadTriggerButtonDown(int &gamepad)
+{
+    return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
+    IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
+    IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) ||
+    IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));
 }
 
 void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg)

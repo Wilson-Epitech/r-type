@@ -104,6 +104,7 @@ namespace ecs
             };
 
             template <class... Components, typename Function>
+
             void addSystem(Function const &f) {
                 _systems.push_back(f);
             };

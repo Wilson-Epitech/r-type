@@ -28,6 +28,7 @@ namespace ecs
             private:
                 void addShot(std::size_t index, Registry &reg);
                 std::pair<component::SpriteInfos,component::Velocity> getPlayerShoot(Registry &reg);
+                bool IsGamepadTriggerButtonDown(int &gamepad);
         };
     }
 }
