@@ -23,7 +23,8 @@ namespace ecs
 
                 void operator()(Registry &reg) override;
             private:
-                void createNewEnemy(component::EnemySpawn enemySpawn, component::Velocity enemyVelocities, component::Life enemyLives, component::SpriteInfos enemySpriteInfos, Registry &reg);
+                void createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> enemySpawn, SparseArray<component::Velocity> enemyVelocities,
+                    SparseArray<component::Life> enemyLives, SparseArray<component::SpriteInfos> enemySpriteInfos, const std::size_t &i);
         };
     }
 }

@@ -25,7 +25,7 @@ namespace ecs
 
                 void operator()(Registry &reg) override;
             private:
-                void handleController(int &gamepad, component::Velocity &velocity);
+                void handleController(int &gamepad, SparseArray<component::Velocity> &velocities, const std::size_t &i);
         };
     }
 }

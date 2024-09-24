@@ -40,7 +40,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
             if (timeElapsed >= spawnInterval || isFirstSpawn) {
                 for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
-                    createNewEnemy(*enemySpawn[i], *enemyVelocities[i], *enemyLives[i], *enemySpriteInfos[i], reg);
+                    createNewEnemy(reg, enemySpawn, enemyVelocities, enemyLives, enemySpriteInfos, i);
                 }
                 isFirstSpawn = false;
             }
@@ -55,7 +55,8 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
     }
 }
 
-void ecs::system::EnemySpawnSystem::createNewEnemy(component::EnemySpawn enemySpawn, component::Velocity enemyVelocities, component::Life enemyLives, component::SpriteInfos enemySpriteInfos, Registry &reg)
+void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> enemySpawn, SparseArray<component::Velocity> enemyVelocities,
+    SparseArray<component::Life> enemyLives, SparseArray<component::SpriteInfos> enemySpriteInfos, const std::size_t &i)
 {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
@@ -64,13 +65,14 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(component::EnemySpawn enemySp
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     entity_t entity = reg.spawnEntity();
-    float x = (rand() % (enemySpawn.maxSpawnWidth - enemySpawn.minSpawnWidth)) + enemySpawn.minSpawnWidth;
-    float y = (rand() % (enemySpawn.maxSpawnHeight - enemySpawn.minSpawnHeight)) + enemySpawn.minSpawnHeight;
+    float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
+    float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
 
     positions.insertAt(entity, ecs::component::Position{x, y});
-    velocities.insertAt(entity, ecs::component::Velocity(enemyVelocities));
-    spriteInfos.insertAt(entity, ecs::component::SpriteInfos(enemySpriteInfos));
+    velocities.insertAt(entity, ecs::component::Velocity{enemyVelocities[i]->vx, enemyVelocities[i]->vy, enemyVelocities[i]->possibleVelocity});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{enemySpriteInfos[i]->spritePath, enemySpriteInfos[i]->patternNb,
+        enemySpriteInfos[i]->firstPattern, enemySpriteInfos[i]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(entity, ecs::component::Life(enemyLives));
+    lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
 }

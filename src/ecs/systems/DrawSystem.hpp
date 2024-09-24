@@ -24,9 +24,12 @@ namespace ecs
                 void operator()(Registry &reg) override;
             private:
                 void loadTextures(SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos);
-                void drawBackground(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos);
-                void changeBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos);
-                Vector2 changeNewBackgroundPos(component::Velocity &velocities, component::Drawable &drawables, component::Position &positions, component::SpriteInfos &spriteInfos, int i);
+                void drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+                    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
+                void changeBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+                    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
+                Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+                    SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index, int j);
                 int getNbrRepeatBackground(float spriteSize, int screenSize);
         };
     }

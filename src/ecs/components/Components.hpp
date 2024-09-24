@@ -26,8 +26,8 @@ namespace ecs
         struct Drawable {
             bool isBackground = false;
             bool isLoaded = false;
-            Texture2D spriteTexture;
-            Rectangle spriteRect;
+            Texture2D spriteTexture = Texture2D{};
+            Rectangle spriteRect = {0, 0, 0, 0};
         };
 
         struct SpriteInfos {
