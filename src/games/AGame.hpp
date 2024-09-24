@@ -6,34 +6,32 @@
 */
 
 #ifndef AGAME_HPP_
-    #define AGAME_HPP_
+#define AGAME_HPP_
 
-    #include "Registry.hpp"
-    #include "Components.hpp"
-    #include "IGame.hpp"
+#include "Components.hpp"
+#include "IGame.hpp"
+#include "Registry.hpp"
 
-namespace game
-{
-    class AGame : virtual public game::IGame
-    {
-        public:
-            AGame(const std::string &gameName) : _gameName(gameName) {};
-            ~AGame() = default;
+namespace game {
+    class AGame : virtual public game::IGame {
+      public:
+        AGame(const std::string &gameName) : _gameName(gameName){};
+        ~AGame() = default;
 
-            GameStatus operator()(ecs::Registry &reg) override {
-                return gameState(reg);
-            }
-            void initializeGame() override {
-                spawnEntities();
-                registerComponents();
-                addComponentsToEntities();
-                addSystemsToRegister();
-            };
+        GameStatus operator()(ecs::Registry &reg) override {
+            return gameState(reg);
+        }
+        void initializeGame() override {
+            spawnEntities();
+            registerComponents();
+            addComponentsToEntities();
+            addSystemsToRegister();
+        };
 
-        protected:
-            ecs::Registry _reg;
-            std::string _gameName;
-            std::unordered_map<std::string, entity_t> _stringToEntity;
+      protected:
+        ecs::Registry _reg;
+        std::string _gameName;
+        std::unordered_map<std::string, entity_t> _stringToEntity;
     };
 }
 

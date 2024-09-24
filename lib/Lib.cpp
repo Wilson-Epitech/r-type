@@ -7,20 +7,17 @@
 
 #include "Lib.hpp"
 
-Vector2 Lib::getScreenRatio()
-{
+Vector2 Lib::getScreenRatio() {
     float widthScaleFactor = (float)SCREEN_WIDTH / (float)GetScreenWidth();
     float heightScaleFactor = (float)SCREEN_HEIGHT / (float)GetScreenHeight();
 
     return {widthScaleFactor, heightScaleFactor};
 }
 
-int Lib::getScreenHeight()
-{
+int Lib::getScreenHeight() {
     return SCREEN_HEIGHT;
 }
 
-int Lib::getScreenWidth()
-{
+int Lib::getScreenWidth() {
     return SCREEN_WIDTH;
 }

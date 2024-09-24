@@ -7,8 +7,7 @@
 
 #include "CollisionSystem.hpp"
 
-void ecs::system::CollisionSystem::operator()(Registry &reg)
-{
+void ecs::system::CollisionSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -28,7 +27,8 @@ void ecs::system::CollisionSystem::operator()(Registry &reg)
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
                 continue;
             rec2 = spriteHitbox(positions, drawables, j);
-            if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) && !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
+            if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) &&
+                !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
             }
@@ -37,15 +37,12 @@ void ecs::system::CollisionSystem::operator()(Registry &reg)
 }
 
 Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions,
-    SparseArray<component::Drawable> &drawables, std::size_t index)
-{
-    return Rectangle {positions[index]->x, positions[index]->y,
-        float(drawables[index]->spriteRect.width), float(drawables[index]->spriteRect.height)};
+                                                     SparseArray<component::Drawable> &drawables, std::size_t index) {
+    return Rectangle{positions[index]->x, positions[index]->y, float(drawables[index]->spriteRect.width),
+                     float(drawables[index]->spriteRect.height)};
 }
 
-bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::EntityType &firstType,
-    ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::EntityType &firstType, ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT) ||
-        (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER));
+            (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER));
 }

@@ -7,8 +7,7 @@
 
 #include "ControlSystem.hpp"
 
-void ecs::system::ControlSystem::operator()(Registry &reg)
-{
+void ecs::system::ControlSystem::operator()(Registry &reg) {
     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     int gamepad = 0;
@@ -34,8 +33,8 @@ void ecs::system::ControlSystem::operator()(Registry &reg)
     }
 }
 
-void ecs::system::ControlSystem::handleController(int &gamepad, SparseArray<component::Velocity> &velocities, const std::size_t &playerIndex)
-{
+void ecs::system::ControlSystem::handleController(int &gamepad, SparseArray<component::Velocity> &velocities,
+                                                  const std::size_t &playerIndex) {
     float leftJoystickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
     float leftJoystickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
 

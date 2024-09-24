@@ -1,0 +1,6 @@
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 130
+NamespaceIndentation: All
+FixNamespaceComments: false
+AllowShortFunctionsOnASingleLine: Empty

@@ -6,24 +6,21 @@
 */
 
 #ifndef SPRITEANIMATIONSYSTEM_HPP_
-    #define SPRITEANIMATIONSYSTEM_HPP_
+#define SPRITEANIMATIONSYSTEM_HPP_
 
-    #include "ISystem.hpp"
-    #include "Components.hpp"
+#include "Components.hpp"
+#include "ISystem.hpp"
 
-    #define SPRITE_UPDATE_TIME 0.1
+#define SPRITE_UPDATE_TIME 0.1
 
-namespace ecs
-{
-    namespace system
-    {
-        class SpriteAnimationSystem : virtual public ecs::system::ISystem
-        {
-            public:
-                SpriteAnimationSystem() = default;
-                ~SpriteAnimationSystem() = default;
+namespace ecs {
+    namespace system {
+        class SpriteAnimationSystem : virtual public ecs::system::ISystem {
+          public:
+            SpriteAnimationSystem() = default;
+            ~SpriteAnimationSystem() = default;
 
-                void operator()(Registry &reg) override;
+            void operator()(Registry &reg) override;
         };
     }
 }
