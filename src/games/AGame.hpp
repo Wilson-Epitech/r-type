@@ -10,7 +10,6 @@
 
 #include "Components.hpp"
 #include "IGame.hpp"
-#include "Registry.hpp"
 
 namespace game {
     class AGame : virtual public game::IGame {

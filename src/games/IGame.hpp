@@ -8,6 +8,8 @@
 #ifndef IGAME_HPP_
 #define IGAME_HPP_
 
+#include "Registry.hpp"
+
 namespace game {
     enum GameStatus { PLAYING, WON, LOOSE };
 
