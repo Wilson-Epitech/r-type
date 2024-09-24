@@ -11,6 +11,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
 {
     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    int gamepad = 0;
 
     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
         if (controllables[i] && positions[i]) {
@@ -18,6 +19,13 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
                 continue;
             if (IsKeyPressed(KEY_SPACE)) {
                 addShot(i, reg);
+            } else if (IsGamepadAvailable(gamepad)) {
+                if (IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) ||
+                    IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
+                    IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) ||
+                    IsGamepadButtonPressed(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2)) {
+                    addShot(i, reg);
+                }
             }
         }
     }

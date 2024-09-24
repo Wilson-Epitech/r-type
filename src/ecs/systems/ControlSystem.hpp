@@ -11,6 +11,8 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
 
+    #define JOYSTICK_SENSIBILITY 0.6
+
 namespace ecs
 {
     namespace system
@@ -22,6 +24,8 @@ namespace ecs
                 ~ControlSystem() = default;
 
                 void operator()(Registry &reg) override;
+            private:
+                void handleController(int &gamepad, component::Velocity &velocity);
         };
     }
 }
