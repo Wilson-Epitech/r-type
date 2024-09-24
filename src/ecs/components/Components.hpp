@@ -59,6 +59,7 @@ namespace ecs
 
         struct EnemySpawn {
             float timeBeforeSpawn;
+            int waveSize;
             int maxSpawnWidth = Lib::getScreenWidth();
             int minSpawnWidth = 0;
             int maxSpawnHeight = Lib::getScreenHeight();
