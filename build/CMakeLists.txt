@@ -15,6 +15,7 @@ include_directories(
     ../src/ecs/systems
     ../src/games
     ../src/gameEngine
+    ../lib
 )
 
 file(GLOB_RECURSE SRC
@@ -36,6 +37,7 @@ file(GLOB_RECURSE SRC
     ../src/ecs/systems/LifeSystem.cpp
     ../src/ecs/systems/DrawSystem.cpp
     ../src/ecs/systems/PositionSystem.cpp
+    ../lib/lib.cpp
 )
 
 add_executable(r-type ${SRC})
