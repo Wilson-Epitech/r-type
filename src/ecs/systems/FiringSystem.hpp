@@ -13,6 +13,8 @@
     #include "Assets.hpp"
     #include <iostream>
 
+    #define SHOOT_RATE 0.3
+
 namespace ecs
 {
     namespace system
