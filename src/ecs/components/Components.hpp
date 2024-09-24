@@ -37,6 +37,12 @@ namespace ecs
             float scaleFactor = 1.0;
         };
 
+        struct SoundEffect {
+            std::string soundPath;
+            Sound sound;
+            bool isLoaded = false;
+        };
+
         struct Controllable {
             bool isControllable = true;
         };

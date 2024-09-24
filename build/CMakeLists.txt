@@ -39,6 +39,7 @@ file(GLOB_RECURSE SRC
     ../src/ecs/systems/LifeSystem.cpp
     ../src/ecs/systems/DrawSystem.cpp
     ../src/ecs/systems/PositionSystem.cpp
+    ../src/ecs/systems/SoundSystem.cpp
     ../lib/Lib.cpp
 )
 

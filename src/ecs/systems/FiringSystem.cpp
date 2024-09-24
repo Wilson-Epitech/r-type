@@ -27,10 +27,12 @@ void ecs::system::FiringSystem::operator()(Registry &reg)
                 time0 = GetTime();
             }
             if (IsKeyDown(KEY_SPACE) && canShoot) {
+                playSound(reg);
                 addShot(i, reg);
                 canShoot = false;
             } else if (IsGamepadAvailable(gamepad)) {
                 if (IsGamepadTriggerButtonDown(gamepad) && canShoot) {
+                    playSound(reg);
                     addShot(i, reg);
                     canShoot = false;
                 }
@@ -90,4 +92,20 @@ std::pair<ecs::component::SpriteInfos, ecs::component::Velocity> ecs::system::Fi
         }
     }
     throw Error("Component PlayerShoot not found have you initialized it ?");
+}
+
+void ecs::system::FiringSystem::playSound(Registry &reg)
+{
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
+        if (types[i]) {
+            if (types[i]->type == ecs::EntityType::PLAYERSHOT) {
+                if (soundEffect[i]->isLoaded) {
+                    PlaySound(soundEffect[i]->sound);
+                }
+            }
+        }
+    }
 }

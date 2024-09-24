@@ -17,6 +17,7 @@
     #include "FiringSystem.hpp"
     #include "SpriteAnimationSystem.hpp"
     #include "EnemySpawnSystem.hpp"
+    #include "SoundSystem.hpp"
 
     #define PLAYER_NAME "player"
     #define BACKGROUND_NAME "background"
