@@ -13,12 +13,17 @@
 
 #include "RTypeGame.hpp"
 #include "GameEngine.hpp"
+#include <iostream>
 
 int main()
 {
-    game::RTypeGame rtype;
-    GameEngine engine(rtype.getRegister(), rtype.getGameName(), rtype);
-
-    engine.run();
+    try {
+        game::RTypeGame rtype;
+        GameEngine engine(rtype.getRegister(), rtype.getGameName(), rtype);
+        engine.run();
+    } catch (const Error &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
     return 0;
 }

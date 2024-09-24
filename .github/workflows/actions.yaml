@@ -14,10 +14,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Install system dependencies
+      run: sudo apt-get install -y libxinerama-dev libxcursor-dev xorg-dev libglu1-mesa-dev pkg-config
+
     - name: Set up vcpkg
       run: |
         cd build
-        git clone https://github.com/microsoft/vcpkg.git
+        git clone https://github.com/microsoft/vcpkg.git vcpkg
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        ./vcpkg install raylib
 
     - name: Check compilation
       run: |

@@ -38,6 +38,8 @@ void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &dra
         if (!drawables[i])
             continue;
         if (drawables[i]->isLoaded == false && spriteInfos[i]->spritePath.length() > 0) {
+            if (!FileExists(spriteInfos[i]->spritePath.c_str()))
+                throw Error("Invalid sprite path");
             drawables[i]->spriteTexture = LoadTexture(spriteInfos[i]->spritePath.c_str());
             offset = float(drawables[i]->spriteTexture.width)/spriteInfos[i]->patternNb;
             firstPatternLocation = spriteInfos[i]->firstPattern * offset;

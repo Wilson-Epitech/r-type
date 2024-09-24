@@ -24,7 +24,7 @@ class GameEngine
 {
     public:
         template <typename Function>
-        GameEngine(ecs::Registry &reg, std::string &gameName,
+        GameEngine(ecs::Registry &reg, const std::string &gameName,
             Function const &gameState) : _reg(reg), _gameState(gameState)
         {
             SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
