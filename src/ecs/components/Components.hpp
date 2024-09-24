@@ -26,14 +26,17 @@ namespace ecs
     namespace component
     {
         struct Drawable {
-            std::string spritePath;
-            std::size_t patternNb = 1;
-            std::size_t firstPattern = 0;
-            float scaleFactor = 1.0;
             bool isBackground = false;
             bool isLoaded = false;
             Texture2D spriteTexture;
             Rectangle spriteRect;
+        };
+
+        struct SpriteInfos {
+            std::string spritePath;
+            std::size_t patternNb = 1;
+            std::size_t firstPattern = 0;
+            float scaleFactor = 1.0;
         };
 
         struct Controllable {
@@ -57,22 +60,11 @@ namespace ecs
         };
 
         struct EnemySpawn {
-            std::string spritePath;
             float timeBeforeSpawn;
-            std::size_t patternNb = 1;
-            std::size_t firstPattern = 0;
-            float scaleFactor = 1.0;
             int maxSpawnWidth = SCREEN_WIDTH;
             int minSpawnWidth = 0;
             int maxSpawnHeight = SCREEN_HEIGHT;
             int minSpawnHeight = 0;
-        };
-
-        struct PlayerShoot {
-            std::string spritePath;
-            std::size_t patternNb = 1;
-            std::size_t firstPattern = 0;
-            float scaleFactor = 1.0;
         };
     }
 }

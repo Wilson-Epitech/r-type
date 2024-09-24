@@ -11,7 +11,6 @@
     #include "ISystem.hpp"
     #include "Components.hpp"
     #include "Assets.hpp"
-    #include <iostream>
 
     #define SHOOT_RATE 0.3
 
@@ -28,7 +27,7 @@ namespace ecs
                 void operator()(Registry &reg) override;
             private:
                 void addShot(std::size_t index, Registry &reg);
-                std::pair<component::PlayerShoot,component::Velocity> getPlayerShoot(Registry &reg);
+                std::pair<component::SpriteInfos,component::Velocity> getPlayerShoot(Registry &reg);
         };
     }
 }
