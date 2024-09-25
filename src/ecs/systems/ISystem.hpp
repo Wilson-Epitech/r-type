@@ -6,22 +6,19 @@
 */
 
 #ifndef ISYSTEM_HPP_
-    #define ISYSTEM_HPP_
+#define ISYSTEM_HPP_
 
-    #include "Registry.hpp"
-    #include "Lib.hpp"
+#include "Lib.hpp"
+#include "Registry.hpp"
 
-namespace ecs
-{
-    namespace system
-    {
-        class ISystem
-        {
-            public:
-                ISystem() = default;
-                ~ISystem() = default;
+namespace ecs {
+    namespace system {
+        class ISystem {
+          public:
+            ISystem() = default;
+            ~ISystem() = default;
 
-                virtual void operator()(Registry &reg) = 0;
+            virtual void operator()(Registry &reg) = 0;
         };
     }
 }

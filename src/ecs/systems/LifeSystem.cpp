@@ -7,8 +7,7 @@
 
 #include "LifeSystem.hpp"
 
-void ecs::system::LifeSystem::operator()(Registry &reg)
-{
+void ecs::system::LifeSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
 
     for (std::size_t i = 0; i < lives.size(); ++i) {

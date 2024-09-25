@@ -5,9 +5,8 @@
 ** Assets
 */
 
-
 #ifndef ASSETS_HPP_
-    #define ASSETS_HPP_
+#define ASSETS_HPP_
 
 #define PLAYER_PATH "assets/r-typesheet5.gif"
 #define PLAYERSHOT_PATH "assets/r-typesheet30a.gif"

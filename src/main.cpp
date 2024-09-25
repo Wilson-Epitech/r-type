@@ -11,12 +11,11 @@
  * @return int
  */
 
-#include "RTypeGame.hpp"
 #include "GameEngine.hpp"
+#include "RTypeGame.hpp"
 #include <iostream>
 
-int main()
-{
+int main() {
     try {
         game::RTypeGame rtype;
         GameEngine engine(rtype.getRegister(), rtype.getGameName(), rtype);
