@@ -37,7 +37,7 @@ namespace ecs {
 
         struct SoundEffect {
             std::string soundPath;
-            Sound sound;
+            Sound sound = Sound{};
             bool isLoaded = false;
         };
 
