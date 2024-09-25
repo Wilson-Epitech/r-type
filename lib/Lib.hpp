@@ -21,6 +21,7 @@ class Lib {
     static Vector2 getScreenRatio();
     static int getScreenHeight();
     static int getScreenWidth();
+    static bool isOnScreen(Vector2 pos);
 
   private:
 };

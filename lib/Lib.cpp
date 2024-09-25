@@ -21,3 +21,11 @@ int Lib::getScreenHeight() {
 int Lib::getScreenWidth() {
     return SCREEN_WIDTH;
 }
+
+bool Lib::isOnScreen(Vector2 pos) {
+    if (pos.x > Lib::getScreenWidth() || pos.x < 0)
+        return false;
+    if (pos.y > Lib::getScreenHeight() || pos.y < 0)
+        return false;
+    return true;
+}
