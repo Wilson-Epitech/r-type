@@ -6,6 +6,7 @@
 */
 
 #include "EnemySpawnSystem.hpp"
+#include <iostream>
 
 void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
 {
@@ -13,6 +14,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
     SparseArray<component::Velocity> &enemyVelocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &enemyLives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &enemySpriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     double time0 = 0;
     static std::vector<std::pair<std::size_t, double>> timer;
     static bool isFirstSpawn = true;
@@ -64,6 +66,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::SoundEffect> &enemySoundEffect = reg.getComponents<component::SoundEffect>();
     entity_t entity = reg.spawnEntity();
     float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
     float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
@@ -75,4 +78,9 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
+    if (enemySoundEffect[i]) {
+        enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
+    }
+    else
+        enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{});
 }
