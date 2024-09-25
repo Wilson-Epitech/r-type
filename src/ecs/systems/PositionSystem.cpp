@@ -14,7 +14,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
         if (positions[i] && velocities[i]) {
-            if (!playerPosition(i, reg)) {
+            if (!handlePlayerPosition(i, reg)) {
                 positions[i]->x += velocities[i]->vx;
                 positions[i]->y += velocities[i]->vy;
             }
@@ -28,7 +28,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
     }
 }
 
-bool ecs::system::PositionSystem::playerPosition(std::size_t playerIndex, Registry &reg) {
+bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<ecs::component::Drawable> &drawables = reg.getComponents<component::Drawable>();

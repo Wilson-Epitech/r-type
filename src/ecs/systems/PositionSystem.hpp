@@ -21,7 +21,7 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-            bool playerPosition(std::size_t playerIndex, Registry &reg);
+            bool handlePlayerPosition(std::size_t playerIndex, Registry &reg);
         };
     }
 }
