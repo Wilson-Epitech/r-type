@@ -19,6 +19,7 @@ namespace ecs {
             ~PositionSystem() = default;
 
             void operator()(Registry &reg) override;
+
           private:
             void playerPosition(std::size_t playerIndex, Registry &reg);
         };

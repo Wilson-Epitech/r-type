@@ -30,8 +30,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::PositionSystem::playerPosition(std::size_t playerIndex, Registry &reg)
-{
+void ecs::system::PositionSystem::playerPosition(std::size_t playerIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<ecs::component::Drawable> &drawables = reg.getComponents<component::Drawable>();
