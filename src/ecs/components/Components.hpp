@@ -39,7 +39,7 @@ namespace ecs {
             std::string soundPath;
             Sound sound = Sound{};
             bool isLoaded = false;
-            bool asToBePlayed = false;
+            bool hasToBePlayed = false;
         };
 
         struct Controllable {

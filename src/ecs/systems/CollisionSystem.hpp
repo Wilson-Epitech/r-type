@@ -25,7 +25,6 @@ namespace ecs {
             Rectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::Drawable> &drawables,
                                    std::size_t index);
             bool isPlayerAndPlayerShot(ecs::EntityType &firstType, ecs::EntityType &secondType);
-            void playSong(std::size_t i, Registry &reg);
         };
     }
 }

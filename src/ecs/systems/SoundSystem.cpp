@@ -14,9 +14,22 @@ void ecs::system::SoundSystem::operator()(Registry &reg) {
         if (!soundEffect[i])
             continue;
         loadSound(i, reg);
-        if (soundEffect[i]->asToBePlayed) {
+        playDeadSong(i, reg);
+        if (soundEffect[i]->hasToBePlayed) {
             PlaySound(soundEffect[i]->sound);
-            soundEffect[i]->asToBePlayed = false;
+            soundEffect[i]->hasToBePlayed = false;
+        }
+    }
+}
+
+void ecs::system::SoundSystem::playDeadSong(std::size_t i, Registry &reg)
+{
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+
+    if (lives[i]) {
+        if (lives[i]->nbLives == 0) {
+            soundEffect[i]->hasToBePlayed = true;
         }
     }
 }

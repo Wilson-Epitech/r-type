@@ -99,7 +99,7 @@ void ecs::system::FiringSystem::playSound(Registry &reg) {
     for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
         if (types[i] && soundEffect[i]) {
             if (types[i]->type == ecs::EntityType::PLAYERSHOT) {
-                soundEffect[i]->asToBePlayed = true;
+                soundEffect[i]->hasToBePlayed = true;
             }
         }
     }

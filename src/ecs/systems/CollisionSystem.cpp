@@ -31,20 +31,9 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
-                if (lives[i]->nbLives <= 0)
-                    playSong(i, reg);
-                if (lives[j]->nbLives <= 0)
-                    playSong(j, reg);
             }
         }
     }
-}
-
-void ecs::system::CollisionSystem::playSong(std::size_t i, Registry &reg) {
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
-
-    if (soundEffect[i])
-        soundEffect[i]->asToBePlayed = true;
 }
 
 Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions,

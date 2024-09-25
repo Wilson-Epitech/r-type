@@ -11,8 +11,6 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define SPRITE_UPDATE_TIME 0.1
-
 namespace ecs {
     namespace system {
         class SoundSystem : virtual public ecs::system::ISystem {
@@ -24,6 +22,7 @@ namespace ecs {
 
           private:
             void loadSound(std::size_t i, Registry &reg);
+            void playDeadSong(std::size_t i, Registry &reg);
         };
     }
 }
