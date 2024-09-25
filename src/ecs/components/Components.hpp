@@ -6,23 +6,21 @@
 */
 
 #ifndef COMPONENTS_HPP_
-    #define COMPONENTS_HPP_
+#define COMPONENTS_HPP_
 
-    #include <string>
-    #include <memory>
-    #include <raylib.h>
-    #include "Lib.hpp"
+#include "Lib.hpp"
+#include <memory>
+#include <raylib.h>
+#include <string>
 
-namespace ecs
-{
+namespace ecs {
     enum EntityType {
         PLAYER,
         PLAYERSHOT,
         ENEMY
     };
 
-    namespace component
-    {
+    namespace component {
         struct Drawable {
             bool isBackground = false;
             bool isLoaded = false;
