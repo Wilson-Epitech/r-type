@@ -6,7 +6,6 @@
 */
 
 #include "CollisionSystem.hpp"
-#include <iostream>
 
 void ecs::system::CollisionSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();

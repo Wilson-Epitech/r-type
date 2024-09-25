@@ -36,8 +36,6 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
                     canShoot = false;
                 }
             }
-            if (IsKeyDown(KEY_LEFT_ALT))
-                addShot(i, reg);
         }
     }
     if (timeElapsed >= spawnInterval) {
