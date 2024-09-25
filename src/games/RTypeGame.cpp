@@ -85,11 +85,11 @@ void game::RTypeGame::addComponentsToEntities() {
 void game::RTypeGame::addSystemsToRegister() {
     _reg.addSystem(ecs::system::ControlSystem());
     _reg.addSystem(ecs::system::PositionSystem());
-    _reg.addSystem(ecs::system::SoundSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
     _reg.addSystem(ecs::system::CollisionSystem());
-    _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::FiringSystem());
+    _reg.addSystem(ecs::system::SoundSystem());
+    _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
 }

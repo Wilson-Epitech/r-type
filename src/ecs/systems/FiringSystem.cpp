@@ -56,7 +56,6 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
     entity_t entity = reg.spawnEntity();
     Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
@@ -76,7 +75,6 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
-    soundEffect.insertAt(entity, ecs::component::SoundEffect{});
 }
 
 std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
@@ -101,9 +99,7 @@ void ecs::system::FiringSystem::playSound(Registry &reg) {
     for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
         if (types[i] && soundEffect[i]) {
             if (types[i]->type == ecs::EntityType::PLAYERSHOT) {
-                if (soundEffect[i]->isLoaded) {
-                    PlaySound(soundEffect[i]->sound);
-                }
+                soundEffect[i]->asToBePlayed = true;
             }
         }
     }

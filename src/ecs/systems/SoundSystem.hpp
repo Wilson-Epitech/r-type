@@ -21,6 +21,9 @@ namespace ecs {
             ~SoundSystem() = default;
 
             void operator()(Registry &reg) override;
+
+          private:
+            void loadSound(std::size_t i, Registry &reg);
         };
     }
 }

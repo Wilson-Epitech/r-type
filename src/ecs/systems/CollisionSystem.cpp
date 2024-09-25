@@ -12,19 +12,16 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     Rectangle rec1 = {0, 0, 0, 0};
     Rectangle rec2 = {0, 0, 0, 0};
 
-    for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size() && i < soundEffect.size();
-         ++i) {
-        if (!positions[i] || !drawables[i] || !types[i] || !lives[i] || !soundEffect[i])
+    for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size(); ++i) {
+        if (!positions[i] || !drawables[i] || !types[i] || !lives[i])
             continue;
         if (lives[i]->nbLives == 0)
             continue;
         rec1 = spriteHitbox(positions, drawables, i);
-        for (std::size_t j = i;
-             j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size() && j < soundEffect.size(); ++j) {
+        for (std::size_t j = i; j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size(); ++j) {
             if (!positions[j] || !drawables[j] || !types[j] || !lives[j])
                 continue;
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
@@ -34,17 +31,20 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 !isPlayerAndPlayerShot(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
-                if (lives[i]->nbLives <= 0) {
-                    if (soundEffect[i]->isLoaded)
-                        PlaySound(soundEffect[i]->sound);
-                }
-                if (lives[j]->nbLives <= 0) {
-                    if (soundEffect[j]->isLoaded)
-                        PlaySound(soundEffect[j]->sound);
-                }
+                if (lives[i]->nbLives <= 0)
+                    playSong(i, reg);
+                if (lives[j]->nbLives <= 0)
+                    playSong(j, reg);
             }
         }
     }
+}
+
+void ecs::system::CollisionSystem::playSong(std::size_t i, Registry &reg) {
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+
+    if (soundEffect[i])
+        soundEffect[i]->asToBePlayed = true;
 }
 
 Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions,
