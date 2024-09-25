@@ -28,6 +28,7 @@ void game::RTypeGame::registerComponents() {
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::SpriteInfos>();
+    _reg.registerComponent<ecs::component::SoundEffect>();
 }
 
 void game::RTypeGame::addComponentsToEntities() {
@@ -39,6 +40,7 @@ void game::RTypeGame::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = _reg.getComponents<ecs::component::SpriteInfos>();
+    ecs::SparseArray<ecs::component::SoundEffect> &soundEffect = _reg.getComponents<ecs::component::SoundEffect>();
 
     positions.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Position{100, 100});
     velocities.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Velocity{0, 0, 5});
@@ -49,6 +51,7 @@ void game::RTypeGame::addComponentsToEntities() {
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
+    soundEffect.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
@@ -62,6 +65,7 @@ void game::RTypeGame::addComponentsToEntities() {
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
+    soundEffect.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
                          ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
@@ -70,19 +74,22 @@ void game::RTypeGame::addComponentsToEntities() {
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Life{10});
+    soundEffect.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
 
     velocities.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Velocity{10, 0});
     spriteInfos.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
     types.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT});
+    soundEffect.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
 }
 
 void game::RTypeGame::addSystemsToRegister() {
     _reg.addSystem(ecs::system::ControlSystem());
     _reg.addSystem(ecs::system::PositionSystem());
-    _reg.addSystem(ecs::system::CollisionSystem());
-    _reg.addSystem(ecs::system::LifeSystem());
-    _reg.addSystem(ecs::system::FiringSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
+    _reg.addSystem(ecs::system::CollisionSystem());
+    _reg.addSystem(ecs::system::FiringSystem());
+    _reg.addSystem(ecs::system::SoundSystem());
+    _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
 }

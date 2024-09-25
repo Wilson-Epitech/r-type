@@ -13,6 +13,8 @@
 #define FIRST_ENEMY_PATH "assets/r-typesheet17.gif"
 #define SECOND_ENEMY_PATH "assets/r-typesheet3.gif"
 #define BACKGROUND_PATH "assets/background.png"
+#define SHOOT_SOUND_PATH "assets/shoot.mp3"
+#define EXPLOSION_SOUND_PATH "assets/explosion.wav"
 
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3
 

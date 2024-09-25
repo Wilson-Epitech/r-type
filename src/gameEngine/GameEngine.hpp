@@ -27,6 +27,7 @@ class GameEngine {
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
         MaximizeWindow();
+        InitAudioDevice();
     }
     ~GameEngine() = default;
 
