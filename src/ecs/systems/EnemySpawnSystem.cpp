@@ -80,7 +80,6 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
     if (enemySoundEffect[i]) {
         enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
-    }
-    else
+    } else
         enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{});
 }

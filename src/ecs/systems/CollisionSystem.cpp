@@ -16,13 +16,15 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     Rectangle rec1 = {0, 0, 0, 0};
     Rectangle rec2 = {0, 0, 0, 0};
 
-    for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size() && i < soundEffect.size(); ++i) {
+    for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size() && i < soundEffect.size();
+         ++i) {
         if (!positions[i] || !drawables[i] || !types[i] || !lives[i] || !soundEffect[i])
             continue;
         if (lives[i]->nbLives == 0)
             continue;
         rec1 = spriteHitbox(positions, drawables, i);
-        for (std::size_t j = i; j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size() && j < soundEffect.size(); ++j) {
+        for (std::size_t j = i;
+             j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size() && j < soundEffect.size(); ++j) {
             if (!positions[j] || !drawables[j] || !types[j] || !lives[j])
                 continue;
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
@@ -40,7 +42,6 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                     if (soundEffect[j]->isLoaded)
                         PlaySound(soundEffect[j]->sound);
                 }
-
             }
         }
     }

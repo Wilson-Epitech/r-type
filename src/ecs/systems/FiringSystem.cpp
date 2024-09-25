@@ -94,8 +94,7 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
     throw Error("Component PlayerShoot not found have you initialized it ?");
 }
 
-void ecs::system::FiringSystem::playSound(Registry &reg)
-{
+void ecs::system::FiringSystem::playSound(Registry &reg) {
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
