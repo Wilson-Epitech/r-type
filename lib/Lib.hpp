@@ -6,24 +6,24 @@
 */
 
 #ifndef LIB_HPP_
-    #define LIB_HPP_
+#define LIB_HPP_
 
-    #include <raylib.h>
+#include <raylib.h>
 
-    #define SCREEN_WIDTH 1920
-    #define SCREEN_HEIGHT 1080
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
 
 class Lib {
-    public:
-        Lib() = default;
-        ~Lib() = default;
+  public:
+    Lib() = default;
+    ~Lib() = default;
 
-        static Vector2 getScreenRatio();
-        static int getScreenHeight();
-        static int getScreenWidth();
-        static bool isOnScreen(Vector2 pos);
+    static Vector2 getScreenRatio();
+    static int getScreenHeight();
+    static int getScreenWidth();
+    static bool isOnScreen(Vector2 pos);
 
-    private:
+  private:
 };
 
 #endif /* !LIB_HPP_ */

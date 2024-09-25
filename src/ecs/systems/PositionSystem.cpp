@@ -7,8 +7,7 @@
 
 #include "PositionSystem.hpp"
 
-void ecs::system::PositionSystem::operator()(Registry &reg)
-{
+void ecs::system::PositionSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();

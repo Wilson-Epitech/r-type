@@ -6,24 +6,21 @@
 */
 
 #ifndef POSITIONSYSTEM_HPP_
-    #define POSITIONSYSTEM_HPP_
+#define POSITIONSYSTEM_HPP_
 
-    #include "ISystem.hpp"
-    #include "Components.hpp"
+#include "Components.hpp"
+#include "ISystem.hpp"
 
-namespace ecs
-{
-    namespace system
-    {
-        class PositionSystem : virtual public ecs::system::ISystem
-        {
-            public:
-                PositionSystem() = default;
-                ~PositionSystem() = default;
+namespace ecs {
+    namespace system {
+        class PositionSystem : virtual public ecs::system::ISystem {
+          public:
+            PositionSystem() = default;
+            ~PositionSystem() = default;
 
-                void operator()(Registry &reg) override;
-            private:
-                void playerPosition(std::size_t playerIndex, Registry &reg);
+            void operator()(Registry &reg) override;
+          private:
+            void playerPosition(std::size_t playerIndex, Registry &reg);
         };
     }
 }

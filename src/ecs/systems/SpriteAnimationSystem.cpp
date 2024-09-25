@@ -7,8 +7,7 @@
 
 #include "SpriteAnimationSystem.hpp"
 
-void ecs::system::SpriteAnimationSystem::operator()(Registry &reg)
-{
+void ecs::system::SpriteAnimationSystem::operator()(Registry &reg) {
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     static double time0 = GetTime();
@@ -22,7 +21,7 @@ void ecs::system::SpriteAnimationSystem::operator()(Registry &reg)
             if (!drawables[i]->isLoaded)
                 continue;
             if (timeElapsed >= SPRITE_UPDATE_TIME) {
-                offset = float(drawables[i]->spriteTexture.width)/spriteInfos[i]->patternNb;
+                offset = float(drawables[i]->spriteTexture.width) / spriteInfos[i]->patternNb;
                 firstPatternLocation = spriteInfos[i]->firstPattern * offset;
                 if (drawables[i]->spriteRect.x + offset == float(drawables[i]->spriteTexture.width)) {
                     drawables[i]->spriteRect.x = firstPatternLocation;

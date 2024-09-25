@@ -44,6 +44,9 @@ check-vcpkg:
 		./vcpkg install raylib > /dev/null 2>&1; \
 	fi
 
+format:
+	find . -name "*.hpp" -o -name "*.cpp" | xargs clang-format -i
+
 re: all
 
 clean:

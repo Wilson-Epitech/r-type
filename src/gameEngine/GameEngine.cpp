@@ -7,8 +7,7 @@
 
 #include "GameEngine.hpp"
 
-void GameEngine::run()
-{
+void GameEngine::run() {
     SetTargetFPS(FPS_LIMIT);
     while (!WindowShouldClose()) {
         BeginDrawing();
