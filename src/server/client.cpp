@@ -1,21 +1,30 @@
 #include <asio.hpp>
 #include <iostream>
+#include <string>
 
 int main()
 {
-    try
-    {
+    try {
         asio::io_context io_context;
 
         asio::ip::udp::socket socket{io_context};
         socket.open(asio::ip::udp::v4());
 
-        socket.send_to(
-                asio::buffer("Hello world!"),
-                asio::ip::udp::endpoint{asio::ip::make_address("127.0.0.1"), 4242});
-    }
-    catch (std::exception& e)
-    {
+        asio::ip::udp::resolver resolver(io_context);
+        asio::ip::udp::endpoint receiver_endpoint = *resolver.resolve(asio::ip::udp::v4(), "127.0.0.1", "4242").begin();
+
+        std::string message;
+        while (true) {
+            std::getline(std::cin, message);
+
+            if (message == "exit") {
+                socket.send_to(asio::buffer("Client deconnected"), receiver_endpoint);
+                break;
+            }
+
+            socket.send_to(asio::buffer(message), receiver_endpoint);
+        }
+    } catch (std::exception& e) {
         std::cerr << e.what() << '\n';
         return -1;
     }
