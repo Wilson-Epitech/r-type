@@ -17,12 +17,12 @@ namespace ecs {
     enum EntityType {
         PLAYER,
         PLAYERSHOT,
-        ENEMY
+        ENEMY,
+        BACKGROUND
     };
 
     namespace component {
         struct Drawable {
-            bool isBackground = false;
             bool isLoaded = false;
             Texture2D spriteTexture = Texture2D{};
             Rectangle spriteRect = {0, 0, 0, 0};
