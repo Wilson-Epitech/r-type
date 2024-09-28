@@ -63,7 +63,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
     float shotX = positions[playerIndex]->x + (float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width)) *
                                                   spriteInfos[playerShootIndex]->scaleFactor;
-        float shotY =
+    float shotY =
         positions[playerIndex]->y + ((float(drawables[playerIndex]->spriteRect.height) / 2) * spriteInfos[playerIndex]->scaleFactor -
                                      (float(shotSpriteRect.height) / 2) * spriteInfos[playerShootIndex]->scaleFactor);
 
