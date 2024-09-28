@@ -55,7 +55,7 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    std::size_t enmyShootIndex = getPlayerShootIndex(reg);
+    std::size_t enmyShootIndex = getEnemyShootIndex(reg);
     if (enmyShootIndex == 0)
         return;
     entity_t entity = reg.spawnEntity();
@@ -79,7 +79,7 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     lives.insertAt(entity, ecs::component::Life{1});
 }
 
-std::size_t ecs::system::EnemyFiringSystem::getPlayerShootIndex(Registry &reg) {
+std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
