@@ -28,7 +28,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 continue;
             rec2 = spriteHitbox(positions, drawables, j);
             if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) &&
-                !isPlayerAndPlayerShot(types[i]->type, types[j]->type) && !isEnemyAndEnemyShot(types[i]->type, types[j]->type) && !isShotAndShot(types[i]->type, types[j]->type)) {
+                areEntitiesEnnemies(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
             }
@@ -42,19 +42,28 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
                      float(drawables[index]->spriteRect.height)};
 }
 
-bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(ecs::EntityType &firstType, ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::areEntitiesEnnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
+{
+    return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) && !isEnemyAndEnemyShot(firstType, secondType) && !isShotAndShot(firstType, secondType));
+}
+
+bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT) ||
             (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER));
 }
 
-bool ecs::system::CollisionSystem::isEnemyAndEnemyShot(ecs::EntityType &firstType, ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::isEnemyAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::ENEMY && secondType == ecs::EntityType::ENEMYSHOT) ||
             (firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::ENEMY));
 }
 
-bool ecs::system::CollisionSystem::isShotAndShot(ecs::EntityType &firstType, ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::isShotAndShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::ENEMYSHOT) ||
             (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYERSHOT) ||
             (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::ENEMYSHOT) ||
             (firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::PLAYERSHOT));
+}
+
+bool ecs::system::CollisionSystem::isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::BACKGROUND || secondType == ecs::EntityType::BACKGROUND));
 }

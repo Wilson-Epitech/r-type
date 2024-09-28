@@ -58,8 +58,9 @@ void game::RTypeGame::addComponentsToEntities() {
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5f, 0.0});
-    drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{true});
+    drawables.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Drawable{});
     spriteInfos.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::SpriteInfos{BACKGROUND_PATH, 1, 0, 0.625});
+    types.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Type{ecs::EntityType::BACKGROUND});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME],
                          ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
