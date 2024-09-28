@@ -18,7 +18,7 @@
 int main() {
     try {
         game::RTypeGame rtype;
-        GameEngine engine(rtype.getRegister(), rtype.getGameName(), rtype);
+        GameEngine engine(rtype.getRegistry(), rtype.getGameName(), rtype);
         engine.run();
     } catch (const Error &e) {
         std::cerr << e.what() << std::endl;

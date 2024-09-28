@@ -59,13 +59,15 @@ namespace game {
         RTypeGame(const std::string gameName = "R-Type");
         ~RTypeGame() = default;
 
+        ecs::Registry &getRegistry() override;
+        std::string &getGameName() override;
+
+      private:
         GameStatus gameState(ecs::Registry &reg) override;
         void spawnEntities() override;
         void registerComponents() override;
         void addComponentsToEntities() override;
-        void addSystemsToRegister() override;
-        ecs::Registry &getRegister() override;
-        std::string &getGameName() override;
+        void addSystemsToRegistry() override;
     };
 }
 

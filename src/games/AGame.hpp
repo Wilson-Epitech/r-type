@@ -14,20 +14,21 @@
 namespace game {
     class AGame : virtual public game::IGame {
       public:
-        AGame(const std::string &gameName) : _gameName(gameName) {};
+        AGame(const std::string &gameName) : _gameName(gameName){};
         ~AGame() = default;
 
         GameStatus operator()(ecs::Registry &reg) override {
             return gameState(reg);
         }
+
+      protected:
         void initializeGame() override {
             spawnEntities();
             registerComponents();
             addComponentsToEntities();
-            addSystemsToRegister();
+            addSystemsToRegistry();
         };
 
-      protected:
         ecs::Registry _reg;
         std::string _gameName;
         std::unordered_map<std::string, entity_t> _stringToEntity;

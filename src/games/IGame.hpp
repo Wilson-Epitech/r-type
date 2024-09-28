@@ -23,14 +23,16 @@ namespace game {
         ~IGame() = default;
 
         virtual GameStatus operator()(ecs::Registry &reg) = 0;
+        virtual ecs::Registry &getRegistry() = 0;
+        virtual std::string &getGameName() = 0;
+
+      protected:
         virtual GameStatus gameState(ecs::Registry &reg) = 0;
         virtual void initializeGame() = 0;
         virtual void spawnEntities() = 0;
         virtual void registerComponents() = 0;
         virtual void addComponentsToEntities() = 0;
-        virtual void addSystemsToRegister() = 0;
-        virtual ecs::Registry &getRegister() = 0;
-        virtual std::string &getGameName() = 0;
+        virtual void addSystemsToRegistry() = 0;
     };
 }
 

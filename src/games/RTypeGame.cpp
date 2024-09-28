@@ -93,7 +93,7 @@ void game::RTypeGame::addComponentsToEntities() {
     soundEffect.insertAt(_stringToEntity[ENEMY_SHOOT], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
 }
 
-void game::RTypeGame::addSystemsToRegister() {
+void game::RTypeGame::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::ControlSystem());
     _reg.addSystem(ecs::system::PositionSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
@@ -106,7 +106,7 @@ void game::RTypeGame::addSystemsToRegister() {
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
 }
 
-ecs::Registry &game::RTypeGame::getRegister() {
+ecs::Registry &game::RTypeGame::getRegistry() {
     return _reg;
 }
 
