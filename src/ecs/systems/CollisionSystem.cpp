@@ -42,9 +42,9 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
                      float(drawables[index]->spriteRect.height)};
 }
 
-bool ecs::system::CollisionSystem::areEntitiesEnnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
-    return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) && !isEnemyAndEnemyShot(firstType, secondType) && !isShotAndShot(firstType, secondType));
+bool ecs::system::CollisionSystem::areEntitiesEnnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
+            !isEnemyAndEnemyShot(firstType, secondType) && !isShotAndShot(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {

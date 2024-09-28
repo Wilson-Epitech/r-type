@@ -71,9 +71,9 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enmyShootIndex]->vx, velocities[enmyShootIndex]->vy,
                                                          velocities[enmyShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(
-        entity, ecs::component::SpriteInfos{spriteInfos[enmyShootIndex]->spritePath, spriteInfos[enmyShootIndex]->patternNb,
-                                            spriteInfos[enmyShootIndex]->firstPattern, spriteInfos[enmyShootIndex]->scaleFactor});
+    spriteInfos.insertAt(entity,
+                         ecs::component::SpriteInfos{spriteInfos[enmyShootIndex]->spritePath, spriteInfos[enmyShootIndex]->patternNb,
+                                                     spriteInfos[enmyShootIndex]->firstPattern, spriteInfos[enmyShootIndex]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});

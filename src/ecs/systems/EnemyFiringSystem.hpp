@@ -6,7 +6,7 @@
 */
 
 #ifndef ENEMYFIRINGSYSTEM_HPP_
-    #define ENEMYFIRINGSYSTEM_HPP_
+#define ENEMYFIRINGSYSTEM_HPP_
 
 #include "Assets.hpp"
 #include "Components.hpp"
