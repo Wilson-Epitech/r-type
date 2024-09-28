@@ -28,7 +28,7 @@ namespace ecs {
             bool isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isEnemyAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
-            bool isShotAndShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isPlayerShotAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
         };
     }
 }

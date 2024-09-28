@@ -67,7 +67,7 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
                   (float(drawables[enemyIndex]->spriteRect.height) / 2 - float(drawables[enemyIndex]->spriteRect.height) / 3) +
                   (float(shotSpriteRect.height) / 2);
 
-    playSound(reg);
+    soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
                                                          velocities[enemyShootIndex]->possibleVelocity});
@@ -94,7 +94,7 @@ std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
     return 0;
 }
 
-void ecs::system::EnemyFiringSystem::playSound(Registry &reg) {
+void ecs::system::EnemyFiringSystem::soundHasToBePlayed(Registry &reg) {
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
