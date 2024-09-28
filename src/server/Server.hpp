@@ -22,13 +22,14 @@ class Server
         void start_receive();
         void handle_receive(const std::error_code& error, std::size_t bytes_transferred);
         void handle_send(std::shared_ptr<std::string> message, const std::error_code& error, std::size_t bytes_transferred);
+        std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
 
         asio::ip::udp::socket socket_;
         asio::ip::udp::endpoint remote_endpoint_;
         std::array<char, 1024> recv_buffer_;
 
-        std::size_t idClient;
-        std::unordered_map<std::size_t, asio::ip::udp::endpoint> connectedClients;
+        std::size_t _idClient;
+        std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
 };
 
 #endif

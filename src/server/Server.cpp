@@ -9,7 +9,7 @@
 #include <iostream>
 #include <functional>
 
-Server::Server(asio::io_context& io_context) : socket_(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), 4242)), idClient(1) {
+Server::Server(asio::io_context& io_context) : socket_(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), 4242)), _idClient(0) {
     start_receive();
 }
 
@@ -21,9 +21,12 @@ void Server::start_receive() {
         std::placeholders::_2));
 }
 
-void Server::handle_receive(const std::error_code& error, std::size_t)
+void Server::handle_receive(const std::error_code& error, std::size_t byteTransfered)
 {
     if (!error) {
+        std::size_t talkingClient = logNewConnection(remote_endpoint_);
+        std::cout << "Server received msg from client " << talkingClient << ": " << std::string(recv_buffer_.data(), byteTransfered) << std::endl;
+
         std::shared_ptr<std::string> message(new std::string("Server received\n"));
 
         socket_.async_send_to(asio::buffer(*message), remote_endpoint_,
@@ -32,8 +35,7 @@ void Server::handle_receive(const std::error_code& error, std::size_t)
                 std::placeholders::_2));
 
         start_receive();
-        std::cout << "Client: " << std::string(recv_buffer_.data()) << std::endl;
-        std::fill(std::begin(recv_buffer_), std::end(recv_buffer_), 0);
+        recv_buffer_.fill(0);
     } else {
         std::cerr << "Receive error: " << error.message() << std::endl;
     }
@@ -45,8 +47,32 @@ void Server::handle_send(std::shared_ptr<std::string> message, const std::error_
         std::cerr << "Failed to send message. Error: " << error.message() << std::endl;
 }
 
-void Server::sendToAClient(const std::size_t idClient, const std::string message)
+void Server::sendToAClient(const std::size_t idClient, const std::string messageToSend)
 {
+    auto it = _connectedClients.find(idClient);
 
+    if (it != _connectedClients.end()) {
+        std::shared_ptr<std::string> message(new std::string (messageToSend));
+
+        socket_.async_send_to(asio::buffer(*message), remote_endpoint_,
+            std::bind(&Server::handle_send, this, message,
+                std::placeholders::_1,
+                std::placeholders::_2));
+    } else {
+        std::cerr << "Client " << idClient << "not found" << std::endl;
+    }
 }
 
+std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
+{
+    for (const auto& it: _connectedClients) {
+        if (it.second == endpoint)
+            return it.first;
+    }
+
+    _idClient++;
+    _connectedClients[_idClient] = endpoint;
+    std::cout << "New client connected: " << _idClient << std::endl;
+    return _idClient;
+
+}
