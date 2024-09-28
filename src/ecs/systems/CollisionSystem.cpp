@@ -28,7 +28,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 continue;
             rec2 = spriteHitbox(positions, drawables, j);
             if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) &&
-                areEntitiesEnnemies(types[i]->type, types[j]->type)) {
+                areEntitiesEnemies(types[i]->type, types[j]->type)) {
                 lives[i]->nbLives--;
                 lives[j]->nbLives--;
             }
@@ -42,7 +42,7 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
                      float(drawables[index]->spriteRect.height)};
 }
 
-bool ecs::system::CollisionSystem::areEntitiesEnnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
             !isEnemyAndEnemyShot(firstType, secondType) && !isShotAndShot(firstType, secondType));
 }

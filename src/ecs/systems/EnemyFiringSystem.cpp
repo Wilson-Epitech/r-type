@@ -55,12 +55,12 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    std::size_t enmyShootIndex = getEnemyShootIndex(reg);
-    if (enmyShootIndex == 0)
+    std::size_t enemyShootIndex = getEnemyShootIndex(reg);
+    if (enemyShootIndex == 0)
         return;
     entity_t entity = reg.spawnEntity();
-    Texture2D shotTexture = LoadTexture(spriteInfos[enmyShootIndex]->spritePath.c_str());
-    float offset = float(shotTexture.width) / spriteInfos[enmyShootIndex]->patternNb;
+    Texture2D shotTexture = LoadTexture(spriteInfos[enemyShootIndex]->spritePath.c_str());
+    float offset = float(shotTexture.width) / spriteInfos[enemyShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
     float shotX = positions[enemyIndex]->x + float(drawables[enemyIndex]->spriteRect.width) - float(shotSpriteRect.width);
     float shotY = positions[enemyIndex]->y +
@@ -69,11 +69,11 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
 
     playSound(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity{velocities[enmyShootIndex]->vx, velocities[enmyShootIndex]->vy,
-                                                         velocities[enmyShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(entity,
-                         ecs::component::SpriteInfos{spriteInfos[enmyShootIndex]->spritePath, spriteInfos[enmyShootIndex]->patternNb,
-                                                     spriteInfos[enmyShootIndex]->firstPattern, spriteInfos[enmyShootIndex]->scaleFactor});
+    velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
+                                                         velocities[enemyShootIndex]->possibleVelocity});
+    spriteInfos.insertAt(
+        entity, ecs::component::SpriteInfos{spriteInfos[enemyShootIndex]->spritePath, spriteInfos[enemyShootIndex]->patternNb,
+                                            spriteInfos[enemyShootIndex]->firstPattern, spriteInfos[enemyShootIndex]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
