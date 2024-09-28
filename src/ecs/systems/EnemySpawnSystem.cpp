@@ -6,6 +6,7 @@
 */
 
 #include "EnemySpawnSystem.hpp"
+#include <iostream>
 
 void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::EnemySpawn> &enemySpawn = reg.getComponents<component::EnemySpawn>();
@@ -79,7 +80,8 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
-    enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
+    if (enemyShooting.size() > i)
+        enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
     if (enemySoundEffect[i])
         enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
 }
