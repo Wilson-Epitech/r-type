@@ -26,12 +26,10 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
                 time0 = GetTime();
             }
             if (IsKeyDown(KEY_SPACE) && canShoot) {
-                playSound(reg);
                 addShot(i, reg);
                 canShoot = false;
             } else if (IsGamepadAvailable(gamepad)) {
                 if (IsGamepadTriggerButtonDown(gamepad) && canShoot) {
-                    playSound(reg);
                     addShot(i, reg);
                     canShoot = false;
                 }
@@ -57,15 +55,20 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
+    if (playerShootIndex == 0)
+        return;
     entity_t entity = reg.spawnEntity();
     Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
     float offset = float(shotTexture.width) / spriteInfos[playerShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
-    float shotX = positions[playerIndex]->x + float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width);
-    float shotY = positions[playerIndex]->y +
-                  (float(drawables[playerIndex]->spriteRect.height) / 2 - float(drawables[playerIndex]->spriteRect.height) / 3) +
-                  (float(shotSpriteRect.height) / 2);
+    float shotX = positions[playerIndex]->x + (float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width)) *
+                                                  spriteInfos[playerShootIndex]->scaleFactor;
+    float shotY =
+        positions[playerIndex]->y + ((float(drawables[playerIndex]->spriteRect.height) / 2) * spriteInfos[playerIndex]->scaleFactor -
+                                     (float(shotSpriteRect.height) / 2) * spriteInfos[playerShootIndex]->scaleFactor);
 
+    UnloadTexture(shotTexture);
+    soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
                                                          velocities[playerShootIndex]->possibleVelocity});
@@ -89,10 +92,10 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
             }
         }
     }
-    throw Error("Component PlayerShoot not found have you initialized it ?");
+    return 0;
 }
 
-void ecs::system::FiringSystem::playSound(Registry &reg) {
+void ecs::system::FiringSystem::soundHasToBePlayed(Registry &reg) {
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 

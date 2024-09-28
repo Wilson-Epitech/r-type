@@ -12,6 +12,7 @@
 #include "CollisionSystem.hpp"
 #include "ControlSystem.hpp"
 #include "DrawSystem.hpp"
+#include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "FiringSystem.hpp"
 #include "LifeSystem.hpp"
@@ -22,8 +23,9 @@
 #define PLAYER_NAME "player"
 #define BACKGROUND_NAME "background"
 #define SPAWN_ENEMY_NAME "enemy"
-#define PLAYER_SHOOT "player_shoot"
 #define SPAWN_BOSS_NAME "boss"
+#define PLAYER_SHOOT "player_shoot"
+#define ENEMY_SHOOT "enemy_shoot"
 
 #define PLAYER_SPRITE_NB_PATTERN 16
 #define FIRST_ENEMY_SPRITE_NB_PATTERN 8
@@ -36,6 +38,8 @@
 #define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.0
 #define ENEMY_SCALE_FACTOR 1
 #define BOSS_SCALE_FACTOR 1.5
+
+#define ENEMY_SHOT_SACLE_FACTOR 2
 
 #define MAX_SPAWN_HEIGHT 1040
 #define MIN_SPAWN_HEIGHT 30

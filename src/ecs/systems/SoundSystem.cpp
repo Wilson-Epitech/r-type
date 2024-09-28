@@ -22,8 +22,7 @@ void ecs::system::SoundSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::SoundSystem::playDeadSong(std::size_t i, Registry &reg)
-{
+void ecs::system::SoundSystem::playDeadSong(std::size_t i, Registry &reg) {
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
 

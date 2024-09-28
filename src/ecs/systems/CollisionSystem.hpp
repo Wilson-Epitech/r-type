@@ -24,9 +24,11 @@ namespace ecs {
           private:
             Rectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::Drawable> &drawables,
                                    std::size_t index);
-            bool areEntitiesEnnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isEnemyAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isPlayerShotAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
         };
     }
 }

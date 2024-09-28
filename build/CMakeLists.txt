@@ -40,6 +40,7 @@ file(GLOB_RECURSE SRC
     ../src/ecs/systems/DrawSystem.cpp
     ../src/ecs/systems/PositionSystem.cpp
     ../src/ecs/systems/SoundSystem.cpp
+    ../src/ecs/systems/EnemyFiringSystem.cpp
     ../lib/Lib.cpp
 )
 
