@@ -18,9 +18,9 @@ int main(int ac, char **av)
         asio::io_context io_context;
         Server server(io_context, std::stoi(av[1]));
         io_context.run();
-    }
-    catch (std::exception& e) {
+    } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
+        return -1;
     }
 
     return 0;

@@ -26,6 +26,7 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
     if (!error) {
         std::size_t talkingClient = logNewConnection(_remoteEndpoint);
         std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
+        sendToAClient(1, "coucou");
 
         std::shared_ptr<std::string> message(new std::string("Server received"));
 
@@ -54,7 +55,7 @@ void Server::sendToAClient(const std::size_t idClient, const std::string message
     if (it != _connectedClients.end()) {
         std::shared_ptr<std::string> message(new std::string (messageToSend));
 
-        _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
+        _socket.async_send_to(asio::buffer(*message), it->second,
             std::bind(&Server::handleSend, this, message,
                 std::placeholders::_1,
                 std::placeholders::_2));
