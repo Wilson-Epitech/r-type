@@ -61,11 +61,13 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
     float offset = float(shotTexture.width) / spriteInfos[playerShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
-    float shotX = positions[playerIndex]->x + float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width);
-    float shotY = positions[playerIndex]->y +
-                  (float(drawables[playerIndex]->spriteRect.height) / 2 - float(drawables[playerIndex]->spriteRect.height) / 3) +
-                  (float(shotSpriteRect.height) / 2);
+    float shotX = positions[playerIndex]->x + (float(drawables[playerIndex]->spriteRect.width) + float(shotSpriteRect.width)) *
+                                                  spriteInfos[playerShootIndex]->scaleFactor;
+        float shotY =
+        positions[playerIndex]->y + ((float(drawables[playerIndex]->spriteRect.height) / 2) * spriteInfos[playerIndex]->scaleFactor -
+                                     (float(shotSpriteRect.height) / 2) * spriteInfos[playerShootIndex]->scaleFactor);
 
+    UnloadTexture(shotTexture);
     soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,

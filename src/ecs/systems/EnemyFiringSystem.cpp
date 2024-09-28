@@ -62,10 +62,10 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     Texture2D shotTexture = LoadTexture(spriteInfos[enemyShootIndex]->spritePath.c_str());
     float offset = float(shotTexture.width) / spriteInfos[enemyShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
-    float shotX = positions[enemyIndex]->x + float(drawables[enemyIndex]->spriteRect.width) - float(shotSpriteRect.width);
-    float shotY = positions[enemyIndex]->y +
-                  (float(drawables[enemyIndex]->spriteRect.height) / 2 - float(drawables[enemyIndex]->spriteRect.height) / 3) +
-                  (float(shotSpriteRect.height) / 2);
+    float shotX = positions[enemyIndex]->x - (float(drawables[enemyIndex]->spriteRect.width) / 2 - float(shotSpriteRect.width) / 2);
+    float shotY = positions[enemyIndex]->y + ((float(drawables[enemyIndex]->spriteRect.height) / 2) * spriteInfos[enemyIndex]->scaleFactor -
+                                              (float(shotSpriteRect.height) / 2) * spriteInfos[enemyShootIndex]->scaleFactor);
+    UnloadTexture(shotTexture);
 
     soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});

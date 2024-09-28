@@ -83,6 +83,8 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
         if (enemyShooting[i])
             enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
     }
-    if (enemySoundEffect[i])
-        enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
+    if (enemySoundEffect.size() > i) {
+        if (enemySoundEffect[i])
+            enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
+    }
 }
