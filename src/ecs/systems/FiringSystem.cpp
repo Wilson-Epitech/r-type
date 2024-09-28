@@ -26,12 +26,10 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
                 time0 = GetTime();
             }
             if (IsKeyDown(KEY_SPACE) && canShoot) {
-                playSound(reg);
                 addShot(i, reg);
                 canShoot = false;
             } else if (IsGamepadAvailable(gamepad)) {
                 if (IsGamepadTriggerButtonDown(gamepad) && canShoot) {
-                    playSound(reg);
                     addShot(i, reg);
                     canShoot = false;
                 }
@@ -57,6 +55,8 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
+    if (playerShootIndex == 0)
+        return;
     entity_t entity = reg.spawnEntity();
     Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
     float offset = float(shotTexture.width) / spriteInfos[playerShootIndex]->patternNb;
@@ -65,6 +65,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     float shotY = positions[playerIndex]->y +
                   (float(drawables[playerIndex]->spriteRect.height) / 2 - float(drawables[playerIndex]->spriteRect.height) / 3) +
                   (float(shotSpriteRect.height) / 2);
+    playSound(reg);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
@@ -89,7 +90,7 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
             }
         }
     }
-    throw Error("Component PlayerShoot not found have you initialized it ?");
+    return 0;
 }
 
 void ecs::system::FiringSystem::playSound(Registry &reg) {

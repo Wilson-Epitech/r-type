@@ -65,6 +65,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::ShootingRate> &enemyShooting = reg.getComponents<component::ShootingRate>();
     SparseArray<component::SoundEffect> &enemySoundEffect = reg.getComponents<component::SoundEffect>();
     entity_t entity = reg.spawnEntity();
     float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
@@ -78,6 +79,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
+    enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
     if (enemySoundEffect[i])
         enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
 }

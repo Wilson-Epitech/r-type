@@ -1,0 +1,109 @@
+/*
+** R_TYPE PROJECT, 2024
+** branch
+** File description:
+** EnemyFiringSystem
+*/
+
+#include "EnemyFiringSystem.hpp"
+
+void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
+    SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
+    SparseArray<component::Type> &type = reg.getComponents<component::Type>();
+    double time0 = GetTime();
+    static std::vector<std::pair<std::size_t, double>> timer;
+    double time1 = GetTime();
+    double timeElapsed = 0;
+    float spawnInterval = 0;
+    bool isTimerSet = false;
+
+    for (std::size_t i = 0; i < type.size() && i < enemyShootingRate.size(); ++i) {
+        if (type[i] && enemyShootingRate[i]) {
+            if (type[i]->type != ecs::EntityType::ENEMY)
+                continue;
+            if (timer.size() > 0) {
+                for (std::size_t j = 0; j < timer.size(); j++) {
+                    if (timer[j].first == i) {
+                        time0 = timer[j].second;
+                        isTimerSet = true;
+                    }
+                }
+            }
+            if (!isTimerSet) {
+                time0 = GetTime();
+                timer.push_back({i, time0});
+            }
+            timeElapsed = time1 - time0;
+            spawnInterval = enemyShootingRate[i]->shootRate;
+            if (timeElapsed >= spawnInterval) {
+                addShot(i, reg);
+            }
+            if (timeElapsed >= spawnInterval) {
+                for (std::size_t j = 0; j < timer.size(); j++) {
+                    if (timer[j].first == i) {
+                        timer[j].second = GetTime();
+                    }
+                }
+            }
+        }
+    }
+}
+
+void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &reg) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    std::size_t playerShootIndex = getPlayerShootIndex(reg);
+    if (playerShootIndex == 0)
+        return;
+    entity_t entity = reg.spawnEntity();
+    Texture2D shotTexture = LoadTexture(spriteInfos[playerShootIndex]->spritePath.c_str());
+    float offset = float(shotTexture.width) / spriteInfos[playerShootIndex]->patternNb;
+    Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
+    float shotX = positions[enemyIndex]->x + float(drawables[enemyIndex]->spriteRect.width) - float(shotSpriteRect.width);
+    float shotY = positions[enemyIndex]->y +
+                  (float(drawables[enemyIndex]->spriteRect.height) / 2 - float(drawables[enemyIndex]->spriteRect.height) / 3) +
+                  (float(shotSpriteRect.height) / 2);
+
+    playSound(reg);
+    positions.insertAt(entity, ecs::component::Position{shotX, shotY});
+    velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
+                                                         velocities[playerShootIndex]->possibleVelocity});
+    spriteInfos.insertAt(
+        entity, ecs::component::SpriteInfos{spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
+                                            spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
+    drawables.insertAt(entity, ecs::component::Drawable{});
+    types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
+    lives.insertAt(entity, ecs::component::Life{1});
+}
+
+std::size_t ecs::system::EnemyFiringSystem::getPlayerShootIndex(Registry &reg) {
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::Velocity> &playerShootVelocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < spriteInfos.size() && i < playerShootVelocities.size() && i < types.size(); ++i) {
+        if (spriteInfos[i] && playerShootVelocities[i] && types[i]) {
+            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->type == ecs::EntityType::ENEMYSHOT) {
+                return i;
+            }
+        }
+    }
+    return 0;
+}
+
+void ecs::system::EnemyFiringSystem::playSound(Registry &reg) {
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
+        if (types[i] && soundEffect[i]) {
+            if (types[i]->type == ecs::EntityType::ENEMYSHOT) {
+                soundEffect[i]->hasToBePlayed = true;
+            }
+        }
+    }
+}

@@ -17,6 +17,7 @@ namespace ecs {
     enum EntityType {
         PLAYER,
         PLAYERSHOT,
+        ENEMYSHOT,
         ENEMY
     };
 
@@ -60,6 +61,10 @@ namespace ecs {
 
         struct Life {
             std::size_t nbLives;
+        };
+
+        struct ShootingRate {
+            int shootRate = 0;
         };
 
         struct EnemySpawn {

@@ -18,12 +18,14 @@
 #include "PositionSystem.hpp"
 #include "SoundSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "EnemyFiringSystem.hpp"
 
 #define PLAYER_NAME "player"
 #define BACKGROUND_NAME "background"
 #define SPAWN_ENEMY_NAME "enemy"
-#define PLAYER_SHOOT "player_shoot"
 #define SPAWN_BOSS_NAME "boss"
+#define PLAYER_SHOOT "player_shoot"
+#define ENEMY_SHOOT "enemy_shoot"
 
 #define PLAYER_SPRITE_NB_PATTERN 16
 #define FIRST_ENEMY_SPRITE_NB_PATTERN 8
