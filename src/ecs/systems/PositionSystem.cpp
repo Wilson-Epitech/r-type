@@ -20,9 +20,9 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
             }
         }
         if (type[i] && positions[i]) {
-            if ((type[i]->type == ecs::EntityType::PLAYERSHOT || type[i]->type == ecs::EntityType::ENEMYSHOT ||
-                 type[i]->type == ecs::EntityType::ENEMY) &&
-                !Lib::isOnScreen({positions[i]->x, positions[i]->y}))
+            if ((type[i]->type == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (type[i]->type == ecs::EntityType::ENEMYSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (type[i]->type == ecs::EntityType::ENEMY && positions[i]->x < 0))
                 reg.killEntity(i);
         }
     }
