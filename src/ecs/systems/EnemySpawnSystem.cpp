@@ -79,8 +79,10 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
-    if (enemyShooting.size() > i)
-        enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
+    if (enemyShooting.size() > i) {
+        if (enemyShooting[i])
+            enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
+    }
     if (enemySoundEffect[i])
         enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
 }
