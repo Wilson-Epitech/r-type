@@ -17,6 +17,7 @@ class Server
     public:
         Server(asio::io_context& ioContext, std::size_t port);
         void sendToAClient(const std::size_t idClient, const std::string message);
+        void sendToAllClient(const std::string message);
 
     private:
         void startReceiving();

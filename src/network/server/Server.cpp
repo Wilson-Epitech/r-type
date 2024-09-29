@@ -9,11 +9,13 @@
 #include <iostream>
 #include <functional>
 
-Server::Server(asio::io_context& io_context, std::size_t port) : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0) {
+Server::Server(asio::io_context& io_context, std::size_t port) : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0)
+{
     startReceiving();
 }
 
-void Server::startReceiving() {
+void Server::startReceiving()
+{
     _socket.async_receive_from(
         asio::buffer(_receiveBuffer), _remoteEndpoint,
         std::bind(&Server::handleReceive, this,
@@ -30,7 +32,8 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
             return;
         }
         std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
-        sendToAClient(1, "coucou");
+        sendToAClient(1, "TEST ONE CLIENT");
+        sendToAllClient("TEST ALL CLIENT");
 
         std::shared_ptr<std::string> message(new std::string("Server received"));
 
@@ -65,6 +68,18 @@ void Server::sendToAClient(const std::size_t idClient, const std::string message
                 std::placeholders::_2));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
+    }
+}
+
+void Server::sendToAllClient(const std::string messageToSend)
+{
+    for (auto &it: _connectedClients) {
+        std::shared_ptr<std::string> message(new std::string (messageToSend));
+
+        _socket.async_send_to(asio::buffer(*message), it.second,
+            std::bind(&Server::handleSend, this, message,
+                std::placeholders::_1,
+                std::placeholders::_2));
     }
 }
 
