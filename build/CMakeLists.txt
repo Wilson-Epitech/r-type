@@ -32,15 +32,9 @@ file(GLOB_RECURSE SRC
     ../src/ecs/systems/EnemySpawnSystem.cpp
     ../src/ecs/systems/PositionSystem.cpp
     ../src/ecs/systems/SpriteAnimationSystem.cpp
-    ../src/ecs/systems/CollisionSystem.cpp
-    ../src/ecs/systems/FiringSystem.cpp
-    ../src/ecs/systems/SpriteAnimationSystem.cpp
-    ../src/ecs/systems/ControlSystem.cpp
-    ../src/ecs/systems/LifeSystem.cpp
-    ../src/ecs/systems/DrawSystem.cpp
-    ../src/ecs/systems/PositionSystem.cpp
     ../src/ecs/systems/SoundSystem.cpp
     ../src/ecs/systems/EnemyFiringSystem.cpp
+    ../src/ecs/systems/KillOffscreenEntitiesSystem.cpp
     ../lib/Lib.cpp
 )
 
