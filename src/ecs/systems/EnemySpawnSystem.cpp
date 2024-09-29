@@ -73,7 +73,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
-   if (shootingRate.size() > i) {
+    if (shootingRate.size() > i) {
         if (shootingRate[i])
             shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
     }

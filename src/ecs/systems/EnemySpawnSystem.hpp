@@ -21,10 +21,9 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-            void createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> &enemySpawn,
-                                                               SparseArray<component::Velocity> &velocities,
-                                                               SparseArray<component::Life> &lives,
-                                                               SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i);
+            void createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> &enemySpawn, SparseArray<component::Velocity> &velocities,
+                                SparseArray<component::Life> &lives, SparseArray<component::SpriteInfos> &spriteInfos,
+                                const std::size_t &i);
         };
     }
 }
