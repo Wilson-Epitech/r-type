@@ -9,9 +9,9 @@
 
 void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::EnemySpawn> &enemySpawn = reg.getComponents<component::EnemySpawn>();
-    SparseArray<component::Velocity> &enemyVelocities = reg.getComponents<component::Velocity>();
-    SparseArray<component::Life> &enemyLives = reg.getComponents<component::Life>();
-    SparseArray<component::SpriteInfos> &enemySpriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     double time0 = 0;
     static std::vector<std::pair<std::size_t, double>> timer;
     static bool isFirstSpawn = true;
@@ -20,9 +20,8 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     float spawnInterval = 0;
     bool isTimerSet = false;
 
-    for (std::size_t i = 0; i < enemySpawn.size() && i < enemyVelocities.size() && i < enemyLives.size() && i < enemySpriteInfos.size();
-         ++i) {
-        if (enemySpawn[i] && enemyVelocities[i] && enemyLives[i] && enemySpriteInfos[i]) {
+    for (std::size_t i = 0; i < enemySpawn.size() && i < velocities.size() && i < lives.size() && i < spriteInfos.size(); ++i) {
+        if (enemySpawn[i] && velocities[i] && lives[i] && spriteInfos[i]) {
             if (timer.size() > 0) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
                     if (timer[j].first == i) {
@@ -40,7 +39,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
             if (timeElapsed >= spawnInterval || isFirstSpawn) {
                 for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
-                    createNewEnemy(reg, enemySpawn, enemyVelocities, enemyLives, enemySpriteInfos, i);
+                    createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                 }
                 isFirstSpawn = false;
             }
@@ -55,36 +54,31 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> enemySpawn,
-                                                   SparseArray<component::Velocity> enemyVelocities,
-                                                   SparseArray<component::Life> enemyLives,
-                                                   SparseArray<component::SpriteInfos> enemySpriteInfos, const std::size_t &i) {
+void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> &enemySpawn,
+                                                   SparseArray<component::Velocity> &velocities, SparseArray<component::Life> &lives,
+                                                   SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
-    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    SparseArray<component::ShootingRate> &enemyShooting = reg.getComponents<component::ShootingRate>();
-    SparseArray<component::SoundEffect> &enemySoundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     entity_t entity = reg.spawnEntity();
     float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
     float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
 
     positions.insertAt(entity, ecs::component::Position{x, y});
-    velocities.insertAt(entity,
-                        ecs::component::Velocity{enemyVelocities[i]->vx, enemyVelocities[i]->vy, enemyVelocities[i]->possibleVelocity});
-    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{enemySpriteInfos[i]->spritePath, enemySpriteInfos[i]->patternNb,
-                                                             enemySpriteInfos[i]->firstPattern, enemySpriteInfos[i]->scaleFactor});
+    velocities.insertAt(entity, ecs::component::Velocity{velocities[i]->vx, velocities[i]->vy, velocities[i]->possibleVelocity});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
+                                                             spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(entity, ecs::component::Life{enemyLives[i]->nbLives});
-    if (enemyShooting.size() > i) {
-        if (enemyShooting[i])
-            enemyShooting.insertAt(entity, ecs::component::ShootingRate{enemyShooting[i]->shootRate});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
+   if (shootingRate.size() > i) {
+        if (shootingRate[i])
+            shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
     }
-    if (enemySoundEffect.size() > i) {
-        if (enemySoundEffect[i])
-            enemySoundEffect.insertAt(entity, ecs::component::SoundEffect{enemySoundEffect[i]->soundPath});
+    if (soundEffect.size() > i) {
+        if (soundEffect[i])
+            soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[i]->soundPath});
     }
 }
