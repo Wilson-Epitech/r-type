@@ -104,6 +104,7 @@ void game::RTypeGame::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
+    _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
 }
 
 ecs::Registry &game::RTypeGame::getRegistry() {

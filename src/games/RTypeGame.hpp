@@ -15,6 +15,7 @@
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "FiringSystem.hpp"
+#include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SoundSystem.hpp"
