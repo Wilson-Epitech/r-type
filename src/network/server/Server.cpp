@@ -25,6 +25,10 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
 {
     if (!error) {
         std::size_t talkingClient = logNewConnection(_remoteEndpoint);
+        if (talkingClient == 0) {
+            startReceiving();
+            return;
+        }
         std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
         sendToAClient(1, "coucou");
 
@@ -69,6 +73,11 @@ std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
     for (const auto& it: _connectedClients) {
         if (it.second == endpoint)
             return it.first;
+    }
+
+    if (_connectedClients.size() >= 4) {
+        std::cerr << "Server is full." << std::endl;
+        return 0;
     }
 
     _idClient++;
