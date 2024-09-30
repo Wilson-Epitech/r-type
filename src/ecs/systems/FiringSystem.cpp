@@ -6,7 +6,6 @@
 */
 
 #include "FiringSystem.hpp"
-#include <iostream>
 
 void ecs::system::FiringSystem::operator()(Registry &reg) {
     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
