@@ -18,6 +18,7 @@ class Client {
         Client(asio::io_context& ioContext, const std::string& host, const std::string& port);
         ~Client();
         void sendMessage(const std::string &message);
+        bool getIsRunning();
 
     private:
         void msgFromServer();

@@ -16,6 +16,7 @@ Client::Client(asio::io_context& ioContext, const std::string& host, const std::
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(asio::ip::udp::v4(), host, port).begin();
     _receiverThread = std::thread(&Client::msgFromServer, this);
+    sendMessage("New client connected.");
 }
 
 Client::~Client() {
@@ -38,9 +39,15 @@ void Client::msgFromServer() {
         }
 
         std::cout << "Server: " << std::string(receiveBuffer.data(), len) << std::endl;
+        if (std::string(receiveBuffer.data(), len) == "Could not connect")
+            _isRunning = false;
     }
 }
 
 void Client::sendMessage(const std::string& message) {
     _socket.send_to(asio::buffer(message), _receiveEndpoint);
+}
+
+bool Client::getIsRunning() {
+    return _isRunning;
 }
