@@ -10,10 +10,10 @@
 void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
-    double time0 = 0;
-    static std::vector<std::pair<std::size_t, double>> timer;
-    double time1 = GetTime();
-    double timeElapsed = 0;
+    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
+    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
 
     for (std::size_t i = 0; i < type.size() && i < enemyShootingRate.size(); ++i) {
@@ -29,17 +29,17 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
                 }
             }
             if (!isTimerSet) {
-                time0 = GetTime();
+                time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            timeElapsed = time1 - time0;
-            if (timeElapsed >= enemyShootingRate[i]->shootRate) {
+            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
+            if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
                 addShot(i, reg);
             }
-            if (timeElapsed >= enemyShootingRate[i]->shootRate) {
+            if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
                     if (timer[j].first == i) {
-                        timer[j].second = GetTime();
+                        timer[j].second = std::chrono::steady_clock::now();
                     }
                 }
             }
