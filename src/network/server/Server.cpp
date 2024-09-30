@@ -32,8 +32,8 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
             return;
         }
         std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
-        sendToAClient(1, "TEST ONE CLIENT");
-        sendToAllClient("TEST ALL CLIENT");
+        // sendToAClient(1, "TEST ONE CLIENT");
+        // sendToAllClient("TEST ALL CLIENT");
 
         std::shared_ptr<std::string> message(new std::string("Server received"));
 
@@ -92,6 +92,12 @@ std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
 
     if (_connectedClients.size() >= 4) {
         std::cerr << "Server is full." << std::endl;
+         std::shared_ptr<std::string> message(new std::string ("Could not connect"));
+
+        _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
+            std::bind(&Server::handleSend, this, message,
+                std::placeholders::_1,
+                std::placeholders::_2));
         return 0;
     }
 
