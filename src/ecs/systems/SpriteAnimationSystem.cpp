@@ -10,9 +10,9 @@
 void ecs::system::SpriteAnimationSystem::operator()(Registry &reg) {
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    static double time0 = GetTime();
-    double time1 = GetTime();
-    double timeElapsed = time1 - time0;
+    static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast <std::chrono::milliseconds>(time1 - time0);
     float offset = 0.0;
     float firstPatternLocation = 0.0;
 
@@ -20,7 +20,7 @@ void ecs::system::SpriteAnimationSystem::operator()(Registry &reg) {
         if (drawables[i] && spriteInfos[i]) {
             if (!drawables[i]->isLoaded)
                 continue;
-            if (timeElapsed >= SPRITE_UPDATE_TIME) {
+            if (timeElapsed.count() >= Lib::toMilliseconds(SPRITE_UPDATE_TIME)) {
                 offset = float(drawables[i]->spriteTexture.width) / spriteInfos[i]->patternNb;
                 firstPatternLocation = spriteInfos[i]->firstPattern * offset;
                 if (drawables[i]->spriteRect.x + offset == float(drawables[i]->spriteTexture.width)) {
@@ -31,6 +31,6 @@ void ecs::system::SpriteAnimationSystem::operator()(Registry &reg) {
             }
         }
     }
-    if (timeElapsed >= SPRITE_UPDATE_TIME)
-        time0 = GetTime();
+    if (timeElapsed.count() >= Lib::toMilliseconds(SPRITE_UPDATE_TIME))
+        time0 = std::chrono::steady_clock::now();
 }
