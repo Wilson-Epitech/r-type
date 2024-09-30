@@ -31,5 +31,5 @@ bool Lib::isOnScreen(Vector2 pos) {
 }
 
 double Lib::toMilliseconds(double time) {
-    return time * TO_SECOND;
+    return time * TO_MILLISECONDS;
 }

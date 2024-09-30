@@ -14,7 +14,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool canShoot = true;
     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast <std::chrono::milliseconds>(time1 - time0);
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     float spawnInterval = SHOOT_RATE;
     int gamepad = 0;
 

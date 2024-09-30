@@ -16,7 +16,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
     static bool isFirstSpawn = true;
     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast <std::chrono::milliseconds>(time1 - time0);
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     float spawnInterval = 0;
     bool isTimerSet = false;
 
@@ -34,7 +34,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
                 time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            timeElapsed = std::chrono::duration_cast <std::chrono::milliseconds>(time1 - time0);
+            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             spawnInterval = enemySpawn[i]->timeBeforeSpawn;
             if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval) || isFirstSpawn) {
                 for (int j = 0; j < enemySpawn[i]->waveSize; j++) {

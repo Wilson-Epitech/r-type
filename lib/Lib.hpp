@@ -13,7 +13,7 @@
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 
-#define TO_SECOND 1000
+#define TO_MILLISECONDS 1000
 
 class Lib {
   public:
