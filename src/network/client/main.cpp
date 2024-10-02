@@ -39,7 +39,9 @@ int main(int ac, char** av)
         signal(SIGINT, handleCtrlC);
         while (handleClient(1)) {
 
-            if (!client.getIsRunning()) {
+            std::getline(std::cin, message);
+
+            if (message == "exit" | !client.getIsRunning()) {
                 client.sendMessage("Client disconnected");
                 break;
             }
