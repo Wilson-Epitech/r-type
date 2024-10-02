@@ -9,7 +9,7 @@
 #include <iostream>
 #include <functional>
 
-Server::Server(asio::io_context& io_context, std::size_t port) : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0)
+Server::Server(asio::io_context& io_context, std::size_t port, asio::thread_pool &pool) : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool)
 {
     startReceiving();
 }
@@ -32,8 +32,6 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
             return;
         }
         std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
-        // sendToAClient(1, "TEST ONE CLIENT");
-        // sendToAllClient("TEST ALL CLIENT");
 
         std::shared_ptr<std::string> message(new std::string("Server received"));
 
@@ -92,7 +90,7 @@ std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
 
     if (_connectedClients.size() >= 4) {
         std::cerr << "Server is full." << std::endl;
-         std::shared_ptr<std::string> message(new std::string ("Could not connect"));
+        std::shared_ptr<std::string> message(new std::string ("Could not connect"));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
             std::bind(&Server::handleSend, this, message,
@@ -103,7 +101,10 @@ std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
-    std::cout << "New client connected: " << _idClient << std::endl;
+    sendToAllClient("New connection: " + std::to_string(_idClient));
+
+    asio::post(_threadPool, std::bind(&Server::startReceiving, this));
+
     return _idClient;
 
 }

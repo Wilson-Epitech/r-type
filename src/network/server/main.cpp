@@ -16,8 +16,11 @@ int main(int ac, char **av)
     }
     try {
         asio::io_context io_context;
-        Server server(io_context, std::stoi(av[1]));
+        asio::thread_pool pool(4);
+        Server server(io_context, std::stoi(av[1]), pool);
+
         io_context.run();
+        pool.join();
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
