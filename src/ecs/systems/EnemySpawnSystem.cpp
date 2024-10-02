@@ -12,11 +12,11 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    double time0 = 0;
-    static std::vector<std::pair<std::size_t, double>> timer;
+    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
     static bool isFirstSpawn = true;
-    double time1 = GetTime();
-    double timeElapsed = 0;
+    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     float spawnInterval = 0;
     bool isTimerSet = false;
 
@@ -31,22 +31,22 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
                 }
             }
             if (!isTimerSet) {
-                time0 = GetTime();
+                time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            timeElapsed = time1 - time0;
+            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             spawnInterval = enemySpawn[i]->timeBeforeSpawn;
-            if (timeElapsed >= spawnInterval || isFirstSpawn) {
+            if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval) || isFirstSpawn) {
                 for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                 }
                 isFirstSpawn = false;
             }
-            if (timeElapsed >= spawnInterval) {
+            if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval)) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
                     if (timer[j].first == i) {
-                        timer[j].second = GetTime();
+                        timer[j].second = std::chrono::steady_clock::now();
                     }
                 }
             }

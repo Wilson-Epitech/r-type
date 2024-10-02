@@ -29,3 +29,7 @@ bool Lib::isOnScreen(Vector2 pos) {
         return false;
     return true;
 }
+
+double Lib::toMilliseconds(double time) {
+    return time * TO_MILLISECONDS;
+}

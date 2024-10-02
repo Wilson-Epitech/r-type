@@ -10,6 +10,7 @@
 
 #include "Lib.hpp"
 #include "Registry.hpp"
+#include <chrono>
 
 namespace ecs {
     namespace system {
