@@ -5,61 +5,58 @@
 ## Makefile
 ##
 
-# ---------------------- CMAKE ------------------------------------------ #
+CXX = g++
 
-BUILD_DIR = build
+CXXFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -g -Wall -Wextra
+CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 			\
+			-iquote src/gameEngine -iquote src/ecs -iquote src/ecs/components 	\
+			-iquote src/ecs/systems	-iquote src/server -iquote client/			\
 
-BUILD_OBJ = $(BUILD_DIR)/cmaketmp
+SRC = 	src/gameEngine/GameEngine.cpp									\
+    	src/games/RTypeGame.cpp											\
+    	src/ecs/systems/CollisionSystem.cpp								\
+    	src/ecs/systems/ControlSystem.cpp								\
+    	src/ecs/systems/DrawSystem.cpp									\
+    	src/ecs/systems/EnemyFiringSystem.cpp							\
+    	src/ecs/systems/EnemySpawnSystem.cpp							\
+    	src/ecs/systems/FiringSystem.cpp								\
+    	src/ecs/systems/KillOffscreenEntitiesSystem.cpp					\
+    	src/ecs/systems/LifeSystem.cpp									\
+    	src/ecs/systems/PositionSystem.cpp								\
+    	src/ecs/systems/SoundSystem.cpp									\
+    	src/ecs/systems/SpriteAnimationSystem.cpp						\
+    	lib/Lib.cpp														\
 
-BINARY_NAME = r-type
+SRC_SERVER = 	src/network/server/Server.cpp							\
+    			src/network//server/main.cpp							\
 
-VCPKG = -DCMAKE_TOOLCHAIN_FILE=../vcpkg/scripts/buildsystems/vcpkg.cmake
+SRC_CLIENT = 	src/network//client/Client.cpp							\
+    			src/network//client/main.cpp							\
 
-CMAKE = cmake
+OBJ = $(SRC:.cpp=.o)
+OBJ_SERVER = $(SRC_SERVER:.cpp=.o)
+OBJ_CLIENT = $(SRC_CLIENT:.cpp=.o)
 
-# ----------------------------------------------------------------------- #
-
-
-# ---------------------- DOCUMENTATION ---------------------------------- #
-
-DOXYGEN = doxygen
-DOC_DIR = ./documentation/
-DOXYFILE = $(DOC_DIR)Doxyfile
-
-# ----------------------------------------------------------------------- #
-
-all: check-vcpkg
-	@echo "CMake"
-	@cd $(BUILD_DIR) && $(CMAKE) -B cmaketmp -S . $(VCPKG)
-	@cd $(BUILD_OBJ) && $(CMAKE) --build .
-	@cd $(BUILD_OBJ) && mv $(BINARY_NAME) ../..
-
-check-vcpkg:
-	@if [ ! -d "$(BUILD_DIR)/vcpkg" ]; then \
-		echo "Cloning vcpkg directory..."; \
-		git clone https://github.com/microsoft/vcpkg.git $(BUILD_DIR)/vcpkg > /dev/null 2>&1; \
-		echo "Installing vcpkg binary..."; \
-		cd $(BUILD_DIR)/vcpkg && ./bootstrap-vcpkg.sh > /dev/null 2>&1; \
-		echo "Installing raylib..."; \
-		./vcpkg install raylib > /dev/null 2>&1; \
-	fi
-
+SERVER_NAME = rtype_server
+CLIENT_NAME = rtype_client
+J
 format:
 	find . -name "*.hpp" -o -name "*.cpp" | xargs clang-format -i
 
-re: all
+all: $(SERVER_NAME) $(CLIENT_NAME)
+
+$(SERVER_NAME): $(OBJ) $(OBJ_SERVER)
+	$(CXX) $(CXXFLAGS) -o $(SERVER_NAME) $(OBJ) $(OBJ_SERVER)
+
+$(CLIENT_NAME): $(OBJ) $(OBJ_CLIENT)
+	$(CXX) $(CXXFLAGS) -o $(CLIENT_NAME) $(OBJ) $(OBJ_CLIENT)
 
 clean:
-	@echo "Clean"
-	@cd $(DOC_DIR) && rm -rf docs/html
-	@rm -rf $(BUILD_OBJ)
-	@rm -f $(BINARY_NAME)
+	$(RM) $(OBJ) $(OBJ_SERVER) $(OBJ_CLIENT)
 
-cleanvcpkg:
-	@cd $(BUILD_DIR) && rm -rf vcpkg
+fclean: clean
+	$(RM) $(SERVER_NAME) $(CLIENT_NAME)
 
-doc:
-	@$(DOXYGEN) $(DOXYFILE) > /dev/null
-	@printf "[\033[0;36mdoc built\033[0m]\n"
+re: fclean all
 
-fclean: clean cleanvcpkg
+.PHONY: all clean fclean re
