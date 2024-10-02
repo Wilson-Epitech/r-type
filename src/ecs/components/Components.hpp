@@ -36,6 +36,10 @@ namespace ecs {
             float scaleFactor = 1.0;
         };
 
+        struct SpriteSize {
+            float spriteWidth = 0, spriteHeight = 0;
+        };
+
         struct SoundEffect {
             std::string soundPath;
             Sound sound = Sound{};
