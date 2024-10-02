@@ -6,11 +6,10 @@
 */
 
 #include "Client.hpp"
-#include <iostream>
 #include <csignal>
+#include <iostream>
 
-static sig_atomic_t handleClient(const volatile sig_atomic_t new_status)
-{
+static sig_atomic_t handleClient(const volatile sig_atomic_t new_status) {
     static volatile sig_atomic_t status = 1;
 
     if (new_status != 1)
@@ -18,14 +17,12 @@ static sig_atomic_t handleClient(const volatile sig_atomic_t new_status)
     return status;
 }
 
-static void handleCtrlC(int signal)
-{
+static void handleCtrlC(int signal) {
     if (signal == SIGINT)
         exit(0);
 }
 
-int main(int ac, char** av)
-{
+int main(int ac, char **av) {
     if (ac != 2 || av[1] == NULL) {
         std::cout << "Usage: ./client [port]" << std::endl;
         return -1;
@@ -46,7 +43,7 @@ int main(int ac, char** av)
                 break;
             }
         }
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }

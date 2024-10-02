@@ -5,11 +5,10 @@
 ** main
 */
 
-#include <iostream>
 #include "Server.hpp"
+#include <iostream>
 
-int main(int ac, char **av)
-{
+int main(int ac, char **av) {
     if (ac != 2 || av[1] == NULL) {
         std::cout << "Usage: ./client [port]" << std::endl;
         return -1;
@@ -21,7 +20,7 @@ int main(int ac, char **av)
 
         io_context.run();
         pool.join();
-    } catch (std::exception& e) {
+    } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }

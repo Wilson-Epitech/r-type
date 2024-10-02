@@ -6,39 +6,33 @@
 */
 
 #include "Server.hpp"
-#include <iostream>
 #include <functional>
+#include <iostream>
 
-Server::Server(asio::io_context& io_context, std::size_t port, asio::thread_pool &pool) : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool)
-{
+Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
 }
 
-void Server::startReceiving()
-{
-    _socket.async_receive_from(
-        asio::buffer(_receiveBuffer), _remoteEndpoint,
-        std::bind(&Server::handleReceive, this,
-        std::placeholders::_1,
-        std::placeholders::_2));
+void Server::startReceiving() {
+    _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
+                               std::bind(&Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void Server::handleReceive(const std::error_code& error, std::size_t byteTransfered)
-{
+void Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
     if (!error) {
         std::size_t talkingClient = logNewConnection(_remoteEndpoint);
         if (talkingClient == 0) {
             startReceiving();
             return;
         }
-        std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered) << std::endl;
+        std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered)
+                  << std::endl;
 
         std::shared_ptr<std::string> message(new std::string("Server received"));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-            std::bind(&Server::handleSend, this, message,
-                std::placeholders::_1,
-                std::placeholders::_2));
+                              std::bind(&Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
 
         startReceiving();
         _receiveBuffer.fill(0);
@@ -47,55 +41,45 @@ void Server::handleReceive(const std::error_code& error, std::size_t byteTransfe
     }
 }
 
-void Server::handleSend(std::shared_ptr<std::string> message, const std::error_code& error, std::size_t)
-{
+void Server::handleSend(std::shared_ptr<std::string> message, const std::error_code &error, std::size_t) {
     if (error)
         std::cerr << "Failed to send message. Error: " << error.message() << std::endl;
 }
 
-void Server::sendToAClient(const std::size_t idClient, const std::string messageToSend)
-{
+void Server::sendToAClient(const std::size_t idClient, const std::string messageToSend) {
     auto it = _connectedClients.find(idClient);
 
     if (it != _connectedClients.end()) {
-        std::shared_ptr<std::string> message(new std::string (messageToSend));
+        std::shared_ptr<std::string> message(new std::string(messageToSend));
 
         _socket.async_send_to(asio::buffer(*message), it->second,
-            std::bind(&Server::handleSend, this, message,
-                std::placeholders::_1,
-                std::placeholders::_2));
+                              std::bind(&Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
     }
 }
 
-void Server::sendToAllClient(const std::string messageToSend)
-{
-    for (auto &it: _connectedClients) {
-        std::shared_ptr<std::string> message(new std::string (messageToSend));
+void Server::sendToAllClient(const std::string messageToSend) {
+    for (auto &it : _connectedClients) {
+        std::shared_ptr<std::string> message(new std::string(messageToSend));
 
         _socket.async_send_to(asio::buffer(*message), it.second,
-            std::bind(&Server::handleSend, this, message,
-                std::placeholders::_1,
-                std::placeholders::_2));
+                              std::bind(&Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
     }
 }
 
-std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
-{
-    for (const auto& it: _connectedClients) {
+std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint) {
+    for (const auto &it : _connectedClients) {
         if (it.second == endpoint)
             return it.first;
     }
 
     if (_connectedClients.size() >= 4) {
         std::cerr << "Server is full." << std::endl;
-        std::shared_ptr<std::string> message(new std::string ("Could not connect"));
+        std::shared_ptr<std::string> message(new std::string("Could not connect"));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-            std::bind(&Server::handleSend, this, message,
-                std::placeholders::_1,
-                std::placeholders::_2));
+                              std::bind(&Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
         return 0;
     }
 
@@ -106,5 +90,4 @@ std::size_t Server::logNewConnection(asio::ip::udp::endpoint endpoint)
     asio::post(_threadPool, std::bind(&Server::startReceiving, this));
 
     return _idClient;
-
 }

@@ -9,31 +9,29 @@
 #define SERVER_HPP
 
 #include <array>
-#include <memory>
 #include <asio.hpp>
+#include <memory>
 
-class Server
-{
-    public:
-        Server(asio::io_context& ioContext, std::size_t port, asio::thread_pool &pool);
-        void sendToAClient(const std::size_t idClient, const std::string message);
-        void sendToAllClient(const std::string message);
+class Server {
+  public:
+    Server(asio::io_context &ioContext, std::size_t port, asio::thread_pool &pool);
+    void sendToAClient(const std::size_t idClient, const std::string message);
+    void sendToAllClient(const std::string message);
 
-    private:
-        void startReceiving();
-        void handleReceive(const std::error_code& error, std::size_t bytesTransferred);
-        void handleSend(std::shared_ptr<std::string> message, const std::error_code& error, std::size_t bytesTransferred);
-        std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
+  private:
+    void startReceiving();
+    void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
+    void handleSend(std::shared_ptr<std::string> message, const std::error_code &error, std::size_t bytesTransferred);
+    std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
 
-        asio::ip::udp::socket _socket;
-        asio::ip::udp::endpoint _remoteEndpoint;
-        std::array<char, 1024> _receiveBuffer;
+    asio::ip::udp::socket _socket;
+    asio::ip::udp::endpoint _remoteEndpoint;
+    std::array<char, 1024> _receiveBuffer;
 
-        std::size_t _idClient;
-        std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
+    std::size_t _idClient;
+    std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
 
-        asio::thread_pool &_threadPool;
+    asio::thread_pool &_threadPool;
 };
 
 #endif
-

@@ -6,12 +6,10 @@
 */
 
 #include "Client.hpp"
-#include <iostream>
 #include <asio.hpp>
+#include <iostream>
 
-Client::Client(asio::io_context& ioContext, const std::string& host, const std::string& port)
-    : _socket(ioContext), _isRunning(true)
-{
+Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port) : _socket(ioContext), _isRunning(true) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(asio::ip::udp::v4(), host, port).begin();
@@ -44,7 +42,7 @@ void Client::msgFromServer() {
     }
 }
 
-void Client::sendMessage(const std::string& message) {
+void Client::sendMessage(const std::string &message) {
     _socket.send_to(asio::buffer(message), _receiveEndpoint);
 }
 
