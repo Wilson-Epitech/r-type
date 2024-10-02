@@ -17,7 +17,8 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     Rectangle rec2 = Rectangle{};
 
     fillSpriteSize(spritesInfos, spritesSizes);
-    for (std::size_t i = 0; i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size() && i < spritesSizes.size(); ++i) {
+    for (std::size_t i = 0;
+         i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size() && i < spritesSizes.size(); ++i) {
         if (!positions[i] || !spritesInfos[i] || !types[i] || !lives[i] || !spritesSizes[i])
             continue;
         if (lives[i]->nbLives == 0)
@@ -35,8 +36,8 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
                 continue;
             rec2 = spriteHitbox(positions, spritesSizes, j);
-            if (areEntitiesEnemies(types[i]->type, types[j]->type) && positions[i]->x > 0 &&
-                positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
+            if (areEntitiesEnemies(types[i]->type, types[j]->type) && positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth() &&
+                positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (CheckCollisionRecs(rec1, rec2)) {
                     lives[i]->nbLives--;
                     lives[j]->nbLives--;
