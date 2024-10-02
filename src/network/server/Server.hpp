@@ -15,7 +15,7 @@
 class Server
 {
     public:
-        Server(asio::io_context& ioContext, std::size_t port);
+        Server(asio::io_context& ioContext, std::size_t port, asio::thread_pool &pool);
         void sendToAClient(const std::size_t idClient, const std::string message);
         void sendToAllClient(const std::string message);
 
@@ -31,6 +31,8 @@ class Server
 
         std::size_t _idClient;
         std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
+
+        asio::thread_pool &_threadPool;
 };
 
 #endif
