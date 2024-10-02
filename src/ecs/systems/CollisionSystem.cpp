@@ -8,38 +8,67 @@
 #include "CollisionSystem.hpp"
 
 void ecs::system::CollisionSystem::operator()(Registry &reg) {
-    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
-    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    Rectangle rec1 = {0, 0, 0, 0};
-    Rectangle rec2 = {0, 0, 0, 0};
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
+    SparseArray<component::SpriteInfos> &spritesInfos = reg.getComponents<component::SpriteInfos>();
+    Rectangle rec1 = Rectangle{};
+    Rectangle rec2 = Rectangle{};
 
-    for (std::size_t i = 0; i < positions.size() && i < drawables.size() && i < types.size() && i < lives.size(); ++i) {
-        if (!positions[i] || !drawables[i] || !types[i] || !lives[i])
+    fillSpriteSize(spritesInfos, spritesSizes);
+    for (std::size_t i = 0; i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size() && i < spritesSizes.size(); ++i) {
+        if (!positions[i] || !spritesInfos[i] || !types[i] || !lives[i] || !spritesSizes[i])
             continue;
         if (lives[i]->nbLives == 0)
             continue;
-        rec1 = spriteHitbox(positions, drawables, i);
-        for (std::size_t j = i; j < positions.size() && j < drawables.size() && j < types.size() && j < lives.size(); ++j) {
-            if (!positions[j] || !drawables[j] || !types[j] || !lives[j])
+        rec1 = spriteHitbox(positions, spritesSizes, i);
+        if (types[i] && positions[i]) {
+            if ((types[i]->type == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (types[i]->type == ecs::EntityType::ENEMY && positions[i]->x < 0))
+                reg.killEntity(i);
+        }
+        for (std::size_t j = i;
+             j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size() && j < spritesSizes.size(); ++j) {
+            if (!positions[j] || !spritesInfos[j] || !types[j] || !lives[j] || !spritesSizes[j])
                 continue;
             if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
                 continue;
-            rec2 = spriteHitbox(positions, drawables, j);
-            if (CheckCollisionRecs(rec1, rec2) && (positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth()) &&
-                areEntitiesEnemies(types[i]->type, types[j]->type)) {
-                lives[i]->nbLives--;
-                lives[j]->nbLives--;
+            rec2 = spriteHitbox(positions, spritesSizes, j);
+            if (areEntitiesEnemies(types[i]->type, types[j]->type) && positions[i]->x > 0 &&
+                positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
+                if (CheckCollisionRecs(rec1, rec2)) {
+                    lives[i]->nbLives--;
+                    lives[j]->nbLives--;
+                }
             }
         }
     }
 }
 
+void ecs::system::CollisionSystem::fillSpriteSize(SparseArray<component::SpriteInfos> &spritesInfos,
+                                                  SparseArray<component::SpriteSize> &spritesSizes) {
+
+    Image tmpImage;
+
+    for (std::size_t i = 0; i < spritesInfos.size(); i++) {
+        if (!spritesInfos[i])
+            continue;
+        if (!spritesSizes[i] && spritesInfos[i]->spritePath.length() > 0) {
+            spritesSizes.insertAt(i, ecs::component::SpriteSize{});
+            if (!FileExists(spritesInfos[i]->spritePath.c_str()))
+                throw Error("Invalid sprite path");
+            tmpImage = LoadImage(spritesInfos[i]->spritePath.c_str());
+            spritesSizes[i]->spriteWidth = (float(tmpImage.width) / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor;
+            spritesSizes[i]->spriteHeight = float(tmpImage.height) * spritesInfos[i]->scaleFactor;
+            UnloadImage(tmpImage);
+        }
+    }
+}
+
 Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions,
-                                                     SparseArray<component::Drawable> &drawables, std::size_t index) {
-    return Rectangle{positions[index]->x, positions[index]->y, float(drawables[index]->spriteRect.width),
-                     float(drawables[index]->spriteRect.height)};
+                                                     SparseArray<component::SpriteSize> &spritesSizes, std::size_t index) {
+    return Rectangle{positions[index]->x, positions[index]->y, spritesSizes[index]->spriteWidth, spritesSizes[index]->spriteHeight};
 }
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {

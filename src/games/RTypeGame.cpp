@@ -31,6 +31,7 @@ void game::RTypeGame::registerComponents() {
     _reg.registerComponent<ecs::component::SpriteInfos>();
     _reg.registerComponent<ecs::component::SoundEffect>();
     _reg.registerComponent<ecs::component::ShootingRate>();
+    _reg.registerComponent<ecs::component::SpriteSize>();
 }
 
 void game::RTypeGame::addComponentsToEntities() {

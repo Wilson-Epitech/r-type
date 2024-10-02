@@ -22,13 +22,14 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-            Rectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::Drawable> &drawables,
+            void fillSpriteSize(SparseArray<component::SpriteInfos> &spritesInfos, SparseArray<component::SpriteSize> &spritesSizes);
+            Rectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteSize> &spritesSizes,
                                    std::size_t index);
             bool areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
-            bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isEnemyAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
             bool isPlayerShotAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
         };
     }
 }
