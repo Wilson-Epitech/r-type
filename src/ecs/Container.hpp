@@ -34,10 +34,14 @@ namespace ecs {
         SparseArray &operator=(SparseArray &&) noexcept = default;
 
         reference_type operator[](size_t idx) {
+            if (idx >= size())
+                _data.resize(idx + 1);
             return _data[idx];
         };
 
         const_reference_type operator[](size_t idx) const {
+            if (idx >= size())
+                _data.resize(idx + 1);
             return _data[idx];
         };
 
