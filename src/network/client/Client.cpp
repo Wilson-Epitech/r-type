@@ -35,9 +35,12 @@ void Client::msgFromServer() {
             std::cerr << "Receive failed: " << error.message() << std::endl;
             break;
         }
+        std::string receivedMessage = std::string(receiveBuffer.data(), len);
+        std::string newConnection = "New Connection:";
 
-        std::cout << "Server: " << std::string(receiveBuffer.data(), len) << std::endl;
-        if (std::string(receiveBuffer.data(), len) == "Could not connect")
+        if (receivedMessage.compare(0, newConnection.length(), newConnection) != 0 && receivedMessage.length() > 0)
+            _data = Lib::deserializeEntityDataVector(receivedMessage);
+        if (receivedMessage == "Could not connect")
             _isRunning = false;
     }
 }
@@ -48,4 +51,8 @@ void Client::sendMessage(const std::string &message) {
 
 bool Client::getIsRunning() {
     return _isRunning;
+}
+
+DataToSend Client::getData() {
+    return _data;
 }

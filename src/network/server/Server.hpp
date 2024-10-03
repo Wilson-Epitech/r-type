@@ -8,22 +8,31 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
+#include "Lib.hpp"
 #include <array>
 #include <asio.hpp>
 #include <memory>
 
+#define UPDATE_SERVER 0.02
+
 class Server {
   public:
     Server(asio::io_context &ioContext, std::size_t port, asio::thread_pool &pool);
+    ~Server();
+
     void sendToAClient(const std::size_t idClient, const std::string message);
     void sendToAllClient(const std::string message);
+    std::size_t getNbClients();
+    DataToSend getEntityData();
 
   private:
     void startReceiving();
+    void deserializeMessage(const std::string message);
     void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
     void handleSend(std::shared_ptr<std::string> message, const std::error_code &error, std::size_t bytesTransferred);
     std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
 
+    std::thread _ioThread;
     asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _remoteEndpoint;
     std::array<char, 1024> _receiveBuffer;
@@ -32,6 +41,9 @@ class Server {
     std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
 
     asio::thread_pool &_threadPool;
+
+    DataToSend _data;
+
 };
 
 #endif

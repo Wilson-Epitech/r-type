@@ -12,11 +12,32 @@
 Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
+    _ioThread = std::thread([&io_context]() {
+        io_context.run();
+    });
+}
+
+Server::~Server() {
+    _ioThread.join();
+}
+
+std::size_t Server::getNbClients() {
+  return _connectedClients.size();
+}
+
+DataToSend Server::getEntityData() {
+  return _data;
 }
 
 void Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
                                std::bind(&Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
+}
+
+void Server::deserializeMessage(const std::string message) {
+    _data.deadEntities.clear();
+    _data.entitiesData.clear();
+    _data = Lib::deserializeEntityDataVector(message);
 }
 
 void Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
@@ -26,14 +47,11 @@ void Server::handleReceive(const std::error_code &error, std::size_t byteTransfe
             startReceiving();
             return;
         }
-        std::cout << "Server received msg from client " << talkingClient << ": " << std::string(_receiveBuffer.data(), byteTransfered)
-                  << std::endl;
+        std::string receivedMessage = std::string(_receiveBuffer.data(), byteTransfered);
+        std::string newClientConnectedMessage = "New client connected.";
 
-        std::shared_ptr<std::string> message(new std::string("Server received"));
-
-        _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-                              std::bind(&Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
-
+        if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && receivedMessage.length() > 0)
+            deserializeMessage(receivedMessage);
         startReceiving();
         _receiveBuffer.fill(0);
     } else {

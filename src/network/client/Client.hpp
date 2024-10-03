@@ -5,13 +5,16 @@
 ** Client
 */
 
+#ifndef CLIENT_HPP_
+#define CLIENT_HPP_
+
+#include "Lib.hpp"
 #include <array>
 #include <asio.hpp>
 #include <string>
 #include <thread>
 
-#ifndef CLIENT_HPP_
-#define CLIENT_HPP_
+#define UPDATE_CLIENT 0.02
 
 class Client {
   public:
@@ -19,6 +22,7 @@ class Client {
     ~Client();
     void sendMessage(const std::string &message);
     bool getIsRunning();
+    DataToSend getData();
 
   private:
     void msgFromServer();
@@ -27,6 +31,8 @@ class Client {
     asio::ip::udp::endpoint _receiveEndpoint;
     std::thread _receiverThread;
     bool _isRunning;
+
+    DataToSend _data;
 };
 
 #endif /* !CLIENT_HPP_ */

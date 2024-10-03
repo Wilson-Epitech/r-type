@@ -5,9 +5,11 @@
 ** main
 */
 
+#include "RtypeGameClient.hpp"
 #include "Client.hpp"
 #include <csignal>
 #include <iostream>
+#include <chrono>
 
 static sig_atomic_t handleClient(const volatile sig_atomic_t new_status) {
     static volatile sig_atomic_t status = 1;
@@ -22,27 +24,70 @@ static void handleCtrlC(int signal) {
         exit(0);
 }
 
+void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client) {
+    DataToSend data = Lib::fillDataToSend(reg);
+
+    if (!data.empty()) {
+        std::string serialized = Lib::serializeEntityDataVector(data);
+        client.sendMessage(serialized);
+    }
+}
+
+
 int main(int ac, char **av) {
     if (ac != 2 || av[1] == NULL) {
-        std::cout << "Usage: ./client [port]" << std::endl;
+        std::cerr << "Usage: ./client [port]" << std::endl;
         return -1;
     }
-
     try {
         asio::io_context ioContext;
         Client client(ioContext, "127.0.0.1", av[1]);
-        std::string message;
+        game::RtypeGameClient rtype;
+        ecs::Registry &reg = rtype.getRegistry();
+        static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
 
+        SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
+        SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+        InitWindow(GetScreenWidth(), GetScreenHeight(), rtype.getGameName().c_str());
+        MaximizeWindow();
+        InitAudioDevice();
         signal(SIGINT, handleCtrlC);
-        while (handleClient(1)) {
-
-            std::getline(std::cin, message);
-
-            if (message == "exit" | !client.getIsRunning()) {
+        while (handleClient(1) && !WindowShouldClose()) {
+            if (!client.getIsRunning()) {
                 client.sendMessage("Client disconnected");
                 break;
             }
+            std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+            std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
+
+            if (!(timeElapsed.count() >= Lib::toMilliseconds(UPDATE_CLIENT))) {
+                continue;
+            }
+            time0 = std::chrono::steady_clock::now();
+            BeginDrawing();
+            ClearBackground(RAYWHITE);
+
+            static DataToSend lastDataReceived;
+            DataToSend dataReceived = client.getData();
+            if (!dataReceived.empty() && dataReceived != lastDataReceived) {
+                for (auto &deadEntity : dataReceived.deadEntities) {
+                    if (reg.entityExist(deadEntity))
+                        reg.killEntity(deadEntity);
+                }
+                for (auto &entity : dataReceived.entitiesData) {
+                    if (entity.entityID != 0) {
+                        Lib::updateEntities(reg, entity);
+                    }
+                }
+                lastDataReceived = dataReceived;
+            }
+            sendUpdatedDataVectorClient(reg, client);
+            reg.clearActualTurnNewEntities();
+            reg.clearActualTurnDeadEntities();
+            reg.runSystems();
+            EndDrawing();
         }
+        CloseWindow();
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
