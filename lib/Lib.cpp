@@ -118,19 +118,19 @@ DataToSend Lib::deserializeEntityDataVector(const std::string &message) {
 
     DataToSend data;
 
-    size_t deadEntitiesCount;
-    stream >> deadEntitiesCount;
+    size_t deadEntitiesNb;
+    stream >> deadEntitiesNb;
 
-    for (size_t i = 0; i < deadEntitiesCount; ++i) {
+    for (size_t i = 0; i < deadEntitiesNb; ++i) {
         std::size_t tmpEntity;
         stream >> tmpEntity;
         data.deadEntities.push_back(tmpEntity);
     }
 
-    size_t entityCount;
-    stream >> entityCount;
+    size_t entityDataNb;
+    stream >> entityDataNb;
 
-    for (size_t i = 0; i < entityCount; ++i) {
+    for (size_t i = 0; i < entityDataNb; ++i) {
         EntityData entityData;
         stream >> entityData;
         data.entitiesData.push_back(entityData);
