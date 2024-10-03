@@ -1,0 +1,108 @@
+/*
+** R_TYPE PROJECT, 2024
+** r-type
+** File description:
+** Components
+*/
+
+#include "Components.hpp"
+#include "Lib.hpp"
+
+void operator<<(std::ostringstream &oss, const ecs::component::Position &position) {
+    oss << position.x << ' ' << position.y;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocity) {
+    oss << velocity.vx << ' ' << velocity.vy << ' ' << velocity.possibleVelocity;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos) {
+    oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::Controllable &controllable) {
+        oss << controllable.isControllable;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
+    oss << type.entityType;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
+    oss << life.nbLives;
+}
+
+void operator<<(std::ostringstream &oss, const EntityData &entityData) {
+
+    oss << entityData.entityID << ' ';
+    oss << entityData.name << ' ';
+    if (entityData.name == ecs::ComponentName:: POSITION)
+        Lib::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: VELOCITY)
+        Lib::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: SPRITEINFOS)
+        Lib::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: CONTROLLABLE)
+        Lib::serializeEntityCompotent<ecs::component::Controllable>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: LIFE)
+        Lib::serializeEntityCompotent<ecs::component::Life>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: TYPE)
+        Lib::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
+    oss << '\n';
+}
+
+void operator>>(std::istringstream &iss, ecs::EntityType &type) {
+    int tmpType = 0;
+
+    iss >> tmpType;
+    type = static_cast<ecs::EntityType>(tmpType);
+}
+
+void operator>>(std::istringstream &iss, ecs::ComponentName &name) {
+    int tmpName = 0;
+
+    iss >> tmpName;
+    name = static_cast<ecs::ComponentName>(tmpName);
+}
+
+void operator>>(std::istringstream &iss, ecs::component::Position &position) {
+    iss >> position.x >> position.y;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity) {
+    iss >> velocity.vx >> velocity.vy >> velocity.possibleVelocity;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos) {
+    iss >> spriteInfos.patternNb >> spriteInfos.firstPattern >> spriteInfos.scaleFactor >> spriteInfos.spritePath;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::Controllable &controllable) {
+    iss >> controllable.isControllable;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::Type &type) {
+   iss >> type.entityType;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::Life &life) {
+    iss >> life.nbLives;
+}
+
+void operator>>(std::istringstream &iss, EntityData &entityData) {
+
+    iss >> entityData.entityID;
+    iss >> entityData.name;
+    if (entityData.name == ecs::ComponentName:: POSITION)
+        Lib::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: VELOCITY)
+        Lib::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: SPRITEINFOS)
+        Lib::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: CONTROLLABLE)
+        Lib::deserializeEntityCompotent<ecs::component::Controllable>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: LIFE)
+        Lib::deserializeEntityCompotent<ecs::component::Life>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName:: TYPE)
+        Lib::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
+}
