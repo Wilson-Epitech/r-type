@@ -67,7 +67,7 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
                                               (float(shotSpriteRect.height) / 2) * spriteInfos[enemyShootIndex]->scaleFactor);
     UnloadTexture(shotTexture);
 
-    soundHasToBePlayed(reg);
+    // soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
                                                          velocities[enemyShootIndex]->possibleVelocity});

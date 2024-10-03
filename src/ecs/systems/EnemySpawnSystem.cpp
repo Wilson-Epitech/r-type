@@ -58,10 +58,9 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
                                                    SparseArray<component::Velocity> &velocities, SparseArray<component::Life> &lives,
                                                    SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    // SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
+    // SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     entity_t entity = reg.spawnEntity();
     float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
     float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
@@ -70,15 +69,14 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     velocities.insertAt(entity, ecs::component::Velocity{velocities[i]->vx, velocities[i]->vy, velocities[i]->possibleVelocity});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
-    drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
-    if (shootingRate.size() > i) {
-        if (shootingRate[i])
-            shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
-    }
-    if (soundEffect.size() > i) {
-        if (soundEffect[i])
-            soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[i]->soundPath});
-    }
+    // if (shootingRate.size() > i) {
+    //     if (shootingRate[i])
+    //         shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
+    // }
+    // if (soundEffect.size() > i) {
+    //     if (soundEffect[i])
+    //         soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[i]->soundPath});
+    // }
 }
