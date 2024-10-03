@@ -117,6 +117,10 @@ namespace ecs {
             int maxSpawnHeight = 1080;
             int minSpawnHeight = 0;
         };
+
+        struct ShootingRate {
+            int shootRate = 0;
+        };
     }
 }
 
