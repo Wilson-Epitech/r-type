@@ -22,11 +22,11 @@ namespace game {
         }
 
         ecs::Registry &getRegistry() override {
-          return _reg;
+            return _reg;
         }
 
         std::string &getGameName() override {
-          return _gameName;
+            return _gameName;
         }
 
       protected:

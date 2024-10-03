@@ -62,7 +62,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT_TEMPLATE});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME],
-                         ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
+                         ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(
         _stringToEntity[SPAWN_ENEMY_NAME],
         ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, 2, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
@@ -76,7 +76,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
-                         ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
+                         ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
     enemySpawns.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
                          ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_BOSS, BOSS_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
