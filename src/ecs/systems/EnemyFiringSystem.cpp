@@ -51,21 +51,22 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
 void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
-    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t enemyShootIndex = getEnemyShootIndex(reg);
-    if (enemyShootIndex == 0)
+
+    if (enemyShootIndex == 0 || !spritesSizes[enemyIndex])
         return;
+    Image tmpShotImage = LoadImage(spriteInfos[enemyShootIndex]->spritePath.c_str());
+    float offset = float(tmpShotImage.width) / spriteInfos[enemyShootIndex]->patternNb;
+    Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
     entity_t entity = reg.spawnEntity();
-    Texture2D shotTexture = LoadTexture(spriteInfos[enemyShootIndex]->spritePath.c_str());
-    float offset = float(shotTexture.width) / spriteInfos[enemyShootIndex]->patternNb;
-    Rectangle shotSpriteRect = {0, 0, offset, float(shotTexture.height)};
-    float shotX = positions[enemyIndex]->x - (float(drawables[enemyIndex]->spriteRect.width) / 2 - float(shotSpriteRect.width) / 2);
-    float shotY = positions[enemyIndex]->y + ((float(drawables[enemyIndex]->spriteRect.height) / 2) * spriteInfos[enemyIndex]->scaleFactor -
+    float shotX = positions[enemyIndex]->x - (float(spritesSizes[enemyIndex]->spriteWidth) / 2 - float(shotSpriteRect.width) / 2);
+    float shotY = positions[enemyIndex]->y + ((float(spritesSizes[enemyIndex]->spriteHeight) / 2) * spriteInfos[enemyIndex]->scaleFactor -
                                               (float(shotSpriteRect.height) / 2) * spriteInfos[enemyShootIndex]->scaleFactor);
-    UnloadTexture(shotTexture);
+    UnloadImage(tmpShotImage);
 
     // soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
@@ -74,7 +75,6 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     spriteInfos.insertAt(
         entity, ecs::component::SpriteInfos{spriteInfos[enemyShootIndex]->spritePath, spriteInfos[enemyShootIndex]->patternNb,
                                             spriteInfos[enemyShootIndex]->firstPattern, spriteInfos[enemyShootIndex]->scaleFactor});
-    drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
 }
