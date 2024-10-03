@@ -87,7 +87,7 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
 
     for (std::size_t i = 0; i < spriteInfos.size() && i < playerShootVelocities.size() && i < types.size(); ++i) {
         if (spriteInfos[i] && playerShootVelocities[i] && types[i]) {
-            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::PLAYERSHOT) {
+            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::PLAYERSHOT_TEMPLATE) {
                 return i;
             }
         }
