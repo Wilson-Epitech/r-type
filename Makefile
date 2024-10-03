@@ -43,6 +43,7 @@ OBJ_CLIENT = $(SRC_CLIENT:.cpp=.o)
 SERVER_NAME = rtype_server
 CLIENT_NAME = rtype_client
 
+
 all: $(SERVER_NAME) $(CLIENT_NAME)
 
 $(SERVER_NAME): $(OBJ) $(OBJ_SERVER)
@@ -58,5 +59,8 @@ fclean: clean
 	$(RM) $(SERVER_NAME) $(CLIENT_NAME)
 
 re: fclean all
+
+format:
+	find . -name "*.hpp" -o -name "*.cpp" | xargs clang-format -i
 
 .PHONY: all clean fclean re

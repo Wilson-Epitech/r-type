@@ -12,9 +12,9 @@
 #include <list>
 #include <memory>
 #include <raylib.h>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <sstream>
 
 namespace ecs {
     enum EntityType {

@@ -12,9 +12,7 @@
 Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
-    _ioThread = std::thread([&io_context]() {
-        io_context.run();
-    });
+    _ioThread = std::thread([&io_context]() { io_context.run(); });
 }
 
 Server::~Server() {
@@ -22,11 +20,11 @@ Server::~Server() {
 }
 
 std::size_t Server::getNbClients() {
-  return _connectedClients.size();
+    return _connectedClients.size();
 }
 
 DataToSend Server::getEntityData() {
-  return _data;
+    return _data;
 }
 
 void Server::startReceiving() {

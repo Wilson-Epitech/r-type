@@ -85,8 +85,7 @@ DataToSend Lib::fillDataToSend(ecs::Registry &reg) {
     return data;
 }
 
-std::vector<std::pair<ecs::ComponentName, std::any>> Lib::getComponentCorrespondance()
-{
+std::vector<std::pair<ecs::ComponentName, std::any>> Lib::getComponentCorrespondance() {
     std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance;
 
     componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::POSITION, ecs::component::Position{}));

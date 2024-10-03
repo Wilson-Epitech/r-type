@@ -35,7 +35,8 @@ class Lib {
     static void updateEntities(ecs::Registry &reg, EntityData &data);
 
     template <typename Component>
-    static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName, const std::any &component) {
+    static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
+                                         const std::any &component) {
         std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance = getComponentCorrespondance();
         for (auto &it : componentCorrespondance) {
             if (entityComponentName == it.first) {

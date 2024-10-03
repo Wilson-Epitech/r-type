@@ -5,11 +5,11 @@
 ** main
 */
 
-#include "RtypeGameClient.hpp"
 #include "Client.hpp"
+#include "RtypeGameClient.hpp"
+#include <chrono>
 #include <csignal>
 #include <iostream>
-#include <chrono>
 
 static sig_atomic_t handleClient(const volatile sig_atomic_t new_status) {
     static volatile sig_atomic_t status = 1;
@@ -32,7 +32,6 @@ void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client) {
         client.sendMessage(serialized);
     }
 }
-
 
 int main(int ac, char **av) {
     if (ac != 2 || av[1] == NULL) {

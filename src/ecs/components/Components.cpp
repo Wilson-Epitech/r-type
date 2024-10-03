@@ -21,7 +21,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spri
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Controllable &controllable) {
-        oss << controllable.isControllable;
+    oss << controllable.isControllable;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
@@ -36,17 +36,17 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
     oss << entityData.name << ' ';
-    if (entityData.name == ecs::ComponentName:: POSITION)
+    if (entityData.name == ecs::ComponentName::POSITION)
         Lib::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: VELOCITY)
+    if (entityData.name == ecs::ComponentName::VELOCITY)
         Lib::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: SPRITEINFOS)
+    if (entityData.name == ecs::ComponentName::SPRITEINFOS)
         Lib::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: CONTROLLABLE)
+    if (entityData.name == ecs::ComponentName::CONTROLLABLE)
         Lib::serializeEntityCompotent<ecs::component::Controllable>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: LIFE)
+    if (entityData.name == ecs::ComponentName::LIFE)
         Lib::serializeEntityCompotent<ecs::component::Life>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: TYPE)
+    if (entityData.name == ecs::ComponentName::TYPE)
         Lib::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
@@ -82,7 +82,7 @@ void operator>>(std::istringstream &iss, ecs::component::Controllable &controlla
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Type &type) {
-   iss >> type.entityType;
+    iss >> type.entityType;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Life &life) {
@@ -93,16 +93,16 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
     iss >> entityData.name;
-    if (entityData.name == ecs::ComponentName:: POSITION)
+    if (entityData.name == ecs::ComponentName::POSITION)
         Lib::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: VELOCITY)
+    if (entityData.name == ecs::ComponentName::VELOCITY)
         Lib::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: SPRITEINFOS)
+    if (entityData.name == ecs::ComponentName::SPRITEINFOS)
         Lib::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: CONTROLLABLE)
+    if (entityData.name == ecs::ComponentName::CONTROLLABLE)
         Lib::deserializeEntityCompotent<ecs::component::Controllable>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: LIFE)
+    if (entityData.name == ecs::ComponentName::LIFE)
         Lib::deserializeEntityCompotent<ecs::component::Life>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName:: TYPE)
+    if (entityData.name == ecs::ComponentName::TYPE)
         Lib::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
 }

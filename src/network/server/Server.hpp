@@ -43,7 +43,6 @@ class Server {
     asio::thread_pool &_threadPool;
 
     DataToSend _data;
-
 };
 
 #endif

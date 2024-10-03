@@ -36,8 +36,8 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             if (i == j || types[i]->entityType == types[j]->entityType || lives[j]->nbLives == 0)
                 continue;
             rec2 = spriteHitbox(positions, spritesSizes, j);
-            if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth() &&
-                positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
+            if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
+                positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (CheckCollisionRecs(rec1, rec2)) {
                     lives[i]->nbLives--;
                     lives[j]->nbLives--;

@@ -14,11 +14,11 @@
 #include "DrawSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "FiringSystem.hpp"
+#include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SoundSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
-#include "KillOffscreenEntitiesSystem.hpp"
 
 #define PLAYER_NAME "player"
 #define BACKGROUND_NAME "background"
