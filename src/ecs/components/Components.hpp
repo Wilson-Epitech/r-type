@@ -8,25 +8,74 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
-#include "Lib.hpp"
+#include <any>
+#include <list>
 #include <memory>
 #include <raylib.h>
 #include <string>
+#include <vector>
+#include <sstream>
 
 namespace ecs {
     enum EntityType {
+        NOTYPE,
         PLAYER,
         PLAYERSHOT,
-        ENEMYSHOT,
+        PLAYERSHOT_TEMPLATE,
         ENEMY,
+        ENEMY_TEMPLATE,
         BACKGROUND
     };
 
+    enum ComponentName {
+        NONE,
+        POSITION,
+        VELOCITY,
+        TYPE,
+        LIFE,
+        CONTROLLABLE,
+        SPRITEINFOS
+    };
+
     namespace component {
-        struct Drawable {
-            bool isLoaded = false;
-            Texture2D spriteTexture = Texture2D{};
-            Rectangle spriteRect = {0, 0, 0, 0};
+        struct Position {
+            float x = 0, y = 0;
+
+            bool operator==(const Position &other) const {
+                return x == other.x && y == other.y;
+            }
+        };
+
+        struct Velocity {
+            float vx = 0, vy = 0, possibleVelocity = 0;
+
+            bool operator==(const Velocity &other) const {
+                return (vx == other.vx && vy == other.vy && possibleVelocity == other.possibleVelocity);
+            }
+        };
+
+        struct Type {
+            ecs::EntityType entityType = ecs::EntityType::NOTYPE;
+
+            bool operator==(const Type &other) const {
+                return (entityType == other.entityType);
+            }
+        };
+
+        struct Life {
+            std::size_t nbLives;
+
+            bool operator==(const Life &other) const {
+                return (nbLives == other.nbLives);
+            }
+        };
+
+        struct Controllable {
+            bool isControllable = false;
+
+            bool operator==(const Controllable &other) const {
+                return (isControllable == other.isControllable);
+            }
         };
 
         struct SpriteInfos {
@@ -34,10 +83,17 @@ namespace ecs {
             std::size_t patternNb = 1;
             std::size_t firstPattern = 0;
             float scaleFactor = 1.0;
+
+            bool operator==(const SpriteInfos &other) const {
+                return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
+                        scaleFactor == other.scaleFactor);
+            }
         };
 
-        struct SpriteSize {
-            float spriteWidth = 0, spriteHeight = 0;
+        struct Drawable {
+            bool isLoaded = false;
+            Texture2D spriteTexture = Texture2D{};
+            Rectangle spriteRect = Rectangle{};
         };
 
         struct SoundEffect {
@@ -47,39 +103,82 @@ namespace ecs {
             bool hasToBePlayed = false;
         };
 
-        struct Controllable {
-            bool isControllable = true;
-        };
-
-        struct Position {
-            float x, y;
-        };
-
-        struct Velocity {
-            float vx, vy, possibleVelocity = 0;
-        };
-
-        struct Type {
-            ecs::EntityType type;
-        };
-
-        struct Life {
-            std::size_t nbLives;
-        };
-
-        struct ShootingRate {
-            int shootRate = 0;
+        struct SpriteSize {
+            float spriteWidth = 0, spriteHeight = 0;
         };
 
         struct EnemySpawn {
             float timeBeforeSpawn;
             int waveSize;
-            int maxSpawnWidth = Lib::getScreenWidth();
+            int maxSpawnWidth = 1920;
             int minSpawnWidth = 0;
-            int maxSpawnHeight = Lib::getScreenHeight();
+            int maxSpawnHeight = 1080;
             int minSpawnHeight = 0;
         };
     }
 }
+
+struct EntityData {
+  public:
+    size_t entityID = 0;
+    ecs::ComponentName name;
+    std::any component;
+
+    bool operator==(const EntityData &other) const {
+        if (entityID == other.entityID && name == other.name) {
+            return (areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
+                    areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
+                    areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
+                    areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
+                    areComponentsEquals<ecs::component::Controllable>(name, ecs::ComponentName::CONTROLLABLE, component, other.component) ||
+                    areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component));
+            return true;
+        }
+        return false;
+    }
+
+  private:
+    template <typename Component>
+    bool areComponentsEquals(const ecs::ComponentName componentName, const ecs::ComponentName name, std::any component,
+                             std::any otherComponent) const {
+        if (componentName == name) {
+            auto comp = std::any_cast<Component>(component);
+            auto otherComp = std::any_cast<Component>(otherComponent);
+            if (comp == otherComp)
+                return true;
+        }
+        return false;
+    }
+};
+
+struct DataToSend {
+    std::list<std::size_t> deadEntities = {};
+    std::vector<EntityData> entitiesData = {};
+
+    bool empty() {
+        return (deadEntities.empty() && entitiesData.empty());
+    }
+    bool operator==(const DataToSend &other) const {
+        return (deadEntities == other.deadEntities && entitiesData == other.entitiesData);
+    }
+};
+
+void operator<<(std::ostringstream &oss, const ecs::component::Position &position);
+void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocity);
+void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos);
+void operator<<(std::ostringstream &oss, const ecs::component::Controllable &controllable);
+void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
+void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
+void operator<<(std::ostringstream &oss, const EntityData &entityData);
+
+void operator>>(std::istringstream &iss, ecs::EntityType &type);
+void operator>>(std::istringstream &iss, ecs::ComponentName &name);
+void operator>>(std::istringstream &iss, ecs::component::Position &position);
+void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);
+void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos);
+void operator>>(std::istringstream &iss, ecs::component::Controllable &controllable);
+void operator>>(std::istringstream &iss, ecs::component::Type &type);
+void operator>>(std::istringstream &iss, ecs::component::Life &life);
+void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */
