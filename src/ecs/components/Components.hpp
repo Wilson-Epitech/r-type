@@ -24,6 +24,8 @@ namespace ecs {
         PLAYERSHOT_TEMPLATE,
         ENEMY,
         ENEMY_TEMPLATE,
+        ENEMYSHOT,
+        ENEMYSHOT_TEMPLATE,
         BACKGROUND
     };
 

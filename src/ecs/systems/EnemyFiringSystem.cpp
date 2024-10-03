@@ -86,7 +86,7 @@ std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
 
     for (std::size_t i = 0; i < spriteInfos.size() && i < enemyShootVelocities.size() && i < types.size(); ++i) {
         if (spriteInfos[i] && enemyShootVelocities[i] && types[i]) {
-            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::ENEMYSHOT) {
+            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::ENEMYSHOT_TEMPLATE) {
                 return i;
             }
         }

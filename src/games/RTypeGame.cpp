@@ -90,7 +90,7 @@ void game::RTypeGame::addComponentsToEntities() {
     velocities.insertAt(_stringToEntity[ENEMY_SHOOT], ecs::component::Velocity{-10, 0});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOOT],
                          ecs::component::SpriteInfos{ENEMYSHOT_PATH, ENEMYSHOT_SPRITE_NB_PATTERN, 0, ENEMY_SHOT_SACLE_FACTOR});
-    types.insertAt(_stringToEntity[ENEMY_SHOOT], ecs::component::Type{ecs::EntityType::ENEMYSHOT});
+    types.insertAt(_stringToEntity[ENEMY_SHOOT], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
     soundEffect.insertAt(_stringToEntity[ENEMY_SHOOT], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
 }
 
