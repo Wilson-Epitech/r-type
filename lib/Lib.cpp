@@ -66,7 +66,7 @@ std::optional<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg)
 }
 
 DataToSend Lib::fillDataToSend(ecs::Registry &reg) {
-    std::list<std::size_t> newEntities = reg.getNewEntities();
+    std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
     std::optional<EntityData> playerData = retrievePlayerVelocityUpdates(reg);
     DataToSend data;
 
