@@ -37,6 +37,7 @@ namespace ecs {
             } else {
                 _indexToEntities[entity] = entity;
             }
+            _newEntities.push_back(entity);
             return entity;
         };
 
@@ -47,10 +48,27 @@ namespace ecs {
             for (auto &it : _indexToEntities) {
                 if (it.second == e) {
                     _deadEntities.push_back(std::size_t(it.second));
+                    _actualTurnDeadEntities.push_back(std::size_t(it.second));
                     it.second = 0;
                 }
             }
         };
+
+        void clearNewEntities() {
+            _newEntities.clear();
+        }
+
+        std::list<std::size_t> getNewEntities() {
+            return _newEntities;
+        }
+
+        void clearActualTurnDeadEntities() {
+            _actualTurnDeadEntities.clear();
+        }
+
+        std::list<std::size_t> getActualTurnDeadEntities() {
+            return _actualTurnDeadEntities;
+        }
 
         entity_t entityFromIndex(std::size_t idx) {
             auto it = _indexToEntities.find(idx);
@@ -59,6 +77,14 @@ namespace ecs {
                 throw Error("No entity found at this index");
             return it->second;
         };
+
+        bool entityExist(const entity_t &ent) {
+            for (auto &it : _indexToEntities) {
+                if (it.second == ent)
+                    return true;
+            }
+            return false;
+        }
 
         template <typename Component> void removeComponent(entity_t const &from) {
             SparseArray<Component> &component = getComponents<Component>();
@@ -96,9 +122,7 @@ namespace ecs {
             return std::any_cast<SparseArray<Component>>(it->second);
         };
 
-        template <class... Components, typename Function>
-
-        void addSystem(Function const &f) {
+        template <class... Components, typename Function> void addSystem(Function const &f) {
             _systems.push_back(f);
         };
 
@@ -112,6 +136,8 @@ namespace ecs {
         std::size_t _totalEntities = 0;
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;
+        std::list<std::size_t> _actualTurnDeadEntities;
+        std::list<std::size_t> _newEntities;
         std::map<std::size_t, entity_t> _indexToEntities;
         std::unordered_map<std::type_index, std::any> _componentsArrays;
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>> _eraseEntity;
