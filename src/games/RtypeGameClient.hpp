@@ -21,9 +21,6 @@ namespace game {
         RtypeGameClient(const std::string gameName = "R-Type");
         ~RtypeGameClient() = default;
 
-        ecs::Registry &getRegistry() override;
-        std::string &getGameName() override;
-
       private:
         GameStatus gameState(ecs::Registry &reg) override;
         void spawnEntities() override;

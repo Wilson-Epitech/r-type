@@ -35,14 +35,6 @@ void game::RtypeGameClient::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
 }
 
-ecs::Registry &game::RtypeGameClient::getRegistry() {
-    return _reg;
-}
-
-std::string &game::RtypeGameClient::getGameName() {
-    return _gameName;
-}
-
 game::GameStatus game::RtypeGameClient::gameState(ecs::Registry &) {
     return game::GameStatus::PLAYING;
 }

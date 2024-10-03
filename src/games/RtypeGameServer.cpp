@@ -83,14 +83,6 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
 }
 
-ecs::Registry &game::RtypeGameServer::getRegistry() {
-    return _reg;
-}
-
-std::string &game::RtypeGameServer::getGameName() {
-    return _gameName;
-}
-
 game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {
     return game::GameStatus::PLAYING;
 }

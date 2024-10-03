@@ -21,6 +21,14 @@ namespace game {
             return gameState(reg);
         }
 
+        ecs::Registry &getRegistry() override {
+          return _reg;
+        }
+
+        std::string &getGameName() override {
+          return _gameName;
+        }
+
       protected:
         void initializeGame() override {
             spawnEntities();
