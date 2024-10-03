@@ -128,7 +128,7 @@ game::GameStatus game::RTypeGame::gameState(ecs::Registry &reg) {
     }
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (lives[i] && types[i]) {
-            if (types[i]->type == ecs::EntityType::ENEMY) {
+            if (types[i]->entityType == ecs::EntityType::ENEMY) {
                 status = game::GameStatus::PLAYING;
                 break;
             }

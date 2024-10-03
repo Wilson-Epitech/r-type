@@ -18,7 +18,7 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < type.size() && i < enemyShootingRate.size(); ++i) {
         if (type[i] && enemyShootingRate[i]) {
-            if (type[i]->type != ecs::EntityType::ENEMY)
+            if (type[i]->entityType != ecs::EntityType::ENEMY)
                 continue;
             if (timer.size() > 0) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -86,7 +86,7 @@ std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
 
     for (std::size_t i = 0; i < spriteInfos.size() && i < enemyShootVelocities.size() && i < types.size(); ++i) {
         if (spriteInfos[i] && enemyShootVelocities[i] && types[i]) {
-            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->type == ecs::EntityType::ENEMYSHOT) {
+            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::ENEMYSHOT) {
                 return i;
             }
         }
@@ -100,7 +100,7 @@ void ecs::system::EnemyFiringSystem::soundHasToBePlayed(Registry &reg) {
 
     for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
         if (types[i] && soundEffect[i]) {
-            if (types[i]->type == ecs::EntityType::ENEMYSHOT) {
+            if (types[i]->entityType == ecs::EntityType::ENEMYSHOT) {
                 soundEffect[i]->hasToBePlayed = true;
             }
         }

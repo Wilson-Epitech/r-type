@@ -18,12 +18,12 @@ void ecs::system::DrawSystem::operator()(Registry &reg) {
     loadTextures(drawables, spriteInfos);
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size() && i < types.size(); ++i) {
         if (drawables[i] && positions[i] && spriteInfos[i] && velocities[i] && types[i]) {
-            if (drawables[i]->isLoaded && types[i]->type != ecs::EntityType::BACKGROUND) {
+            if (drawables[i]->isLoaded && types[i]->entityType != ecs::EntityType::BACKGROUND) {
                 Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
-            } else if (drawables[i]->isLoaded && types[i]->type == ecs::EntityType::BACKGROUND) {
+            } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(velocities, drawables, positions, spriteInfos, i);
             }
         }

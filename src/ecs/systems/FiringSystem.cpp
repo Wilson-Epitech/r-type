@@ -87,7 +87,7 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
 
     for (std::size_t i = 0; i < spriteInfos.size() && i < playerShootVelocities.size() && i < types.size(); ++i) {
         if (spriteInfos[i] && playerShootVelocities[i] && types[i]) {
-            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->type == ecs::EntityType::PLAYERSHOT) {
+            if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::PLAYERSHOT) {
                 return i;
             }
         }
@@ -101,7 +101,7 @@ void ecs::system::FiringSystem::soundHasToBePlayed(Registry &reg) {
 
     for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
         if (types[i] && soundEffect[i]) {
-            if (types[i]->type == ecs::EntityType::PLAYERSHOT) {
+            if (types[i]->entityType == ecs::EntityType::PLAYERSHOT) {
                 soundEffect[i]->hasToBePlayed = true;
             }
         }
