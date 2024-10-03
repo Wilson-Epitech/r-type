@@ -37,7 +37,7 @@ namespace ecs {
             } else {
                 _indexToEntities[entity] = entity;
             }
-            _newEntities.push_back(entity);
+            _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
 
@@ -54,12 +54,12 @@ namespace ecs {
             }
         };
 
-        void clearNewEntities() {
-            _newEntities.clear();
+        void clearActualTurnNewEntities() {
+            _actualTurnActualTurnNewEntities.clear();
         }
 
-        std::list<std::size_t> getNewEntities() {
-            return _newEntities;
+        std::list<std::size_t> getActualTurnNewEntities() {
+            return _actualTurnActualTurnNewEntities;
         }
 
         void clearActualTurnDeadEntities() {
@@ -137,7 +137,7 @@ namespace ecs {
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;
         std::list<std::size_t> _actualTurnDeadEntities;
-        std::list<std::size_t> _newEntities;
+        std::list<std::size_t> _actualTurnActualTurnNewEntities;
         std::map<std::size_t, entity_t> _indexToEntities;
         std::unordered_map<std::type_index, std::any> _componentsArrays;
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>> _eraseEntity;
