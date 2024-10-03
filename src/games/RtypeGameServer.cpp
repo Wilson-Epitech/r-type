@@ -14,8 +14,9 @@ game::RtypeGameServer::RtypeGameServer(const std::string gameName) : AGame(gameN
 void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[BACKGROUND_NAME] = _reg.spawnEntity();
     _stringToEntity[PLAYER_NAME] = _reg.spawnEntity();
-    _stringToEntity[PLAYER_SHOOT] = _reg.spawnEntity();
+    _stringToEntity[PLAYER_SHOT] = _reg.spawnEntity();
     _stringToEntity[SPAWN_ENEMY_NAME] = _reg.spawnEntity();
+    _stringToEntity[ENEMY_SHOT] = _reg.spawnEntity();
     _stringToEntity[SPAWN_BOSS_NAME] = _reg.spawnEntity();
 }
 
@@ -29,6 +30,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::SpriteSize>();
+    _reg.registerComponent<ecs::component::ShootingRate>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -39,6 +41,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = _reg.getComponents<ecs::component::SpriteInfos>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
+    ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = _reg.getComponents<ecs::component::ShootingRate>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -54,9 +57,9 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
 
-    velocities.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Velocity{10, 0});
-    spriteInfos.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
-    types.insertAt(_stringToEntity[PLAYER_SHOOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT_TEMPLATE});
+    velocities.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Velocity{10, 0});
+    spriteInfos.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
+    types.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT_TEMPLATE});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME],
                          ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
@@ -65,6 +68,12 @@ void game::RtypeGameServer::addComponentsToEntities() {
         ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, 2, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
+    shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
+
+    velocities.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Velocity{-10, 0});
+    spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT],
+                         ecs::component::SpriteInfos{ENEMYSHOT_PATH, ENEMYSHOT_SPRITE_NB_PATTERN, 0, ENEMYSHOT_SCALE_FACTOR});
+    types.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
                          ecs::component::SpriteInfos{FIRST_ENEMY_PATH, FIRST_ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
@@ -78,6 +87,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
 void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::PositionSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
+    _reg.addSystem(ecs::system::EnemyFiringSystem());
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
