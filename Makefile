@@ -13,7 +13,7 @@ CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 			\
 			-iquote src/ecs/systems	-iquote src/server -iquote client/			\
 
 SRC = 	src/gameEngine/GameEngine.cpp									\
-    	src/games/RTypeGame.cpp											\
+		src/ecs/components/Components.cpp								\
     	src/ecs/systems/CollisionSystem.cpp								\
     	src/ecs/systems/ControlSystem.cpp								\
     	src/ecs/systems/DrawSystem.cpp									\
@@ -27,10 +27,13 @@ SRC = 	src/gameEngine/GameEngine.cpp									\
     	src/ecs/systems/SpriteAnimationSystem.cpp						\
     	lib/Lib.cpp														\
 
-SRC_SERVER = 	src/network/server/Server.cpp							\
+
+SRC_SERVER = 	src/games/RtypeGameServer.cpp							\
+				src/network/server/Server.cpp							\
     			src/network//server/main.cpp							\
 
-SRC_CLIENT = 	src/network//client/Client.cpp							\
+SRC_CLIENT = 	src/games/RtypeGameClient.cpp 							\
+				src/network//client/Client.cpp							\
     			src/network//client/main.cpp							\
 
 OBJ = $(SRC:.cpp=.o)
@@ -39,9 +42,6 @@ OBJ_CLIENT = $(SRC_CLIENT:.cpp=.o)
 
 SERVER_NAME = rtype_server
 CLIENT_NAME = rtype_client
-J
-format:
-	find . -name "*.hpp" -o -name "*.cpp" | xargs clang-format -i
 
 all: $(SERVER_NAME) $(CLIENT_NAME)
 
