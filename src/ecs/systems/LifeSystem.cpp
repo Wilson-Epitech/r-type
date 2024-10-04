@@ -7,8 +7,6 @@
 
 #include "LifeSystem.hpp"
 
-#include <iostream>
-
 void ecs::system::LifeSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
