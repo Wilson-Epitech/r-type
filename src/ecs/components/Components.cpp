@@ -32,6 +32,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
     oss << life.nbLives;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect) {
+    oss << soundEffect.isLoaded << ' ' << soundEffect.hasToBePlayed << ' ' << soundEffect.soundPath;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -48,6 +52,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         Lib::serializeEntityCompotent<ecs::component::Life>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TYPE)
         Lib::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
+        Lib::serializeEntityCompotent<ecs::component::SoundEffect>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -89,6 +95,10 @@ void operator>>(std::istringstream &iss, ecs::component::Life &life) {
     iss >> life.nbLives;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect) {
+    iss >> soundEffect.isLoaded >> soundEffect.hasToBePlayed >> soundEffect.soundPath;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -105,4 +115,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         Lib::deserializeEntityCompotent<ecs::component::Life>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TYPE)
         Lib::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
+        Lib::deserializeEntityCompotent<ecs::component::SoundEffect>(iss, entityData.name, entityData.component);
 }

@@ -81,6 +81,7 @@ DataToSend Lib::fillDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Life>(reg, newEntity, data, ecs::ComponentName::LIFE);
         fillEntityComponentData<ecs::component::Controllable>(reg, newEntity, data, ecs::ComponentName::CONTROLLABLE);
         fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
+        fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
     }
     return data;
 }
@@ -94,6 +95,7 @@ std::vector<std::pair<ecs::ComponentName, std::any>> Lib::getComponentCorrespond
     componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::CONTROLLABLE, ecs::component::Controllable{}));
     componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::TYPE, ecs::component::Type{}));
     componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::LIFE, ecs::component::Life{}));
+    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffect{}));
     return componentCorrespondance;
 }
 
@@ -155,4 +157,5 @@ void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::Life>(reg, data, ecs::ComponentName::LIFE);
     insertComponent<ecs::component::Controllable>(reg, data, ecs::ComponentName::CONTROLLABLE);
     insertComponent<ecs::component::SpriteInfos>(reg, data, ecs::ComponentName::SPRITEINFOS);
+    insertComponent<ecs::component::SoundEffect>(reg, data, ecs::ComponentName::SOUNDEFFECT);
 }

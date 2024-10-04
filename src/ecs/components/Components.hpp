@@ -36,7 +36,8 @@ namespace ecs {
         TYPE,
         LIFE,
         CONTROLLABLE,
-        SPRITEINFOS
+        SPRITEINFOS,
+        SOUNDEFFECT
     };
 
     namespace component {
@@ -87,8 +88,19 @@ namespace ecs {
             float scaleFactor = 1.0;
 
             bool operator==(const SpriteInfos &other) const {
-                return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                        scaleFactor == other.scaleFactor);
+                return (spritePath == other.spritePath && patternNb == other.patternNb
+                    && firstPattern == other.firstPattern && scaleFactor == other.scaleFactor);
+            }
+        };
+
+        struct SoundEffect {
+            std::string soundPath;
+            bool isLoaded = false;
+            bool hasToBePlayed = false;
+            Sound sound = Sound{};
+
+            bool operator==(const SoundEffect &other) const {
+                return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
             }
         };
 
@@ -98,12 +110,6 @@ namespace ecs {
             Rectangle spriteRect = Rectangle{};
         };
 
-        struct SoundEffect {
-            std::string soundPath;
-            Sound sound = Sound{};
-            bool isLoaded = false;
-            bool hasToBePlayed = false;
-        };
 
         struct SpriteSize {
             float spriteWidth = 0, spriteHeight = 0;
@@ -137,7 +143,8 @@ struct EntityData {
                     areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
                     areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
                     areComponentsEquals<ecs::component::Controllable>(name, ecs::ComponentName::CONTROLLABLE, component, other.component) ||
-                    areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component));
+                    areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
+                    areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component));
             return true;
         }
         return false;
@@ -175,6 +182,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spri
 void operator<<(std::ostringstream &oss, const ecs::component::Controllable &controllable);
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
+void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -185,6 +193,7 @@ void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfo
 void operator>>(std::istringstream &iss, ecs::component::Controllable &controllable);
 void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
+void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */
