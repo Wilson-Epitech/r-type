@@ -14,6 +14,7 @@
 #include "FiringSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "SoundSystem.hpp"
 
 namespace game {
     class RtypeGameClient : virtual public game::AGame {

@@ -33,6 +33,7 @@ void game::RtypeGameClient::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::FiringSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
+    _reg.addSystem(ecs::system::SoundSystem());
 }
 
 game::GameStatus game::RtypeGameClient::gameState(ecs::Registry &) {
