@@ -25,7 +25,7 @@ static void handleCtrlC(int signal) {
 }
 
 void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client) {
-    DataToSend data = Lib::fillDataToSend(reg);
+    DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
 
     if (!data.empty()) {
         std::string serialized = Lib::serializeEntityDataVector(data);

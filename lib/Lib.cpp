@@ -65,7 +65,7 @@ std::optional<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg)
     return playerData;
 }
 
-DataToSend Lib::fillDataToSend(ecs::Registry &reg) {
+DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
     std::optional<EntityData> playerData = retrievePlayerVelocityUpdates(reg);
     DataToSend data;
@@ -82,6 +82,29 @@ DataToSend Lib::fillDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Controllable>(reg, newEntity, data, ecs::ComponentName::CONTROLLABLE);
         fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
         fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
+    }
+    return data;
+}
+
+DataToSend Lib::fillAllEntitiesDataToSend(ecs::Registry &reg) {
+    ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
+    ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
+    ecs::SparseArray<ecs::component::Controllable> &controllables = reg.getComponents<ecs::component::Controllable>();
+    ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+    ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
+    ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
+    ecs::SparseArray<ecs::component::SoundEffect > &soundEffect = reg.getComponents<ecs::component::SoundEffect>();
+    DataToSend data;
+
+    data.deadEntities = reg.getActualTurnDeadEntities();
+    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size(); i++) {
+        fillEntityComponentData<ecs::component::Position>(reg, i, data, ecs::ComponentName::POSITION);
+        fillEntityComponentData<ecs::component::Velocity>(reg, i, data, ecs::ComponentName::VELOCITY);
+        fillEntityComponentData<ecs::component::Type>(reg, i, data, ecs::ComponentName::TYPE);
+        fillEntityComponentData<ecs::component::Life>(reg, i, data, ecs::ComponentName::LIFE);
+        fillEntityComponentData<ecs::component::Controllable>(reg, i, data, ecs::ComponentName::CONTROLLABLE);
+        fillEntityComponentData<ecs::component::SpriteInfos>(reg, i, data, ecs::ComponentName::SPRITEINFOS);
+        fillEntityComponentData<ecs::component::SoundEffect>(reg, i, data, ecs::ComponentName::SOUNDEFFECT);
     }
     return data;
 }

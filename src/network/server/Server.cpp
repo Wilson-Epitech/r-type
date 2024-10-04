@@ -19,8 +19,16 @@ Server::~Server() {
     _ioThread.join();
 }
 
+std::unordered_map<std::size_t, asio::ip::udp::endpoint> Server::getConnectedClients() {
+    return _connectedClients;
+}
+
 std::size_t Server::getNbClients() {
     return _connectedClients.size();
+}
+
+std::size_t Server::getLastConnectedClientId() {
+    return _idClient;
 }
 
 DataToSend Server::getEntityData() {

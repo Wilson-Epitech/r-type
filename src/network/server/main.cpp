@@ -12,11 +12,31 @@
 #include <iostream>
 
 void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
-    DataToSend data = Lib::fillDataToSend(reg);
+    DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
+    DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
 
-    if (!data.empty()) {
-        std::string serialized = Lib::serializeEntityDataVector(data);
-        server.sendToAllClient(serialized);
+    std::unordered_map<std::size_t, asio::ip::udp::endpoint> connectedClients = server.getConnectedClients();
+
+    static std::size_t previousConnectedClientsSize;
+    std::size_t connectedClientsSize = connectedClients.size();
+
+    static std::size_t previousLastConnectedClientId;
+    std::size_t lastConnectedClientId = server.getLastConnectedClientId();
+
+    if (!newEntitiesData.empty()) {
+        std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+        std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
+        for (const auto &it : connectedClients) {
+            std::size_t id = it.first;
+            if (((connectedClientsSize != previousConnectedClientsSize) && (lastConnectedClientId == id)) ||
+                ((lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == id))) {
+                previousConnectedClientsSize = connectedClientsSize;
+                previousLastConnectedClientId = lastConnectedClientId;
+                server.sendToAClient(id, allEntititiesSerialized);
+            } else {
+                server.sendToAClient(id, newEntititiesSerialized);
+            }
+        }
     }
 }
 

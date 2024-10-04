@@ -29,7 +29,8 @@ class Lib {
     static int getScreenWidth();
     static bool isOnScreen(Vector2 pos);
     static double toMilliseconds(double time);
-    static DataToSend fillDataToSend(ecs::Registry &reg);
+    static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg);
+    static DataToSend fillAllEntitiesDataToSend(ecs::Registry &reg);
     static std::string serializeEntityDataVector(const DataToSend &data);
     static DataToSend deserializeEntityDataVector(const std::string &message);
     static void updateEntities(ecs::Registry &reg, EntityData &data);

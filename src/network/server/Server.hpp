@@ -22,7 +22,9 @@ class Server {
 
     void sendToAClient(const std::size_t idClient, const std::string message);
     void sendToAllClient(const std::string message);
+    std::unordered_map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
     std::size_t getNbClients();
+    std::size_t getLastConnectedClientId();
     DataToSend getEntityData();
 
   private:
@@ -35,12 +37,13 @@ class Server {
     std::thread _ioThread;
     asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _remoteEndpoint;
-    std::array<char, 1024> _receiveBuffer;
+    std::array<char, 2048> _receiveBuffer;
 
     std::size_t _idClient;
-    std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
 
     asio::thread_pool &_threadPool;
+
+    std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
 
     DataToSend _data;
 };
