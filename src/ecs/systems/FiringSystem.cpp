@@ -52,6 +52,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
@@ -68,7 +69,6 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
                                      (float(shotSpriteRect.height) / 2) * spriteInfos[playerShootIndex]->scaleFactor);
 
     UnloadTexture(shotTexture);
-    soundHasToBePlayed(reg);
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
                                                          velocities[playerShootIndex]->possibleVelocity});
@@ -78,6 +78,11 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
+
+    if (!soundEffect[playerShootIndex])
+        return;
+    if (soundEffect[playerShootIndex]->soundPath.length() > 0)
+        soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[playerShootIndex]->soundPath, false, true});
 }
 
 std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
@@ -93,17 +98,4 @@ std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {
         }
     }
     return 0;
-}
-
-void ecs::system::FiringSystem::soundHasToBePlayed(Registry &reg) {
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
-    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-
-    for (std::size_t i = 0; i < types.size() && i < soundEffect.size(); ++i) {
-        if (types[i] && soundEffect[i]) {
-            if (types[i]->entityType == ecs::EntityType::PLAYERSHOT) {
-                soundEffect[i]->hasToBePlayed = true;
-            }
-        }
-    }
 }

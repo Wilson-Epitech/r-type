@@ -18,7 +18,6 @@
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
 #include "PositionSystem.hpp"
-#include "SoundSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 
 #define PLAYER_NAME "player"
