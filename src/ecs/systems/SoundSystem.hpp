@@ -21,7 +21,7 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-            void loadSound(std::size_t i, Registry &reg, SparseArray<component::SoundEffect> &soundEffect);
+            void loadSound(std::size_t i, SparseArray<component::SoundEffect> &soundEffect);
         };
     }
 }
