@@ -19,6 +19,7 @@
 #include "LifeSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "PlayerSpawnSystem.hpp"
 
 #define PLAYER_NAME "player"
 #define PLAYER_SHOT "player_shot"

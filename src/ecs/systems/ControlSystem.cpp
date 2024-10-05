@@ -12,23 +12,28 @@ void ecs::system::ControlSystem::operator()(Registry &reg) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     int gamepad = 0;
 
-    for (std::size_t i = 0; i < controllables.size() && i < velocities.size(); ++i) {
-        if (controllables[i] && velocities[i]) {
-            if (!controllables[i]->isControllable)
-                continue;
-            velocities[i]->vx = 0;
-            velocities[i]->vy = 0;
-            if (IsKeyDown(KEY_UP))
-                velocities[i]->vy = -velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_DOWN))
-                velocities[i]->vy = velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_LEFT))
-                velocities[i]->vx = -velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_RIGHT))
-                velocities[i]->vx = velocities[i]->possibleVelocity;
-            else if (IsGamepadAvailable(gamepad)) {
-                handleController(gamepad, velocities, i);
-            }
+    std::map<std::size_t, entity_t> player = reg.getPlayers();
+
+    if (player.size() != 1)
+        return;
+
+    entity_t playerEntity = player[0];
+
+    if (controllables[playerEntity] && velocities[playerEntity]) {
+        if (!controllables[playerEntity]->isControllable)
+            return;
+        velocities[playerEntity]->vx = 0;
+        velocities[playerEntity]->vy = 0;
+        if (IsKeyDown(KEY_UP))
+            velocities[playerEntity]->vy = -velocities[playerEntity]->possibleVelocity;
+        if (IsKeyDown(KEY_DOWN))
+            velocities[playerEntity]->vy = velocities[playerEntity]->possibleVelocity;
+        if (IsKeyDown(KEY_LEFT))
+            velocities[playerEntity]->vx = -velocities[playerEntity]->possibleVelocity;
+        if (IsKeyDown(KEY_RIGHT))
+            velocities[playerEntity]->vx = velocities[playerEntity]->possibleVelocity;
+        else if (IsGamepadAvailable(gamepad)) {
+            handleController(gamepad, velocities, playerEntity);
         }
     }
 }

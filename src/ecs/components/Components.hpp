@@ -20,6 +20,7 @@ namespace ecs {
     enum EntityType {
         NOTYPE,
         PLAYER,
+        PLAYER_TEMPLATE,
         PLAYERSHOT,
         PLAYERSHOT_TEMPLATE,
         ENEMY,

@@ -65,9 +65,12 @@ int main(int ac, char **av) {
             time0 = std::chrono::steady_clock::now();
             BeginDrawing();
             ClearBackground(RAYWHITE);
-
             static DataToSend lastDataReceived;
             DataToSend dataReceived = client.getData();
+            std::size_t playerId = client.getPlayerId();
+            std::map<std::size_t, entity_t> player = reg.getPlayers();
+            if (playerId != 0 && player.size() == 0)
+                reg.addPlayer(0, playerId);
             if (!dataReceived.empty() && dataReceived != lastDataReceived) {
                 for (auto &deadEntity : dataReceived.deadEntities) {
                     if (reg.entityExist(deadEntity))

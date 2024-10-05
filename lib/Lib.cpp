@@ -89,11 +89,9 @@ DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
 DataToSend Lib::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
-    ecs::SparseArray<ecs::component::Controllable> &controllables = reg.getComponents<ecs::component::Controllable>();
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
-    ecs::SparseArray<ecs::component::SoundEffect > &soundEffect = reg.getComponents<ecs::component::SoundEffect>();
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();

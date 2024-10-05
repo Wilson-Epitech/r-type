@@ -38,8 +38,11 @@ void Client::msgFromServer() {
         std::string receivedMessage = std::string(receiveBuffer.data(), len);
         std::string newConnection = "New Connection:";
 
-        if (receivedMessage.compare(0, newConnection.length(), newConnection) != 0 && receivedMessage.length() > 0)
+        if (receivedMessage.length() <= 3) { // à améliorer
+            _playerId = std::atoi(receivedMessage.c_str());
+        } else if (receivedMessage.compare(0, newConnection.length(), newConnection) != 0 && receivedMessage.length() > 0) {
             _data = Lib::deserializeEntityDataVector(receivedMessage);
+        }
         if (receivedMessage == "Could not connect")
             _isRunning = false;
     }
@@ -55,4 +58,9 @@ bool Client::getIsRunning() {
 
 DataToSend Client::getData() {
     return _data;
+}
+
+
+std::size_t Client::getPlayerId() {
+    return _playerId;
 }

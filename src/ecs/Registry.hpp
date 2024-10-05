@@ -86,6 +86,25 @@ namespace ecs {
             return false;
         }
 
+        void addPlayer(std::size_t clientId, entity_t entity) {
+            auto it = _players.find(clientId);
+            if (it != _players.end())
+                throw Error("Client already mapped with a player");
+            _players[clientId] = entity;
+        }
+
+        std::size_t getPlayerByClientId(std::size_t clientId) {
+            auto it = _players.find(clientId);
+            if (it == _players.end())
+                throw Error("No player mapped with this client id");
+            return it->second;
+        }
+
+        std::map<std::size_t, entity_t> getPlayers() {
+            return _players;
+        }
+
+
         template <typename Component> void removeComponent(entity_t const &from) {
             SparseArray<Component> &component = getComponents<Component>();
             component.erase(from);
@@ -127,12 +146,20 @@ namespace ecs {
         };
 
         void runSystems() {
-            for (std::size_t i = 0; i < _systems.size(); i++) {
+            for (std::size_t i = 0; i < _systems.size() ; i++) {
                 _systems[i](*this);
             }
         };
 
+        void runInitPlayer() {
+            for (std::size_t i = 0; i <= 1; i++) {
+                _systems[i](*this);
+            } // trouver une manière plus clean de faire ça
+        };
+
       private:
+        std::map<std::size_t, entity_t> _players;
+
         std::size_t _totalEntities = 0;
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;

@@ -22,6 +22,7 @@ SRC = 	src/gameEngine/GameEngine.cpp									\
     	src/ecs/systems/FiringSystem.cpp								\
     	src/ecs/systems/KillOffscreenEntitiesSystem.cpp					\
     	src/ecs/systems/LifeSystem.cpp									\
+		src/ecs/systems/PlayerSpawnSystem.cpp 							\
     	src/ecs/systems/PositionSystem.cpp								\
     	src/ecs/systems/SoundSystem.cpp									\
     	src/ecs/systems/SpriteAnimationSystem.cpp						\

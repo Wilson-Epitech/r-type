@@ -23,6 +23,7 @@ class Client {
     void sendMessage(const std::string &message);
     bool getIsRunning();
     DataToSend getData();
+    std::size_t getPlayerId();
 
   private:
     void msgFromServer();
@@ -33,6 +34,7 @@ class Client {
     bool _isRunning;
 
     DataToSend _data;
+    std::size_t _playerId;
 };
 
 #endif /* !CLIENT_HPP_ */
