@@ -36,11 +36,12 @@ void Client::msgFromServer() {
             break;
         }
         std::string receivedMessage = std::string(receiveBuffer.data(), len);
-        std::string newConnection = "New Connection:";
+        std::string newConnectionMessage = "New Connection:";
+        std::string playerIdMessage = "playerId:";
 
-        if (receivedMessage.length() <= 3) { // à améliorer
-            _playerId = std::atoi(receivedMessage.c_str());
-        } else if (receivedMessage.compare(0, newConnection.length(), newConnection) != 0 && receivedMessage.length() > 0) {
+        if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
+            _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
+        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 && receivedMessage.length() > 0) {
             _data = Lib::deserializeEntityDataVector(receivedMessage);
         }
         if (receivedMessage == "Could not connect")

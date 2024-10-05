@@ -37,7 +37,7 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
                     std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
                     previousConnectedClientsSize = connectedClientsSize;
                     previousLastConnectedClientId = lastConnectedClientId;
-                    server.sendToAClient(id, std::to_string(playerId));
+                    server.sendToAClient(id, "playerId:" + std::to_string(playerId));
                     server.sendToAClient(id, allEntititiesSerialized);
             } else if (!newEntitiesData.empty()) {
                 std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
