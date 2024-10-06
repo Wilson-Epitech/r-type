@@ -49,86 +49,18 @@ std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
     return playersIndex;
 }
 
-std::vector<EntityData> Lib::retrievePlayersVelocitiesUpdates(ecs::Registry &reg) {
-    static std::vector<ecs::SparseArray<ecs::component::Velocity>::value_type> lastPlayersVelocities;
-    ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
-    std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
-    std::vector<EntityData> playersData;
-    EntityData playerData = EntityData{};
-    std::size_t turn = 0;
-
-    for (auto &playerIndex : playersIndex) {
-        if (playerIndex == 0 || !velocities[playerIndex]) {
-            continue;
-        }
-        if (lastPlayersVelocities.size() >= turn + 1) {
-            if (lastPlayersVelocities[turn] != velocities[playerIndex].value()) {
-                playerData.entityID = playerIndex;
-                playerData.component = velocities[playerIndex].value();
-                playerData.name = ecs::ComponentName::VELOCITY;
-                playersData.push_back(playerData);
-                lastPlayersVelocities[turn] = velocities[playerIndex].value();
-            }
-        } else {
-            playerData.entityID = playerIndex;
-            playerData.component = velocities[playerIndex].value();
-            playerData.name = ecs::ComponentName::VELOCITY;
-            playersData.push_back(playerData);
-            lastPlayersVelocities.push_back(velocities[playerIndex].value());
-        }
-        turn++;
-    }
-    return playersData;
-}
-
-std::vector<EntityData> Lib::retrievePlayersShootingsUpdates(ecs::Registry &reg) {
-    static std::vector<ecs::SparseArray<ecs::component::Shooting>::value_type> lastPlayersShootings;
-    ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
-    std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
-    std::vector<EntityData> playersData;
-    EntityData playerData = EntityData{};
-    std::size_t turn = 0;
-
-    for (auto &playerIndex : playersIndex) {
-        if (playerIndex == 0 || !shootings[playerIndex]) {
-            continue;
-        }
-        if (lastPlayersShootings.size() >= turn + 1) {
-            if (lastPlayersShootings[turn] != shootings[playerIndex].value()) {
-                playerData.entityID = playerIndex;
-                playerData.component = shootings[playerIndex].value();
-                playerData.name = ecs::ComponentName::SHOOTING;
-                playersData.push_back(playerData);
-                lastPlayersShootings[turn] = shootings[playerIndex].value();
-            }
-        } else {
-            playerData.entityID = playerIndex;
-            playerData.component = shootings[playerIndex].value();
-            playerData.name = ecs::ComponentName::SHOOTING;
-            playersData.push_back(playerData);
-            lastPlayersShootings.push_back(shootings[playerIndex].value());
-        }
-        turn++;
-    }
-    return playersData;
-}
-
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     try {
         std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-        std::vector<EntityData> playersVelocitiesData = retrievePlayersVelocitiesUpdates(reg);
-        std::vector<EntityData> playersShootingsData = retrievePlayersShootingsUpdates(reg);
+        std::vector<EntityData> playersVelocitiesData = retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
+        std::vector<EntityData> playersShootingsData = retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
         DataToSend data;
 
         data.deadEntities = reg.getActualTurnDeadEntities();
-
-        for (auto &playerVelocityData : playersVelocitiesData) {
+        for (auto &playerVelocityData : playersVelocitiesData)
             data.entitiesData.push_back(playerVelocityData);
-        }
-        for (auto &playerShootingData : playersShootingsData) {
+        for (auto &playerShootingData : playersShootingsData)
             data.entitiesData.push_back(playerShootingData);
-        }
-
         for (auto &newEntity : newEntities) {
             fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
             fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);

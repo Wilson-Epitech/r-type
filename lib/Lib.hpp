@@ -62,10 +62,41 @@ class Lib {
     }
 
   private:
-    static std::vector<EntityData> retrievePlayersVelocitiesUpdates(ecs::Registry &reg);
-    static std::vector<EntityData> retrievePlayersShootingsUpdates(ecs::Registry &reg);
-    static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
     static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
+    static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
+
+    template <typename Component>
+    static std::vector<EntityData> retrievePlayersComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
+        static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersShootings;
+        ecs::SparseArray<Component> &shootings = reg.getComponents<Component>();
+        std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
+        std::vector<EntityData> playersData;
+        EntityData playerData = EntityData{};
+        std::size_t turn = 0;
+
+        for (auto &playerIndex : playersIndex) {
+            if (playerIndex == 0 || !shootings[playerIndex]) {
+                continue;
+            }
+            if (lastPlayersShootings.size() >= turn + 1) {
+                if (lastPlayersShootings[turn] != shootings[playerIndex].value()) {
+                    playerData.entityID = playerIndex;
+                    playerData.component = shootings[playerIndex].value();
+                    playerData.name = name;
+                    playersData.push_back(playerData);
+                    lastPlayersShootings[turn] = shootings[playerIndex].value();
+                }
+            } else {
+                playerData.entityID = playerIndex;
+                playerData.component = shootings[playerIndex].value();
+                playerData.name = name;
+                playersData.push_back(playerData);
+                lastPlayersShootings.push_back(shootings[playerIndex].value());
+            }
+            turn++;
+        }
+        return playersData;
+    }
 
     template <typename Component>
     static void fillEntityComponentData(ecs::Registry &reg, const std::size_t &newEntity, DataToSend &data, const ecs::ComponentName name) {
