@@ -146,7 +146,8 @@ namespace ecs {
             return std::any_cast<SparseArray<Component>>(it->second);
         };
 
-        template <class... Components, typename Function> void addSystem(Function const &f) {
+        template <class... Components, typename Function>
+        void addSystem(Function const &f) {
             _systems.push_back(f);
         };
 
@@ -156,15 +157,19 @@ namespace ecs {
             }
         };
 
-        void runInitPlayer() {
-            for (std::size_t i = 0; i <= 1; i++) {
-                _systems[i](*this);
-            } // trouver une manière plus clean de faire ça
+        template <class... Components, typename Function>
+        void addInitPlayerSystem(Function const &f) {
+            _initPlayerSystem = f;
+        };
+
+        void runInitPlayerSystem() {
+            _initPlayerSystem(*this);
         };
 
       private:
         std::map<std::size_t, entity_t> _players;
         std::size_t _totalEntities = 0;
+        std::function<void(Registry &)> _initPlayerSystem;
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;
         std::list<std::size_t> _actualTurnDeadEntities;

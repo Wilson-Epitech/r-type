@@ -30,7 +30,7 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
-            reg.runInitPlayer();
+            reg.runInitPlayerSystem();
             DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
             previousConnectedClientsSize = connectedClientsSize;
@@ -60,7 +60,7 @@ int main(int ac, char **av) {
     }
     try {
         asio::io_context io_context;
-        asio::thread_pool pool(4);
+        asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
         Server server(io_context, std::stoi(av[1]), pool);
         game::RtypeGameServer rtype;
         ecs::Registry reg = rtype.getRegistry();

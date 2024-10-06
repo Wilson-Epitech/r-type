@@ -92,7 +92,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
-    _reg.addSystem(ecs::system::PlayerSpawnSystem());
+    _reg.addInitPlayerSystem(ecs::system::PlayerSpawnSystem());
     _reg.addSystem(ecs::system::FiringSystem());
     _reg.addSystem(ecs::system::PositionSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
