@@ -28,7 +28,7 @@ class Server {
     DataToSend getEntityData();
 
     std::unordered_map<std::size_t, bool> getAreClientsWorldSet() {
-      return _AreClientsWorldSet;
+        return _AreClientsWorldSet;
     }
 
   private:

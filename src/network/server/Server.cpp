@@ -39,7 +39,6 @@ DataToSend Server::getEntityData() {
     return _data;
 }
 
-
 void Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
                                std::bind(&Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
@@ -63,7 +62,8 @@ void Server::handleReceive(const std::error_code &error, std::size_t byteTransfe
         std::string worldSetMessage = "World set";
         if (receivedMessage.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
             _AreClientsWorldSet[talkingClient] = true;
-        } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && receivedMessage.length() > 0) {
+        } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 &&
+                   receivedMessage.length() > 0) {
             std::cout << "data:" << receivedMessage << std::endl;
             deserializeMessage(receivedMessage);
         }

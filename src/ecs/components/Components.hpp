@@ -89,8 +89,8 @@ namespace ecs {
             float scaleFactor = 1.0;
 
             bool operator==(const SpriteInfos &other) const {
-                return (spritePath == other.spritePath && patternNb == other.patternNb
-                    && firstPattern == other.firstPattern && scaleFactor == other.scaleFactor);
+                return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
+                        scaleFactor == other.scaleFactor);
             }
         };
 
@@ -110,7 +110,6 @@ namespace ecs {
             Texture2D spriteTexture = Texture2D{};
             Rectangle spriteRect = Rectangle{};
         };
-
 
         struct SpriteSize {
             float spriteWidth = 0, spriteHeight = 0;

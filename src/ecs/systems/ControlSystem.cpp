@@ -37,7 +37,6 @@ void ecs::system::ControlSystem::operator()(Registry &reg) {
     }
 }
 
-
 bool ecs::system::ControlSystem::IsGamepadTriggerButtonDown(int &gamepad) {
     return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
             IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));

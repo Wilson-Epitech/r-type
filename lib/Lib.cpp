@@ -70,11 +70,11 @@ std::vector<EntityData> Lib::retrievePlayersVelocitiesUpdates(ecs::Registry &reg
                 lastPlayersVelocities[turn] = velocities[playerIndex].value();
             }
         } else {
-                playerData.entityID = playerIndex;
-                playerData.component = velocities[playerIndex].value();
-                playerData.name = ecs::ComponentName::VELOCITY;
-                playersData.push_back(playerData);
-                lastPlayersVelocities.push_back(velocities[playerIndex].value());
+            playerData.entityID = playerIndex;
+            playerData.component = velocities[playerIndex].value();
+            playerData.name = ecs::ComponentName::VELOCITY;
+            playersData.push_back(playerData);
+            lastPlayersVelocities.push_back(velocities[playerIndex].value());
         }
         turn++;
     }
@@ -102,17 +102,16 @@ std::vector<EntityData> Lib::retrievePlayersShootingsUpdates(ecs::Registry &reg)
                 lastPlayersShootings[turn] = shootings[playerIndex].value();
             }
         } else {
-                playerData.entityID = playerIndex;
-                playerData.component = shootings[playerIndex].value();
-                playerData.name = ecs::ComponentName::SHOOTING;
-                playersData.push_back(playerData);
-                lastPlayersShootings.push_back(shootings[playerIndex].value());
+            playerData.entityID = playerIndex;
+            playerData.component = shootings[playerIndex].value();
+            playerData.name = ecs::ComponentName::SHOOTING;
+            playersData.push_back(playerData);
+            lastPlayersShootings.push_back(shootings[playerIndex].value());
         }
         turn++;
     }
     return playersData;
 }
-
 
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     try {

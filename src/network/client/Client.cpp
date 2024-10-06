@@ -64,7 +64,6 @@ DataToSend Client::getData() {
     return _data;
 }
 
-
 std::size_t Client::getPlayerId() {
     return _playerId;
 }

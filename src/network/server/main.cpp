@@ -26,26 +26,27 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
         for (auto rit = connectedClients.rbegin(); rit != connectedClients.rend(); rit++) {
             std::size_t clientId = rit->first;
             if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-                lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
-                    entity_t newPlayer = reg.spawnEntity();
-                    reg.addPlayer(lastConnectedClientId, newPlayer);
-                    std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
-                    reg.runInitPlayer();
-                    DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
-                    std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
-                    previousConnectedClientsSize = connectedClientsSize;
-                    previousLastConnectedClientId = lastConnectedClientId;
-                    server.sendToAClient(clientId, "playerId:" + std::to_string(playerId));
-                    if (!allEntitiesData.empty())
-                        server.sendToAClient(clientId, allEntititiesSerialized);
+                 lastConnectedClientId != previousLastConnectedClientId) &&
+                (lastConnectedClientId == clientId)) {
+                entity_t newPlayer = reg.spawnEntity();
+                reg.addPlayer(lastConnectedClientId, newPlayer);
+                std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
+                reg.runInitPlayer();
+                DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
+                std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
+                previousConnectedClientsSize = connectedClientsSize;
+                previousLastConnectedClientId = lastConnectedClientId;
+                server.sendToAClient(clientId, "playerId:" + std::to_string(playerId));
+                if (!allEntitiesData.empty())
+                    server.sendToAClient(clientId, allEntititiesSerialized);
             }
         }
-        DataToSend newEntitiesData =  Lib::fillNewEntitiesDataToSend(reg);
+        DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
 
         for (auto rit = connectedClients.rbegin(); rit != connectedClients.rend(); rit++) {
             std::size_t clientId = rit->first;
             if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-                 std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
                 if (!newEntitiesData.empty()) {
                     server.sendToAClient(clientId, newEntititiesSerialized);
                 }
