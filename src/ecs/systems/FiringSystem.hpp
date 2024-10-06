@@ -12,7 +12,7 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define SHOOT_RATE 0.3
+#define SHOOT_RATE 0.5
 
 namespace ecs {
     namespace system {
@@ -26,7 +26,6 @@ namespace ecs {
           private:
             void addShot(std::size_t index, Registry &reg);
             std::size_t getPlayerShootIndex(Registry &reg);
-            bool IsGamepadTriggerButtonDown(int &gamepad);
         };
     }
 }

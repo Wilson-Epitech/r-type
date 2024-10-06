@@ -7,61 +7,28 @@
 
 #include "FiringSystem.hpp"
 
-// void ecs::system::FiringSystem::operator()(Registry &reg) {
-//     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
-//     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-//     static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-//     static bool canShoot = true;
-//     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-//     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-//     float spawnInterval = SHOOT_RATE;
-//     int gamepad = 0;
-
-//     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
-//         if (controllables[i] && positions[i]) {
-//             if (!controllables[i]->isControllable)
-//                 continue;
-//             if (!IsKeyDown(KEY_SPACE) && !IsGamepadTriggerButtonDown(gamepad)) {
-//                 canShoot = true;
-//                 time0 = std::chrono::steady_clock::now();
-//             }
-//             if (IsKeyDown(KEY_SPACE) && canShoot) {
-//                 addShot(i, reg);
-//                 canShoot = false;
-//             } else if (IsGamepadAvailable(gamepad)) {
-//                 if (IsGamepadTriggerButtonDown(gamepad) && canShoot) {
-//                     addShot(i, reg);
-//                     canShoot = false;
-//                 }
-//             }
-//         }
-//     }
-//     if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval)) {
-//         canShoot = true;
-//         time0 = std::chrono::steady_clock::now();
-//     }
-// }
-
 void ecs::system::FiringSystem::operator()(Registry &reg) {
     SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
+    float spawnInterval = SHOOT_RATE;
+    static bool canShoot = true;
 
+    if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval)) {
+        canShoot = true;
+        time0 = std::chrono::steady_clock::now();
+    }
     for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
         if (controllables[i] && positions[i]) {
-            if (controllables[i]->isControllable) {
+            if (controllables[i]->isControllable && canShoot) {
                 addShot(i, reg);
                 controllables[i]->isControllable = false;
+                canShoot = false;
             }
         }
     }
-}
-
-
-#include <iostream>
-
-bool ecs::system::FiringSystem::IsGamepadTriggerButtonDown(int &gamepad) {
-    return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
-            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));
 }
 
 void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) {
