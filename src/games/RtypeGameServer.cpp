@@ -23,7 +23,7 @@ void game::RtypeGameServer::spawnEntities() {
 void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Position>();
     _reg.registerComponent<ecs::component::Velocity>();
-    _reg.registerComponent<ecs::component::Controllable>();
+    _reg.registerComponent<ecs::component::Shooting>();
     _reg.registerComponent<ecs::component::Type>();
     _reg.registerComponent<ecs::component::SpriteInfos>();
     _reg.registerComponent<ecs::component::Drawable>();
@@ -37,7 +37,7 @@ void game::RtypeGameServer::registerComponents() {
 void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Position> &positions = _reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = _reg.getComponents<ecs::component::Velocity>();
-    ecs::SparseArray<ecs::component::Controllable> &controllables = _reg.getComponents<ecs::component::Controllable>();
+    ecs::SparseArray<ecs::component::Shooting> &shootings = _reg.getComponents<ecs::component::Shooting>();
     ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
@@ -54,7 +54,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     spriteInfos.insertAt(
         _stringToEntity[PLAYER_NAME],
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
-    controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{false});
+    shootings.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Shooting{false});
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
     soundEffect.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});

@@ -19,7 +19,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
 {
     ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
-    ecs::SparseArray<ecs::component::Controllable> &controllables = reg.getComponents<ecs::component::Controllable>();
+    ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
@@ -35,8 +35,8 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
         positions.insertAt(entity, ecs::component::Position{100, 100});
     if (velocities[playerTemplateIndex] && !velocities[entity])
         velocities.insertAt(entity, ecs::component::Velocity{velocities[playerTemplateIndex].value()});
-    if (controllables[playerTemplateIndex] && !controllables[entity])
-        controllables.insertAt(entity, ecs::component::Controllable{controllables[playerTemplateIndex].value()});
+    if (shootings[playerTemplateIndex] && !shootings[entity])
+        shootings.insertAt(entity, ecs::component::Shooting{shootings[playerTemplateIndex].value()});
     if (lives[playerTemplateIndex] && !lives[entity])
         lives.insertAt(entity, ecs::component::Life{lives[playerTemplateIndex].value()});
     if (spriteInfos[playerTemplateIndex] && !spriteInfos[entity])

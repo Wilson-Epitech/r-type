@@ -8,7 +8,7 @@
 #include "FiringSystem.hpp"
 
 void ecs::system::FiringSystem::operator()(Registry &reg) {
-    SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
+    SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
@@ -20,11 +20,11 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
         canShoot = true;
         time0 = std::chrono::steady_clock::now();
     }
-    for (std::size_t i = 0; i < controllables.size() && i < positions.size(); ++i) {
-        if (controllables[i] && positions[i]) {
-            if (controllables[i]->isControllable && canShoot) {
+    for (std::size_t i = 0; i < shootings.size() && i < positions.size(); ++i) {
+        if (shootings[i] && positions[i]) {
+            if (shootings[i]->isShooting && canShoot) {
                 addShot(i, reg);
-                controllables[i]->isControllable = false;
+                shootings[i]->isShooting = false;
                 canShoot = false;
             }
         }

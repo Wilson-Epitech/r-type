@@ -63,7 +63,7 @@ class Lib {
 
   private:
     static std::vector<EntityData> retrievePlayersVelocitiesUpdates(ecs::Registry &reg);
-    static std::vector<EntityData> retrievePlayersControllablesUpdates(ecs::Registry &reg);
+    static std::vector<EntityData> retrievePlayersShootingsUpdates(ecs::Registry &reg);
     static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
     static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
 

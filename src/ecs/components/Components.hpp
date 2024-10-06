@@ -36,7 +36,7 @@ namespace ecs {
         VELOCITY,
         TYPE,
         LIFE,
-        CONTROLLABLE,
+        SHOOTING,
         SPRITEINFOS,
         SOUNDEFFECT
     };
@@ -74,11 +74,11 @@ namespace ecs {
             }
         };
 
-        struct Controllable {
-            bool isControllable = false;
+        struct Shooting {
+            bool isShooting = false;
 
-            bool operator==(const Controllable &other) const {
-                return (isControllable == other.isControllable);
+            bool operator==(const Shooting &other) const {
+                return (isShooting == other.isShooting);
             }
         };
 
@@ -143,7 +143,7 @@ struct EntityData {
                     areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
                     areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
                     areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
-                    areComponentsEquals<ecs::component::Controllable>(name, ecs::ComponentName::CONTROLLABLE, component, other.component) ||
+                    areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                     areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component));
             return true;
@@ -180,7 +180,7 @@ struct DataToSend {
 void operator<<(std::ostringstream &oss, const ecs::component::Position &position);
 void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocity);
 void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos);
-void operator<<(std::ostringstream &oss, const ecs::component::Controllable &controllable);
+void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting);
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect);
@@ -191,7 +191,7 @@ void operator>>(std::istringstream &iss, ecs::ComponentName &name);
 void operator>>(std::istringstream &iss, ecs::component::Position &position);
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);
 void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos);
-void operator>>(std::istringstream &iss, ecs::component::Controllable &controllable);
+void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting);
 void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect);

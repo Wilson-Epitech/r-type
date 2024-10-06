@@ -17,7 +17,7 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::Position>();
     _reg.registerComponent<ecs::component::Velocity>();
     _reg.registerComponent<ecs::component::Drawable>();
-    _reg.registerComponent<ecs::component::Controllable>();
+    _reg.registerComponent<ecs::component::Shooting>();
     _reg.registerComponent<ecs::component::Type>();
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
