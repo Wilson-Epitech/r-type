@@ -50,30 +50,26 @@ std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
 }
 
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
-    try {
-        std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-        std::vector<EntityData> playersVelocitiesData = retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
-        std::vector<EntityData> playersShootingsData = retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
-        DataToSend data;
+    std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
+    std::vector<EntityData> playersVelocitiesData = retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
+    std::vector<EntityData> playersShootingsData = retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
+    DataToSend data;
 
-        data.deadEntities = reg.getActualTurnDeadEntities();
-        for (auto &playerVelocityData : playersVelocitiesData)
-            data.entitiesData.push_back(playerVelocityData);
-        for (auto &playerShootingData : playersShootingsData)
-            data.entitiesData.push_back(playerShootingData);
-        for (auto &newEntity : newEntities) {
-            fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
-            fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);
-            fillEntityComponentData<ecs::component::Type>(reg, newEntity, data, ecs::ComponentName::TYPE);
-            fillEntityComponentData<ecs::component::Life>(reg, newEntity, data, ecs::ComponentName::LIFE);
-            fillEntityComponentData<ecs::component::Shooting>(reg, newEntity, data, ecs::ComponentName::SHOOTING);
-            fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
-            fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
-        }
-        return data;
-    } catch (const std::exception &e) {
-        throw;
+    data.deadEntities = reg.getActualTurnDeadEntities();
+    for (auto &playerVelocityData : playersVelocitiesData)
+        data.entitiesData.push_back(playerVelocityData);
+    for (auto &playerShootingData : playersShootingsData)
+        data.entitiesData.push_back(playerShootingData);
+    for (auto &newEntity : newEntities) {
+        fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
+        fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);
+        fillEntityComponentData<ecs::component::Type>(reg, newEntity, data, ecs::ComponentName::TYPE);
+        fillEntityComponentData<ecs::component::Life>(reg, newEntity, data, ecs::ComponentName::LIFE);
+        fillEntityComponentData<ecs::component::Shooting>(reg, newEntity, data, ecs::ComponentName::SHOOTING);
+        fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
+        fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
     }
+    return data;
 }
 
 DataToSend Lib::fillAllEntitiesDataToSend(ecs::Registry &reg) {
