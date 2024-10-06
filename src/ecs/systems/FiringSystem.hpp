@@ -12,7 +12,7 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define SHOOT_RATE 0.5
+#define SHOOT_RATE 0.4
 
 namespace ecs {
     namespace system {
