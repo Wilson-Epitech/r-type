@@ -14,6 +14,7 @@
 #include <memory>
 
 #define UPDATE_SERVER 0.02
+#define NB_CLIENTS_AUTHORIZED 4
 
 class Server {
   public:
@@ -28,7 +29,7 @@ class Server {
     DataToSend getEntityData();
 
     std::unordered_map<std::size_t, bool> getAreClientsWorldSet() {
-        return _AreClientsWorldSet;
+        return _areClientsWorldSet;
     }
 
   private:
@@ -48,7 +49,7 @@ class Server {
     asio::thread_pool &_threadPool;
 
     std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
-    std::unordered_map<std::size_t, bool> _AreClientsWorldSet;
+    std::unordered_map<std::size_t, bool> _areClientsWorldSet;
 
     DataToSend _data;
     bool _worldSet = false;

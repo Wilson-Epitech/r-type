@@ -13,10 +13,8 @@ Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
-    _AreClientsWorldSet[0] = false;
-    _AreClientsWorldSet[1] = false;
-    _AreClientsWorldSet[2] = false;
-    _AreClientsWorldSet[3] = false;
+    for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
+        _areClientsWorldSet[i] = false;
 }
 
 Server::~Server() {
@@ -61,7 +59,7 @@ void Server::handleReceive(const std::error_code &error, std::size_t byteTransfe
         std::string newClientConnectedMessage = "New client connected.";
         std::string worldSetMessage = "World set";
         if (receivedMessage.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _AreClientsWorldSet[talkingClient] = true;
+            _areClientsWorldSet[talkingClient] = true;
         } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 &&
                    receivedMessage.length() > 0) {
             std::cout << "data:" << receivedMessage << std::endl;
