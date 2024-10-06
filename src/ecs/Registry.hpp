@@ -52,6 +52,12 @@ namespace ecs {
                     it.second = 0;
                 }
             }
+            for (auto &player : _players) {
+                if (player.second == e) {
+                    _players.erase(player.first);
+                    break;
+                }
+            }
         };
 
         void clearActualTurnNewEntities() {
@@ -159,7 +165,6 @@ namespace ecs {
 
       private:
         std::map<std::size_t, entity_t> _players;
-
         std::size_t _totalEntities = 0;
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;

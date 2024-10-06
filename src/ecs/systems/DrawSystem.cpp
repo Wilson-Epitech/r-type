@@ -35,7 +35,7 @@ void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &dra
     float firstPatternLocation = 0.0;
 
     for (std::size_t i = 0; i < drawables.size() && i < spriteInfos.size(); ++i) {
-        if (!drawables[i])
+        if (!drawables[i] || !spriteInfos[i])
             continue;
         if (drawables[i]->isLoaded == false && spriteInfos[i]->spritePath.length() > 0) {
             if (!FileExists(spriteInfos[i]->spritePath.c_str()))

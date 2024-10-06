@@ -62,8 +62,8 @@ class Lib {
     }
 
   private:
-    static std::size_t retrievePlayerIndex(ecs::Registry &reg);
-    static std::optional<EntityData> retrievePlayerVelocityUpdates(ecs::Registry &reg);
+    static std::vector<EntityData> retrievePlayerVelocityUpdates(ecs::Registry &reg);
+    static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
     static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
 
     template <typename Component>

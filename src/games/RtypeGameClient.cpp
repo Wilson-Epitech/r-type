@@ -30,7 +30,6 @@ void game::RtypeGameClient::addComponentsToEntities() {}
 void game::RtypeGameClient::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::ControlSystem());
     _reg.addSystem(ecs::system::PositionSystem());
-    _reg.addSystem(ecs::system::FiringSystem());
     _reg.addSystem(ecs::system::DrawSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
     _reg.addSystem(ecs::system::SoundSystem());

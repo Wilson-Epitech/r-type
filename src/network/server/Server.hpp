@@ -22,10 +22,14 @@ class Server {
 
     void sendToAClient(const std::size_t idClient, const std::string message);
     void sendToAllClient(const std::string message);
-    std::unordered_map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
+    std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
     std::size_t getNbClients();
     std::size_t getLastConnectedClientId();
     DataToSend getEntityData();
+
+    std::unordered_map<std::size_t, bool> getAreClientsWorldSet() {
+      return _AreClientsWorldSet;
+    }
 
   private:
     void startReceiving();
@@ -37,15 +41,17 @@ class Server {
     std::thread _ioThread;
     asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _remoteEndpoint;
-    std::array<char, 2048> _receiveBuffer;
+    std::array<char, 10000> _receiveBuffer;
 
     std::size_t _idClient;
 
     asio::thread_pool &_threadPool;
 
-    std::unordered_map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
+    std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
+    std::unordered_map<std::size_t, bool> _AreClientsWorldSet;
 
     DataToSend _data;
+    bool _worldSet = false;
 };
 
 #endif

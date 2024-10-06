@@ -30,7 +30,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
         return;
 
     if (!types[entity])
-        types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
+        types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYER});
     if (!positions[entity])
         positions.insertAt(entity, ecs::component::Position{100, 100});
     if (velocities[playerTemplateIndex] && !velocities[entity])

@@ -24,7 +24,7 @@ Client::~Client() {
 }
 
 void Client::msgFromServer() {
-    std::array<char, 2048> receiveBuffer;
+    std::array<char, 10000> receiveBuffer;
     asio::ip::udp::endpoint senderEndpoint;
 
     while (_isRunning) {
@@ -36,13 +36,16 @@ void Client::msgFromServer() {
             break;
         }
         std::string receivedMessage = std::string(receiveBuffer.data(), len);
-        std::string newConnectionMessage = "New Connection:";
+        std::string newConnectionMessage = "New connection: ";
         std::string playerIdMessage = "playerId:";
+        std::string createWorldMessage = "Create World:";
 
         if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
             _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
+            std::cout << _playerId << std::endl;
         } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 && receivedMessage.length() > 0) {
             _data = Lib::deserializeEntityDataVector(receivedMessage);
+            std::cout << "data:" << receivedMessage << std::endl;
         }
         if (receivedMessage == "Could not connect")
             _isRunning = false;

@@ -36,54 +36,78 @@ double Lib::toMilliseconds(double time) {
     return time * TO_MILLISECONDS;
 }
 
-std::size_t Lib::retrievePlayerIndex(ecs::Registry &reg) {
+std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+    std::vector<std::size_t> playersIndex;
 
     for (std::size_t i = 0; i < types.size(); ++i) {
         if (!types[i])
             continue;
         if (types[i]->entityType == ecs::EntityType::PLAYER)
-            return i;
+            playersIndex.push_back(i);
     }
-    return 0;
+    return playersIndex;
 }
 
-std::optional<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg) {
-    static ecs::SparseArray<ecs::component::Velocity>::value_type lastPlayerVelocity;
+std::vector<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg) {
+    static std::vector<ecs::SparseArray<ecs::component::Velocity>::value_type> lastPlayersVelocities;
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
-    std::size_t playerIndex = retrievePlayerIndex(reg);
+    std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
+    std::vector<EntityData> playersData;
     EntityData playerData = EntityData{};
 
-    if (playerIndex == 0 || !velocities[playerIndex])
-        return std::nullopt;
-    if (lastPlayerVelocity == velocities[playerIndex].value())
-        return std::nullopt;
-    lastPlayerVelocity = velocities[playerIndex].value();
-    playerData.entityID = playerIndex;
-    playerData.component = velocities[playerIndex].value();
-    playerData.name = ecs::ComponentName::VELOCITY;
-    return playerData;
+    std::size_t turn = 0;
+
+    for (auto &playerIndex : playersIndex) {
+        if (playerIndex == 0 || !velocities[playerIndex]) {
+            continue;
+        }
+        if (lastPlayersVelocities.size() >= turn + 1) {
+            if (lastPlayersVelocities[turn] != velocities[playerIndex].value()) {
+                playerData.entityID = playerIndex;
+                playerData.component = velocities[playerIndex].value();
+                playerData.name = ecs::ComponentName::VELOCITY;
+                playersData.push_back(playerData);
+                lastPlayersVelocities[turn] = velocities[playerIndex].value();
+            }
+        } else {
+                playerData.entityID = playerIndex;
+                playerData.component = velocities[playerIndex].value();
+                playerData.name = ecs::ComponentName::VELOCITY;
+                playersData.push_back(playerData);
+                lastPlayersVelocities.push_back(velocities[playerIndex].value());
+        }
+        turn++;
+    }
+    return playersData;
 }
 
+
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
-    std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-    std::optional<EntityData> playerData = retrievePlayerVelocityUpdates(reg);
-    DataToSend data;
+    try {
+        std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
+        std::vector<EntityData> playersData = retrievePlayerVelocityUpdates(reg);
+        DataToSend data;
 
-    if (playerData.has_value())
-        data.entitiesData.push_back(playerData.value());
-    data.deadEntities = reg.getActualTurnDeadEntities();
+        data.deadEntities = reg.getActualTurnDeadEntities();
 
-    for (auto &newEntity : newEntities) {
-        fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
-        fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);
-        fillEntityComponentData<ecs::component::Type>(reg, newEntity, data, ecs::ComponentName::TYPE);
-        fillEntityComponentData<ecs::component::Life>(reg, newEntity, data, ecs::ComponentName::LIFE);
-        fillEntityComponentData<ecs::component::Controllable>(reg, newEntity, data, ecs::ComponentName::CONTROLLABLE);
-        fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
-        fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
+        for (auto &playerData : playersData) {
+            data.entitiesData.push_back(playerData);
+        }
+
+        for (auto &newEntity : newEntities) {
+            fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
+            fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);
+            fillEntityComponentData<ecs::component::Type>(reg, newEntity, data, ecs::ComponentName::TYPE);
+            fillEntityComponentData<ecs::component::Life>(reg, newEntity, data, ecs::ComponentName::LIFE);
+            fillEntityComponentData<ecs::component::Controllable>(reg, newEntity, data, ecs::ComponentName::CONTROLLABLE);
+            fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
+            fillEntityComponentData<ecs::component::SoundEffect>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
+        }
+        return data;
+    } catch (const std::exception &e) {
+        throw;
     }
-    return data;
 }
 
 DataToSend Lib::fillAllEntitiesDataToSend(ecs::Registry &reg) {
@@ -171,6 +195,7 @@ void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
     } else {
         drawables.insertAt(data.entityID, ecs::component::Drawable({}));
     }
+
     insertComponent<ecs::component::Position>(reg, data, ecs::ComponentName::POSITION);
     insertComponent<ecs::component::Velocity>(reg, data, ecs::ComponentName::VELOCITY);
     insertComponent<ecs::component::Type>(reg, data, ecs::ComponentName::TYPE);

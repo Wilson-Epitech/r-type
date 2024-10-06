@@ -13,13 +13,17 @@ Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
+    _AreClientsWorldSet[0] = false;
+    _AreClientsWorldSet[1] = false;
+    _AreClientsWorldSet[2] = false;
+    _AreClientsWorldSet[3] = false;
 }
 
 Server::~Server() {
     _ioThread.join();
 }
 
-std::unordered_map<std::size_t, asio::ip::udp::endpoint> Server::getConnectedClients() {
+std::map<std::size_t, asio::ip::udp::endpoint> Server::getConnectedClients() {
     return _connectedClients;
 }
 
@@ -34,6 +38,7 @@ std::size_t Server::getLastConnectedClientId() {
 DataToSend Server::getEntityData() {
     return _data;
 }
+
 
 void Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
@@ -55,9 +60,13 @@ void Server::handleReceive(const std::error_code &error, std::size_t byteTransfe
         }
         std::string receivedMessage = std::string(_receiveBuffer.data(), byteTransfered);
         std::string newClientConnectedMessage = "New client connected.";
-
-        if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && receivedMessage.length() > 0)
+        std::string worldSetMessage = "World set";
+        if (receivedMessage.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
+            _AreClientsWorldSet[talkingClient] = true;
+        } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && receivedMessage.length() > 0) {
+            std::cout << "data:" << receivedMessage << std::endl;
             deserializeMessage(receivedMessage);
+        }
         startReceiving();
         _receiveBuffer.fill(0);
     } else {
