@@ -17,10 +17,11 @@ void ecs::system::ControlSystem::operator()(Registry &reg) {
         return;
     entity_t playerEntity = player[0];
     if (controllables[playerEntity] && velocities[playerEntity]) {
-        if (!controllables[playerEntity]->isControllable)
-            return;
         // velocities[playerEntity]->vx = 0;
         // velocities[playerEntity]->vy = 0;
+        if (IsKeyDown(KEY_SPACE)) {
+            controllables[playerEntity]->isControllable = true;
+        }
         if (IsKeyDown(KEY_UP)) {
             velocities[playerEntity]->vx = 0;
             velocities[playerEntity]->vy = -velocities[playerEntity]->possibleVelocity;

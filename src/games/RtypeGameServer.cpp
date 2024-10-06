@@ -54,7 +54,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     spriteInfos.insertAt(
         _stringToEntity[PLAYER_NAME],
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
-    controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{true});
+    controllables.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Controllable{false});
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{3});
     soundEffect.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
@@ -92,6 +92,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
 
 void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::PlayerSpawnSystem());
+    _reg.addSystem(ecs::system::FiringSystem());
     _reg.addSystem(ecs::system::PositionSystem());
     _reg.addSystem(ecs::system::EnemySpawnSystem());
     _reg.addSystem(ecs::system::EnemyFiringSystem());

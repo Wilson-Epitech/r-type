@@ -49,13 +49,12 @@ std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
     return playersIndex;
 }
 
-std::vector<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg) {
+std::vector<EntityData> Lib::retrievePlayersVelocitiesUpdates(ecs::Registry &reg) {
     static std::vector<ecs::SparseArray<ecs::component::Velocity>::value_type> lastPlayersVelocities;
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
     std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
     std::vector<EntityData> playersData;
     EntityData playerData = EntityData{};
-
     std::size_t turn = 0;
 
     for (auto &playerIndex : playersIndex) {
@@ -82,17 +81,53 @@ std::vector<EntityData> Lib::retrievePlayerVelocityUpdates(ecs::Registry &reg) {
     return playersData;
 }
 
+std::vector<EntityData> Lib::retrievePlayersControllablesUpdates(ecs::Registry &reg) {
+    static std::vector<ecs::SparseArray<ecs::component::Controllable>::value_type> lastPlayersControllables;
+    ecs::SparseArray<ecs::component::Controllable> &controllables = reg.getComponents<ecs::component::Controllable>();
+    std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
+    std::vector<EntityData> playersData;
+    EntityData playerData = EntityData{};
+    std::size_t turn = 0;
+
+    for (auto &playerIndex : playersIndex) {
+        if (playerIndex == 0 || !controllables[playerIndex]) {
+            continue;
+        }
+        if (lastPlayersControllables.size() >= turn + 1) {
+            if (lastPlayersControllables[turn] != controllables[playerIndex].value()) {
+                playerData.entityID = playerIndex;
+                playerData.component = controllables[playerIndex].value();
+                playerData.name = ecs::ComponentName::CONTROLLABLE;
+                playersData.push_back(playerData);
+                lastPlayersControllables[turn] = controllables[playerIndex].value();
+            }
+        } else {
+                playerData.entityID = playerIndex;
+                playerData.component = controllables[playerIndex].value();
+                playerData.name = ecs::ComponentName::CONTROLLABLE;
+                playersData.push_back(playerData);
+                lastPlayersControllables.push_back(controllables[playerIndex].value());
+        }
+        turn++;
+    }
+    return playersData;
+}
+
 
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     try {
         std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-        std::vector<EntityData> playersData = retrievePlayerVelocityUpdates(reg);
+        std::vector<EntityData> playersVelocitiesData = retrievePlayersVelocitiesUpdates(reg);
+        std::vector<EntityData> playersControllablesData = retrievePlayersControllablesUpdates(reg);
         DataToSend data;
 
         data.deadEntities = reg.getActualTurnDeadEntities();
 
-        for (auto &playerData : playersData) {
-            data.entitiesData.push_back(playerData);
+        for (auto &playerVelocityData : playersVelocitiesData) {
+            data.entitiesData.push_back(playerVelocityData);
+        }
+        for (auto &playerControllableData : playersControllablesData) {
+            data.entitiesData.push_back(playerControllableData);
         }
 
         for (auto &newEntity : newEntities) {
