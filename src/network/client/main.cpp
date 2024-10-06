@@ -25,20 +25,16 @@ static void handleCtrlC(int signal) {
 }
 
 void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client) {
-    try {
-        DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
-        static bool hasSendWorldSet = 0;
+    DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
+    static bool hasSendWorldSet = 0;
 
-        if (!data.empty()) {
-            if (!hasSendWorldSet) {
-                client.sendMessage("World set");
-                hasSendWorldSet = true;
-            }
-            std::string serialized = Lib::serializeEntityDataVector(data);
-            client.sendMessage(serialized);
+    if (!data.empty()) {
+        if (!hasSendWorldSet) {
+            client.sendMessage("World set");
+            hasSendWorldSet = true;
         }
-    } catch (const std::exception &e) {
-        throw;
+        std::string serialized = Lib::serializeEntityDataVector(data);
+        client.sendMessage(serialized);
     }
 }
 

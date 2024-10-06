@@ -110,7 +110,6 @@ namespace ecs {
             return _players;
         }
 
-
         template <typename Component> void removeComponent(entity_t const &from) {
             SparseArray<Component> &component = getComponents<Component>();
             component.erase(from);
@@ -152,7 +151,7 @@ namespace ecs {
         };
 
         void runSystems() {
-            for (std::size_t i = 0; i < _systems.size() ; i++) {
+            for (std::size_t i = 0; i < _systems.size(); i++) {
                 _systems[i](*this);
             }
         };

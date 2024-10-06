@@ -17,9 +17,9 @@
 #include "FiringSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
+#include "PlayerSpawnSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
-#include "PlayerSpawnSystem.hpp"
 
 #define PLAYER_NAME "player"
 #define PLAYER_SHOT "player_shot"

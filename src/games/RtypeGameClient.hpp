@@ -13,8 +13,8 @@
 #include "DrawSystem.hpp"
 #include "FiringSystem.hpp"
 #include "PositionSystem.hpp"
-#include "SpriteAnimationSystem.hpp"
 #include "SoundSystem.hpp"
+#include "SpriteAnimationSystem.hpp"
 
 namespace game {
     class RtypeGameClient : virtual public game::AGame {

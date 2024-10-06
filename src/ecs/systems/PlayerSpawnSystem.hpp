@@ -21,9 +21,8 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-          void createNewPlayer(Registry &reg, entity_t entity);
-          std::size_t getPlayerTemplateIndex(Registry &reg);
-
+            void createNewPlayer(Registry &reg, entity_t entity);
+            std::size_t getPlayerTemplateIndex(Registry &reg);
         };
     }
 }

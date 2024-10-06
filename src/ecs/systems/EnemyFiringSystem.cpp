@@ -64,9 +64,8 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     float offset = float(tmpShotImage.width) / spriteInfos[enemyShootIndex]->patternNb;
     Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
     entity_t entity = reg.spawnEntity();
-    float shotX = positions[enemyIndex]->x - (float(spritesSizes[enemyIndex]->spriteWidth) / 2 - float(shotSpriteRect.width) / 2);
-    float shotY = positions[enemyIndex]->y + ((float(spritesSizes[enemyIndex]->spriteHeight) / 2) * spriteInfos[enemyIndex]->scaleFactor -
-                                              (float(shotSpriteRect.height) / 2) * spriteInfos[enemyShootIndex]->scaleFactor);
+    float shotX = positions[enemyIndex]->x - (float((spritesSizes[enemyIndex]->spriteWidth)) + ((shotSpriteRect.width) / 2));
+    float shotY = positions[enemyIndex]->y + (float((spritesSizes[enemyIndex]->spriteHeight) / 2) - ((shotSpriteRect.height) / 2));
     UnloadImage(tmpShotImage);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
