@@ -52,7 +52,6 @@ class Server {
     std::unordered_map<std::size_t, bool> _areClientsWorldSet;
 
     DataToSend _data;
-    bool _worldSet = false;
 };
 
 #endif

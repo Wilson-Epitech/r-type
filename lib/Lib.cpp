@@ -51,8 +51,10 @@ std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
 
 DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-    std::vector<EntityData> playersVelocitiesData = retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
-    std::vector<EntityData> playersShootingsData = retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
+    std::vector<EntityData> playersVelocitiesData =
+        retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
+    std::vector<EntityData> playersShootingsData =
+        retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();

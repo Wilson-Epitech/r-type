@@ -146,8 +146,7 @@ namespace ecs {
             return std::any_cast<SparseArray<Component>>(it->second);
         };
 
-        template <class... Components, typename Function>
-        void addSystem(Function const &f) {
+        template <class... Components, typename Function> void addSystem(Function const &f) {
             _systems.push_back(f);
         };
 
@@ -157,8 +156,7 @@ namespace ecs {
             }
         };
 
-        template <class... Components, typename Function>
-        void addInitPlayerSystem(Function const &f) {
+        template <class... Components, typename Function> void addInitPlayerSystem(Function const &f) {
             _initPlayerSystem = f;
         };
 
