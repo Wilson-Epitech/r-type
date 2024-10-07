@@ -38,7 +38,8 @@ namespace ecs {
         LIFE,
         SHOOTING,
         SPRITEINFOS,
-        SOUNDEFFECT
+        SOUNDEFFECT,
+        MUSIC
     };
 
     namespace component {
@@ -127,6 +128,20 @@ namespace ecs {
         struct ShootingRate {
             float shootRate = 0;
         };
+
+        struct BackgroundMusic {
+            std::string musicPath;
+            float volume;
+            bool hasToBePlayed = false;
+            bool isLoaded = false;
+            bool isCurrentlyPlayed = false;
+            Music music = Music{};
+
+            bool operator==(const BackgroundMusic &other) const {
+                return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
+                        hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
+            }
+        };
     }
 }
 
@@ -144,7 +159,8 @@ struct EntityData {
                     areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
                     areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
-                    areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component));
+                    areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
+                    areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
             return true;
         }
         return false;
@@ -183,6 +199,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shootin
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect);
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -194,6 +211,7 @@ void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting);
 void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect);
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */
