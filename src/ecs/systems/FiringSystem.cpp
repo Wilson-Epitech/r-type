@@ -16,7 +16,6 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
-    static bool canShoot = true;
 
     for (std::size_t i = 0; i < shootings.size() && i < positions.size() && i < shootingRate.size(); ++i) {
         if (shootings[i] && positions[i] && shootingRate[i]) {
@@ -33,13 +32,10 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
                 timer.push_back({i, time0});
             }
             timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-            if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate))
-                canShoot = true;
-            if (canShoot) {
+            if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate)) {
                 if (shootings[i]->isShooting) {
                     addShot(i, reg);
                     shootings[i]->isShooting = false;
-                    canShoot = false;
                 }
             }
             if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate)) {
