@@ -157,7 +157,7 @@ Truc qu'on peut rajouter
 - $\textsf{\textbf{\color{#8957E5}{Starting the server :}}}$
 ```bash
     ╭─ ~/root
-    ╰─ ./a.out 127.0.0.1 4242
+    ╰─ ./server 127.0.0.1 4242
 ```
 
 - $\textsf{\textbf{\color{#8957E5}{Attempt to connect a client not conforming to the protocol :}}}$
@@ -169,7 +169,7 @@ Truc qu'on peut rajouter
 - $\textsf{\textbf{\color{#8957E5}{Server response:}}}$
 ```bash
     ╭─ ~/root
-    |   ./a.out 127.0.0.1 4242
+    |   ./server 127.0.0.1 4242
     ╰─  Invalid magic number
 ```
 
