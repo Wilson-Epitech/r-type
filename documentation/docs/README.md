@@ -9,7 +9,7 @@ This document describes our implementaiton of binary protocl adapted to our need
 
 In our R-Type project, we use a binary protocol to manage communications between client and server. This ensures fast data exchange, which is essential for real-time gaming. By structuring messages compactly, we reduce latency and optimize bandwidth utilization. What's more, this protocol imposes a strict structure, preventing the sending of non-compliant messages and limiting the risk of intrusion. In short, the binary protocol is a cornerstone of our network architecture, guaranteeing both performance and security.
 
-## Structure du Message
+## Message structure
 
 The message structure used to communicate between server and client is designed to be both compact and complete for our needs, guaranteeing efficient and secure communication between client and server. Each message consists of the following elements:
 <br>
@@ -91,7 +91,7 @@ This well-defined structure ensures that each message is processed in an optimal
 
 <br>
 
-## Types de Messages
+## Message types
 
 | Type          | Id                            | Description                        |
 |---------------|-------------------------------|------------------------------------|
@@ -109,7 +109,7 @@ Truc qu'on peut rajouter
 | Event         | 3   | Un événement déclenché par un service |
 -->
 
-## Gestion des Erreurs
+## Error Management
 
 > [!NOTE]
 > Magic number check
@@ -147,7 +147,7 @@ Truc qu'on peut rajouter
 ```
 <br>
 
-## Sécurité
+## Security
 
 > [!IMPORTANT]
 > Security point:
@@ -174,11 +174,11 @@ Truc qu'on peut rajouter
 ```
 
 
-## Performance et Optimisation
+## Performance and Optimization
 
 Performance optimization has been crucial in ensuring a smooth and responsive gaming experience. Our binary protocol has been designed to be lightweight and efficient, which is essential when handling large numbers of packets in a real-time gaming environment. Compared with a conventional binary protocol, our implementation stands out for its compactness and efficiency.
 
-### Taille et Efficacité
+### Efficiency
 
 Compared with standard communication protocols, our message structure is optimized to minimize the size of the data transmitted. For example, by using compact data types such as:
 ```cpp
@@ -213,7 +213,7 @@ which doubles the size needed to store the same type of information
 > ```uint16_t (16 bits)``` : Can store values from 0 to 65 535 bytes <br><br>
 > ```uint32_t (32 bits)``` : Can store values from 0 to 4 294 967 295 bytes (typically used)<br>
 
-### Avantages
+### Advantages
 > [!NOTE]
 > Reduced message size
 - Our message header uses just 6 bytes, which is significantly smaller than the 12-20 byte headers often found in conventional protocols. This reduces communication overhead and improves transmission speed.
