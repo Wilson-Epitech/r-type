@@ -12,6 +12,7 @@
 #include "ControlSystem.hpp"
 #include "DrawSystem.hpp"
 #include "FiringSystem.hpp"
+#include "MusicSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SoundSystem.hpp"
 #include "SpriteAnimationSystem.hpp"

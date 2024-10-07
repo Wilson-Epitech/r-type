@@ -26,6 +26,7 @@ SRC = 	src/gameEngine/GameEngine.cpp									\
     	src/ecs/systems/PositionSystem.cpp								\
     	src/ecs/systems/SoundSystem.cpp									\
     	src/ecs/systems/SpriteAnimationSystem.cpp						\
+    	src/ecs/systems/MusicSystem.cpp									\
     	lib/Lib.cpp														\
 
 

@@ -27,6 +27,7 @@
 #define SPAWN_ENEMY_NAME "enemy"
 #define ENEMY_SHOT "enemy_shot"
 #define SPAWN_BOSS_NAME "boss"
+#define MUSIC_NAME "music"
 
 #define MAX_SPAWN_HEIGHT 1040
 #define MIN_SPAWN_HEIGHT 30
