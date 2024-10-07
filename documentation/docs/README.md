@@ -3,7 +3,7 @@
 
 # Binary Protocol
 
-This document describes our implementaiton of binary protocl adapted to our needs
+This document describes our implementaiton of binary protocol adapted to our needs
 
 ## Introduction
 
@@ -31,7 +31,6 @@ const uint16_t _magicNumber = 0x9B3D; // 2 bytes
 <br>
 
 
-<!-- `Message Type` -->
 > [!NOTE]
 > Message Type
 - The message type is represented by a unique identifier that indicates the nature of the message. This can include categories such as errors, information transmissions, or other specific types of communication. This enables the various project parties to treat each message appropriately according to its type.
@@ -45,7 +44,6 @@ uint8_t _messageType // 1 byte
 <br>
 
 
-<!-- `Message ID` -->
 > [!NOTE]
 > Message ID
 - The message identifier is a unique number assigned to each message to ensure its precise identification. This allows duplicate messages to be detected and avoided, ensuring that each message is processed only once.
@@ -59,7 +57,6 @@ uint8_t _messageId // 1 byte
 <br>
 
 
-<!-- `Message Size` -->
 > [!NOTE]
 > Message Size
 - Message size is a value indicating the total length of the message in bytes. It is essential for checking that the message has been received completely and without corruption.
@@ -73,7 +70,6 @@ uint16_t _messageSize // 2 bytes
 <br>
 
 
-<!-- `Message` -->
 > [!NOTE]
 > Message
 - Message content
@@ -191,23 +187,8 @@ uint32_t
 ```
 which doubles the size needed to store the same type of information
 
-<!-- > [!IMPORTANT]
-> Remeinder
-> - Voici les différences de capacité de stockage entre les différents types `uint_t`: <br><br>
-> uint8_t (8 bits) : Peut stocker des valeurs de 0 à 255 octets <br>
-> uint16_t (16 bits) : Peut stocker des valeurs de 0 à 65 535 octets <br>
-> uint32_t (32 bits) : Peut stocker des valeurs de 0 à 4 294 967 295 octets, souvent utilisé dans les protocoles classiques <br> -->
-
-<!-- > [!IMPORTANT]
-> Remeinder
-> - Voici les différences de capacité de stockage entre les différents types **uint_t**: <br><br>
-> ```uint8_t (8 bits) : Peut stocker des valeurs de 0 à 255 octets``` <br>
-> ```uint16_t (16 bits) : Peut stocker des valeurs de 0 à 65 535 octets``` <br>
-> ```uint32_t (32 bits) : Peut stocker des valeurs de 0 à 4 294 967 295 octets, souvent utilisé  dans les protocoles classiques``` <br> -->
-
-
 > [!IMPORTANT]
-> Remeinder
+> Reminder
 > - Here are the differences in storage capacity between the different **uint_t** types: <br><br>
 > ```uint8_t (8 bits)``` : Can store values from 0 to 255 bytes <br><br>
 > ```uint16_t (16 bits)``` : Can store values from 0 to 65 535 bytes <br><br>
