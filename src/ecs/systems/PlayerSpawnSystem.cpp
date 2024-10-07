@@ -23,6 +23,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
     ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
     ecs::SparseArray<ecs::component::SoundEffect> &soundEffect = reg.getComponents<ecs::component::SoundEffect>();
+    ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = reg.getComponents<ecs::component::ShootingRate>();
     std::size_t playerTemplateIndex = getPlayerTemplateIndex(reg);
 
     if (playerTemplateIndex == 0)
@@ -42,6 +43,8 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
         spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[playerTemplateIndex].value()});
     if (soundEffect[playerTemplateIndex] && !soundEffect[entity])
         soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[playerTemplateIndex].value()});
+    if (shootingRate[playerTemplateIndex] && !shootingRate[entity])
+        shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[playerTemplateIndex].value()});
 }
 
 std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg) {

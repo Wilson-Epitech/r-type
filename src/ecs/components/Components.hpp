@@ -125,7 +125,7 @@ namespace ecs {
         };
 
         struct ShootingRate {
-            int shootRate = 0;
+            float shootRate = 0;
         };
     }
 }

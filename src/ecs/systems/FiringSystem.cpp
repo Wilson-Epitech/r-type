@@ -8,26 +8,49 @@
 #include "FiringSystem.hpp"
 
 void ecs::system::FiringSystem::operator()(Registry &reg) {
+    SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
     std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-    float spawnInterval = SHOOT_RATE;
+    bool isTimerSet = false;
     static bool canShoot = true;
 
-    if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval)) {
-        canShoot = true;
-        time0 = std::chrono::steady_clock::now();
-    }
-    for (std::size_t i = 0; i < shootings.size() && i < positions.size(); ++i) {
-        if (shootings[i] && positions[i]) {
-            if (shootings[i]->isShooting && canShoot) {
-                addShot(i, reg);
-                shootings[i]->isShooting = false;
-                canShoot = false;
+    for (std::size_t i = 0; i < shootings.size() && i < positions.size() && i < shootingRate.size(); ++i) {
+        if (shootings[i] && positions[i] && shootingRate[i]) {
+            if (timer.size() > 0) {
+                for (std::size_t j = 0; j < timer.size(); j++) {
+                    if (timer[j].first == i) {
+                        time0 = timer[j].second;
+                        isTimerSet = true;
+                    }
+                }
+            }
+            if (!isTimerSet) {
+                time0 = std::chrono::steady_clock::now();
+                timer.push_back({i, time0});
+            }
+            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
+            if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate))
+                canShoot = true;
+            if (canShoot) {
+                if (shootings[i]->isShooting) {
+                    addShot(i, reg);
+                    shootings[i]->isShooting = false;
+                    canShoot = false;
+                }
+            }
+            if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate)) {
+                for (std::size_t j = 0; j < timer.size(); j++) {
+                    if (timer[j].first == i) {
+                        timer[j].second = std::chrono::steady_clock::now();
+                    }
+                }
             }
         }
+        isTimerSet = false;
     }
 }
 

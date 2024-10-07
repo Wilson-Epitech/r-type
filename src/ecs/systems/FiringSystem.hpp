@@ -12,8 +12,6 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define SHOOT_RATE 0.4
-
 namespace ecs {
     namespace system {
         class FiringSystem : virtual public ecs::system::ISystem {
