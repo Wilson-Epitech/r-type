@@ -37,7 +37,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soun
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
-    oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurentlyPlayed;
+    oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
@@ -106,7 +106,7 @@ void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffec
 }
 
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
-    iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurentlyPlayed;
+    iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 
 void operator>>(std::istringstream &iss, EntityData &entityData) {

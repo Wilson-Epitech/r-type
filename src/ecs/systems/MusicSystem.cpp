@@ -17,9 +17,9 @@ void ecs::system::MusicSystem::operator()(Registry &reg) {
         if (music[i]->hasToBePlayed) {
             SetMusicVolume(music[i]->music, music[i]->volume);
             UpdateMusicStream(music[i]->music);
-            if (!music[i]->isCurentlyPlayed) {
+            if (!music[i]->isCurrentlyPlayed) {
                 PlayMusicStream(music[i]->music);
-                music[i]->isCurentlyPlayed = true;
+                music[i]->isCurrentlyPlayed = true;
             }
         }
     }

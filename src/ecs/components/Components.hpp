@@ -134,12 +134,12 @@ namespace ecs {
             float volume;
             bool hasToBePlayed = false;
             bool isLoaded = false;
-            bool isCurentlyPlayed = false;
+            bool isCurrentlyPlayed = false;
             Music music = Music{};
 
             bool operator==(const BackgroundMusic &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
-                        hasToBePlayed == other.hasToBePlayed && isCurentlyPlayed == other.isCurentlyPlayed);
+                        hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
             }
         };
     }
