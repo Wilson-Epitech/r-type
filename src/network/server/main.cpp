@@ -22,11 +22,10 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
     std::size_t lastConnectedClientId = server.getLastConnectedClientId();
     std::unordered_map<std::size_t, bool> areClientsWorldSet = server.getAreClientsWorldSet();
 
-    for (auto rit = connectedClients.rbegin(); rit != connectedClients.rend(); rit++) {
-        std::size_t clientId = rit->first;
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        std::size_t clientId = it->first;
         if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-             lastConnectedClientId != previousLastConnectedClientId) &&
-            (lastConnectedClientId == clientId)) {
+             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
@@ -42,13 +41,11 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
     }
 
     DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
-    for (auto rit = connectedClients.rbegin(); rit != connectedClients.rend(); rit++) {
-        std::size_t clientId = rit->first;
-        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-            if (!newEntitiesData.empty()) {
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        std::size_t clientId = it->first;
+        if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
+                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
                 server.sendToAClient(clientId, newEntititiesSerialized);
-            }
         }
     }
 }
@@ -75,15 +72,14 @@ int main(int ac, char **av) {
             }
             time0 = std::chrono::steady_clock::now();
             static DataToSend lastDataReceived;
-            DataToSend dataReceived;
-            dataReceived = server.getEntityData();
-            if (!dataReceived.empty() && lastDataReceived != dataReceived) {
+            DataToSend dataReceived = server.getEntityData();
+            bool dataHasBeenUsed = server.getDataHasBeenUsed();
+            if (!dataReceived.empty() && !dataHasBeenUsed) {
                 for (auto &entity : dataReceived.entitiesData) {
-                    if (entity.entityID != 0) {
                         Lib::updateEntities(reg, entity);
-                    }
                 }
                 lastDataReceived = dataReceived;
+                server.setDataHasBeenUsed(true);
             }
             if (server.getNbClients() > 0) {
                 sendUpdatedDataVectorServer(reg, server);

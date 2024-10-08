@@ -24,15 +24,16 @@ static void handleCtrlC(int signal) {
         exit(0);
 }
 
-void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client) {
+void sendUpdatedDataVectorClient(ecs::Registry &reg, Client &client, DataToSend &lastDataReceived) {
     DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
     static bool hasSendWorldSet = 0;
 
+    Lib::deleteSimilarDataLines(data, lastDataReceived);
+    if (!lastDataReceived.empty() && !hasSendWorldSet) {
+        client.sendMessage("World set");
+        hasSendWorldSet = true;
+    }
     if (!data.empty()) {
-        if (!hasSendWorldSet) {
-            client.sendMessage("World set");
-            hasSendWorldSet = true;
-        }
         std::string serialized = Lib::serializeEntityDataVector(data);
         client.sendMessage(serialized);
     }
@@ -76,8 +77,8 @@ int main(int ac, char **av) {
             std::map<std::size_t, entity_t> player = reg.getPlayers();
             if (playerId != 0 && player.size() == 0)
                 reg.addPlayer(0, playerId);
-            if (!dataReceived.empty() && dataReceived != lastDataReceived) {
-                for (auto &deadEntity : dataReceived.deadEntities) {
+            if (!dataReceived.empty() && !(lastDataReceived == dataReceived)) {
+              for (auto &deadEntity : dataReceived.deadEntities) {
                     if (reg.entityExist(deadEntity))
                         reg.killEntity(deadEntity);
                 }
@@ -88,7 +89,7 @@ int main(int ac, char **av) {
                 }
                 lastDataReceived = dataReceived;
             }
-            sendUpdatedDataVectorClient(reg, client);
+            sendUpdatedDataVectorClient(reg, client, lastDataReceived);
             reg.clearActualTurnNewEntities();
             reg.clearActualTurnDeadEntities();
             reg.runSystems();

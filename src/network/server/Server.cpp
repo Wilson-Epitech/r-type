@@ -10,7 +10,7 @@
 #include <iostream>
 
 Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
     for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
@@ -33,8 +33,20 @@ std::size_t Server::getLastConnectedClientId() {
     return _idClient;
 }
 
+std::unordered_map<std::size_t, bool> Server::getAreClientsWorldSet() {
+    return _areClientsWorldSet;
+}
+
 DataToSend Server::getEntityData() {
     return _data;
+}
+
+bool Server::getDataHasBeenUsed() {
+  return _dataHasBeenUsed;
+}
+
+void Server::setDataHasBeenUsed(bool value) {
+  _dataHasBeenUsed = value;
 }
 
 void Server::startReceiving() {
@@ -46,6 +58,7 @@ void Server::deserializeMessage(const std::string message) {
     _data.deadEntities.clear();
     _data.entitiesData.clear();
     _data = Lib::deserializeEntityDataVector(message);
+    _dataHasBeenUsed = false;
 }
 
 void Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
@@ -59,7 +72,7 @@ void Server::handleReceive(const std::error_code &error, std::size_t byteTransfe
         std::string newClientConnectedMessage = "New client connected.";
         std::string worldSetMessage = "World set";
         if (receivedMessage.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient] = true;
+            _areClientsWorldSet[talkingClient - 1] = true;
         } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 &&
                    receivedMessage.length() > 0) {
             std::cout << "data:" << receivedMessage << std::endl;
