@@ -161,7 +161,6 @@ struct EntityData {
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                     areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
                     areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
-            return true;
         }
         return false;
     }
