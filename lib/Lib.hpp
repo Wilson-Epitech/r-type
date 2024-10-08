@@ -34,6 +34,7 @@ class Lib {
     static std::string serializeEntityDataVector(const DataToSend &data);
     static DataToSend deserializeEntityDataVector(const std::string &message);
     static void updateEntities(ecs::Registry &reg, EntityData &data);
+    static void deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived);
 
     template <typename Component>
     static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
@@ -67,7 +68,7 @@ class Lib {
 
     template <typename Component>
     static std::vector<EntityData> retrievePlayersComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
-        static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersShootings;
+        static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersValues;
         ecs::SparseArray<Component> &shootings = reg.getComponents<Component>();
         std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
         std::vector<EntityData> playersData;
@@ -78,20 +79,20 @@ class Lib {
             if (playerIndex == 0 || !shootings[playerIndex]) {
                 continue;
             }
-            if (lastPlayersShootings.size() >= turn + 1) {
-                if (lastPlayersShootings[turn] != shootings[playerIndex].value()) {
+            if (lastPlayersValues.size() >= turn + 1) {
+                if (lastPlayersValues[turn] != shootings[playerIndex].value()) {
                     playerData.entityID = playerIndex;
                     playerData.component = shootings[playerIndex].value();
                     playerData.name = name;
                     playersData.push_back(playerData);
-                    lastPlayersShootings[turn] = shootings[playerIndex].value();
+                    lastPlayersValues[turn] = shootings[playerIndex].value();
                 }
             } else {
                 playerData.entityID = playerIndex;
                 playerData.component = shootings[playerIndex].value();
                 playerData.name = name;
                 playersData.push_back(playerData);
-                lastPlayersShootings.push_back(shootings[playerIndex].value());
+                lastPlayersValues.push_back(shootings[playerIndex].value());
             }
             turn++;
         }
@@ -103,7 +104,7 @@ class Lib {
         auto &components = reg.getComponents<Component>();
 
         if (components[newEntity]) {
-            EntityData entityData;
+            EntityData entityData = EntityData{};
             entityData.entityID = newEntity;
             entityData.component = components[newEntity].value();
             entityData.name = name;
