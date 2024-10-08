@@ -72,7 +72,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
                          ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(
         _stringToEntity[SPAWN_ENEMY_NAME],
-        ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, 2, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+        ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, 3, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
@@ -105,7 +105,6 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::EnemyFiringSystem());
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::LifeSystem());
-    _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
 }
 
 game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {

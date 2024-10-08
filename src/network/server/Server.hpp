@@ -26,11 +26,10 @@ class Server {
     std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
     std::size_t getNbClients();
     std::size_t getLastConnectedClientId();
+    std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
     DataToSend getEntityData();
-
-    std::unordered_map<std::size_t, bool> getAreClientsWorldSet() {
-        return _areClientsWorldSet;
-    }
+    bool getDataHasBeenUsed();
+    void setDataHasBeenUsed(bool value);
 
   private:
     void startReceiving();
@@ -42,7 +41,7 @@ class Server {
     std::thread _ioThread;
     asio::ip::udp::socket _socket;
     asio::ip::udp::endpoint _remoteEndpoint;
-    std::array<char, 10000> _receiveBuffer;
+    std::array<char, 50000> _receiveBuffer;
 
     std::size_t _idClient;
 
@@ -52,6 +51,7 @@ class Server {
     std::unordered_map<std::size_t, bool> _areClientsWorldSet;
 
     DataToSend _data;
+    bool _dataHasBeenUsed;
 };
 
 #endif

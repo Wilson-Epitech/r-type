@@ -38,13 +38,18 @@ double Lib::toMilliseconds(double time) {
 
 std::vector<std::size_t> Lib::retrievePlayersIndex(ecs::Registry &reg) {
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+    std::map<std::size_t, entity_t> players = reg.getPlayers();
     std::vector<std::size_t> playersIndex;
 
     for (std::size_t i = 0; i < types.size(); ++i) {
         if (!types[i])
             continue;
-        if (types[i]->entityType == ecs::EntityType::PLAYER)
-            playersIndex.push_back(i);
+        if (types[i]->entityType == ecs::EntityType::PLAYER) {
+            for (auto &player : players) {
+                if (player.second == i)
+                    playersIndex.push_back(i);
+            }
+        }
     }
     return playersIndex;
 }
@@ -143,7 +148,7 @@ DataToSend Lib::deserializeEntityDataVector(const std::string &message) {
     stream >> entityDataNb;
 
     for (size_t i = 0; i < entityDataNb; ++i) {
-        EntityData entityData;
+        EntityData entityData = EntityData{};
         stream >> entityData;
         data.entitiesData.push_back(entityData);
     }
@@ -162,7 +167,6 @@ void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
     } else {
         drawables.insertAt(data.entityID, ecs::component::Drawable({}));
     }
-
     insertComponent<ecs::component::Position>(reg, data, ecs::ComponentName::POSITION);
     insertComponent<ecs::component::Velocity>(reg, data, ecs::ComponentName::VELOCITY);
     insertComponent<ecs::component::Type>(reg, data, ecs::ComponentName::TYPE);
@@ -171,4 +175,23 @@ void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::SpriteInfos>(reg, data, ecs::ComponentName::SPRITEINFOS);
     insertComponent<ecs::component::SoundEffect>(reg, data, ecs::ComponentName::SOUNDEFFECT);
     insertComponent<ecs::component::BackgroundMusic>(reg, data, ecs::ComponentName::MUSIC);
+}
+
+void Lib::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
+    for (auto dataToSendIt = dataToSend.deadEntities.begin(); dataToSendIt != dataToSend.deadEntities.end(); dataToSendIt++) {
+        for (auto dataReceivedIt = dataReceived.deadEntities.begin(); dataReceivedIt != dataReceived.deadEntities.end(); dataReceivedIt++) {
+            if (*dataToSendIt == *dataReceivedIt) {
+                dataToSendIt = dataToSend.deadEntities.erase(dataToSendIt);
+                dataToSendIt--;
+            }
+        }
+    }
+    for (auto dataToSendIt = dataToSend.entitiesData.begin(); dataToSendIt != dataToSend.entitiesData.end(); dataToSendIt++) {
+        for (auto dataReceivedIt = dataReceived.entitiesData.begin(); dataReceivedIt != dataReceived.entitiesData.end(); dataReceivedIt++) {
+            if (*dataToSendIt == *dataReceivedIt) {
+                dataToSendIt = dataToSend.entitiesData.erase(dataToSendIt);
+                dataToSendIt--;
+            }
+        }
+    }
 }

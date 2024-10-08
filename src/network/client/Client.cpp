@@ -24,7 +24,7 @@ Client::~Client() {
 }
 
 void Client::msgFromServer() {
-    std::array<char, 10000> receiveBuffer;
+    std::array<char, 50000> receiveBuffer;
     asio::ip::udp::endpoint senderEndpoint;
 
     while (_isRunning) {
