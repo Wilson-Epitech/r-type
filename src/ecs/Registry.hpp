@@ -22,21 +22,17 @@ using entity_t = std::size_t;
 namespace ecs {
     class Registry {
       public:
+
         entity_t spawnEntity() {
-            entity_t entity = _indexToEntities.size() + 1;
+            entity_t entity;
 
             if (!_deadEntities.empty()) {
                 entity = _deadEntities.front();
                 _deadEntities.pop_front();
-                for (auto &it : _indexToEntities) {
-                    if (it.second == 0) {
-                        _indexToEntities[it.first] = entity;
-                        break;
-                    }
-                }
             } else {
-                _indexToEntities[entity] = entity;
+                entity = _indexToEntities.size() + 1;
             }
+            _indexToEntities[entity] = entity;
             _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
