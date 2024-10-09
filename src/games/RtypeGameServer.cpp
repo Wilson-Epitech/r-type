@@ -105,6 +105,7 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::EnemyFiringSystem());
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::LifeSystem());
+    _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
 }
 
 game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {
