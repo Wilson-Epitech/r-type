@@ -66,17 +66,17 @@ std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg
 void ecs::system::PlayerSpawnSystem::setPlayerColor(entity_t playerEntity, std::size_t clientIndex, Registry &reg) {
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
     switch (clientIndex) {
-        case 4:
-            spriteInfos[playerEntity]->color = GOLD;
-            break;
-        case 2:
-            spriteInfos[playerEntity]->color = PINK;
-            break;
-        case 3:
-            spriteInfos[playerEntity]->color = BEIGE;
-            break;
         case 1:
             spriteInfos[playerEntity]->color = CYAN;
+            break;
+        case 2:
+            spriteInfos[playerEntity]->color = BEIGE;
+            break;
+        case 3:
+            spriteInfos[playerEntity]->color = GOLD;
+            break;
+        case 4:
+            spriteInfos[playerEntity]->color = PINK;
             break;
         default:
             break;
