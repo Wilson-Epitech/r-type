@@ -35,8 +35,6 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
             timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
                 addShot(i, reg);
-            }
-            if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
                     if (timer[j].first == i) {
                         timer[j].second = std::chrono::steady_clock::now();

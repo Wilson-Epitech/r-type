@@ -25,7 +25,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         std::size_t clientId = it->first;
         if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
+             lastConnectedClientId != previousLastConnectedClientId) &&
+            (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
@@ -44,8 +45,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
-                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-                server.sendToAClient(clientId, newEntititiesSerialized);
+            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            server.sendToAClient(clientId, newEntititiesSerialized);
         }
     }
 }
@@ -76,7 +77,7 @@ int main(int ac, char **av) {
             bool dataHasBeenUsed = server.getDataHasBeenUsed();
             if (!dataReceived.empty() && !dataHasBeenUsed) {
                 for (auto &entity : dataReceived.entitiesData) {
-                        Lib::updateEntities(reg, entity);
+                    Lib::updateEntities(reg, entity);
                 }
                 lastDataReceived = dataReceived;
                 server.setDataHasBeenUsed(true);

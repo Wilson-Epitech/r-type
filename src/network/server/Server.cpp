@@ -42,11 +42,11 @@ DataToSend Server::getEntityData() {
 }
 
 bool Server::getDataHasBeenUsed() {
-  return _dataHasBeenUsed;
+    return _dataHasBeenUsed;
 }
 
 void Server::setDataHasBeenUsed(bool value) {
-  _dataHasBeenUsed = value;
+    _dataHasBeenUsed = value;
 }
 
 void Server::startReceiving() {
