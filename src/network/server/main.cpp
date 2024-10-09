@@ -11,7 +11,7 @@
 #include <chrono>
 #include <iostream>
 
-void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
+void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
     std::map<std::size_t, asio::ip::udp::endpoint> connectedClients = server.getConnectedClients();
 
@@ -34,9 +34,9 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
             previousConnectedClientsSize = connectedClientsSize;
             previousLastConnectedClientId = lastConnectedClientId;
-            server.sendToAClient(clientId, "playerId:" + std::to_string(playerId));
+            server.sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
-                server.sendToAClient(clientId, allEntititiesSerialized);
+                server.sendToAClient(clientId, allEntititiesSerialized, 3);
         }
     }
 
@@ -45,27 +45,28 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, Server &server) {
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
                 std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-                server.sendToAClient(clientId, newEntititiesSerialized);
+                server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }
 }
 
-int main(int ac, char **av) {
-    if (ac != 2 || av[1] == NULL) {
-        std::cerr << "Usage: ./server [port]" << std::endl;
+int main(int ac, char **av)
+{
+    if (ac != 3 || av[1] == NULL || av[2] == NULL) {
+        std::cerr << "Usage: ./server [ip] [port]" << std::endl;
         return -1;
     }
     try {
         asio::io_context io_context;
-        asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
-        Server server(io_context, std::stoi(av[1]), pool);
+        asio::thread_pool pool(MAXCLIENTS);
+        network::Server server(io_context, av[1], std::stoi(av[2]), pool);
         game::RtypeGameServer rtype;
         ecs::Registry reg = rtype.getRegistry();
-        static std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+        static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
 
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         while (1) {
-            std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+            std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
             std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             if (!(timeElapsed.count() >= Lib::toMilliseconds(UPDATE_SERVER))) {
                 continue;
