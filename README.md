@@ -1,3 +1,11 @@
+![Static Badge](https://img.shields.io/badge/graphic-raylib-blue)
+![Static Badge](https://img.shields.io/badge/engine-c%2B%2B-red)
+![Static Badge](https://img.shields.io/badge/network-asio-purple)
+![Static Badge](https://img.shields.io/badge/compilation-cmake-yellow)
+![Static Badge](https://img.shields.io/badge/package-vcpkg-green)
+
+![R-Type Logo](assets/R-type_logo.jpg)
+
 # R-Type
 
 R-type is an advanced C++ project. The goal of the project is to recreate the infamous arcade game of the same name, moreover, it must be a multiplayer game. Up to 4 players can join a party and beat ennemies and bosses together.
