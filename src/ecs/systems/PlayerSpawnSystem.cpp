@@ -12,10 +12,10 @@ void ecs::system::PlayerSpawnSystem::operator()(Registry &reg) {
     std::map<std::size_t, entity_t> players = reg.getPlayers();
 
     for (auto &it : players)
-        createNewPlayer(reg, it.second);
+        createNewPlayer(reg, it.second, it.first);
 }
 
-void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t entity) {
+void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t entity, std::size_t clientIndex) {
     ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
     ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
@@ -39,8 +39,10 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
         shootings.insertAt(entity, ecs::component::Shooting{shootings[playerTemplateIndex].value()});
     if (lives[playerTemplateIndex] && !lives[entity])
         lives.insertAt(entity, ecs::component::Life{lives[playerTemplateIndex].value()});
-    if (spriteInfos[playerTemplateIndex] && !spriteInfos[entity])
+    if (spriteInfos[playerTemplateIndex] && !spriteInfos[entity]) {
+        setPlayerColor(playerTemplateIndex, clientIndex, reg);
         spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[playerTemplateIndex].value()});
+    }
     if (soundEffect[playerTemplateIndex] && !soundEffect[entity])
         soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[playerTemplateIndex].value()});
     if (shootingRate[playerTemplateIndex] && !shootingRate[entity])
@@ -59,4 +61,24 @@ std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg
         }
     }
     return 0;
+}
+
+void ecs::system::PlayerSpawnSystem::setPlayerColor(entity_t playerEntity, std::size_t clientIndex, Registry &reg) {
+    ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
+    switch (clientIndex) {
+        case 1:
+            spriteInfos[playerEntity]->color = CYAN;
+            break;
+        case 2:
+            spriteInfos[playerEntity]->color = BEIGE;
+            break;
+        case 3:
+            spriteInfos[playerEntity]->color = GOLD;
+            break;
+        case 4:
+            spriteInfos[playerEntity]->color = PINK;
+            break;
+        default:
+            break;
+    }
 }
