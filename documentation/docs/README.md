@@ -7,7 +7,7 @@ This document describes our implementaiton of binary protocol adapted to our nee
 
 ## Introduction
 
-In our R-Type project, we use a binary protocol to manage communications between client and server. This ensures fast data exchange, which is essential for real-time gaming. By structuring messages compactly, we reduce latency and optimize bandwidth utilization. What's more, this protocol imposes a strict structure, preventing the sending of non-compliant messages and limiting the risk of intrusion. In short, the binary protocol is a cornerstone of our network architecture, guaranteeing both performance and security.
+In our R-Type project, we use a binary protocol to manage communications between client and server. This ensures fast data exchange, which is essential for real-time gaming. By structuring messages compactly, we reduce latency and optimize bandwidth utilization. Furthermore, this protocol imposes a strict structure, preventing the sending of non-compliant messages and limiting the risk of intrusion. In short, the binary protocol is a cornerstone of our network architecture, guaranteeing both performance and security.
 
 ## Message structure
 
