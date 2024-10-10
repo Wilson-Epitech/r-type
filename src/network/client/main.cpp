@@ -30,12 +30,12 @@ void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, Da
 
     Lib::deleteSimilarDataLines(data, lastDataReceived);
     if (!lastDataReceived.empty() && !hasSendWorldSet) {
-        client.sendMessage("World set", 3);
+        client.sendMessage("World set");
         hasSendWorldSet = true;
     }
     if (!data.empty()) {
         std::string serialized = Lib::serializeEntityDataVector(data);
-        client.sendMessage(serialized, 3);
+        client.sendMessage(serialized);
     }
 }
 
@@ -54,14 +54,13 @@ int main(int ac, char** av)
 
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        InitWindow(900, 450, rtype.getGameName().c_str());
-        // InitWindow(GetScreenWidth(), GetScreenHeight(), rtype.getGameName().c_str());
+        InitWindow(900, 400, rtype.getGameName().c_str());
         // MaximizeWindow();
         InitAudioDevice();
         signal(SIGINT, handleCtrlC);
         while (handleClient(1) && !WindowShouldClose()) {
             if (!client.getIsRunning()) {
-                client.sendMessage("Client disconnected", 2);
+                client.sendMessage("Client disconnected");
                 break;
             }
             std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
@@ -80,7 +79,7 @@ int main(int ac, char** av)
             if (playerId != 0 && player.size() == 0)
                 reg.addPlayer(0, playerId);
             if (!dataReceived.empty() && !(lastDataReceived == dataReceived)) {
-              for (auto &deadEntity : dataReceived.deadEntities) {
+                for (auto &deadEntity : dataReceived.deadEntities) {
                     if (reg.entityExist(deadEntity))
                         reg.killEntity(deadEntity);
                 }

@@ -44,11 +44,11 @@ DataToSend network::Server::getEntityData() {
 }
 
 bool network::Server::getDataHasBeenUsed() {
-    return _dataHasBeenUsed;
+      return _dataHasBeenUsed;
 }
 
 void network::Server::setDataHasBeenUsed(bool value) {
-    _dataHasBeenUsed = value;
+      _dataHasBeenUsed = value;
 }
 
 void network::Server::startReceiving() {
