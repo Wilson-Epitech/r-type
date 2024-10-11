@@ -25,8 +25,7 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         std::size_t clientId = it->first;
         if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-             lastConnectedClientId != previousLastConnectedClientId) &&
-            (lastConnectedClientId == clientId)) {
+             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
@@ -35,9 +34,9 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
             previousConnectedClientsSize = connectedClientsSize;
             previousLastConnectedClientId = lastConnectedClientId;
-            server.sendToAClient(clientId, "playerId:" + std::to_string(playerId));
+            server.sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
-                server.sendToAClient(clientId, allEntititiesSerialized);
+                server.sendToAClient(clientId, allEntititiesSerialized, 3);
         }
     }
 
@@ -45,8 +44,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
-            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-            server.sendToAClient(clientId, newEntititiesSerialized);
+                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+                server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }
 }
@@ -58,7 +57,7 @@ void checkConnectedHeartbeat(network::Server &server) {
 
     while (it != lastSeenClient.end()) {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
-            server.sendToAllClient("Disconnected: " + std::to_string(it->first));
+            server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             it = lastSeenClient.erase(it);
         } else {
             it++;

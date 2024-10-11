@@ -16,6 +16,7 @@
 
 #define UPDATE_SERVER 0.02
 #define NB_CLIENTS_AUTHORIZED 4
+#define MAXMESSAGE 255
 
 namespace network {
   class Server {
@@ -23,8 +24,8 @@ namespace network {
       Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
       ~Server();
 
-      void sendToAClient(const std::size_t idClient, const std::string message);
-      void sendToAllClient(const std::string message);
+      void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
+      void sendToAllClient(const std::string message, uint8_t messageType);
       std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
       std::size_t getNbClients();
       std::size_t getLastConnectedClientId();
@@ -39,7 +40,7 @@ namespace network {
       void startReceiving();
       void deserializeMessage(const std::string message);
       void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
-      void handleSend(std::shared_ptr<std::string> message, const std::error_code &error, std::size_t bytesTransferred);
+      void handleSend(const std::error_code &error, std::size_t bytesTransferred);
       std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
 
       std::thread _ioThread;
@@ -58,6 +59,12 @@ namespace network {
   
       DataToSend _data;
       bool _dataHasBeenUsed;
+
+      const uint16_t _magicNumber;
+      uint16_t _receivedMagicNbr;
+      uint8_t _messageType;
+      uint8_t _messageId;
+      uint16_t _messageLen;
   };
 };
 

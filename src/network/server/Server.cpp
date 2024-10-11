@@ -10,7 +10,7 @@
 #include <iostream>
 
 network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false) {
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false), _magicNumber(0x9B3D){
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
     for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
@@ -72,26 +72,54 @@ void network::Server::deserializeMessage(const std::string message) {
 
 void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
     if (!error) {
+        std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
+
+        if (_receivedMagicNbr != _magicNumber) {
+            std::cerr << "Invalid magic number" << std::endl;
+            startReceiving();
+            return;
+        }
+
+        std::memcpy(&_messageType, _receiveBuffer.data() + sizeof(_receivedMagicNbr), sizeof(_messageType));
+        std::memcpy(&_messageId, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType), sizeof(_messageId));
+        std::memcpy(&_messageLen, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId),
+                    sizeof(_messageLen));
+
+        if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
+            std::cerr << "Incomplete message received" << std::endl;
+            startReceiving();
+            return;
+        }
+
+        std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
+                                sizeof(_messageLen),
+                            _messageLen);
+
         std::size_t talkingClient = logNewConnection(_remoteEndpoint);
         if (talkingClient == 0) {
             startReceiving();
             return;
         }
-        std::string receivedMessage = std::string(_receiveBuffer.data(), byteTransfered);
+
+        if (message == "Client disconnected") {
+            _connectedClients.erase(talkingClient);
+            std::string msg = "Client disconnected: " + std::to_string(talkingClient);
+            sendToAllClient(msg, 2);
+        }
+
         std::string newClientConnectedMessage = "New client connected.";
         std::string worldSetMessage = "World set";
         std::string aliveMessage = "Alive: ";
 
-        if (receivedMessage.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
+        if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
             _areClientsWorldSet[talkingClient - 1] = true;
-        } else if (receivedMessage.compare(0, aliveMessage.length(), aliveMessage) == 0) {
-            std::size_t clientId = std::stoi(receivedMessage.substr(aliveMessage.length()));
+        } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
+            std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
             std::cerr << "Received heartbeat from client " << clientId << std::endl;
-        } else if (receivedMessage.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 &&
-                   receivedMessage.length() > 0) {
-            std::cout << "data:" << receivedMessage << std::endl;
-            deserializeMessage(receivedMessage);
+        } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
+            std::cout << "data:" << message << std::endl;
+            deserializeMessage(message);
         }
         startReceiving();
         _receiveBuffer.fill(0);
@@ -100,30 +128,59 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
     }
 }
 
-void network::Server::handleSend(std::shared_ptr<std::string> message, const std::error_code &error, std::size_t) {
+void network::Server::handleSend(const std::error_code &error, std::size_t) {
     if (error)
         std::cerr << "Failed to send message. Error: " << error.message() << std::endl;
 }
 
-void network::Server::sendToAClient(const std::size_t idClient, const std::string messageToSend) {
+void network::Server::sendToAClient(const std::size_t idClient, const std::string messageToSend, uint8_t type) {
     auto it = _connectedClients.find(idClient);
+    uint16_t len = static_cast<uint16_t>(messageToSend.size());
+    std::string buffer(sizeof(_magicNumber) + sizeof(type) + sizeof(_messageId) + sizeof(len) + len, '\0');
+
+    _messageId += 1;
+    if (_messageId >= MAXMESSAGE) {
+        _messageId = 0;
+    }
+
+    std::memcpy(&buffer[0], &_magicNumber, sizeof(_magicNumber));
+    std::memcpy(&buffer[sizeof(_magicNumber)], &type, sizeof(type));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(type)], &_messageId, sizeof(_messageId));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(type) + sizeof(_messageId)], &len, sizeof(len));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(type) + sizeof(_messageId) + sizeof(len)], messageToSend.data(),
+                messageToSend.size());
 
     if (it != _connectedClients.end()) {
-        std::shared_ptr<std::string> message(new std::string(messageToSend));
+        std::shared_ptr<std::string> message(new std::string(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it->second,
-                              std::bind(&network::Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
     }
 }
 
-void network::Server::sendToAllClient(const std::string messageToSend) {
+void network::Server::sendToAllClient(const std::string messageToSend, uint8_t messageType) {
+    uint16_t len = static_cast<uint16_t>(messageToSend.size());
+    std::string buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(len) + len, '\0');
+
+    _messageId += 1;
+    if (_messageId >= MAXMESSAGE) {
+        _messageId = 0;
+    }
+
+    std::memcpy(&buffer[0], &_magicNumber, sizeof(_magicNumber));
+    std::memcpy(&buffer[sizeof(_magicNumber)], &messageType, sizeof(messageType));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType)], &_messageId, sizeof(_messageId));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId)], &len, sizeof(len));
+    std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(len)], messageToSend.data(),
+                messageToSend.size());
+
     for (auto &it : _connectedClients) {
-        std::shared_ptr<std::string> message(new std::string(messageToSend));
+        std::shared_ptr<std::string> message(new std::string(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it.second,
-                              std::bind(&network::Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
     }
 }
 
@@ -133,18 +190,34 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
             return it.first;
     }
 
-    if (_connectedClients.size() >= 4) {
+    if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
+        std::string messageToSend = "Could not connect";
+        uint8_t messageType = 5;
+        uint16_t len = static_cast<uint16_t>(messageToSend.size());
+        std::string buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(len) + len, '\0');
+
+        _messageId += 1;
+        if (_messageId >= MAXMESSAGE) {
+            _messageId = 0;
+        }
+
+        std::memcpy(&buffer[0], &_magicNumber, sizeof(_magicNumber));
+        std::memcpy(&buffer[sizeof(_magicNumber)], &messageType, sizeof(messageType));
+        std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType)], &_messageId, sizeof(_messageId));
+        std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId)], &len, sizeof(len));
+        std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(len)], messageToSend.data(),
+                    messageToSend.size());
         std::cerr << "Server is full." << std::endl;
-        std::shared_ptr<std::string> message(new std::string("Could not connect"));
+        std::shared_ptr<std::string> message(new std::string(buffer));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-                              std::bind(&network::Server::handleSend, this, message, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
         return 0;
     }
 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
-    sendToAllClient("New connection: " + std::to_string(_idClient));
+    sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
 
