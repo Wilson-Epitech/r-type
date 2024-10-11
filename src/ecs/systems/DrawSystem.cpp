@@ -22,7 +22,7 @@ void ecs::system::DrawSystem::operator()(Registry &reg) {
                 Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
-                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
+                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, spriteInfos[i]->color);
                 drawLife(reg, drawables, spriteInfos, positions, i);
             } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(velocities, drawables, positions, spriteInfos, i);

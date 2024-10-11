@@ -90,10 +90,12 @@ namespace ecs {
             std::size_t patternNb = 1;
             std::size_t firstPattern = 0;
             float scaleFactor = 1.0;
+            Color color = RAYWHITE;
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                        scaleFactor == other.scaleFactor);
+                        scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
+                        color.b == other.color.b);
             }
         };
 
