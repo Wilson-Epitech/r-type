@@ -50,6 +50,22 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
     }
 }
 
+void checkConnectedHeartbeat(network::Server &server) {
+    std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = server.getHeartbeatClient();
+    auto now = std::chrono::steady_clock::now();
+    auto it = lastSeenClient.begin();
+
+    while (it != lastSeenClient.end()) {
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
+            server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
+            it = lastSeenClient.erase(it);
+        } else {
+            it++;
+        }
+    }
+    server.setHeartBeatmMap(lastSeenClient);
+}
+
 int main(int ac, char **av)
 {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
@@ -58,7 +74,7 @@ int main(int ac, char **av)
     }
     try {
         asio::io_context io_context;
-        asio::thread_pool pool(MAXCLIENTS);
+        asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
         network::Server server(io_context, av[1], std::stoi(av[2]), pool);
         game::RtypeGameServer rtype;
         ecs::Registry reg = rtype.getRegistry();
@@ -77,7 +93,7 @@ int main(int ac, char **av)
             bool dataHasBeenUsed = server.getDataHasBeenUsed();
             if (!dataReceived.empty() && !dataHasBeenUsed) {
                 for (auto &entity : dataReceived.entitiesData) {
-                        Lib::updateEntities(reg, entity);
+                    Lib::updateEntities(reg, entity);
                 }
                 lastDataReceived = dataReceived;
                 server.setDataHasBeenUsed(true);
@@ -88,6 +104,7 @@ int main(int ac, char **av)
                 reg.clearActualTurnDeadEntities();
             }
             reg.runSystems();
+            checkConnectedHeartbeat(server);
         }
         pool.join();
     } catch (std::exception &e) {

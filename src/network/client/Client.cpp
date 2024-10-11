@@ -9,9 +9,7 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(asio::io_context& ioContext, const std::string& host, const std::string& port)
-    : _socket(ioContext), _isRunning(true), _ownId(0), _magicNumber(0x9B3D), _messageId(0)
-{
+network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port) : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -28,7 +26,7 @@ network::Client::~Client() {
 }
 
 void network::Client::msgFromServer() {
-    std::array<char, 100000> receiveBuffer;
+    std::array<char, 50000> receiveBuffer;
     asio::ip::udp::endpoint senderEndpoint;
     uint16_t receivedMagicNbr;
     uint8_t messageType;
@@ -61,16 +59,17 @@ void network::Client::msgFromServer() {
         std::memcpy(&messageLen, receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId), sizeof(messageLen));
 
         std::string receivedMessage(receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId) + sizeof(messageLen), messageLen);
-        std::string newCoMessage = "New connection: ";
+        std::string newConnectionMessage = "New connection: ";
         std::string playerIdMessage = "playerId:";
         std::string createWorldMessage = "Create World:";
+        std::string disconnectedClient = "Disconnected:";
 
-        if (receivedMessage.find(playerIdMessage, 0) != std::string::npos)
-            _playerId = std::stoi(receivedMessage.substr(playerIdMessage.length()).c_str());
-        if (receivedMessage.find(newCoMessage, 0) != std::string::npos && _ownId == 0)
-            _ownId = std::stoi(receivedMessage.substr(newCoMessage.size()));
-        if (receivedMessage.find(newCoMessage) == std::string::npos && receivedMessage.length() > 0) {
-            std::cout << "data:" << receivedMessage << std::endl;
+        if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
+            _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
+            std::cout << _playerId << std::endl;
+        } else if (receivedMessage.find(disconnectedClient) != std::string::npos) {
+            std::cout << "CLIENT DISOCNNECTED" << std::endl;
+        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 && receivedMessage.length() > 0) {
             _data = Lib::deserializeEntityDataVector(receivedMessage);
         }
         if (receivedMessage == "Could not connect") {
@@ -90,7 +89,7 @@ void network::Client::sendMessage(const std::string& message, uint8_t messageTyp
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_len, sizeof(_len));
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len), message.data(), message.size());
 
-    if (_messageId >= maxMessage) {
+    if (_messageId >= MAXMESSAGE) {
         _messageId = 0;
     } else {
         _messageId += 1;
@@ -114,6 +113,6 @@ std::size_t network::Client::getPlayerId() {
 void network::Client::heartbeatToServer() {
     while (_isRunning) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        sendMessage("Alive: " + std::to_string(_ownId), 4);
+        sendMessage("Alive: " + std::to_string(_playerId), 4);
     }
 }

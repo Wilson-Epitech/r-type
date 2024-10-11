@@ -10,16 +10,14 @@
 #include <iostream>
 
 network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
-      _threadRunning(false), _threadPoolHeartbeat(pool), _magicNumber(0x9B3D), _dataHasBeenUsed(false) {
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false), _magicNumber(0x9B3D){
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
-    for (std::size_t i = 0; i < MAXCLIENTS; i++)
+    for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
         _areClientsWorldSet[i] = false;
 }
 
 network::Server::~Server() {
-    _threadPoolHeartbeat.join();
     _ioThread.join();
 }
 
@@ -49,6 +47,15 @@ bool network::Server::getDataHasBeenUsed() {
 
 void network::Server::setDataHasBeenUsed(bool value) {
     _dataHasBeenUsed = value;
+}
+
+std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::Server::getHeartbeatClient() {
+    return _lastAliveClient;
+}
+
+void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map)
+{
+    _lastAliveClient = map;
 }
 
 void network::Server::startReceiving() {
@@ -93,30 +100,26 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
             startReceiving();
             return;
         }
-        if (_threadRunning == false)
-            asio::post(_threadPoolHeartbeat, std::bind(&network::Server::keepAlive, this, talkingClient));
-
-        _threadRunning = true;
 
         if (message == "Client disconnected") {
-            _clientHeartbeat.erase(talkingClient);
             _connectedClients.erase(talkingClient);
             std::string msg = "Client disconnected: " + std::to_string(talkingClient);
             sendToAllClient(msg, 2);
         }
 
         std::string newClientConnectedMessage = "New client connected.";
-        std::string aliveMessage = "Alive:";
         std::string worldSetMessage = "World set";
+        std::string aliveMessage = "Alive: ";
 
-        if (message.find(newClientConnectedMessage) == std::string::npos && message.find(aliveMessage) == std::string::npos &&
-            message.length() > 0) {
-            if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-                _areClientsWorldSet[talkingClient - 1] = true;
-            } else {
-                std::cout << "data:" << message << std::endl;
-                deserializeMessage(message);
-            }
+        if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
+            _areClientsWorldSet[talkingClient - 1] = true;
+        } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
+            std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
+            _lastAliveClient[clientId] = std::chrono::steady_clock::now();
+            std::cerr << "Received heartbeat from client " << clientId << std::endl;
+        } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
+            std::cout << "data:" << message << std::endl;
+            deserializeMessage(message);
         }
         startReceiving();
         _receiveBuffer.fill(0);
@@ -187,7 +190,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
             return it.first;
     }
 
-    if (_connectedClients.size() >= MAXCLIENTS) {
+    if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
         std::string messageToSend = "Could not connect";
         uint8_t messageType = 5;
         uint16_t len = static_cast<uint16_t>(messageToSend.size());
@@ -215,48 +218,8 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
-    _threadRunning = false;
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
 
     return _idClient;
-}
-
-void network::Server::keepAlive(std::size_t talkingClient) {
-    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-    while (1) {
-        std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-        std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-        _clientHeartbeat[talkingClient] = timeElapsed;
-
-        std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
-
-        std::string checkSize = _receiveBuffer.data();
-
-        if (checkSize.length() > 0 && _receivedMagicNbr != _magicNumber) {
-            std::cerr << "KeepAlive:Invalid magic number" << std::endl;
-            continue;
-        }
-
-        std::memcpy(&_messageType, _receiveBuffer.data() + sizeof(_receivedMagicNbr), sizeof(_messageType));
-        std::memcpy(&_messageId, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType), sizeof(_messageId));
-        std::memcpy(&_messageLen, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId),
-                    sizeof(_messageLen));
-
-        std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
-                                sizeof(_messageLen),
-                            _messageLen);
-        std::string aliveMsg = "Alive: ";
-
-        if (message.find(aliveMsg, 0) != std::string::npos && (std::size_t)std::stoi(message.substr(aliveMsg.size())) == talkingClient) {
-            time0 = std::chrono::steady_clock::now();
-        }
-        if (_clientHeartbeat[talkingClient] >= std::chrono::seconds(5)) {
-            std::string message = "Client disconnected: " + std::to_string(talkingClient);
-            _connectedClients.erase(talkingClient);
-            _clientHeartbeat.erase(talkingClient);
-            sendToAllClient(message, 2);
-            break;
-        }
-    }
 }
