@@ -25,19 +25,19 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             continue;
         rec1 = spriteHitbox(positions, spritesSizes, i);
         if (types[i] && positions[i]) {
-            if ((types[i]->type == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
-                (types[i]->type == ecs::EntityType::ENEMY && positions[i]->x < 0))
+            if ((types[i]->entityType == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (types[i]->entityType == ecs::EntityType::ENEMY && positions[i]->x < 0))
                 reg.killEntity(i);
         }
         for (std::size_t j = i;
              j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size() && j < spritesSizes.size(); ++j) {
             if (!positions[j] || !spritesInfos[j] || !types[j] || !lives[j] || !spritesSizes[j])
                 continue;
-            if (i == j || types[i]->type == types[j]->type || lives[j]->nbLives == 0)
+            if (i == j || types[i]->entityType == types[j]->entityType || lives[j]->nbLives == 0)
                 continue;
             rec2 = spriteHitbox(positions, spritesSizes, j);
-            if (areEntitiesEnemies(types[i]->type, types[j]->type) && positions[i]->x > 0 && positions[i]->x < Lib::getScreenWidth() &&
-                positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
+            if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
+                positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (CheckCollisionRecs(rec1, rec2)) {
                     lives[i]->nbLives--;
                     lives[j]->nbLives--;

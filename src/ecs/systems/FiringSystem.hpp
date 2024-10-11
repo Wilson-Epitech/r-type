@@ -12,8 +12,6 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define SHOOT_RATE 0.3
-
 namespace ecs {
     namespace system {
         class FiringSystem : virtual public ecs::system::ISystem {
@@ -26,8 +24,6 @@ namespace ecs {
           private:
             void addShot(std::size_t index, Registry &reg);
             std::size_t getPlayerShootIndex(Registry &reg);
-            bool IsGamepadTriggerButtonDown(int &gamepad);
-            void soundHasToBePlayed(Registry &reg);
         };
     }
 }

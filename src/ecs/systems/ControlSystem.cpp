@@ -8,29 +8,38 @@
 #include "ControlSystem.hpp"
 
 void ecs::system::ControlSystem::operator()(Registry &reg) {
-    SparseArray<component::Controllable> &controllables = reg.getComponents<component::Controllable>();
+    SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    std::map<std::size_t, entity_t> player = reg.getPlayers();
     int gamepad = 0;
 
-    for (std::size_t i = 0; i < controllables.size() && i < velocities.size(); ++i) {
-        if (controllables[i] && velocities[i]) {
-            if (!controllables[i]->isControllable)
-                continue;
-            velocities[i]->vx = 0;
-            velocities[i]->vy = 0;
-            if (IsKeyDown(KEY_UP))
-                velocities[i]->vy = -velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_DOWN))
-                velocities[i]->vy = velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_LEFT))
-                velocities[i]->vx = -velocities[i]->possibleVelocity;
-            if (IsKeyDown(KEY_RIGHT))
-                velocities[i]->vx = velocities[i]->possibleVelocity;
-            else if (IsGamepadAvailable(gamepad)) {
-                handleController(gamepad, velocities, i);
-            }
+    if (player.size() != 1)
+        return;
+    entity_t playerEntity = player[0];
+    if (shootings[playerEntity] && velocities[playerEntity]) {
+        if (IsKeyDown(KEY_SPACE) || IsGamepadTriggerButtonDown(gamepad))
+            shootings[playerEntity]->isShooting = true;
+        if (IsKeyDown(KEY_UP)) {
+            velocities[playerEntity]->vx = 0;
+            velocities[playerEntity]->vy = -velocities[playerEntity]->possibleVelocity;
+        } else if (IsKeyDown(KEY_DOWN)) {
+            velocities[playerEntity]->vx = 0;
+            velocities[playerEntity]->vy = velocities[playerEntity]->possibleVelocity;
+        } else if (IsKeyDown(KEY_LEFT)) {
+            velocities[playerEntity]->vy = 0;
+            velocities[playerEntity]->vx = -velocities[playerEntity]->possibleVelocity;
+        } else if (IsKeyDown(KEY_RIGHT)) {
+            velocities[playerEntity]->vy = 0;
+            velocities[playerEntity]->vx = velocities[playerEntity]->possibleVelocity;
+        } else if (IsGamepadAvailable(gamepad)) {
+            handleController(gamepad, velocities, playerEntity);
         }
     }
+}
+
+bool ecs::system::ControlSystem::IsGamepadTriggerButtonDown(int &gamepad) {
+    return (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_RIGHT_TRIGGER_2) ||
+            IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_1) || IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_TRIGGER_2));
 }
 
 void ecs::system::ControlSystem::handleController(int &gamepad, SparseArray<component::Velocity> &velocities,

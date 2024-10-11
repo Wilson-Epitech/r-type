@@ -24,6 +24,7 @@ namespace ecs {
 
           private:
             void handleController(int &gamepad, SparseArray<component::Velocity> &velocities, const std::size_t &i);
+            bool IsGamepadTriggerButtonDown(int &gamepad);
         };
     }
 }

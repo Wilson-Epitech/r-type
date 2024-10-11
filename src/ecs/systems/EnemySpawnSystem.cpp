@@ -12,10 +12,10 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
+    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
     static bool isFirstSpawn = true;
-    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     float spawnInterval = 0;
     bool isTimerSet = false;
@@ -58,7 +58,6 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
                                                    SparseArray<component::Velocity> &velocities, SparseArray<component::Life> &lives,
                                                    SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
@@ -70,7 +69,6 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     velocities.insertAt(entity, ecs::component::Velocity{velocities[i]->vx, velocities[i]->vy, velocities[i]->possibleVelocity});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
-    drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
     lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
     if (shootingRate.size() > i) {

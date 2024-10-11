@@ -14,11 +14,19 @@
 namespace game {
     class AGame : virtual public game::IGame {
       public:
-        AGame(const std::string &gameName) : _gameName(gameName) {};
+        AGame(const std::string &gameName) : _gameName(gameName){};
         ~AGame() = default;
 
         GameStatus operator()(ecs::Registry &reg) override {
             return gameState(reg);
+        }
+
+        ecs::Registry &getRegistry() override {
+            return _reg;
+        }
+
+        std::string &getGameName() override {
+            return _gameName;
         }
 
       protected:

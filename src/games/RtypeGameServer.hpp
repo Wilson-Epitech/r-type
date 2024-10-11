@@ -5,8 +5,8 @@
 ** RTypeGame
 */
 
-#ifndef RTYPEGAME_HPP_
-#define RTYPEGAME_HPP_
+#ifndef RTYPEGAMESERVER_HPP_
+#define RTYPEGAMESERVER_HPP_
 
 #include "AGame.hpp"
 #include "CollisionSystem.hpp"
@@ -17,30 +17,17 @@
 #include "FiringSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
+#include "PlayerSpawnSystem.hpp"
 #include "PositionSystem.hpp"
-#include "SoundSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 
 #define PLAYER_NAME "player"
+#define PLAYER_SHOT "player_shot"
 #define BACKGROUND_NAME "background"
 #define SPAWN_ENEMY_NAME "enemy"
+#define ENEMY_SHOT "enemy_shot"
 #define SPAWN_BOSS_NAME "boss"
-#define PLAYER_SHOOT "player_shoot"
-#define ENEMY_SHOOT "enemy_shoot"
-
-#define PLAYER_SPRITE_NB_PATTERN 16
-#define FIRST_ENEMY_SPRITE_NB_PATTERN 8
-#define SECOND_ENEMY_SPRITE_NB_PATTERN 12
-
-#define PLAYER_SPRITE_FIRST_PATTERN 8
-#define SECOND_ENEMY_SPRITE_FIRST_PATTERN 0
-
-#define PLAYER_SPRITE_SCALE_FACTOR 2.3
-#define SECOND_ENEMY_SPRITE_SCALE_FACTOR 2.0
-#define ENEMY_SCALE_FACTOR 1
-#define BOSS_SCALE_FACTOR 1.5
-
-#define ENEMY_SHOT_SACLE_FACTOR 2
+#define MUSIC_NAME "music"
 
 #define MAX_SPAWN_HEIGHT 1040
 #define MIN_SPAWN_HEIGHT 30
@@ -55,13 +42,10 @@
 #define TIME_BEFORE_SPAWN_BOSS 15
 
 namespace game {
-    class RTypeGame : virtual public game::AGame {
+    class RtypeGameServer : virtual public game::AGame {
       public:
-        RTypeGame(const std::string gameName = "R-Type");
-        ~RTypeGame() = default;
-
-        ecs::Registry &getRegistry() override;
-        std::string &getGameName() override;
+        RtypeGameServer(const std::string gameName = "R-Type");
+        ~RtypeGameServer() = default;
 
       private:
         GameStatus gameState(ecs::Registry &reg) override;
@@ -72,4 +56,4 @@ namespace game {
     };
 }
 
-#endif /* !RTYPEGAME_HPP_ */
+#endif /* !RTYPEGAMESERVER_HPP_ */

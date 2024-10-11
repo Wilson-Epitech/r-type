@@ -24,7 +24,6 @@ namespace ecs {
           private:
             void addShot(std::size_t index, Registry &reg);
             std::size_t getEnemyShootIndex(Registry &reg);
-            void soundHasToBePlayed(Registry &reg);
         };
     }
 }

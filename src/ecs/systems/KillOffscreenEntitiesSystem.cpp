@@ -13,9 +13,9 @@ void ecs::system::KillOffscreenEntitiesSystem::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < positions.size() && i < types.size(); ++i) {
         if (types[i] && positions[i]) {
-            if ((types[i]->type == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
-                (types[i]->type == ecs::EntityType::ENEMYSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
-                (types[i]->type == ecs::EntityType::ENEMY && positions[i]->x < 0))
+            if ((types[i]->entityType == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (types[i]->entityType == ecs::EntityType::ENEMYSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
+                (types[i]->entityType == ecs::EntityType::ENEMY && positions[i]->x < 0))
                 reg.killEntity(i);
         }
     }

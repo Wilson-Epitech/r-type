@@ -22,21 +22,18 @@ using entity_t = std::size_t;
 namespace ecs {
     class Registry {
       public:
+
         entity_t spawnEntity() {
-            entity_t entity = _indexToEntities.size() + 1;
+            entity_t entity;
 
             if (!_deadEntities.empty()) {
                 entity = _deadEntities.front();
                 _deadEntities.pop_front();
-                for (auto &it : _indexToEntities) {
-                    if (it.second == 0) {
-                        _indexToEntities[it.first] = entity;
-                        break;
-                    }
-                }
             } else {
-                _indexToEntities[entity] = entity;
+                entity = _indexToEntities.size() + 1;
             }
+            _indexToEntities[entity] = entity;
+            _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
 
@@ -47,10 +44,33 @@ namespace ecs {
             for (auto &it : _indexToEntities) {
                 if (it.second == e) {
                     _deadEntities.push_back(std::size_t(it.second));
+                    _actualTurnDeadEntities.push_back(std::size_t(it.second));
                     it.second = 0;
                 }
             }
+            for (auto &player : _players) {
+                if (player.second == e) {
+                    _players.erase(player.first);
+                    break;
+                }
+            }
         };
+
+        void clearActualTurnNewEntities() {
+            _actualTurnActualTurnNewEntities.clear();
+        }
+
+        std::list<std::size_t> getActualTurnNewEntities() {
+            return _actualTurnActualTurnNewEntities;
+        }
+
+        void clearActualTurnDeadEntities() {
+            _actualTurnDeadEntities.clear();
+        }
+
+        std::list<std::size_t> getActualTurnDeadEntities() {
+            return _actualTurnDeadEntities;
+        }
 
         entity_t entityFromIndex(std::size_t idx) {
             auto it = _indexToEntities.find(idx);
@@ -59,6 +79,32 @@ namespace ecs {
                 throw Error("No entity found at this index");
             return it->second;
         };
+
+        bool entityExist(const entity_t &ent) {
+            for (auto &it : _indexToEntities) {
+                if (it.second == ent)
+                    return true;
+            }
+            return false;
+        }
+
+        void addPlayer(std::size_t clientId, entity_t entity) {
+            auto it = _players.find(clientId);
+            if (it != _players.end())
+                throw Error("Client already mapped with a player");
+            _players[clientId] = entity;
+        }
+
+        std::size_t getPlayerByClientId(std::size_t clientId) {
+            auto it = _players.find(clientId);
+            if (it == _players.end())
+                throw Error("No player mapped with this client id");
+            return it->second;
+        }
+
+        std::map<std::size_t, entity_t> getPlayers() {
+            return _players;
+        }
 
         template <typename Component> void removeComponent(entity_t const &from) {
             SparseArray<Component> &component = getComponents<Component>();
@@ -96,9 +142,7 @@ namespace ecs {
             return std::any_cast<SparseArray<Component>>(it->second);
         };
 
-        template <class... Components, typename Function>
-
-        void addSystem(Function const &f) {
+        template <class... Components, typename Function> void addSystem(Function const &f) {
             _systems.push_back(f);
         };
 
@@ -108,10 +152,22 @@ namespace ecs {
             }
         };
 
+        template <class... Components, typename Function> void addInitPlayerSystem(Function const &f) {
+            _initPlayerSystem = f;
+        };
+
+        void runInitPlayerSystem() {
+            _initPlayerSystem(*this);
+        };
+
       private:
+        std::map<std::size_t, entity_t> _players;
         std::size_t _totalEntities = 0;
+        std::function<void(Registry &)> _initPlayerSystem;
         std::vector<std::function<void(Registry &)>> _systems;
         std::list<std::size_t> _deadEntities;
+        std::list<std::size_t> _actualTurnDeadEntities;
+        std::list<std::size_t> _actualTurnActualTurnNewEntities;
         std::map<std::size_t, entity_t> _indexToEntities;
         std::unordered_map<std::type_index, std::any> _componentsArrays;
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>> _eraseEntity;
