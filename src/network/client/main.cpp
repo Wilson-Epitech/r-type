@@ -78,7 +78,7 @@ int main(int ac, char **av) {
             if (playerId != 0 && player.size() == 0)
                 reg.addPlayer(0, playerId);
             if (!dataReceived.empty() && !(lastDataReceived == dataReceived)) {
-              for (auto &deadEntity : dataReceived.deadEntities) {
+                for (auto &deadEntity : dataReceived.deadEntities) {
                     if (reg.entityExist(deadEntity))
                         reg.killEntity(deadEntity);
                 }

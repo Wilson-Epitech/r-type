@@ -60,6 +60,7 @@ DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
         retrievePlayersComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
     std::vector<EntityData> playersShootingsData =
         retrievePlayersComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
+    std::vector<EntityData> playersLivesData = retrievePlayersComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -67,6 +68,8 @@ DataToSend Lib::fillNewEntitiesDataToSend(ecs::Registry &reg) {
         data.entitiesData.push_back(playerVelocityData);
     for (auto &playerShootingData : playersShootingsData)
         data.entitiesData.push_back(playerShootingData);
+    for (auto &playerLifeData : playersLivesData)
+        data.entitiesData.push_back(playerLifeData);
     for (auto &newEntity : newEntities) {
         fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);

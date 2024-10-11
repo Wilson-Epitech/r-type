@@ -6,7 +6,7 @@
 */
 
 #include "DrawSystem.hpp"
-
+#include <iostream>
 void ecs::system::DrawSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
@@ -23,11 +23,36 @@ void ecs::system::DrawSystem::operator()(Registry &reg) {
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
+                drawLife(reg, drawables, spriteInfos, positions, i);
             } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(velocities, drawables, positions, spriteInfos, i);
             }
         }
     }
+}
+
+void ecs::system::DrawSystem::drawLife(Registry &reg, SparseArray<component::Drawable> &drawables,
+                                       SparseArray<component::SpriteInfos> &spriteInfos, SparseArray<component::Position> &positions,
+                                       std::size_t index) {
+    SparseArray<component::Life> &lifes = reg.getComponents<component::Life>();
+    Vector2 screenRatio = Lib::getScreenRatio();
+    float lifeBarSize = 0;
+
+    if (lifes.size() < index)
+        return;
+    if (!lifes[index])
+        return;
+    if (!lifes[index]->displayLife)
+        return;
+
+    lifeBarSize = ((drawables[index]->spriteRect.width * (float)lifes[index]->nbLives / lifes[index]->maxLives) *
+                   (spriteInfos[index]->scaleFactor / screenRatio.x)) *
+                  2 / 3;
+    DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 4) / screenRatio.x, positions[index]->y / screenRatio.y,
+                  lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, RED);
+    DrawRectangleLines((positions[index]->x + drawables[index]->spriteRect.width / 4) / screenRatio.x, positions[index]->y / screenRatio.y,
+                       (drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3,
+                       (LIVES_BAR_HEIGHT + 1) / screenRatio.y, RED);
 }
 
 void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos) {

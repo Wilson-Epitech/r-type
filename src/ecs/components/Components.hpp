@@ -69,9 +69,11 @@ namespace ecs {
 
         struct Life {
             std::size_t nbLives;
+            bool displayLife = false;
+            std::size_t maxLives = 0;
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
             }
         };
 
