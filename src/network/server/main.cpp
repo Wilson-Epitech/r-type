@@ -50,20 +50,23 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
     }
 }
 
-void checkConnectedHeartbeat(network::Server &server) {
+std::size_t checkConnectedHeartbeat(network::Server &server) {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = server.getHeartbeatClient();
     auto now = std::chrono::steady_clock::now();
     auto it = lastSeenClient.begin();
+    std::size_t disconnectedPlayerEntity = 0;
 
     while (it != lastSeenClient.end()) {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
             server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
+            disconnectedPlayerEntity = it->first;
             it = lastSeenClient.erase(it);
         } else {
             it++;
         }
     }
     server.setHeartBeatmMap(lastSeenClient);
+    return disconnectedPlayerEntity;
 }
 
 int main(int ac, char **av)
@@ -79,6 +82,7 @@ int main(int ac, char **av)
         game::RtypeGameServer rtype;
         ecs::Registry reg = rtype.getRegistry();
         static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+        std::size_t disconnectedPlayerEntity = 0;
 
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         while (1) {
@@ -104,7 +108,9 @@ int main(int ac, char **av)
                 reg.clearActualTurnDeadEntities();
             }
             reg.runSystems();
-            checkConnectedHeartbeat(server);
+            disconnectedPlayerEntity = checkConnectedHeartbeat(server);
+            if (disconnectedPlayerEntity != 0)
+                reg.killEntity(disconnectedPlayerEntity);
         }
         pool.join();
     } catch (std::exception &e) {
