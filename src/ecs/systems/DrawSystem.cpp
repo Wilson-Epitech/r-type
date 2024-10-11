@@ -6,7 +6,7 @@
 */
 
 #include "DrawSystem.hpp"
-#include <iostream>
+
 void ecs::system::DrawSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
