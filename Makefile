@@ -8,11 +8,13 @@
 CXX = g++
 
 CXXFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -g -Wall -Wextra
-CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 			\
-			-iquote src/gameEngine -iquote src/ecs -iquote src/ecs/components 	\
-			-iquote src/ecs/systems	-iquote src/server -iquote client/			\
+CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 							\
+			-iquote src/runGame -iquote src/ecs -iquote src/ecs/components 						\
+			-iquote src/ecs/systems	-iquote src/network/server -iquote src/network/client		\
 
-SRC = 	src/gameEngine/GameEngine.cpp									\
+SRC = 	src/runGame/RunGame.cpp											\
+		src/network/server/Server.cpp									\
+		src/network//client/Client.cpp									\
 		src/ecs/components/Components.cpp								\
     	src/ecs/systems/CollisionSystem.cpp								\
     	src/ecs/systems/ControlSystem.cpp								\
@@ -31,11 +33,9 @@ SRC = 	src/gameEngine/GameEngine.cpp									\
 
 
 SRC_SERVER = 	src/games/RtypeGameServer.cpp							\
-				src/network/server/Server.cpp							\
     			src/network//server/main.cpp							\
 
 SRC_CLIENT = 	src/games/RtypeGameClient.cpp 							\
-				src/network//client/Client.cpp							\
     			src/network//client/main.cpp							\
 
 OBJ = $(SRC:.cpp=.o)

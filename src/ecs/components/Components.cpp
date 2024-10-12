@@ -17,8 +17,8 @@ void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocit
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos) {
-    oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath << ' '
-        << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b;
+    oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath
+        << ' ' << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {

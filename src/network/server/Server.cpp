@@ -10,7 +10,8 @@
 #include <iostream>
 
 network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false), _magicNumber(0x9B3D){
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
+      _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
     for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
@@ -53,8 +54,7 @@ std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::
     return _lastAliveClient;
 }
 
-void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map)
-{
+void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
     _lastAliveClient = map;
 }
 
@@ -222,4 +222,63 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
 
     return _idClient;
+}
+
+std::size_t network::Server::checkConnectedHeartbeat() {
+    std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = getHeartbeatClient();
+    auto now = std::chrono::steady_clock::now();
+    auto it = lastSeenClient.begin();
+    std::size_t disconnectedPlayerEntity = 0;
+
+    while (it != lastSeenClient.end()) {
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
+            sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
+            disconnectedPlayerEntity = it->first;
+            it = lastSeenClient.erase(it);
+        } else {
+            it++;
+        }
+    }
+    setHeartBeatmMap(lastSeenClient);
+    return disconnectedPlayerEntity;
+}
+
+void network::Server::sendUpdatedData(ecs::Registry &reg) {
+
+    std::map<std::size_t, asio::ip::udp::endpoint> connectedClients = getConnectedClients();
+
+    static std::size_t previousConnectedClientsSize;
+    std::size_t connectedClientsSize = connectedClients.size();
+
+    static std::size_t previousLastConnectedClientId;
+    std::size_t lastConnectedClientId = getLastConnectedClientId();
+    std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
+
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        std::size_t clientId = it->first;
+        if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
+             lastConnectedClientId != previousLastConnectedClientId) &&
+            (lastConnectedClientId == clientId)) {
+            entity_t newPlayer = reg.spawnEntity();
+            reg.addPlayer(lastConnectedClientId, newPlayer);
+            std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
+            reg.runInitPlayerSystem();
+            DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
+            std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
+            previousConnectedClientsSize = connectedClientsSize;
+            previousLastConnectedClientId = lastConnectedClientId;
+            sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
+            if (!allEntitiesData.empty())
+                sendToAClient(clientId, allEntititiesSerialized, 3);
+        }
+    }
+
+    DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        std::size_t clientId = it->first;
+        if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
+            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            sendToAClient(clientId, newEntititiesSerialized, 3);
+        }
+    }
 }

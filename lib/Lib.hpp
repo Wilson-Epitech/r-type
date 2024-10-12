@@ -33,7 +33,9 @@ class Lib {
     static DataToSend fillAllEntitiesDataToSend(ecs::Registry &reg);
     static std::string serializeEntityDataVector(const DataToSend &data);
     static DataToSend deserializeEntityDataVector(const std::string &message);
-    static void updateEntities(ecs::Registry &reg, EntityData &data);
+    static void updateEntity(ecs::Registry &reg, EntityData &data);
+    static void updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg);
+    static void updateEntitiesData(DataToSend &dataReceived, ecs::Registry &reg);
     static void deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived);
 
     template <typename Component>
