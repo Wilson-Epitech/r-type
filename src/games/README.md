@@ -27,7 +27,8 @@ void game::RtypeGameServer::spawnEntities() {
 ```
 
 ### How to add components
-We also want to add some components to our game. To do so, you have to register your new component in the ```registerComponents``` function by adding a new line with the component to add.```c++
+We also want to add some components to our game. To do so, you have to register your new component in the ```registerComponents``` function by adding a new line with the component to add.
+```c++
 void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Position>();
     _reg.registerComponent<ecs::component::Velocity>();
@@ -54,7 +55,8 @@ To add and call our system, we need to add it to the Registry in the function ``
 ```c++
 _reg.addSystem(ecs::system::FiringSystem());
 ```
-**Be careful of the order of your system**<br>
+> [!CAUTION]
+> **Be careful of the order of your system**<br>
 
 </div>
 
@@ -64,4 +66,6 @@ _reg.addSystem(ecs::system::FiringSystem());
 
 **The client side is way easier than the server side**<br><br>
 You only have to register your components in ```registerComponents``` function and add your systems to the registry in the function ```addSystemsToRegistry``` <br><br>
-Both function works the same way as the server side
+
+> [!NOTE]
+> Both function works the same way as the server side
