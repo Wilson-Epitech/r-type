@@ -73,7 +73,7 @@ void network::Client::msgFromServer() {
         } else if (receivedMessage.find(disconnectedClient) != std::string::npos) {
             std::cout << "CLIENT DISOCNNECTED" << std::endl;
         } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 && receivedMessage.length() > 0) {
-            _data = Lib::deserializeEntityDataVector(receivedMessage);
+            _data.push_back(Lib::deserializeEntityDataVector(receivedMessage));
         }
         if (receivedMessage == "Could not connect") {
             _isRunning = false;
@@ -106,12 +106,16 @@ bool network::Client::getIsRunning() {
     return _isRunning;
 }
 
-DataToSend network::Client::getData() {
+std::list<DataToSend> network::Client::getData() {
     return _data;
 }
 
 std::size_t network::Client::getPlayerId() {
     return _playerId;
+}
+
+void network::Client::clearData() {
+      _data.clear();
 }
 
 void network::Client::heartbeatToServer() {
