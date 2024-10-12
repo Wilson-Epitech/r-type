@@ -34,6 +34,11 @@ namespace network {
       bool getDataHasBeenUsed();
       void setDataHasBeenUsed(bool value);
       std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
+
+      std::unordered_map<std::size_t, bool> getClientStillHere();
+      void setClientStillHere(std::unordered_map<std::size_t, bool>);
+      std::unordered_map<std::size_t, std::size_t> getCorrespondence();
+
       void setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
 
     private:
@@ -42,6 +47,7 @@ namespace network {
       void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
       void handleSend(const std::error_code &error, std::size_t bytesTransferred);
       std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
+      std::size_t getStillAliveClientNumber();
 
       std::thread _ioThread;
       asio::ip::udp::socket _socket;
@@ -54,9 +60,11 @@ namespace network {
 
       std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
       std::unordered_map<std::size_t, bool> _areClientsWorldSet;
-  
+
       std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient;
-  
+      std::unordered_map<std::size_t, bool> _isClientStillHere;
+      std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId;
+
       DataToSend _data;
       bool _dataHasBeenUsed;
 

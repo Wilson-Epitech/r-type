@@ -53,9 +53,30 @@ std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::
     return _lastAliveClient;
 }
 
-void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map)
-{
+void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
     _lastAliveClient = map;
+}
+
+std::unordered_map<std::size_t, bool> network::Server::getClientStillHere() {
+    return _isClientStillHere;
+}
+
+void network::Server::setClientStillHere(std::unordered_map<std::size_t, bool> map) {
+    _isClientStillHere = map;
+}
+
+std::unordered_map<std::size_t, std::size_t> network::Server::getCorrespondence() {
+    return _corresOwnPlayerId;
+}
+
+std::size_t network::Server::getStillAliveClientNumber() {
+    std::size_t numberAlive = 0;
+
+    for (auto it = _isClientStillHere.begin(); it != _isClientStillHere.end(); it++) {
+        if (it->second == true)
+            numberAlive++;
+    }
+    return numberAlive;
 }
 
 void network::Server::startReceiving() {
@@ -117,6 +138,8 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
             std::cerr << "Received heartbeat from client " << clientId << std::endl;
+            if (!_corresOwnPlayerId[clientId])
+                _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
             std::cout << "data:" << message << std::endl;
             deserializeMessage(message);
@@ -190,7 +213,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
             return it.first;
     }
 
-    if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
+    if (getStillAliveClientNumber() >= NB_CLIENTS_AUTHORIZED) {
         std::string messageToSend = "Could not connect";
         uint8_t messageType = 5;
         uint16_t len = static_cast<uint16_t>(messageToSend.size());
@@ -217,6 +240,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
+    _isClientStillHere[_idClient] = true;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));

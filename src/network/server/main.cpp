@@ -52,6 +52,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
 std::size_t checkConnectedHeartbeat(network::Server &server) {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = server.getHeartbeatClient();
+    std::unordered_map<std::size_t, std::size_t> coressClient = server.getCorrespondence();
+    std::unordered_map<std::size_t, bool> clientStillHere = server.getClientStillHere();
     auto now = std::chrono::steady_clock::now();
     auto it = lastSeenClient.begin();
     std::size_t disconnectedPlayerEntity = 0;
@@ -61,11 +63,14 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
             server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
             it = lastSeenClient.erase(it);
+            std::size_t _ownId = coressClient[it->first];
+            clientStillHere[_ownId] = false;
         } else {
             it++;
         }
     }
     server.setHeartBeatmMap(lastSeenClient);
+    server.setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
 }
 
