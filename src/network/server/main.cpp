@@ -62,9 +62,9 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
             server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
-            it = lastSeenClient.erase(it);
             std::size_t _ownId = coressClient[it->first];
             clientStillHere[_ownId] = false;
+            it = lastSeenClient.erase(it);
         } else {
             it++;
         }
