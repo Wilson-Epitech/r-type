@@ -20,10 +20,6 @@ BUILD_DIR="build"
 #  mesa-libGLU-devel (a voir)
 #  pkg-config (a voir)
 
-
-
-
-
 echo "Checking vcpkg Configuration..."; \
 if [ ! -d "$BUILD_DIR/vcpkg" ]; then \
 		echo "Cloning vcpkg directory..."; \

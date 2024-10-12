@@ -17,7 +17,18 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     )
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     target_link_libraries(rtype_client
-        PRIVATE GL m pthread dl rt X11
+        PRIVATE GL
+        PRIVATE m
+        PRIVATE pthread
+        PRIVATE dl
+        PRIVATE rt
+        PRIVATE X11
+    )
+elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    target_link_libraries(rtype_client
+        PRIVATE opengl32
+        PRIVATE gdi32
+        PRIVATE winmm
     )
 else()
     message(FATAL_ERROR "Unsupported OS")

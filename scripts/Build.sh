@@ -4,7 +4,7 @@ set -e
 
 BUILD_DIR="build"
 
-./scripts/BuildUnix.sh
+./scripts/CheckDependencies.sh
 
 rm -rf $BUILD_DIR/cmaketmp
 
