@@ -11,7 +11,10 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define CYAN CLITERAL(Color){120, 200, 225, 255}
+#define CYAN                                                                                                                               \
+    CLITERAL(Color) {                                                                                                                      \
+        120, 200, 225, 255                                                                                                                 \
+    }
 
 namespace ecs {
     namespace system {

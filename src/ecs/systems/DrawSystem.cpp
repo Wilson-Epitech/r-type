@@ -48,11 +48,13 @@ void ecs::system::DrawSystem::drawLife(Registry &reg, SparseArray<component::Dra
     lifeBarSize = ((drawables[index]->spriteRect.width * (float)lifes[index]->nbLives / lifes[index]->maxLives) *
                    (spriteInfos[index]->scaleFactor / screenRatio.x)) *
                   2 / 3;
-    DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 4) / screenRatio.x, positions[index]->y / screenRatio.y,
+    DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x, positions[index]->y / screenRatio.y,
                   lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, RED);
-    DrawRectangleLines((positions[index]->x + drawables[index]->spriteRect.width / 4) / screenRatio.x, positions[index]->y / screenRatio.y,
-                       (drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3,
-                       (LIVES_BAR_HEIGHT + 1) / screenRatio.y, RED);
+    if (LIVES_BAR_HEIGHT / screenRatio.y > 3)
+        DrawRectangleLines((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x,
+                           positions[index]->y / screenRatio.y,
+                           (drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3,
+                           (LIVES_BAR_HEIGHT + 1) / screenRatio.y, RED);
 }
 
 void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos) {

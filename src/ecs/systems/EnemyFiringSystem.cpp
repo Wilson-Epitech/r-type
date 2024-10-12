@@ -10,9 +10,9 @@
 void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
-    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
-    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
 

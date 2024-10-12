@@ -94,8 +94,8 @@ namespace ecs {
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                        scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
-                        color.b == other.color.b);
+                        scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
+                        color.g == other.color.g && color.b == other.color.b);
             }
         };
 

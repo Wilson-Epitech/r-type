@@ -12,10 +12,10 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    std::chrono::_V2::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-    static std::vector<std::pair<std::size_t, std::chrono::_V2::steady_clock::time_point>> timer;
+    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
     static bool isFirstSpawn = true;
-    std::chrono::_V2::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     float spawnInterval = 0;
     bool isTimerSet = false;
