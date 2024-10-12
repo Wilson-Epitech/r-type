@@ -24,14 +24,14 @@ Our game engine is composed of three main elements in the ECS architecture:
 
 ## Components
 > [!NOTE] 
-> Every components that are send by/to the server have an overload operator == to check if the component as be modify
+> Every components that are sent by/to the server have an overload operator "==" to check if the component has been modified
 
 <div id='Components'/>
 
 **Components** are structures used to store the data of an entity. Below is an overview of the available components:
 
 ### Type and Name
-There is two enum in the Components.hpp
+There is two enum in the Components.hpp.
 The first one is the EntityType
 ```hpp
 enum EntityType {
@@ -139,7 +139,7 @@ enum ComponentName {
    };
    ```
 6. **SoundEffect**
-   - Store a sound and and his characteristic
+   - Store a sound and and its characteristics
    ```c++
    struct SoundEffect {
       std::string soundPath;
@@ -162,7 +162,7 @@ enum ComponentName {
    };
    ```
 8. **SpriteSize**
-   - Store the size of the sprite
+   - Store the sprite's size
    ```c++
    struct SpriteSize {
       float spriteWidth = 0, spriteHeight = 0;
@@ -188,7 +188,7 @@ enum ComponentName {
    };
    ```
 11. **BackgroundMusic**
-   - Define the background music (or game music) and store the volume and if the music has to be played
+   - Define the background music (or game music), store the volume and if the music has to be played
    ```c++
    struct BackgroundMusic {
       std::string musicPath;
@@ -207,18 +207,18 @@ enum ComponentName {
 <div id='AddComponents'/>
 
 ## How to add a new component
-To add a new component you have to create a new structure like the other one.<br>
+To add a new component you have to create a new structure like the other ones.<br>
 There is 2 case when adding a component :
-* The component has to be send between server and client
-* The component wont be send between server and client
+* The component has to be sent between the server and the client
+* The component won't be sent between the server and the client
 
-### 1st case the component wont be send between server and client
-In this case you just have to build your system and use your component (pretty easy)
+### 1st case the component won't be sent between the server and the client
+In this case you just have to build your system and use your component (pretty easy).
 
-### 2nd case the component has to be send between server and client
-In this case you have to do multiple things
+### 2nd case the component has to be sent between the server and the client
+In this case you have to do multiple things.
 
-First you have to add a ligne `areComponentsEquals` in the overload operator in `EntityData` structure with your component :
+First you have to add the line `areComponentsEquals` in the overload operator in `EntityData` structure with your component :
 ```c++
 bool operator==(const EntityData &other) const {
     if (entityID == other.entityID && name == other.name) {
@@ -230,22 +230,21 @@ bool operator==(const EntityData &other) const {
     return false;
 }
 ```
-You also have to add the prototype of `<<` and `>>` at the end of the file<br>
-Now you have to go in Components.cpp and add your overload operator, one for the serialization and one for deserialization
+You also have to add the prototype of `<<` and `>>` at the end of the file.<br>
+Now you have to go in Components.cpp and add your overload operator, one for the serialization and one for deserialization.
 ```c++
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 ```
-And
 ```c++
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 ```
-The order of the call must be the same<br>
-You will also see two biger overload operator that don't take a component but a EntityData<br>
-in those operator you have to add a if statement with a call of the lib function to serialization or deserialization
+The variables called in the two operators must be in the same position.<br>
+You will also see two bigger overload operator that don't take a component but a EntityData.<br>
+In those operators you have to add an if statement with a call of the lib function to serialize or deserialize.
 ```c++
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
@@ -282,15 +281,15 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 **Systems** contain the game logic and are responsible for manipulating entities via their components.
 
 ### How to add a system
-To add a system you have to create a new system that will made acction or modification with components
+To add a system you have to create a new system that will make the action or modification on the components.
 
-A new system has to have a hpp and cpp<br>
+A new system has to have a .hpp and .cpp<br>
 In the hpp file you must have those include :
 ```hpp
 #include "Components.hpp"
 #include "ISystem.hpp"
 ```
-And the Class of your system must be like this one (you can add as many private function as you want):
+And the class of your system must be like this one (you can add as many private function as you want):
 ```hpp
 namespace ecs {
     namespace system {
@@ -304,7 +303,7 @@ namespace ecs {
     }
 }
 ```
-In your cpp file you must have the overload operator, this is a basic template of an overloaded operator :
+In your cpp file you must have the overload operator, this is a basic template for an overloaded operator :
 ```c++
 void ecs::system::LifeSystem::operator()(Registry &reg) {
     SparseArray<component::ComponentName> &yourComponentArray = reg.getComponents<component::ComponentName>();
@@ -317,21 +316,21 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
     }
 }
 ```
-The last thing to do is to register the component and the system in the game (see the game documentation)
+The last thing to do is to register the component and the system in the game (see the game documentation).
 
 <div id='Registry'/>
 
 ## Registry
 
-The Registry is basicaly where the entities are stored
-The Registry have a lot of function that allow us to do actions on our entites
+The Registry is basicaly where the entities are stored.<br>
+The Registry has a lot of function that allow us to do actions on our entites
 There is the different command that you can do with the Registry :
    - `entity_t spawnEntity()` : use to create a new entity and return the entity
    - `killEntity(entity_t const &e)` : use to kill an entity
    - `entity_t entityFromIndex(std::size_t idx)` : return an entity by his index in the list of entities
    - `bool entityExist(const entity_t &ent)` : check if an entity exist and return a bool
    - `addPlayer(std::size_t clientId, entity_t entity)` : add a player to a client id
-   - `std::size_t getPlayerByClientId(std::size_t clientId)` : use to get a plyser entity by the ID of a client
+   - `std::size_t getPlayerByClientId(std::size_t clientId)` : use to get a player entity by the ID of a client
    - `std::map<std::size_t, entity_t> getPlayers()` : return the map of all player assoiated to a client
    - `removeComponent(entity_t const &from)` : remove a component that as been registered
    - `SparseArray<Component> &registerComponent()` : register a component
