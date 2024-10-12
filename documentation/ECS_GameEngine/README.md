@@ -14,6 +14,16 @@ Our game engine is composed of three main elements in the ECS architecture:
 - **Components**: Store the data associated with entities.
 - **Systems**: Contain the logic to manipulate entities through their components.
 
+## Sumary
+
+1. [Components](#Components)
+2. [How to add a new component](#AddComponents)
+3. [Systems](#Systems)
+4. [Registry](#Registry)
+5. [ECS Architecture](#ECSArchitecture)
+
+<div id='Components'/>
+
 ## Components
 
 **Components** are structures used to store the data of an entity. Below is an overview of the available components:
@@ -194,6 +204,7 @@ enum ComponentName {
       }
    };
    ```
+<div id='AddComponents'/>
 
 ## How to add a new component
 To add a new component you have to create a new structure like the other one.<br>
@@ -264,6 +275,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 }
 ```
 
+<div id='Systems'/>
+
 ## Systems
 
 **Systems** contain the game logic and are responsible for manipulating entities via their components.
@@ -306,6 +319,8 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
 ```
 The last thing to do is to register the component and the system in the game (see the game documentation)
 
+<div id='Registry'/>
+
 ## Registry
 
 The Registry is basicaly where the entities are stored
@@ -325,6 +340,8 @@ There is the different command that you can do with the Registry :
    - `runSystems()` : run every system that have been added
    - `addInitPlayerSystem(Function const &f)` : take a system in parameter, initialise a new player
    - `runInitPlayerSystem()` : run the initialisation of the player
+
+<div id='ECSArchitecture'/>
 
 ## ECS Architecture
 
