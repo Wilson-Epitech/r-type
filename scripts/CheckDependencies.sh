@@ -4,6 +4,26 @@ set -e
 
 BUILD_DIR="build"
 
+# check les dépendencies:
+
+# fedora: (faire des txt dependencies list) par os et ajouter ça:
+# dnf install:
+#  gcc
+#  g++
+#  cmake
+#  glfw
+#  glfw-devel
+#  libXinerama-devel
+#  libXcursor-devel
+#  libXrandr-devel
+#  libX11-devel
+#  mesa-libGLU-devel (a voir)
+#  pkg-config (a voir)
+
+
+
+
+
 echo "Checking vcpkg Configuration..."; \
 if [ ! -d "$BUILD_DIR/vcpkg" ]; then \
 		echo "Cloning vcpkg directory..."; \
