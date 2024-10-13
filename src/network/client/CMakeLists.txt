@@ -5,7 +5,7 @@ set(CLIENT_SRC
 
 add_executable(rtype_client ${CLIENT_SRC})
 
-target_link_libraries(rtype_client PRIVATE rtype_lib raylib asio glfw)
+target_link_libraries(rtype_client PRIVATE rtype_lib)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_link_libraries(rtype_client
