@@ -79,21 +79,21 @@ class Lib {
             if (playerIndex == 0 || !shootings[playerIndex]) {
                 continue;
             }
-            // if (lastPlayersValues.size() >= turn + 1) {
-            //     if (lastPlayersValues[turn] != shootings[playerIndex].value()) {
-            //         playerData.entityID = playerIndex;
-            //         playerData.component = shootings[playerIndex].value();
-            //         playerData.name = name;
-            //         playersData.push_back(playerData);
-            //         lastPlayersValues[turn] = shootings[playerIndex].value();
-            //     }
-            // } else {
-            //     playerData.entityID = playerIndex;
-            //     playerData.component = shootings[playerIndex].value();
-            //     playerData.name = name;
-            //     playersData.push_back(playerData);
-            //     lastPlayersValues.push_back(shootings[playerIndex].value());
-            // }
+            if (lastPlayersValues.size() >= turn + 1) {
+                if (!(lastPlayersValues[turn] == shootings[playerIndex].value())) {
+                    playerData.entityID = playerIndex;
+                    playerData.component = shootings[playerIndex].value();
+                    playerData.name = name;
+                    playersData.push_back(playerData);
+                    lastPlayersValues[turn] = shootings[playerIndex].value();
+                }
+            } else {
+                playerData.entityID = playerIndex;
+                playerData.component = shootings[playerIndex].value();
+                playerData.name = name;
+                playersData.push_back(playerData);
+                lastPlayersValues.push_back(shootings[playerIndex].value());
+            }
             turn++;
         }
         return playersData;
