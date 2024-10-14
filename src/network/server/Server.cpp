@@ -139,7 +139,6 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
             if (!_corresOwnPlayerId[clientId])
                 _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
-            std::cout << "data:" << message << std::endl;
             deserializeMessage(message);
         }
         startReceiving();
