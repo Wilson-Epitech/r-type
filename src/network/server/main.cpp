@@ -50,8 +50,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
             continue;
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-                server.sendToAClient(clientId, newEntititiesSerialized, 3);
+            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }
 }
