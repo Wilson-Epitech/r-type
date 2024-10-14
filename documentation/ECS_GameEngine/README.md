@@ -251,11 +251,11 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
     iss >> entityData.entityID;
     iss >> entityData.name;
     if (entityData.name == ecs::ComponentName::POSITION)
-        Lib::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        Lib::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        Lib::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
 }
 ```
 And
@@ -265,11 +265,11 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
     oss << entityData.entityID << ' ';
     oss << entityData.name << ' ';
     if (entityData.name == ecs::ComponentName::POSITION)
-        Lib::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        Lib::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        Lib::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 ```

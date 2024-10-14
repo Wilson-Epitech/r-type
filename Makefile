@@ -8,9 +8,10 @@
 CXX = g++
 
 CXXFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -g -Wall -Wextra
-CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 			\
-			-iquote src/gameEngine -iquote src/ecs -iquote src/ecs/components 	\
-			-iquote src/ecs/systems	-iquote src/server -iquote client/			\
+CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 								\
+			-iquote src/gameEngine -iquote src/ecs -iquote src/ecs/components 						\
+			-iquote src/ecs/systems	-iquote src/network/server -iquote src/network/client			\
+			-iquote src/network/handleData 															\
 
 SRC = 	src/gameEngine/GameEngine.cpp									\
 		src/ecs/components/Components.cpp								\
@@ -27,6 +28,7 @@ SRC = 	src/gameEngine/GameEngine.cpp									\
     	src/ecs/systems/SoundSystem.cpp									\
     	src/ecs/systems/SpriteAnimationSystem.cpp						\
     	src/ecs/systems/MusicSystem.cpp									\
+		src/network/handleData/HandleData.cpp 							\
     	lib/Lib.cpp														\
 
 

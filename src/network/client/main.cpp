@@ -25,17 +25,17 @@ static void handleCtrlC(int signal) {
 }
 
 void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, std::list<DataToSend> &lastDataReceivedList) {
-    DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
+    DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg);
     static bool hasSendWorldSet = 0;
 
     for (auto lastDataReceived : lastDataReceivedList)
-        Lib::deleteSimilarDataLines(data, lastDataReceived);
+        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
     if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
         client.sendMessage("World set", 3);
         hasSendWorldSet = true;
     }
     if (!data.empty()) {
-        std::string serialized = Lib::serializeEntityDataVector(data);
+        std::string serialized = network::HandleData::serializeEntityDataVector(data);
         client.sendMessage(serialized, 3);
     }
 }
@@ -88,7 +88,7 @@ int main(int ac, char **av) {
                     }
                     for (auto &entity : dataReceived.entitiesData) {
                         if (entity.entityID != 0) {
-                            Lib::updateEntities(reg, entity);
+                            network::HandleData::updateEntities(reg, entity);
                         }
                     }
                     lastDataReceivedList = dataReceivedList;

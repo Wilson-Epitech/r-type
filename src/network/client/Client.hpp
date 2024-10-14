@@ -8,7 +8,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "Lib.hpp"
+#include "HandleData.hpp"
 #include <array>
 #include <asio.hpp>
 #include <string>

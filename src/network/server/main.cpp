@@ -32,8 +32,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
             reg.runInitPlayerSystem();
-            DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
-            std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
+            DataToSend allEntitiesData = network::HandleData::fillAllEntitiesDataToSend(reg);
+            std::string allEntititiesSerialized = network::HandleData::serializeEntityDataVector(allEntitiesData);
             previousLastConnectedClientId = lastConnectedClientId;
             server.sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
@@ -44,13 +44,13 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
     if (connectedClientsSize != previousConnectedClientsSize)
         previousConnectedClientsSize = connectedClientsSize;
 
-    DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
+    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
             server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }
@@ -110,7 +110,7 @@ int main(int ac, char **av) {
             bool dataHasBeenUsed = server.getDataHasBeenUsed();
             if (!dataReceived.empty() && !dataHasBeenUsed) {
                 for (auto &entity : dataReceived.entitiesData) {
-                    Lib::updateEntities(reg, entity);
+                    network::HandleData::updateEntities(reg, entity);
                 }
                 lastDataReceived = dataReceived;
                 server.setDataHasBeenUsed(true);

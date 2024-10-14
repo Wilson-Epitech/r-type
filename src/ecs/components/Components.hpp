@@ -8,13 +8,12 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
+#include "Lib.hpp"
 #include <any>
 #include <list>
 #include <memory>
-#include <raylib.h>
 #include <sstream>
 #include <string>
-#include <vector>
 
 namespace ecs {
     enum EntityType {
@@ -123,9 +122,9 @@ namespace ecs {
         struct EnemySpawn {
             float timeBeforeSpawn;
             int waveSize;
-            int maxSpawnWidth = 1920;
+            int maxSpawnWidth = Lib::getScreenWidth();
             int minSpawnWidth = 0;
-            int maxSpawnHeight = 1080;
+            int maxSpawnHeight = Lib::getScreenHeight();
             int minSpawnHeight = 0;
         };
 

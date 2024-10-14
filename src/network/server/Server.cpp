@@ -86,7 +86,7 @@ void network::Server::startReceiving() {
 void network::Server::deserializeMessage(const std::string message) {
     _data.deadEntities.clear();
     _data.entitiesData.clear();
-    _data = Lib::deserializeEntityDataVector(message);
+    _data = network::HandleData::deserializeEntityDataVector(message);
     _dataHasBeenUsed = false;
 }
 
