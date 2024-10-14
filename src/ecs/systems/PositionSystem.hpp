@@ -6,11 +6,11 @@
 */
 
 /**
-* @file PositionSystem.hpp
-* @brief Declares the system responsible for updating the position of entities in the game engine ECS.
-* This file contains the `PositionSystem` class, which handles updating the position of entities based
-* on their velocity. It ensures that entities move correctly within the game world by adjusting their positions.
-*/
+ * @file PositionSystem.hpp
+ * @brief Declares the system responsible for updating the position of entities in the game engine ECS.
+ * This file contains the `PositionSystem` class, which handles updating the position of entities based
+ * on their velocity. It ensures that entities move correctly within the game world by adjusting their positions.
+ */
 
 #ifndef POSITIONSYSTEM_HPP_
 #define POSITIONSYSTEM_HPP_
@@ -22,36 +22,35 @@ namespace ecs {
     namespace system {
 
         /**
-        * @class PositionSystem
-        * @brief System responsible for updating entity positions based on their velocity.
-        * The `PositionSystem` adjusts the position of each entity in the game based on its velocity component.
-        * It ensures that entities are moved correctly, and in the case of player-controlled entities, 
-        * it includes additional logic for handling player movement constraints.
-        */
+         * @class PositionSystem
+         * @brief System responsible for updating entity positions based on their velocity.
+         * The `PositionSystem` adjusts the position of each entity in the game based on its velocity component.
+         * It ensures that entities are moved correctly, and in the case of player-controlled entities,
+         * it includes additional logic for handling player movement constraints.
+         */
         class PositionSystem : virtual public ecs::system::ISystem {
           public:
             PositionSystem() = default;
             ~PositionSystem() = default;
 
             /**
-            * @brief Executes the position update system.
-            * This function processes the position and velocity components of entities, updating
-            * their positions accordingly. It applies logic for both general entities and player-controlled entities.
-            * @param reg The ECS registry containing entities and their components.
-            */
+             * @brief Executes the position update system.
+             * This function processes the position and velocity components of entities, updating
+             * their positions accordingly. It applies logic for both general entities and player-controlled entities.
+             * @param reg The ECS registry containing entities and their components.
+             */
             void operator()(Registry &reg) override;
 
           private:
-
             /**
-            * @brief Handles the position update for player-controlled entities.
-            * This method ensures that the player entities' positions are updated correctly based on their velocity
-            * while considering additional constraints, such as staying within the screen bounds.
-            * @param playerIndex The index of the player entity.
-            * @param reg The ECS registry containing entities and their components.
-            * @return true If the player's position was updated successfully.
-            * @return false If the player's position update was not necessary.
-            */
+             * @brief Handles the position update for player-controlled entities.
+             * This method ensures that the player entities' positions are updated correctly based on their velocity
+             * while considering additional constraints, such as staying within the screen bounds.
+             * @param playerIndex The index of the player entity.
+             * @param reg The ECS registry containing entities and their components.
+             * @return true If the player's position was updated successfully.
+             * @return false If the player's position update was not necessary.
+             */
             bool handlePlayerPosition(std::size_t playerIndex, Registry &reg);
         };
     }

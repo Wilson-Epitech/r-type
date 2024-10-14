@@ -6,12 +6,12 @@
 */
 
 /**
-* @file RtypeGameServer.hpp
-* @brief Declares the `RtypeGameServer` class for managing the server-side logic of the R-Type game.
-* This file defines the `RtypeGameServer` class, which is responsible for handling all the server-side
-* operations, including entity spawning, component registration, system initialization, and maintaining
-* the game state.
-*/
+ * @file RtypeGameServer.hpp
+ * @brief Declares the `RtypeGameServer` class for managing the server-side logic of the R-Type game.
+ * This file defines the `RtypeGameServer` class, which is responsible for handling all the server-side
+ * operations, including entity spawning, component registration, system initialization, and maintaining
+ * the game state.
+ */
 
 #ifndef RTYPEGAMESERVER_HPP_
 #define RTYPEGAMESERVER_HPP_
@@ -69,55 +69,55 @@
 namespace game {
 
     /**
-    * @class RtypeGameServer
-    * @brief Manages the server-side logic of the R-Type game.
-    * The `RtypeGameServer` class is responsible for handling all server-side operations, including entity
-    * spawning, component registration, system initialization, and maintaining the game state for players.
-    */
+     * @class RtypeGameServer
+     * @brief Manages the server-side logic of the R-Type game.
+     * The `RtypeGameServer` class is responsible for handling all server-side operations, including entity
+     * spawning, component registration, system initialization, and maintaining the game state for players.
+     */
     class RtypeGameServer : virtual public game::AGame {
       public:
         /**
-        * @brief Constructs the RtypeGameServer and initializes the game.
-        * @param gameName The name of the game, used for server-side management.
-        */
+         * @brief Constructs the RtypeGameServer and initializes the game.
+         * @param gameName The name of the game, used for server-side management.
+         */
         RtypeGameServer(const std::string gameName = "R-Type");
         ~RtypeGameServer() = default;
 
       private:
         /**
-        * @brief Manages the game state and updates the registry accordingly.
-        * This method is responsible for controlling the flow of the game and ensuring the
-        * game state remains in sync with server-side operations.
-        * @param reg The ECS registry that contains all entities and components.
-        * @return The current game status.
-        */
+         * @brief Manages the game state and updates the registry accordingly.
+         * This method is responsible for controlling the flow of the game and ensuring the
+         * game state remains in sync with server-side operations.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return The current game status.
+         */
         GameStatus gameState(ecs::Registry &reg) override;
 
         /**
-        * @brief Spawns the necessary entities for the R-Type game.
-        * This method creates entities such as the player, player shots, enemies, bosses, background, and background music.
-        */
+         * @brief Spawns the necessary entities for the R-Type game.
+         * This method creates entities such as the player, player shots, enemies, bosses, background, and background music.
+         */
         void spawnEntities() override;
 
         /**
-        * @brief Registers components for the game entities.
-        * This method registers all the required components like position, velocity, type, life, and others
-        * in the ECS registry.
-        */
+         * @brief Registers components for the game entities.
+         * This method registers all the required components like position, velocity, type, life, and others
+         * in the ECS registry.
+         */
         void registerComponents() override;
 
         /**
-        * @brief Adds components to the created entities.
-        * This method assigns the registered components (e.g., velocity, sprite info, shooting, sound effects)
-        * to the corresponding game entities.
-        */
+         * @brief Adds components to the created entities.
+         * This method assigns the registered components (e.g., velocity, sprite info, shooting, sound effects)
+         * to the corresponding game entities.
+         */
         void addComponentsToEntities() override;
 
         /**
-        * @brief Adds the required systems to the ECS registry.
-        * This method registers the systems that control various aspects of the game such as movement, collision detection,
-        * spawning enemies, shooting, and other game mechanics.
-        */
+         * @brief Adds the required systems to the ECS registry.
+         * This method registers the systems that control various aspects of the game such as movement, collision detection,
+         * spawning enemies, shooting, and other game mechanics.
+         */
         void addSystemsToRegistry() override;
     };
 }
