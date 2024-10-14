@@ -13,6 +13,7 @@
 #include <asio.hpp>
 #include <string>
 #include <thread>
+#include <list>
 
 #define UPDATE_CLIENT 0.02
 #define MAXMESSAGE 255
@@ -24,8 +25,9 @@ namespace network {
         ~Client();
         void sendMessage(const std::string &message, uint8_t messageType);
         bool getIsRunning();
-        DataToSend getData();
+        std::list<DataToSend> getData();
         std::size_t getPlayerId();
+        void clearData();
 
       private:
         void msgFromServer();
@@ -41,7 +43,7 @@ namespace network {
         uint8_t _messageId;
         uint16_t _len;
 
-        DataToSend _data;
+        std::list<DataToSend> _data;
         std::size_t _playerId;
     };
 };

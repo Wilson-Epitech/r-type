@@ -68,11 +68,11 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
             server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
-            auto it2 = coressClient.find(it->first);
-            if (it2 == coressClient.end())
-                throw Error("ah");
+            auto corresponenceFound = coressClient.find(it->first);
+            if (corresponenceFound == coressClient.end())
+                throw Error("Correspondance no set yet");
             it = lastSeenClient.erase(it);
-            std::size_t _ownId = it2->second;
+            std::size_t _ownId = corresponenceFound->second;
             clientStillHere[_ownId] = false;
         } else {
             it++;
