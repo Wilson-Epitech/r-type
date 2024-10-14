@@ -39,7 +39,7 @@ void RunGame::runServer() {
             Lib::updateEntitiesData(dataReceived, _reg);
             _server->setDataHasBeenUsed(true);
         }
-        if (_server->getNbClients() > 0) {
+        if (_server->getStillAliveClientNumber() > 0) {
             _server->sendUpdatedData(_reg);
             _reg.clearActualTurnNewEntities();
             _reg.clearActualTurnDeadEntities();
@@ -52,8 +52,8 @@ void RunGame::runServer() {
 }
 
 void RunGame::runClient() {
-    static DataToSend lastDataReceived;
-    DataToSend dataReceived;
+    static std::list<DataToSend> lastDataReceivedList;
+    std::list<DataToSend> dataReceivedList;
     std::map<std::size_t, entity_t> player;
     std::size_t playerId = 0;
 
@@ -66,17 +66,22 @@ void RunGame::runClient() {
             continue;
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        dataReceived = _client->getData();
+        dataReceivedList = _client->getData();
+        _client->clearData();
         player = _reg.getPlayers();
         playerId = _client->getPlayerId();
+
         if (playerId != 0 && player.size() == 0)
             _reg.addPlayer(0, playerId);
-        if (!dataReceived.empty() && !(lastDataReceived == dataReceived)) {
-            Lib::updateDeadEntities(dataReceived, _reg);
-            Lib::updateEntitiesData(dataReceived, _reg);
-            lastDataReceived = dataReceived;
+        for (auto dataReceived : dataReceivedList) {
+            if (!dataReceived.empty()) {
+                Lib::updateDeadEntities(dataReceived, _reg);
+                Lib::updateEntitiesData(dataReceived, _reg);
+            }
+            lastDataReceivedList = dataReceivedList;
         }
-        _client->sendUpdatedData(_reg, lastDataReceived);
+
+        _client->sendUpdatedData(_reg, lastDataReceivedList);
         _reg.clearActualTurnNewEntities();
         _reg.clearActualTurnDeadEntities();
         _reg.runSystems();

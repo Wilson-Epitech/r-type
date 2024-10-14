@@ -9,7 +9,8 @@
 #include "RunGame.hpp"
 #include <iostream>
 
-int main(int ac, char **av) {
+int main(int ac, char** av)
+{
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
         std::cerr << "Usage: ./client [ip] [port]" << std::endl;
         return -1;

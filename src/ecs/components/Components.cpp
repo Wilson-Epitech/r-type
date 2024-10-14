@@ -30,7 +30,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
-    oss << life.nbLives;
+    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect) {
@@ -100,7 +100,7 @@ void operator>>(std::istringstream &iss, ecs::component::Type &type) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Life &life) {
-    iss >> life.nbLives;
+    iss >> life.nbLives >> life.displayLife >> life.maxLives;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect) {

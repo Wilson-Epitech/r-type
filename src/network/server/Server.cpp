@@ -14,8 +14,6 @@ network::Server::Server(asio::io_context &io_context, std::string host, std::siz
       _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
-    for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
-        _areClientsWorldSet[i] = false;
 }
 
 network::Server::~Server() {
@@ -56,6 +54,28 @@ std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::
 
 void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
     _lastAliveClient = map;
+}
+
+std::unordered_map<std::size_t, bool> network::Server::getClientStillHere() {
+    return _isClientStillHere;
+}
+
+void network::Server::setClientStillHere(std::unordered_map<std::size_t, bool> map) {
+    _isClientStillHere = map;
+}
+
+std::unordered_map<std::size_t, std::size_t> network::Server::getCorrespondence() {
+    return _corresOwnPlayerId;
+}
+
+std::size_t network::Server::getStillAliveClientNumber() {
+    std::size_t numberAlive = 0;
+
+    for (auto it = _isClientStillHere.begin(); it != _isClientStillHere.end(); it++) {
+        if (it->second == true)
+            numberAlive++;
+    }
+    return numberAlive;
 }
 
 void network::Server::startReceiving() {
@@ -112,13 +132,14 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         std::string aliveMessage = "Alive: ";
 
         if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient - 1] = true;
+            _areClientsWorldSet[talkingClient] = true;
         } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
             std::cerr << "Received heartbeat from client " << clientId << std::endl;
+            if (!_corresOwnPlayerId[clientId])
+                _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
-            std::cout << "data:" << message << std::endl;
             deserializeMessage(message);
         }
         startReceiving();
@@ -190,7 +211,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
             return it.first;
     }
 
-    if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
+    if (getStillAliveClientNumber() >= NB_CLIENTS_AUTHORIZED) {
         std::string messageToSend = "Could not connect";
         uint8_t messageType = 5;
         uint16_t len = static_cast<uint16_t>(messageToSend.size());
@@ -217,6 +238,8 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
+    _isClientStillHere[_idClient] = true;
+    _areClientsWorldSet[_idClient] = false;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
@@ -226,6 +249,8 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
 
 std::size_t network::Server::checkConnectedHeartbeat() {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = getHeartbeatClient();
+    std::unordered_map<std::size_t, std::size_t> coressClient = getCorrespondence();
+    std::unordered_map<std::size_t, bool> clientStillHere = getClientStillHere();
     auto now = std::chrono::steady_clock::now();
     auto it = lastSeenClient.begin();
     std::size_t disconnectedPlayerEntity = 0;
@@ -234,38 +259,44 @@ std::size_t network::Server::checkConnectedHeartbeat() {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
             sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
+            auto corresponenceFound = coressClient.find(it->first);
+            if (corresponenceFound == coressClient.end())
+                throw Error("Correspondance no set yet");
             it = lastSeenClient.erase(it);
+            std::size_t _ownId = corresponenceFound->second;
+            clientStillHere[_ownId] = false;
         } else {
             it++;
         }
     }
     setHeartBeatmMap(lastSeenClient);
+    setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
 }
 
 void network::Server::sendUpdatedData(ecs::Registry &reg) {
 
-    std::map<std::size_t, asio::ip::udp::endpoint> connectedClients = getConnectedClients();
+    std::unordered_map<std::size_t, bool> connectedClients = getClientStillHere();
 
     static std::size_t previousConnectedClientsSize;
-    std::size_t connectedClientsSize = connectedClients.size();
+    std::size_t connectedClientsSize = getStillAliveClientNumber();
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = getLastConnectedClientId();
     std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
-        if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-             lastConnectedClientId != previousLastConnectedClientId) &&
-            (lastConnectedClientId == clientId)) {
+        if (((connectedClientsSize > previousConnectedClientsSize) &&
+             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
             reg.runInitPlayerSystem();
             DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
-            previousConnectedClientsSize = connectedClientsSize;
             previousLastConnectedClientId = lastConnectedClientId;
             sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
@@ -273,10 +304,15 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
         }
     }
 
+    if (connectedClientsSize != previousConnectedClientsSize)
+        previousConnectedClientsSize = connectedClientsSize;
+
     DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
+        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
             std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
             sendToAClient(clientId, newEntititiesSerialized, 3);
         }
