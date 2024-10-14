@@ -9,7 +9,7 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port) : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {
+network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port) : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -113,6 +113,7 @@ std::size_t network::Client::getPlayerId() {
 void network::Client::heartbeatToServer() {
     while (_isRunning) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        sendMessage("Alive: " + std::to_string(_playerId), 4);
+        if (_playerId != 0)
+            sendMessage("Alive: " + std::to_string(_playerId), 4);
     }
 }

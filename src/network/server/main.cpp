@@ -26,7 +26,7 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
+        if (((connectedClientsSize > previousConnectedClientsSize) &&
              lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
@@ -34,13 +34,15 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
             reg.runInitPlayerSystem();
             DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
-            previousConnectedClientsSize = connectedClientsSize;
             previousLastConnectedClientId = lastConnectedClientId;
             server.sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
                 server.sendToAClient(clientId, allEntititiesSerialized, 3);
         }
     }
+
+    if (connectedClientsSize != previousConnectedClientsSize)
+        previousConnectedClientsSize = connectedClientsSize;
 
     DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
