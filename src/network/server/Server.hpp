@@ -19,44 +19,44 @@
 #define MAXMESSAGE 255
 
 namespace network {
-  class Server {
-    public:
-      Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
-      ~Server();
+    class Server {
+      public:
+        Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
+        ~Server();
 
-      void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
-      void sendToAllClient(const std::string message, uint8_t messageType);
-      std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
-      std::size_t getNbClients();
-      std::size_t getLastConnectedClientId();
-      std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
-      DataToSend getEntityData();
-      bool getDataHasBeenUsed();
-      void setDataHasBeenUsed(bool value);
-      std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
+        void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
+        void sendToAllClient(const std::string message, uint8_t messageType);
+        std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
+        std::size_t getNbClients();
+        std::size_t getLastConnectedClientId();
+        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
+        DataToSend getEntityData();
+        bool getDataHasBeenUsed();
+        void setDataHasBeenUsed(bool value);
+        std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
 
       std::unordered_map<std::size_t, bool> getClientStillHere();
       void setClientStillHere(std::unordered_map<std::size_t, bool>);
       std::unordered_map<std::size_t, std::size_t> getCorrespondence();
       std::size_t getStillAliveClientNumber();
 
-      void setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
+        void setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
 
-    private:
-      void startReceiving();
-      void deserializeMessage(const std::string message);
-      void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
-      void handleSend(const std::error_code &error, std::size_t bytesTransferred);
-      std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
+      private:
+        void startReceiving();
+        void deserializeMessage(const std::string message);
+        void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
+        void handleSend(const std::error_code &error, std::size_t bytesTransferred);
+        std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
 
-      std::thread _ioThread;
-      asio::ip::udp::socket _socket;
-      asio::ip::udp::endpoint _remoteEndpoint;
-      std::array<char, 50000> _receiveBuffer;
+        std::thread _ioThread;
+        asio::ip::udp::socket _socket;
+        asio::ip::udp::endpoint _remoteEndpoint;
+        std::array<char, 50000> _receiveBuffer;
 
-      std::size_t _idClient;
+        std::size_t _idClient;
 
-      asio::thread_pool &_threadPool;
+        asio::thread_pool &_threadPool;
 
       std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients;
       std::unordered_map<std::size_t, bool> _areClientsWorldSet;
@@ -68,12 +68,12 @@ namespace network {
       DataToSend _data;
       bool _dataHasBeenUsed;
 
-      const uint16_t _magicNumber;
-      uint16_t _receivedMagicNbr;
-      uint8_t _messageType;
-      uint8_t _messageId;
-      uint16_t _messageLen;
-  };
+        const uint16_t _magicNumber;
+        uint16_t _receivedMagicNbr;
+        uint8_t _messageType;
+        uint8_t _messageId;
+        uint16_t _messageLen;
+    };
 };
 
 #endif

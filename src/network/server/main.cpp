@@ -50,8 +50,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
             continue;
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-                std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
-                server.sendToAClient(clientId, newEntititiesSerialized, 3);
+            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }
 }
@@ -83,8 +83,7 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
     return disconnectedPlayerEntity;
 }
 
-int main(int ac, char **av)
-{
+int main(int ac, char **av) {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
         std::cerr << "Usage: ./server [ip] [port]" << std::endl;
         return -1;

@@ -9,7 +9,8 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port) : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
+network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port)
+    : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -56,9 +57,11 @@ void network::Client::msgFromServer() {
 
         std::memcpy(&messageType, receiveBuffer.data() + sizeof(receivedMagicNbr), sizeof(messageType));
         std::memcpy(&messageId, receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType), sizeof(messageId));
-        std::memcpy(&messageLen, receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId), sizeof(messageLen));
+        std::memcpy(&messageLen, receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId),
+                    sizeof(messageLen));
 
-        std::string receivedMessage(receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId) + sizeof(messageLen), messageLen);
+        std::string receivedMessage(
+            receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId) + sizeof(messageLen), messageLen);
         std::string newConnectionMessage = "New connection: ";
         std::string playerIdMessage = "playerId:";
         std::string createWorldMessage = "Create World:";
@@ -77,7 +80,7 @@ void network::Client::msgFromServer() {
     }
 }
 
-void network::Client::sendMessage(const std::string& message, uint8_t messageType) {
+void network::Client::sendMessage(const std::string &message, uint8_t messageType) {
     _len = static_cast<uint16_t>(message.size());
     std::vector<char> buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len) + message.size());
 
@@ -85,7 +88,8 @@ void network::Client::sendMessage(const std::string& message, uint8_t messageTyp
     std::memcpy(buffer.data() + sizeof(_magicNumber), &messageType, sizeof(messageType));
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType), &_messageId, sizeof(_messageId));
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_len, sizeof(_len));
-    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len), message.data(), message.size());
+    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len), message.data(),
+                message.size());
 
     if (_messageId >= MAXMESSAGE) {
         _messageId = 0;

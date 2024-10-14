@@ -11,6 +11,8 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
+#define LIVES_BAR_HEIGHT 5
+
 namespace ecs {
     namespace system {
         class DrawSystem : virtual public ecs::system::ISystem {
@@ -32,6 +34,8 @@ namespace ecs {
                                            SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
                                            const std::size_t &index, int j);
             int getNbrRepeatBackground(float spriteSize, int screenSize);
+            void drawLife(Registry &reg, SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
+                          SparseArray<component::Position> &positions, std::size_t index);
         };
     }
 }

@@ -23,11 +23,43 @@ void ecs::system::DrawSystem::operator()(Registry &reg) {
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, spriteInfos[i]->color);
+                drawLife(reg, drawables, spriteInfos, positions, i);
             } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(velocities, drawables, positions, spriteInfos, i);
             }
         }
     }
+}
+
+void ecs::system::DrawSystem::drawLife(Registry &reg, SparseArray<component::Drawable> &drawables,
+                                       SparseArray<component::SpriteInfos> &spriteInfos, SparseArray<component::Position> &positions,
+                                       std::size_t index) {
+    SparseArray<component::Life> &lifes = reg.getComponents<component::Life>();
+    Vector2 screenRatio = Lib::getScreenRatio();
+    float lifeBarSize = 0;
+    CLITERAL(Color) lifeColor = GREEN;
+
+    if (lifes.size() < index)
+        return;
+    if (!lifes[index])
+        return;
+    if (!lifes[index]->displayLife)
+        return;
+
+    lifeBarSize = ((drawables[index]->spriteRect.width * (float)lifes[index]->nbLives / lifes[index]->maxLives) *
+                   (spriteInfos[index]->scaleFactor / screenRatio.x)) *
+                  2 / 3;
+    if ((float)lifes[index]->nbLives / (float)lifes[index]->maxLives <= (float)1 / 3)
+        lifeColor = RED;
+    else if ((float)lifes[index]->nbLives / (float)lifes[index]->maxLives <= (float)2 / 3)
+        lifeColor = ORANGE;
+    DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x, positions[index]->y / screenRatio.y,
+                  lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, lifeColor);
+    if (LIVES_BAR_HEIGHT / screenRatio.y > 3)
+        DrawRectangleLines((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x,
+                           positions[index]->y / screenRatio.y,
+                           (drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3,
+                           (LIVES_BAR_HEIGHT + 1) / screenRatio.y, lifeColor);
 }
 
 void ecs::system::DrawSystem::loadTextures(SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos) {

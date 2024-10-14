@@ -18,32 +18,32 @@
 #define MAXMESSAGE 255
 
 namespace network {
-  class Client {
-    public:
-      Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
-      ~Client();
-      void sendMessage(const std::string& message, uint8_t messageType);
-      bool getIsRunning();
-      DataToSend getData();
-      std::size_t getPlayerId();
+    class Client {
+      public:
+        Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
+        ~Client();
+        void sendMessage(const std::string &message, uint8_t messageType);
+        bool getIsRunning();
+        DataToSend getData();
+        std::size_t getPlayerId();
 
-    private:
-      void msgFromServer();
-      void heartbeatToServer();
+      private:
+        void msgFromServer();
+        void heartbeatToServer();
 
-      asio::ip::udp::socket _socket;
-      asio::ip::udp::endpoint _receiveEndpoint;
-      std::thread _receiverThread;
-      std::thread _heartbeatThread;
-      bool _isRunning;
+        asio::ip::udp::socket _socket;
+        asio::ip::udp::endpoint _receiveEndpoint;
+        std::thread _receiverThread;
+        std::thread _heartbeatThread;
+        bool _isRunning;
 
-      const uint16_t _magicNumber;
-      uint8_t _messageId;
-      uint16_t _len;
+        const uint16_t _magicNumber;
+        uint8_t _messageId;
+        uint16_t _len;
 
-      DataToSend _data;
-      std::size_t _playerId;
-  };
+        DataToSend _data;
+        std::size_t _playerId;
+    };
 };
 
 #endif /* !CLIENT_HPP_ */
