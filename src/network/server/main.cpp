@@ -26,8 +26,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (((connectedClientsSize > previousConnectedClientsSize) &&
-             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
+        if (((connectedClientsSize > previousConnectedClientsSize) && lastConnectedClientId != previousLastConnectedClientId) &&
+            (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);

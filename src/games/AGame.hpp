@@ -14,7 +14,7 @@
 namespace game {
     class AGame : virtual public game::IGame {
       public:
-        AGame(const std::string &gameName) : _gameName(gameName) {};
+        AGame(const std::string &gameName) : _gameName(gameName){};
         ~AGame() = default;
 
         GameStatus operator()(ecs::Registry &reg) override {

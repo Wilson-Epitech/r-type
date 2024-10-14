@@ -11,9 +11,9 @@
 #include "HandleData.hpp"
 #include <array>
 #include <asio.hpp>
+#include <list>
 #include <string>
 #include <thread>
-#include <list>
 
 #define UPDATE_CLIENT 0.02
 #define MAXMESSAGE 255

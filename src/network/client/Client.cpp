@@ -69,8 +69,8 @@ void network::Client::msgFromServer() {
 
         if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
             _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
-        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0
-                    && receivedMessage.find(disconnectedClient) == std::string::npos && receivedMessage.length() > 0) {
+        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 &&
+                   receivedMessage.find(disconnectedClient) == std::string::npos && receivedMessage.length() > 0) {
             _data.push_back(network::HandleData::deserializeEntityDataVector(receivedMessage));
         }
         if (receivedMessage == "Could not connect") {
@@ -113,7 +113,7 @@ std::size_t network::Client::getPlayerId() {
 }
 
 void network::Client::clearData() {
-      _data.clear();
+    _data.clear();
 }
 
 void network::Client::heartbeatToServer() {

@@ -8,8 +8,8 @@
 #ifndef LIB_HPP_
 #define LIB_HPP_
 
-#include <vector>
 #include <raylib.h>
+#include <vector>
 
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
