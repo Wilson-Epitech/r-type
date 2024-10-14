@@ -102,9 +102,11 @@ namespace ecs {
         */
         struct Life {
             std::size_t nbLives; ///< Number of lives the entity has
+            bool displayLife = false; ///< Indicates if the life has to be displayed
+            std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
             }
         };
 
@@ -133,8 +135,8 @@ namespace ecs {
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                        scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
-                        color.b == other.color.b);
+                        scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
+                        color.g == other.color.g && color.b == other.color.b);
             }
         };
 

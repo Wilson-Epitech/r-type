@@ -24,12 +24,13 @@ static void handleCtrlC(int signal) {
         exit(0);
 }
 
-void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, DataToSend &lastDataReceived) {
+void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, std::list<DataToSend> &lastDataReceivedList) {
     DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
     static bool hasSendWorldSet = 0;
 
-    Lib::deleteSimilarDataLines(data, lastDataReceived);
-    if (!lastDataReceived.empty() && !hasSendWorldSet) {
+    for (auto lastDataReceived : lastDataReceivedList)
+        Lib::deleteSimilarDataLines(data, lastDataReceived);
+    if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
         client.sendMessage("World set", 3);
         hasSendWorldSet = true;
     }
@@ -39,8 +40,7 @@ void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, Da
     }
 }
 
-int main(int ac, char** av)
-{
+int main(int ac, char **av) {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
         std::cerr << "Usage: ./client [ip] [port]" << std::endl;
         return -1;
@@ -73,25 +73,28 @@ int main(int ac, char** av)
             time0 = std::chrono::steady_clock::now();
             BeginDrawing();
             ClearBackground(RAYWHITE);
-            static DataToSend lastDataReceived;
-            DataToSend dataReceived = client.getData();
+            static std::list<DataToSend> lastDataReceivedList;
+            std::list<DataToSend> dataReceivedList = client.getData();
+            client.clearData();
             std::size_t playerId = client.getPlayerId();
             std::map<std::size_t, entity_t> player = reg.getPlayers();
             if (playerId != 0 && player.size() == 0)
                 reg.addPlayer(0, playerId);
-            if (!dataReceived.empty() && !(lastDataReceived == dataReceived)) {
-              for (auto &deadEntity : dataReceived.deadEntities) {
-                    if (reg.entityExist(deadEntity))
-                        reg.killEntity(deadEntity);
-                }
-                for (auto &entity : dataReceived.entitiesData) {
-                    if (entity.entityID != 0) {
-                        Lib::updateEntities(reg, entity);
+            for (auto dataReceived : dataReceivedList) {
+                if (!dataReceived.empty() && !(lastDataReceivedList == dataReceivedList)) {
+                    for (auto &deadEntity : dataReceived.deadEntities) {
+                        if (reg.entityExist(deadEntity))
+                            reg.killEntity(deadEntity);
                     }
+                    for (auto &entity : dataReceived.entitiesData) {
+                        if (entity.entityID != 0) {
+                            Lib::updateEntities(reg, entity);
+                        }
+                    }
+                    lastDataReceivedList = dataReceivedList;
                 }
-                lastDataReceived = dataReceived;
             }
-            sendUpdatedDataVectorClient(reg, client, lastDataReceived);
+            sendUpdatedDataVectorClient(reg, client, lastDataReceivedList);
             reg.clearActualTurnNewEntities();
             reg.clearActualTurnDeadEntities();
             reg.runSystems();

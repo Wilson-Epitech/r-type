@@ -39,7 +39,6 @@ namespace ecs {
     */
     class Registry {
       public:
-
         /**
         * @brief Creates a new entity and returns its identifier.
         * This method spawns a new entity, either by reusing a previously deleted entity or creating
