@@ -10,7 +10,7 @@
 #include <iostream>
 
 network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port)
-    : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {
+    : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -69,10 +69,8 @@ void network::Client::msgFromServer() {
 
         if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
             _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
-            std::cout << _playerId << std::endl;
-        } else if (receivedMessage.find(disconnectedClient) != std::string::npos) {
-            std::cout << "CLIENT DISOCNNECTED" << std::endl;
-        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 && receivedMessage.length() > 0) {
+        } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0
+                    && receivedMessage.find(disconnectedClient) == std::string::npos && receivedMessage.length() > 0) {
             _data.push_back(Lib::deserializeEntityDataVector(receivedMessage));
         }
         if (receivedMessage == "Could not connect") {
@@ -121,6 +119,7 @@ void network::Client::clearData() {
 void network::Client::heartbeatToServer() {
     while (_isRunning) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        sendMessage("Alive: " + std::to_string(_playerId), 4);
+        if (_playerId != 0)
+            sendMessage("Alive: " + std::to_string(_playerId), 4);
     }
 }
