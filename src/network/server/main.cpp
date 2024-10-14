@@ -13,16 +13,18 @@
 
 void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
-    std::map<std::size_t, asio::ip::udp::endpoint> connectedClients = server.getConnectedClients();
+    std::unordered_map<std::size_t, bool> connectedClients = server.getClientStillHere();
 
     static std::size_t previousConnectedClientsSize;
-    std::size_t connectedClientsSize = connectedClients.size();
+    std::size_t connectedClientsSize = server.getStillAliveClientNumber();
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = server.getLastConnectedClientId();
     std::unordered_map<std::size_t, bool> areClientsWorldSet = server.getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
         if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
              lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
@@ -42,8 +44,10 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
     DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
+        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
                 std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
                 server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
@@ -110,7 +114,7 @@ int main(int ac, char **av)
                 lastDataReceived = dataReceived;
                 server.setDataHasBeenUsed(true);
             }
-            if (server.getNbClients() > 0) {
+            if (server.getStillAliveClientNumber() > 0) {
                 sendUpdatedDataVectorServer(reg, server);
                 reg.clearActualTurnNewEntities();
                 reg.clearActualTurnDeadEntities();

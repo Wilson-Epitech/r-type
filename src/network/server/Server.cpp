@@ -13,8 +13,6 @@ network::Server::Server(asio::io_context &io_context, std::string host, std::siz
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false), _magicNumber(0x9B3D){
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
-    for (std::size_t i = 0; i < NB_CLIENTS_AUTHORIZED; i++)
-        _areClientsWorldSet[i] = false;
 }
 
 network::Server::~Server() {
@@ -133,7 +131,7 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         std::string aliveMessage = "Alive: ";
 
         if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient - 1] = true;
+            _areClientsWorldSet[talkingClient] = true;
         } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
@@ -241,6 +239,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
     _isClientStillHere[_idClient] = true;
+    _areClientsWorldSet[_idClient] = false;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
