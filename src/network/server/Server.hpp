@@ -118,6 +118,11 @@ namespace network {
          */
         void setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
 
+        std::unordered_map<std::size_t, bool> getClientStillHere();
+        void setClientStillHere(std::unordered_map<std::size_t, bool>);
+        std::unordered_map<std::size_t, std::size_t> getCorrespondence();
+        std::size_t getStillAliveClientNumber();
+
       private:
         /**
          * @brief Begins receiving data asynchronously from clients.
@@ -163,6 +168,8 @@ namespace network {
         std::unordered_map<std::size_t, bool> _areClientsWorldSet;        ///< Map indicating whether each client's world is initialized.
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
+        std::unordered_map<std::size_t, bool> _isClientStillHere;
+        std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId;
 
         DataToSend _data;      ///< Data structure containing entity updates from clients.
         bool _dataHasBeenUsed; ///< Flag indicating whether the received data has been processed.
