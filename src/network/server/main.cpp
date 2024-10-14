@@ -13,27 +13,27 @@
 
 void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
-    std::map<std::size_t, asio::ip::udp::endpoint> connectedClients = server.getConnectedClients();
+    std::unordered_map<std::size_t, bool> connectedClients = server.getClientStillHere();
 
     static std::size_t previousConnectedClientsSize;
-    std::size_t connectedClientsSize = connectedClients.size();
+    std::size_t connectedClientsSize = server.getStillAliveClientNumber();
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = server.getLastConnectedClientId();
     std::unordered_map<std::size_t, bool> areClientsWorldSet = server.getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
-        if (((connectedClientsSize > previousConnectedClientsSize) && (lastConnectedClientId == clientId) &&
-             lastConnectedClientId != previousLastConnectedClientId) &&
-            (lastConnectedClientId == clientId)) {
+        if (((connectedClientsSize > previousConnectedClientsSize) &&
+             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
             reg.runInitPlayerSystem();
             DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
             std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
-            previousConnectedClientsSize = connectedClientsSize;
             previousLastConnectedClientId = lastConnectedClientId;
             server.sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
@@ -41,10 +41,15 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
         }
     }
 
+    if (connectedClientsSize != previousConnectedClientsSize)
+        previousConnectedClientsSize = connectedClientsSize;
+
     DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId - 1] && !newEntitiesData.empty()) {
+        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
             std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
             server.sendToAClient(clientId, newEntititiesSerialized, 3);
         }
@@ -53,6 +58,8 @@ void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
 
 std::size_t checkConnectedHeartbeat(network::Server &server) {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = server.getHeartbeatClient();
+    std::unordered_map<std::size_t, std::size_t> coressClient = server.getCorrespondence();
+    std::unordered_map<std::size_t, bool> clientStillHere = server.getClientStillHere();
     auto now = std::chrono::steady_clock::now();
     auto it = lastSeenClient.begin();
     std::size_t disconnectedPlayerEntity = 0;
@@ -61,12 +68,18 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
         if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
             server.sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
+            auto it2 = coressClient.find(it->first);
+            if (it2 == coressClient.end())
+                throw Error("ah");
             it = lastSeenClient.erase(it);
+            std::size_t _ownId = it2->second;
+            clientStillHere[_ownId] = false;
         } else {
             it++;
         }
     }
     server.setHeartBeatmMap(lastSeenClient);
+    server.setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
 }
 
@@ -102,7 +115,7 @@ int main(int ac, char **av) {
                 lastDataReceived = dataReceived;
                 server.setDataHasBeenUsed(true);
             }
-            if (server.getNbClients() > 0) {
+            if (server.getStillAliveClientNumber() > 0) {
                 sendUpdatedDataVectorServer(reg, server);
                 reg.clearActualTurnNewEntities();
                 reg.clearActualTurnDeadEntities();
