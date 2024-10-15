@@ -33,3 +33,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
     message(FATAL_ERROR "Unsupported OS")
 endif()
+
+add_custom_command(TARGET rtype_client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:rtype_client> ${CMAKE_SOURCE_DIR}/rtype_client
+)
