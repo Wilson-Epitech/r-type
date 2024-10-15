@@ -129,9 +129,28 @@ namespace network {
          */
         void setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
 
+        /**
+         * @brief get the map _clientStillHere.
+         * @return map A map containing the list of all client once connected and if they are still connected.
+        */
         std::unordered_map<std::size_t, bool> getClientStillHere();
+
+        /**
+         * @brief set the map _clientStillHere to new values.
+         * @param unordered_map A map containing the list of all client once connected and if they are still connected.
+        */
         void setClientStillHere(std::unordered_map<std::size_t, bool>);
+
+        /**
+         * @brief get the map _corresOwnPlayerId.
+         * @return unordered_map A map containing the list of all client once connected and their ID clients.
+        */
         std::unordered_map<std::size_t, std::size_t> getCorrespondence();
+
+        /**
+         * @brief count the number of client that are still alive.
+         * @return size_t a size_t containing the number of client stll alive.
+        */
         std::size_t getStillAliveClientNumber();
 
       private:
