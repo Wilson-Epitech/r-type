@@ -33,7 +33,7 @@ void RunGame::runServer() {
     while (1) {
         if (!isUpdateTimeElapsed())
             continue;
-        dataReceived = _server->getEntityData();
+        dataReceived = _server->getData();
         dataHasBeenUsed = _server->getDataHasBeenUsed();
         if (!dataReceived.empty() && !dataHasBeenUsed) {
             network::HandleData::updateEntitiesData(dataReceived, _reg);

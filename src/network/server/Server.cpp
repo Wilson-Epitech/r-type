@@ -20,14 +20,6 @@ network::Server::~Server() {
     _ioThread.join();
 }
 
-std::map<std::size_t, asio::ip::udp::endpoint> network::Server::getConnectedClients() {
-    return _connectedClients;
-}
-
-std::size_t network::Server::getNbClients() {
-    return _connectedClients.size();
-}
-
 std::size_t network::Server::getLastConnectedClientId() {
     return _idClient;
 }
@@ -36,7 +28,7 @@ std::unordered_map<std::size_t, bool> network::Server::getAreClientsWorldSet() {
     return _areClientsWorldSet;
 }
 
-DataToSend network::Server::getEntityData() {
+DataToSend network::Server::getData() {
     return _data;
 }
 
