@@ -1,5 +1,4 @@
 set(CLIENT_SRC
-    Client.cpp
     main.cpp
 )
 

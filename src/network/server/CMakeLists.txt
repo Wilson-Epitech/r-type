@@ -1,5 +1,4 @@
 set(SERVER_SRC
-    Server.cpp
     main.cpp
 )
 

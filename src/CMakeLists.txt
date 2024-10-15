@@ -1,5 +1,4 @@
 set(SRC
-    gameEngine/GameEngine.cpp
     games/RtypeGameClient.cpp
     games/RtypeGameServer.cpp
     ecs/components/Components.cpp
@@ -16,6 +15,9 @@ set(SRC
     ecs/systems/SoundSystem.cpp
     ecs/systems/SpriteAnimationSystem.cpp
     ecs/systems/MusicSystem.cpp
+    runGame/RunGame.cpp
+    network/client/Client.cpp
+    network/server/Server.cpp
     ../lib/Lib.cpp
 )
 
@@ -30,5 +32,9 @@ target_include_directories(rtype_lib PUBLIC
     ecs/systems
     gameEngine
     games
+    runGame
+    network/handleData
+    network/server
+    network/client
     ../lib
 )

@@ -6,7 +6,7 @@
 */
 
 #include "Components.hpp"
-#include "Lib.hpp"
+#include "HandleData.hpp"
 
 void operator<<(std::ostringstream &oss, const ecs::component::Position &position) {
     oss << position.x << ' ' << position.y;
@@ -17,8 +17,8 @@ void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocit
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos) {
-    oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath << ' '
-        << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b;
+    oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath
+        << ' ' << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {
@@ -30,7 +30,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
-    oss << life.nbLives;
+    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect) {
@@ -46,21 +46,21 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
     oss << entityData.entityID << ' ';
     oss << entityData.name << ' ';
     if (entityData.name == ecs::ComponentName::POSITION)
-        Lib::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        Lib::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        Lib::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SHOOTING)
-        Lib::serializeEntityCompotent<ecs::component::Shooting>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Shooting>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::LIFE)
-        Lib::serializeEntityCompotent<ecs::component::Life>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Life>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TYPE)
-        Lib::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
-        Lib::serializeEntityCompotent<ecs::component::SoundEffect>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::SoundEffect>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        Lib::serializeEntityCompotent<ecs::component::BackgroundMusic>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusic>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -100,7 +100,7 @@ void operator>>(std::istringstream &iss, ecs::component::Type &type) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Life &life) {
-    iss >> life.nbLives;
+    iss >> life.nbLives >> life.displayLife >> life.maxLives;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect) {
@@ -116,19 +116,19 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
     iss >> entityData.entityID;
     iss >> entityData.name;
     if (entityData.name == ecs::ComponentName::POSITION)
-        Lib::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        Lib::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        Lib::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SHOOTING)
-        Lib::deserializeEntityCompotent<ecs::component::Shooting>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Shooting>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::LIFE)
-        Lib::deserializeEntityCompotent<ecs::component::Life>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Life>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TYPE)
-        Lib::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
-        Lib::deserializeEntityCompotent<ecs::component::SoundEffect>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::SoundEffect>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        Lib::deserializeEntityCompotent<ecs::component::BackgroundMusic>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusic>(iss, entityData.name, entityData.component);
 }
