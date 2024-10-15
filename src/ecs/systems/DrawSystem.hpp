@@ -103,6 +103,15 @@ namespace ecs {
              * @return int The number of repetitions required.
              */
             int getNbrRepeatBackground(float spriteSize, int screenSize);
+
+            /**
+             * @brief Renders the life of an entity.
+             * @param reg The ECS Registry.
+             * @param drawables Array of drawable components for entities.
+             * @param spriteInfos Array of sprite information components for entities.
+             * @param positions Array of position components for entities.
+             * @param index The index of the entity life being drawn.
+             */
             void drawLife(Registry &reg, SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
                           SparseArray<component::Position> &positions, std::size_t index);
         };
