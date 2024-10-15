@@ -13,9 +13,9 @@
 
 namespace network {
     /**
-     * @class HandleData
+     * @class HandleData.hpp
      * @brief Class providing static functions for managing and retrieving game data.
-     * Contains helper methods for data serialization, and ECS component manipulation.
+     * Contains helper methods for data serialization/deserialization, entity data and component manipulation.
      */
     class HandleData {
       public:
@@ -50,12 +50,24 @@ namespace network {
         static DataToSend deserializeEntityDataVector(const std::string &message);
 
         /**
-         * @brief Updates entities in the ECS registry based on the received entity data.
+         * @brief Updates the EntityData of the entity in the ECS registry based on the received entity.
          * @param reg The ECS registry.
          * @param data The entity data to update.
          */
-        static void updateEntities(ecs::Registry &reg, EntityData &data);
+        static void updateEntity(ecs::Registry &reg, EntityData &data);
 
+        /**
+         * @brief Kill entities from the registry based on the entities present in the deadEntities list from DataToSend struct.
+         * @param reg The ECS registry.
+         * @param data The DataToSend struct.
+         */
+        static void updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg);
+        /**
+         * @brief Updates the EntityData of entities in the ECS registry based on the entities present in the vector of entitiesData from DataToSend struct.
+         * @param reg The ECS registry.
+         * @param data The DataToSend struct.
+         */
+        static void updateEntitiesData(DataToSend &dataReceived, ecs::Registry &reg);
         /**
          * @brief Deletes similar lines of data between two DataToSend objects.
          * This function compares two DataToSend objects and removes matching lines from the first.

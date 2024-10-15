@@ -21,7 +21,6 @@
 #include <map>
 #include <memory>
 
-#define UPDATE_SERVER 0.02
 #define NB_CLIENTS_AUTHORIZED 4
 #define MAXMESSAGE 255
 
@@ -111,6 +110,8 @@ namespace network {
          * @return A map of client IDs and their last heartbeat timestamps.
          */
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
+        void sendUpdatedData(ecs::Registry &reg);
+        std::size_t checkConnectedHeartbeat();
 
         /**
          * @brief Updates the heartbeat timestamps for clients.

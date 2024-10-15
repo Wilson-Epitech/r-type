@@ -5,106 +5,24 @@
 ** main
 */
 
-#include "Client.hpp"
 #include "RtypeGameClient.hpp"
-#include <chrono>
-#include <csignal>
+#include "RunGame.hpp"
 #include <iostream>
-
-static sig_atomic_t handleClient(const sig_atomic_t new_status) {
-    static volatile sig_atomic_t status = 1;
-
-    if (new_status != 1)
-        status = new_status;
-    return status;
-}
-
-static void handleCtrlC(int signal) {
-    if (signal == SIGINT)
-        exit(0);
-}
-
-void sendUpdatedDataVectorClient(ecs::Registry &reg, network::Client &client, std::list<DataToSend> &lastDataReceivedList) {
-    DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg);
-    static bool hasSendWorldSet = 0;
-
-    for (auto lastDataReceived : lastDataReceivedList)
-        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
-    if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
-        client.sendMessage("World set", 3);
-        hasSendWorldSet = true;
-    }
-    if (!data.empty()) {
-        std::string serialized = network::HandleData::serializeEntityDataVector(data);
-        client.sendMessage(serialized, 3);
-    }
-}
 
 int main(int ac, char **av) {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
         std::cerr << "Usage: ./client [ip] [port]" << std::endl;
         return -1;
     }
+
     try {
         asio::io_context ioContext;
-        network::Client client(ioContext, av[1], av[2]);
+        std::unique_ptr<network::Client> client = std::make_unique<network::Client>(ioContext, av[1], av[2]);
         game::RtypeGameClient rtype;
-        ecs::Registry &reg = rtype.getRegistry();
-        static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-
-        SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
-        SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        InitWindow(900, 450, rtype.getGameName().c_str());
-        // InitWindow(GetScreenWidth(), GetScreenHeight(), rtype.getGameName().c_str());
-        // MaximizeWindow();
-        InitAudioDevice();
-        signal(SIGINT, handleCtrlC);
-        while (handleClient(1) && !WindowShouldClose()) {
-            if (!client.getIsRunning()) {
-                client.sendMessage("Client disconnected", 2);
-                break;
-            }
-            std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-            std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-
-            if (!(timeElapsed.count() >= Lib::toMilliseconds(UPDATE_CLIENT))) {
-                continue;
-            }
-            time0 = std::chrono::steady_clock::now();
-            BeginDrawing();
-            ClearBackground(RAYWHITE);
-            static std::list<DataToSend> lastDataReceivedList;
-            std::list<DataToSend> dataReceivedList = client.getData();
-            client.clearData();
-            std::size_t playerId = client.getPlayerId();
-            std::map<std::size_t, entity_t> player = reg.getPlayers();
-            if (playerId != 0 && player.size() == 0)
-                reg.addPlayer(0, playerId);
-            for (auto dataReceived : dataReceivedList) {
-                if (!dataReceived.empty() && !(lastDataReceivedList == dataReceivedList)) {
-                    for (auto &deadEntity : dataReceived.deadEntities) {
-                        if (reg.entityExist(deadEntity))
-                            reg.killEntity(deadEntity);
-                    }
-                    for (auto &entity : dataReceived.entitiesData) {
-                        if (entity.entityID != 0) {
-                            network::HandleData::updateEntities(reg, entity);
-                        }
-                    }
-                    lastDataReceivedList = dataReceivedList;
-                }
-            }
-            sendUpdatedDataVectorClient(reg, client, lastDataReceivedList);
-            reg.clearActualTurnNewEntities();
-            reg.clearActualTurnDeadEntities();
-            reg.runSystems();
-            EndDrawing();
-        }
-        CloseWindow();
+        RunGame runGame(client, rtype.getRegistry(), rtype.getGameName(), rtype);
+        runGame.run();
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }
-
-    return 0;
 }

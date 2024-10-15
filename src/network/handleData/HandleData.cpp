@@ -130,7 +130,7 @@ DataToSend network::HandleData::deserializeEntityDataVector(const std::string &m
     return data;
 }
 
-void network::HandleData::updateEntities(ecs::Registry &reg, EntityData &data) {
+void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
     ecs::SparseArray<ecs::component::Drawable> &drawables = reg.getComponents<ecs::component::Drawable>();
 
     if (!reg.entityExist(data.entityID))
@@ -150,6 +150,21 @@ void network::HandleData::updateEntities(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::SoundEffect>(reg, data, ecs::ComponentName::SOUNDEFFECT);
     insertComponent<ecs::component::BackgroundMusic>(reg, data, ecs::ComponentName::MUSIC);
 }
+
+void network::HandleData::updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg) {
+    for (auto &deadEntity : dataReceived.deadEntities) {
+        if (reg.entityExist(deadEntity))
+            reg.killEntity(deadEntity);
+    }
+}
+
+void network::HandleData::updateEntitiesData(DataToSend &dataReceived, ecs::Registry &reg) {
+    for (auto &entity : dataReceived.entitiesData) {
+        if (entity.entityID != 0)
+            updateEntity(reg, entity);
+    }
+}
+
 
 void network::HandleData::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
     for (auto dataToSendIt = dataToSend.deadEntities.begin(); dataToSendIt != dataToSend.deadEntities.end(); dataToSendIt++) {

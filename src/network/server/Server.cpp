@@ -246,3 +246,75 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
 
     return _idClient;
 }
+
+std::size_t network::Server::checkConnectedHeartbeat() {
+    std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = getHeartbeatClient();
+    std::unordered_map<std::size_t, std::size_t> coressClient = getCorrespondence();
+    std::unordered_map<std::size_t, bool> clientStillHere = getClientStillHere();
+    auto now = std::chrono::steady_clock::now();
+    auto it = lastSeenClient.begin();
+    std::size_t disconnectedPlayerEntity = 0;
+
+    while (it != lastSeenClient.end()) {
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
+            sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
+            disconnectedPlayerEntity = it->first;
+            auto corresponenceFound = coressClient.find(it->first);
+            if (corresponenceFound == coressClient.end())
+                throw Error("Correspondance no set yet");
+            it = lastSeenClient.erase(it);
+            std::size_t _ownId = corresponenceFound->second;
+            clientStillHere[_ownId] = false;
+        } else {
+            it++;
+        }
+    }
+    setHeartBeatMap(lastSeenClient);
+    setClientStillHere(clientStillHere);
+    return disconnectedPlayerEntity;
+}
+
+void network::Server::sendUpdatedData(ecs::Registry &reg) {
+
+    std::unordered_map<std::size_t, bool> connectedClients = getClientStillHere();
+
+    static std::size_t previousConnectedClientsSize;
+    std::size_t connectedClientsSize = getStillAliveClientNumber();
+
+    static std::size_t previousLastConnectedClientId;
+    std::size_t lastConnectedClientId = getLastConnectedClientId();
+    std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
+
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
+        std::size_t clientId = it->first;
+        if (((connectedClientsSize > previousConnectedClientsSize) &&
+             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
+            entity_t newPlayer = reg.spawnEntity();
+            reg.addPlayer(lastConnectedClientId, newPlayer);
+            std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
+            reg.runInitPlayerSystem();
+            DataToSend allEntitiesData = network::HandleData::fillAllEntitiesDataToSend(reg);
+            std::string allEntititiesSerialized = network::HandleData::serializeEntityDataVector(allEntitiesData);
+            previousLastConnectedClientId = lastConnectedClientId;
+            sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
+            if (!allEntitiesData.empty())
+                sendToAClient(clientId, allEntititiesSerialized, 3);
+        }
+    }
+
+    if (connectedClientsSize != previousConnectedClientsSize)
+        previousConnectedClientsSize = connectedClientsSize;
+
+    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg);
+    for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
+        if (it->second == false)
+            continue;
+        std::size_t clientId = it->first;
+        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
+            std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
+            sendToAClient(clientId, newEntititiesSerialized, 3);
+        }
+    }
+}

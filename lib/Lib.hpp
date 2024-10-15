@@ -8,15 +8,7 @@
 /**
  * @file Lib.hpp
  * @brief Declares utility functions for the R-Type game engine.
- * This file defines a set of helper functions and constants related to screen management, entity data manipulation, and
- * serialization/deserialization.
- */
-
-/**
- * @file Lib.hpp
- * @brief Declares utility functions for the R-Type game engine.
- * This file defines a set of helper functions and constants related to screen management, entity data manipulation, and
- * serialization/deserialization.
+ * This file defines a set of helper functions and constants related to screen management, and time conversion.
  */
 
 #ifndef LIB_HPP_
