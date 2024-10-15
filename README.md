@@ -23,9 +23,15 @@ We also aim for our game to soon be Cross-Plateform. For now, the program lauche
 
 ## Installation
 
-<!--
-A implementer quand le cmake est fait
--->
+Run these two commands in order from the project root to compile it:
+
+```bash
+cmake -B build -S .
+```
+
+```bash
+cmake --build build
+```
 
 ## Usage
 
