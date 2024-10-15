@@ -57,8 +57,9 @@ class RunGame {
           _time1(std::chrono::steady_clock::now()) {
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
-        MaximizeWindow();
+        InitWindow(900, 450, gameName.c_str());
+        // InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
+        // MaximizeWindow();
         InitAudioDevice();
     }
 

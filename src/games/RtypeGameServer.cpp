@@ -94,7 +94,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     shootingRate.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::ShootingRate{6});
     soundEffect.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusic{BACKGROUND_MUSIC_PATH, 0.1, true});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusic{BACKGROUND_MUSIC_PATH, 0.5, true});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

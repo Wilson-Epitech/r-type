@@ -70,12 +70,6 @@ namespace network {
         std::size_t getLastConnectedClientId();
 
         /**
-         * @brief Retrieves the map indicating whether each client's world has been set.
-         * @return A map of client IDs and their world initialization status.
-         */
-        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
-
-        /**
          * @brief Retrieves the entity data sent from clients.
          * @return A DataToSend structure containing entity data.
          */
@@ -183,7 +177,6 @@ namespace network {
         asio::thread_pool &_threadPool; ///< Thread pool for handling tasks.
 
         std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients; ///< Map of connected clients and their endpoints.
-        std::unordered_map<std::size_t, bool> _areClientsWorldSet;        ///< Map indicating whether each client's world is initialized.
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
         std::unordered_map<std::size_t, bool>

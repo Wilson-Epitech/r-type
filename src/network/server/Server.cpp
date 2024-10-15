@@ -24,10 +24,6 @@ std::size_t network::Server::getLastConnectedClientId() {
     return _idClient;
 }
 
-std::unordered_map<std::size_t, bool> network::Server::getAreClientsWorldSet() {
-    return _areClientsWorldSet;
-}
-
 DataToSend network::Server::getData() {
     return _data;
 }
@@ -120,12 +116,9 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         }
 
         std::string newClientConnectedMessage = "New client connected.";
-        std::string worldSetMessage = "World set";
         std::string aliveMessage = "Alive: ";
 
-        if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient] = true;
-        } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
+        if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
             std::cerr << "Received heartbeat from client " << clientId << std::endl;
@@ -231,7 +224,6 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
     _isClientStillHere[_idClient] = true;
-    _areClientsWorldSet[_idClient] = false;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
@@ -275,7 +267,6 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = getLastConnectedClientId();
-    std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
@@ -304,7 +295,7 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
+        if (!newEntitiesData.empty()) {
             std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
             sendToAClient(clientId, newEntititiesSerialized, 3);
         }
