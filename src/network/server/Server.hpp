@@ -64,18 +64,6 @@ namespace network {
         void sendToAllClient(const std::string message, uint8_t messageType);
 
         /**
-         * @brief Retrieves the currently connected clients.
-         * @return A map containing client IDs and their corresponding UDP endpoints.
-         */
-        std::map<std::size_t, asio::ip::udp::endpoint> getConnectedClients();
-
-        /**
-         * @brief Retrieves the number of currently connected clients.
-         * @return The number of connected clients.
-         */
-        std::size_t getNbClients();
-
-        /**
          * @brief Retrieves the ID of the last client that connected.
          * @return The ID of the most recently connected client.
          */
@@ -91,7 +79,7 @@ namespace network {
          * @brief Retrieves the entity data sent from clients.
          * @return A DataToSend structure containing entity data.
          */
-        DataToSend getEntityData();
+        DataToSend getData();
 
         /**
          * @brief Checks whether the received data has been processed.

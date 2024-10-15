@@ -23,7 +23,7 @@ Our game engine is composed of three main elements in the ECS architecture:
 5. [ECS Architecture](#ECSArchitecture)
 
 ## Components
-> [!NOTE] 
+> [!NOTE]
 > Every components that are sent by/to the server have an overload operator "==" to check if the component has been modified
 
 <div id='Components'/>
@@ -174,9 +174,9 @@ enum ComponentName {
    struct EnemySpawn {
       float timeBeforeSpawn;
       int waveSize;
-      int maxSpawnWidth = 1920;
+      int maxSpawnWidth = Lib::getScreenWidth();
       int minSpawnWidth = 0;
-      int maxSpawnHeight = 1080;
+      int maxSpawnHeight = Lib::getScreenHeight();
       int minSpawnHeight = 0;
    };
    ```

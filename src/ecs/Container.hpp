@@ -152,21 +152,6 @@ namespace ecs {
         };
 
         /**
-         * @brief Emplaces a new component at the specified position.
-         * Constructs a new component in-place at the specified position.
-         * @tparam Params The types of the parameters used to construct the component.
-         * @param pos The position where the component will be emplaced.
-         * @param param The parameters to pass to the component's constructor.
-         * @return reference_type A reference to the newly constructed component.
-         */
-        template <class... Params> reference_type emplaceAt(size_type pos, Params &&...param) {
-            if (pos >= size())
-                _data.resize(pos + 1);
-            _data.emplace(begin() + pos, (std::move(param), ...));
-            return _data[pos];
-        };
-
-        /**
          * @brief Erases a component at the specified position.
          * The component at the given position is reset to `std::nullopt`, effectively removing it.
          * @param pos The position of the component to erase.
