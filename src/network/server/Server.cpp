@@ -52,7 +52,7 @@ std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::
     return _lastAliveClient;
 }
 
-void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
+void network::Server::setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
     _lastAliveClient = map;
 }
 

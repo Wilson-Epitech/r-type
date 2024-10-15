@@ -12,18 +12,65 @@
 #include "Registry.hpp"
 
 namespace network {
+    /**
+     * @class HandleData
+     * @brief Class providing static functions for managing and retrieving game data.
+     * Contains helper methods for data serialization, and ECS component manipulation.
+     */
     class HandleData {
       public:
         HandleData() = default;
         ~HandleData() = default;
 
+        /**
+         * @brief Fills a DataToSend object with data for newly spawned entities in the ECS.
+         * @param reg The ECS registry containing the components and entities.
+         * @return A DataToSend structure containing data for the newly spawned entities.
+         */
         static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg);
+
+        /**
+         * @brief Fills a DataToSend object with data for all entities in the ECS.
+         * @param reg The ECS registry containing the components and entities.
+         * @return A DataToSend structure containing data for all entities in the registry.
+         */
         static DataToSend fillAllEntitiesDataToSend(ecs::Registry &reg);
+        /**
+         * @brief Serializes a DataToSend structure into a string format.
+         * @param data The data to serialize.
+         * @return A string representation of the serialized data.
+         */
         static std::string serializeEntityDataVector(const DataToSend &data);
+
+        /**
+         * @brief Deserializes a string into a DataToSend structure.
+         * @param message The serialized string data.
+         * @return A DataToSend structure containing the deserialized entity data.
+         */
         static DataToSend deserializeEntityDataVector(const std::string &message);
+
+        /**
+         * @brief Updates entities in the ECS registry based on the received entity data.
+         * @param reg The ECS registry.
+         * @param data The entity data to update.
+         */
         static void updateEntities(ecs::Registry &reg, EntityData &data);
+
+        /**
+         * @brief Deletes similar lines of data between two DataToSend objects.
+         * This function compares two DataToSend objects and removes matching lines from the first.
+         * @param dataToSend The DataToSend structure to modify.
+         * @param dataReceived The DataToSend structure to compare against.
+         */
         static void deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived);
 
+        /**
+         * @brief Serializes a specific component type from an entity.
+         * @tparam Component The component type to serialize.
+         * @param oss The output string stream to store the serialized data.
+         * @param entityComponentName The name of the component.
+         * @param component The component data to serialize.
+         */
         template <typename Component>
         static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
                                              const std::any &component) {
@@ -37,6 +84,13 @@ namespace network {
             }
         }
 
+        /**
+         * @brief Deserializes a specific component type into an entity.
+         * @tparam Component The component type to deserialize.
+         * @param iss The input string stream containing the serialized data.
+         * @param entityComponentName The name of the component.
+         * @param component The component to store the deserialized data.
+         */
         template <typename Component>
         static void deserializeEntityCompotent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
                                                std::any &component) {
@@ -52,9 +106,25 @@ namespace network {
         }
 
       private:
+        /**
+         * @brief Retrieves the list of component types and their corresponding default values.
+         * @return A vector of pairs containing the component names and their default values.
+         */
         static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
+        /**
+         * @brief Retrieves the indices of player entities in the ECS registry.
+         * @param reg The ECS registry.
+         * @return A vector of player entity indices.
+         */
         static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
 
+        /**
+         * @brief Retrieves updates for a specific component type for all players in the ECS registry.
+         * @tparam Component The component type to retrieve updates for.
+         * @param reg The ECS registry.
+         * @param name The name of the component.
+         * @return A vector of EntityData containing updated component data for the players.
+         */
         template <typename Component>
         static std::vector<EntityData> retrievePlayersComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
             static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersValues;
@@ -88,6 +158,14 @@ namespace network {
             return playersData;
         }
 
+        /**
+         * @brief Fills a DataToSend structure with component data for a specific entity.
+         * @tparam Component The component type to retrieve data from.
+         * @param reg The ECS registry.
+         * @param newEntity The entity ID to retrieve data for.
+         * @param data The DataToSend structure to populate.
+         * @param name The name of the component.
+         */
         template <typename Component>
         static void fillEntityComponentData(ecs::Registry &reg, const std::size_t &newEntity, DataToSend &data,
                                             const ecs::ComponentName name) {
@@ -101,6 +179,14 @@ namespace network {
                 data.entitiesData.push_back(entityData);
             }
         }
+
+        /**
+         * @brief Inserts a component into the ECS registry for a specific entity.
+         * @tparam Component The component type to insert.
+         * @param reg The ECS registry.
+         * @param entityData The entity data containing the component to insert.
+         * @param name The name of the component.
+         */
         template <typename Component>
         static void insertComponent(ecs::Registry &reg, const EntityData &entityData, const ecs::ComponentName name) {
             if (entityData.name == name) {

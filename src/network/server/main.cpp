@@ -78,7 +78,7 @@ std::size_t checkConnectedHeartbeat(network::Server &server) {
             it++;
         }
     }
-    server.setHeartBeatmMap(lastSeenClient);
+    server.setHeartBeatMap(lastSeenClient);
     server.setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
 }
