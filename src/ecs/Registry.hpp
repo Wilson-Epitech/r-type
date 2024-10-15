@@ -267,7 +267,6 @@ namespace ecs {
 
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
-        std::size_t _totalEntities = 0;                                  ///< The total number of entities.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
         std::vector<std::function<void(Registry &)>> _systems;           ///< A list of systems to run each frame.
         std::list<std::size_t> _deadEntities;                            ///< A list of dead entities to be recycled.
