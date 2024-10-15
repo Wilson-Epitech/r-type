@@ -26,6 +26,19 @@ network::Client::~Client() {
     _socket.close();
 }
 
+void network::Client::handleCtrlC(int signal) {
+    if (signal == SIGINT)
+        exit(0);
+}
+
+sig_atomic_t network::Client::handleClient(const sig_atomic_t new_status) {
+    static volatile sig_atomic_t status = 1;
+
+    if (new_status != 1)
+        status = new_status;
+    return status;
+}
+
 void network::Client::msgFromServer() {
     std::array<char, 50000> receiveBuffer;
     asio::ip::udp::endpoint senderEndpoint;
@@ -121,5 +134,21 @@ void network::Client::heartbeatToServer() {
         std::this_thread::sleep_for(std::chrono::seconds(1));
         if (_playerId != 0)
             sendMessage("Alive: " + std::to_string(_playerId), 4);
+    }
+}
+
+void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
+    DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
+    static bool hasSendWorldSet = 0;
+
+    for (auto lastDataReceived : lastDataReceivedList)
+        Lib::deleteSimilarDataLines(data, lastDataReceived);
+    if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
+        sendMessage("World set", 3);
+        hasSendWorldSet = true;
+    }
+    if (!data.empty()) {
+        std::string serialized = Lib::serializeEntityDataVector(data);
+        sendMessage(serialized, 3);
     }
 }

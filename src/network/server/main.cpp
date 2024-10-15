@@ -6,9 +6,8 @@
 */
 
 #include "RtypeGameServer.hpp"
-#include "Server.hpp"
+#include "RunGame.hpp"
 #include "raylib.h"
-#include <chrono>
 #include <iostream>
 
 void sendUpdatedDataVectorServer(ecs::Registry &reg, network::Server &server) {
@@ -88,48 +87,17 @@ int main(int ac, char **av) {
         std::cerr << "Usage: ./server [ip] [port]" << std::endl;
         return -1;
     }
+
     try {
         asio::io_context io_context;
         asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
-        network::Server server(io_context, av[1], std::stoi(av[2]), pool);
+        std::unique_ptr<network::Server> server = std::make_unique<network::Server>(io_context, av[1], std::stoi(av[2]), pool);
         game::RtypeGameServer rtype;
-        ecs::Registry reg = rtype.getRegistry();
-        static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
-        std::size_t disconnectedPlayerEntity = 0;
-
-        SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
-        while (1) {
-            std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-            std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-            if (!(timeElapsed.count() >= Lib::toMilliseconds(UPDATE_SERVER))) {
-                continue;
-            }
-            time0 = std::chrono::steady_clock::now();
-            static DataToSend lastDataReceived;
-            DataToSend dataReceived = server.getEntityData();
-            bool dataHasBeenUsed = server.getDataHasBeenUsed();
-            if (!dataReceived.empty() && !dataHasBeenUsed) {
-                for (auto &entity : dataReceived.entitiesData) {
-                    Lib::updateEntities(reg, entity);
-                }
-                lastDataReceived = dataReceived;
-                server.setDataHasBeenUsed(true);
-            }
-            if (server.getStillAliveClientNumber() > 0) {
-                sendUpdatedDataVectorServer(reg, server);
-                reg.clearActualTurnNewEntities();
-                reg.clearActualTurnDeadEntities();
-            }
-            reg.runSystems();
-            disconnectedPlayerEntity = checkConnectedHeartbeat(server);
-            if (disconnectedPlayerEntity != 0)
-                reg.killEntity(disconnectedPlayerEntity);
-        }
+        RunGame runGame(server, rtype.getRegistry(), rtype);
+        runGame.run();
         pool.join();
     } catch (std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }
-
-    return 0;
 }

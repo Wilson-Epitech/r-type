@@ -60,6 +60,9 @@ namespace network {
          */
         void sendMessage(const std::string &message, uint8_t messageType);
 
+        static void handleCtrlC(int signal);
+        sig_atomic_t handleClient(const sig_atomic_t new_status);
+
         /**
          * @brief Checks if the client is still running.
          * @return true If the client is active and running.
@@ -82,6 +85,7 @@ namespace network {
          * @brief Clear the list of Data received by the server
          */
         void clearData();
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
 
       private:
         /**
@@ -108,9 +112,9 @@ namespace network {
         uint8_t _messageId;          ///< ID of the current message being sent.
         uint16_t _len;               ///< Length of the current message.
 
-        std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
-        std::size_t _playerId;       ///< The player's ID assigned by the server.
-    };
+      std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
+      std::size_t _playerId;       ///< The player's ID assigned by the server.
+  };
 };
 
 #endif /* !CLIENT_HPP_ */

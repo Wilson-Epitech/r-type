@@ -102,7 +102,7 @@ class Lib {
      * @param reg The ECS registry.
      * @param data The entity data to update.
      */
-    static void updateEntities(ecs::Registry &reg, EntityData &data);
+    static void updateEntity(ecs::Registry &reg, EntityData &data);
 
     /**
      * @brief Deletes similar lines of data between two DataToSend objects.
@@ -111,6 +111,8 @@ class Lib {
      * @param dataReceived The DataToSend structure to compare against.
      */
     static void deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived);
+    static void updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg);
+    static void updateEntitiesData(DataToSend &dataReceived, ecs::Registry &reg);
 
     /**
      * @brief Serializes a specific component type from an entity.

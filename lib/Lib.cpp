@@ -159,7 +159,7 @@ DataToSend Lib::deserializeEntityDataVector(const std::string &message) {
     return data;
 }
 
-void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
+void Lib::updateEntity(ecs::Registry &reg, EntityData &data) {
     ecs::SparseArray<ecs::component::Drawable> &drawables = reg.getComponents<ecs::component::Drawable>();
 
     if (!reg.entityExist(data.entityID))
@@ -178,6 +178,20 @@ void Lib::updateEntities(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::SpriteInfos>(reg, data, ecs::ComponentName::SPRITEINFOS);
     insertComponent<ecs::component::SoundEffect>(reg, data, ecs::ComponentName::SOUNDEFFECT);
     insertComponent<ecs::component::BackgroundMusic>(reg, data, ecs::ComponentName::MUSIC);
+}
+
+void Lib::updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg) {
+    for (auto &deadEntity : dataReceived.deadEntities) {
+        if (reg.entityExist(deadEntity))
+            reg.killEntity(deadEntity);
+    }
+}
+
+void Lib::updateEntitiesData(DataToSend &dataReceived, ecs::Registry &reg) {
+    for (auto &entity : dataReceived.entitiesData) {
+        if (entity.entityID != 0)
+            Lib::updateEntity(reg, entity);
+    }
 }
 
 void Lib::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
