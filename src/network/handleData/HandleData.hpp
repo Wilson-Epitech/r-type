@@ -152,7 +152,7 @@ namespace network {
                     continue;
                 }
                 if (lastPlayersValues.size() >= turn + 1) {
-                    if (lastPlayersValues[turn] != shootings[playerIndex].value()) {
+                    if (!(lastPlayersValues[turn] == shootings[playerIndex].value())) {
                         playerData.entityID = playerIndex;
                         playerData.component = shootings[playerIndex].value();
                         playerData.name = name;

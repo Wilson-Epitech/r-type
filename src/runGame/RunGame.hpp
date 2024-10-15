@@ -14,11 +14,10 @@
 #ifndef RUNGAME_HPP_
 #define RUNGAME_HPP_
 
+#include "IGame.hpp"
+#include "Server.hpp"
 #include "Client.hpp"
 #include "Components.hpp"
-#include "IGame.hpp"
-#include "Registry.hpp"
-#include "Server.hpp"
 #include <functional>
 #include <raylib.h>
 

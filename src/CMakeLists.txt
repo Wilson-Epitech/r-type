@@ -18,6 +18,7 @@ set(SRC
     runGame/RunGame.cpp
     network/client/Client.cpp
     network/server/Server.cpp
+    network/handleData/HandleData.cpp
     ../lib/Lib.cpp
 )
 
