@@ -19,7 +19,6 @@ jobs:
 
     - name: Set up vcpkg
       run: |
-        cd build
         cmake -B build -S .
         cmake --build build
 
