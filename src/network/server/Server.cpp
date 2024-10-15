@@ -172,7 +172,7 @@ void network::Server::sendToAClient(const std::size_t idClient, const std::strin
                 messageToSend.size());
 
     if (it != _connectedClients.end()) {
-        std::shared_ptr<std::string> message(new std::string(buffer));
+        std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it->second,
                               std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
@@ -198,7 +198,7 @@ void network::Server::sendToAllClient(const std::string messageToSend, uint8_t m
                 messageToSend.size());
 
     for (auto &it : _connectedClients) {
-        std::shared_ptr<std::string> message(new std::string(buffer));
+        std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it.second,
                               std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
@@ -229,7 +229,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
         std::memcpy(&buffer[sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(len)], messageToSend.data(),
                     messageToSend.size());
         std::cerr << "Server is full." << std::endl;
-        std::shared_ptr<std::string> message(new std::string(buffer));
+        std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
                               std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
