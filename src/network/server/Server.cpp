@@ -52,7 +52,7 @@ std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::
     return _lastAliveClient;
 }
 
-void network::Server::setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
+void network::Server::setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> map) {
     _lastAliveClient = map;
 }
 
@@ -86,7 +86,7 @@ void network::Server::startReceiving() {
 void network::Server::deserializeMessage(const std::string message) {
     _data.deadEntities.clear();
     _data.entitiesData.clear();
-    _data = Lib::deserializeEntityDataVector(message);
+    _data = network::HandleData::deserializeEntityDataVector(message);
     _dataHasBeenUsed = false;
 }
 
@@ -269,7 +269,7 @@ std::size_t network::Server::checkConnectedHeartbeat() {
             it++;
         }
     }
-    setHeartBeatmMap(lastSeenClient);
+    setHeartBeatMap(lastSeenClient);
     setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
 }
@@ -289,14 +289,14 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (((connectedClientsSize > previousConnectedClientsSize) &&
-             lastConnectedClientId != previousLastConnectedClientId) && (lastConnectedClientId == clientId)) {
+        if (((connectedClientsSize > previousConnectedClientsSize) && lastConnectedClientId != previousLastConnectedClientId) &&
+            (lastConnectedClientId == clientId)) {
             entity_t newPlayer = reg.spawnEntity();
             reg.addPlayer(lastConnectedClientId, newPlayer);
             std::size_t playerId = reg.getPlayerByClientId(lastConnectedClientId);
             reg.runInitPlayerSystem();
-            DataToSend allEntitiesData = Lib::fillAllEntitiesDataToSend(reg);
-            std::string allEntititiesSerialized = Lib::serializeEntityDataVector(allEntitiesData);
+            DataToSend allEntitiesData = network::HandleData::fillAllEntitiesDataToSend(reg);
+            std::string allEntititiesSerialized = network::HandleData::serializeEntityDataVector(allEntitiesData);
             previousLastConnectedClientId = lastConnectedClientId;
             sendToAClient(clientId, "playerId:" + std::to_string(playerId), 3);
             if (!allEntitiesData.empty())
@@ -307,13 +307,13 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
     if (connectedClientsSize != previousConnectedClientsSize)
         previousConnectedClientsSize = connectedClientsSize;
 
-    DataToSend newEntitiesData = Lib::fillNewEntitiesDataToSend(reg);
+    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
         if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
-            std::string newEntititiesSerialized = Lib::serializeEntityDataVector(newEntitiesData);
+            std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
             sendToAClient(clientId, newEntititiesSerialized, 3);
         }
     }

@@ -15,13 +15,12 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
+#include "Lib.hpp"
 #include <any>
 #include <list>
 #include <memory>
-#include <raylib.h>
 #include <sstream>
 #include <string>
-#include <vector>
 
 namespace ecs {
 
@@ -178,12 +177,12 @@ namespace ecs {
          * @brief Component representing the enemy spawn information.
          */
         struct EnemySpawn {
-            float timeBeforeSpawn;     ///< Time before the next spawn
-            int waveSize;              ///< Size of the enemy wave to spawn
-            int maxSpawnWidth = 1920;  ///< Maximum spawn width
-            int minSpawnWidth = 0;     ///< Minimum spawn width
-            int maxSpawnHeight = 1080; ///< Maximum spawn height
-            int minSpawnHeight = 0;    ///< Minimum spawn height
+            float timeBeforeSpawn;                       ///< Time before the next spawn
+            int waveSize;                                ///< Size of the enemy wave to spawn
+            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
+            int minSpawnWidth = 0;                       ///< Minimum spawn width
+            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
+            int minSpawnHeight = 0;                      ///< Minimum spawn height
         };
 
         /**

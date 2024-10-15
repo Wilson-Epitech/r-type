@@ -84,7 +84,7 @@ void network::Client::msgFromServer() {
             _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
         } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 &&
                    receivedMessage.find(disconnectedClient) == std::string::npos && receivedMessage.length() > 0) {
-            _data.push_back(Lib::deserializeEntityDataVector(receivedMessage));
+            _data.push_back(network::HandleData::deserializeEntityDataVector(receivedMessage));
         }
         if (receivedMessage == "Could not connect") {
             _isRunning = false;
@@ -138,17 +138,17 @@ void network::Client::heartbeatToServer() {
 }
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
-    DataToSend data = Lib::fillNewEntitiesDataToSend(reg);
+    DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg);
     static bool hasSendWorldSet = 0;
 
     for (auto lastDataReceived : lastDataReceivedList)
-        Lib::deleteSimilarDataLines(data, lastDataReceived);
+        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
     if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
         sendMessage("World set", 3);
         hasSendWorldSet = true;
     }
     if (!data.empty()) {
-        std::string serialized = Lib::serializeEntityDataVector(data);
+        std::string serialized = network::HandleData::serializeEntityDataVector(data);
         sendMessage(serialized, 3);
     }
 }

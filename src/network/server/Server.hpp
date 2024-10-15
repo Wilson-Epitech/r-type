@@ -15,7 +15,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "Lib.hpp"
+#include "HandleData.hpp"
 #include <array>
 #include <asio.hpp>
 #include <map>
@@ -127,7 +127,7 @@ namespace network {
          * @brief Updates the heartbeat timestamps for clients.
          * @param map A map containing the updated heartbeat timestamps.
          */
-        void setHeartBeatmMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
+        void setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
 
         std::unordered_map<std::size_t, bool> getClientStillHere();
         void setClientStillHere(std::unordered_map<std::size_t, bool>);

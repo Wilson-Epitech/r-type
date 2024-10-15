@@ -36,7 +36,7 @@ void RunGame::runServer() {
         dataReceived = _server->getEntityData();
         dataHasBeenUsed = _server->getDataHasBeenUsed();
         if (!dataReceived.empty() && !dataHasBeenUsed) {
-            Lib::updateEntitiesData(dataReceived, _reg);
+            network::HandleData::updateEntitiesData(dataReceived, _reg);
             _server->setDataHasBeenUsed(true);
         }
         if (_server->getStillAliveClientNumber() > 0) {
@@ -75,8 +75,8 @@ void RunGame::runClient() {
             _reg.addPlayer(0, playerId);
         for (auto dataReceived : dataReceivedList) {
             if (!dataReceived.empty()) {
-                Lib::updateDeadEntities(dataReceived, _reg);
-                Lib::updateEntitiesData(dataReceived, _reg);
+                network::HandleData::updateDeadEntities(dataReceived, _reg);
+                network::HandleData::updateEntitiesData(dataReceived, _reg);
             }
             lastDataReceivedList = dataReceivedList;
         }

@@ -11,6 +11,7 @@ CXXFLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -g -Wall -Wextra
 CPPFLAGS = -std=c++20 -iquote include -iquote lib -iquote src/games 							\
 			-iquote src/runGame -iquote src/ecs -iquote src/ecs/components 						\
 			-iquote src/ecs/systems	-iquote src/network/server -iquote src/network/client		\
+			-iquote src/network/handleData 														\
 
 SRC = 	src/runGame/RunGame.cpp											\
 		src/network/server/Server.cpp									\
@@ -29,6 +30,7 @@ SRC = 	src/runGame/RunGame.cpp											\
     	src/ecs/systems/SoundSystem.cpp									\
     	src/ecs/systems/SpriteAnimationSystem.cpp						\
     	src/ecs/systems/MusicSystem.cpp									\
+		src/network/handleData/HandleData.cpp 							\
     	lib/Lib.cpp														\
 
 
