@@ -73,7 +73,8 @@ namespace ecs {
                 if (it.second == e) {
                     _deadEntities.push_back(std::size_t(it.second));
                     _actualTurnDeadEntities.push_back(std::size_t(it.second));
-                    it.second = 0;
+                    _indexToEntities.erase(it.first);
+                    break;
                 }
             }
             for (auto &player : _players) {
