@@ -24,7 +24,7 @@ int main(int ac, char **av) {
         RunGame runGame(server, rtype.getRegistry(), rtype);
         runGame.run();
         pool.join();
-    } catch (std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }

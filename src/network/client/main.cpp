@@ -21,7 +21,7 @@ int main(int ac, char **av) {
         game::RtypeGameClient rtype;
         RunGame runGame(client, rtype.getRegistry(), rtype.getGameName(), rtype);
         runGame.run();
-    } catch (std::exception &e) {
+    } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return -1;
     }
