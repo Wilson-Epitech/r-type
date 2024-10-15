@@ -110,7 +110,17 @@ namespace network {
          * @return A map of client IDs and their last heartbeat timestamps.
          */
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
+
+        /**
+         * @brief Sends updates to the client in order to display informations.
+         * @param reg The ECS registry managing entities and components.
+         */
         void sendUpdatedData(ecs::Registry &reg);
+
+        /**
+         * @brief Check if the client has missed to many heartbeat. If it did, it considers the client as disconnected.
+         * @return The ID of the newly deconnected clients.
+         */
         std::size_t checkConnectedHeartbeat();
 
         /**
@@ -169,8 +179,8 @@ namespace network {
         std::unordered_map<std::size_t, bool> _areClientsWorldSet;        ///< Map indicating whether each client's world is initialized.
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
-        std::unordered_map<std::size_t, bool> _isClientStillHere;
-        std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId;
+        std::unordered_map<std::size_t, bool> _isClientStillHere; ///<  Map that set to false the a bool if the client with the std::size_t id was disconnected
+        std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId; ///< Create a coresspondence between the _OwnID and the _playerID;
 
         DataToSend _data;      ///< Data structure containing entity updates from clients.
         bool _dataHasBeenUsed; ///< Flag indicating whether the received data has been processed.

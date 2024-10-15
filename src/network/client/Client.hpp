@@ -60,6 +60,10 @@ namespace network {
          */
         void sendMessage(const std::string &message, uint8_t messageType);
 
+        /**
+         * @brief Catch the ctrl C signal.
+         * @param signal Retrieve the signal sent.
+         */
         static void handleCtrlC(int signal);
         sig_atomic_t handleClient(const sig_atomic_t new_status);
 
