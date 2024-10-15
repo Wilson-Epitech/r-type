@@ -5,7 +5,6 @@
 ** RunGame
 */
 
-
 /**
  * @file RunGame.hpp
  * @brief Declares the `RunGame` class responsible for running the game and managing the game loop.
@@ -28,10 +27,11 @@
 class RunGame {
   public:
     /**
-     * @brief Constructs the game and initializes the window and audio device.
-     * This constructor sets up the game by initializing the window, maximizing it, and initializing the audio device.
+     * @brief Constructs the game serverside.
+     * This constructor sets up the necessary game variables before running the game server loop.
      * It also sets a custom logging level and defines a callback function to manage the game state.
      * @tparam Function The type of the game state function, which defines the current state of the game.
+     * @param server The server instance that will manage the game.
      * @param reg The ECS registry that manages entities and components.
      * @param gameName The name of the game, used as the window title.
      * @param gameState A function that manages the game's state transitions.
@@ -42,7 +42,16 @@ class RunGame {
           _time1(std::chrono::steady_clock::now()) {
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     }
-
+    /**
+     * @brief Constructs the game clientside.
+     * This constructor sets up the game before running the game client loop. It initializes the window, maximizes it, and initializes the
+     * audio device. It also sets a custom logging level and defines a callback function to manage the game state.
+     * @tparam Function The type of the game state function, which defines the current state of the game.
+     * @param client The client instance that will receive game data from the server.
+     * @param reg The ECS registry that manages entities and components.
+     * @param gameName The name of the game, used as the window title.
+     * @param gameState A function that manages the game's state transitions.
+     */
     template <typename Function>
     RunGame(std::unique_ptr<network::Client> &client, ecs::Registry &reg, const std::string &gameName, Function const &gameState)
         : _server(nullptr), _client(std::move(client)), _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
@@ -88,13 +97,13 @@ class RunGame {
      */
     void runClient();
 
-    std::unique_ptr<network::Server> _server; ///< Unique pointer to an instance of the server
-    std::unique_ptr<network::Client> _client; ///< Unique Pointer to an instance of the client
-    ecs::Registry _reg; ///< The ECS registry managing entities and components.
+    std::unique_ptr<network::Server> _server;                    ///< Unique pointer to an instance of the server
+    std::unique_ptr<network::Client> _client;                    ///< Unique Pointer to an instance of the client
+    ecs::Registry _reg;                                          ///< The ECS registry managing entities and components.
     std::function<game::GameStatus(ecs::Registry &)> _gameState; ///< Function to manage the current game state.
-    std::chrono::steady_clock::time_point _time0; ///< Base Clock
-    std::chrono::steady_clock::time_point _time1; ///< Clock to compare the base clock to
-    std::chrono::milliseconds _timeElapsed; ///< The chrono to see the time that passed.
+    std::chrono::steady_clock::time_point _time0;                ///< Base Clock
+    std::chrono::steady_clock::time_point _time1;                ///< Clock to compare the base clock to
+    std::chrono::milliseconds _timeElapsed;                      ///< The chrono to see the time that passed.
 };
 
 #endif /* !RUNGAME_HPP_ */

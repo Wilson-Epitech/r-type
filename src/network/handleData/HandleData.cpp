@@ -165,7 +165,6 @@ void network::HandleData::updateEntitiesData(DataToSend &dataReceived, ecs::Regi
     }
 }
 
-
 void network::HandleData::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
     for (auto dataToSendIt = dataToSend.deadEntities.begin(); dataToSendIt != dataToSend.deadEntities.end(); dataToSendIt++) {
         for (auto dataReceivedIt = dataReceived.deadEntities.begin(); dataReceivedIt != dataReceived.deadEntities.end(); dataReceivedIt++) {

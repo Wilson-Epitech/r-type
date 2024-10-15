@@ -63,7 +63,8 @@ namespace network {
          */
         static void updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg);
         /**
-         * @brief Updates the EntityData of entities in the ECS registry based on the entities present in the vector of entitiesData from DataToSend struct.
+         * @brief Updates the EntityData of entities in the ECS registry based on the entities present in the vector of entitiesData from
+         * DataToSend struct.
          * @param reg The ECS registry.
          * @param data The DataToSend struct.
          */

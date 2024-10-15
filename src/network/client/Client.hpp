@@ -112,9 +112,9 @@ namespace network {
         uint8_t _messageId;          ///< ID of the current message being sent.
         uint16_t _len;               ///< Length of the current message.
 
-      std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
-      std::size_t _playerId;       ///< The player's ID assigned by the server.
-  };
+        std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
+        std::size_t _playerId;       ///< The player's ID assigned by the server.
+    };
 };
 
 #endif /* !CLIENT_HPP_ */
