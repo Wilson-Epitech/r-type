@@ -5,6 +5,13 @@
 ** Components
 */
 
+/**
+ * @file Components.hpp
+ * @brief Defines components used in the ECS system for the game engine.
+ * This file contains the declaration of various components used in the ECS system,
+ * such as position, velocity, type, life, sprite information, sound effects, and others.
+ */
+
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
@@ -17,80 +24,114 @@
 #include <vector>
 
 namespace ecs {
+
+    /**
+     * @enum EntityType
+     * @brief Enum representing different types of entities in the game.
+     */
     enum EntityType {
-        NOTYPE,
-        PLAYER,
-        PLAYER_TEMPLATE,
-        PLAYERSHOT,
-        PLAYERSHOT_TEMPLATE,
-        ENEMY,
-        ENEMY_TEMPLATE,
-        ENEMYSHOT,
-        ENEMYSHOT_TEMPLATE,
-        BACKGROUND
+        NOTYPE,              ///< No type entity
+        PLAYER,              ///< Player entity
+        PLAYER_TEMPLATE,     ///< Player template entity
+        PLAYERSHOT,          ///< Player's shot entity
+        PLAYERSHOT_TEMPLATE, ///< Player's shot template entity
+        ENEMY,               ///< Enemy entity
+        ENEMY_TEMPLATE,      ///< Enemy template entity
+        ENEMYSHOT,           ///< Enemy's shot entity
+        ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
+        BACKGROUND           ///< Background entity
     };
 
+    /**
+     * @enum ComponentName
+     * @brief Enum representing different component types in the ECS.
+     */
     enum ComponentName {
-        NONE,
-        POSITION,
-        VELOCITY,
-        TYPE,
-        LIFE,
-        SHOOTING,
-        SPRITEINFOS,
-        SOUNDEFFECT,
-        MUSIC
+        NONE,        ///< No component
+        POSITION,    ///< Position component
+        VELOCITY,    ///< Velocity component
+        TYPE,        ///< Type component
+        LIFE,        ///< Life component
+        SHOOTING,    ///< Shooting component
+        SPRITEINFOS, ///< Sprite information component
+        SOUNDEFFECT, ///< Sound effect component
+        MUSIC        ///< Background music component
     };
 
     namespace component {
+
+        /**
+         * @struct Position
+         * @brief Component for the position of an entity in 2D space.
+         */
         struct Position {
-            float x = 0, y = 0;
+            float x = 0, y = 0; ///< X and Y coordinates of the entity
 
             bool operator==(const Position &other) const {
                 return x == other.x && y == other.y;
             }
         };
 
+        /**
+         * @struct Velocity
+         * @brief Component representing the velocity of an entity.
+         */
         struct Velocity {
-            float vx = 0, vy = 0, possibleVelocity = 0;
+            float vx = 0, vy = 0, possibleVelocity = 0; ///< Velocity in the X and Y directions, and possible max velocity
 
             bool operator==(const Velocity &other) const {
                 return (vx == other.vx && vy == other.vy && possibleVelocity == other.possibleVelocity);
             }
         };
 
+        /**
+         * @struct Type
+         * @brief Component representing the type of the entity.
+         */
         struct Type {
-            ecs::EntityType entityType = ecs::EntityType::NOTYPE;
+            ecs::EntityType entityType = ecs::EntityType::NOTYPE; ///< The type of the entity
 
             bool operator==(const Type &other) const {
                 return (entityType == other.entityType);
             }
         };
 
+        /**
+         * @struct Life
+         * @brief Component representing the life count of an entity.
+         */
         struct Life {
-            std::size_t nbLives;
-            bool displayLife = false;
-            std::size_t maxLives = 0;
+            std::size_t nbLives;      ///< Number of lives the entity has
+            bool displayLife = false; ///< Indicates if the life has to be displayed
+            std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
 
             bool operator==(const Life &other) const {
                 return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
             }
         };
 
+        /**
+         * @struct Shooting
+         * @brief Component that determines whether the entity is currently shooting.
+         */
         struct Shooting {
-            bool isShooting = false;
+            bool isShooting = false; ///< Boolean indicating if the entity is shooting
 
             bool operator==(const Shooting &other) const {
                 return (isShooting == other.isShooting);
             }
         };
 
+        /**
+         * @struct SpriteInfos
+         * @brief Component for sprite information of an entity.
+         */
         struct SpriteInfos {
-            std::string spritePath;
-            std::size_t patternNb = 1;
-            std::size_t firstPattern = 0;
-            float scaleFactor = 1.0;
-            Color color = RAYWHITE;
+            std::string spritePath;       ///< Path to the sprite file
+            std::size_t patternNb = 1;    ///< Number of patterns in the sprite
+            std::size_t firstPattern = 0; ///< First pattern in the sprite
+            float scaleFactor = 1.0;      ///< Scale factor for the sprite
+            Color color = RAYWHITE;       ///< Color applied to the sprite
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
@@ -99,47 +140,71 @@ namespace ecs {
             }
         };
 
+        /**
+         * @struct SoundEffect
+         * @brief Component for sound effects related to an entity.
+         */
         struct SoundEffect {
-            std::string soundPath;
-            bool isLoaded = false;
-            bool hasToBePlayed = false;
-            Sound sound = Sound{};
+            std::string soundPath;      ///< Path to the sound file
+            bool isLoaded = false;      ///< Boolean indicating if the sound is loaded
+            bool hasToBePlayed = false; ///< Boolean indicating if the sound should be played
+            Sound sound = Sound{};      ///< Sound object
 
             bool operator==(const SoundEffect &other) const {
                 return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
             }
         };
 
+        /**
+         * @struct Drawable
+         * @brief Component representing the drawable texture of an entity.
+         */
         struct Drawable {
-            bool isLoaded = false;
-            Texture2D spriteTexture = Texture2D{};
-            Rectangle spriteRect = Rectangle{};
+            bool isLoaded = false;                 ///< Indicates if the texture is loaded
+            Texture2D spriteTexture = Texture2D{}; ///< Texture for the entity
+            Rectangle spriteRect = Rectangle{};    ///< Rectangle of the texture to be drawn
         };
 
+        /**
+         * @struct SpriteSize
+         * @brief Component for the size of the sprite.
+         */
         struct SpriteSize {
-            float spriteWidth = 0, spriteHeight = 0;
+            float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
         };
 
+        /**
+         * @struct EnemySpawn
+         * @brief Component representing the enemy spawn information.
+         */
         struct EnemySpawn {
-            float timeBeforeSpawn;
-            int waveSize;
-            int maxSpawnWidth = 1920;
-            int minSpawnWidth = 0;
-            int maxSpawnHeight = 1080;
-            int minSpawnHeight = 0;
+            float timeBeforeSpawn;     ///< Time before the next spawn
+            int waveSize;              ///< Size of the enemy wave to spawn
+            int maxSpawnWidth = 1920;  ///< Maximum spawn width
+            int minSpawnWidth = 0;     ///< Minimum spawn width
+            int maxSpawnHeight = 1080; ///< Maximum spawn height
+            int minSpawnHeight = 0;    ///< Minimum spawn height
         };
 
+        /**
+         * @struct ShootingRate
+         * @brief Component representing the shooting rate of an entity.
+         */
         struct ShootingRate {
-            float shootRate = 0;
+            float shootRate = 0; ///< Rate of shooting
         };
 
+        /**
+         * @struct BackgroundMusic
+         * @brief Component for background music of an entity.
+         */
         struct BackgroundMusic {
-            std::string musicPath;
-            float volume;
-            bool hasToBePlayed = false;
-            bool isLoaded = false;
-            bool isCurrentlyPlayed = false;
-            Music music = Music{};
+            std::string musicPath;          ///< Path to the music file
+            float volume;                   ///< Volume level of the music
+            bool hasToBePlayed = false;     ///< Indicates if the music should be played
+            bool isLoaded = false;          ///< Indicates if the music is loaded
+            bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
+            Music music = Music{};          ///< Music object
 
             bool operator==(const BackgroundMusic &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
@@ -149,11 +214,15 @@ namespace ecs {
     }
 }
 
+/**
+ * @struct EntityData
+ * @brief Represents the data of an entity, including its ID and components.
+ */
 struct EntityData {
   public:
-    size_t entityID = 0;
-    ecs::ComponentName name;
-    std::any component;
+    size_t entityID = 0;     ///< Unique ID of the entity
+    ecs::ComponentName name; ///< The name of the component
+    std::any component;      ///< The component data stored as std::any
 
     bool operator==(const EntityData &other) const {
         if (entityID == other.entityID && name == other.name) {
@@ -183,9 +252,13 @@ struct EntityData {
     }
 };
 
+/**
+ * @struct DataToSend
+ * @brief Structure for holding data to send between systems.
+ */
 struct DataToSend {
-    std::list<std::size_t> deadEntities = {};
-    std::vector<EntityData> entitiesData = {};
+    std::list<std::size_t> deadEntities = {};  ///< List of dead entities to be removed
+    std::vector<EntityData> entitiesData = {}; ///< List of entities' data
 
     bool empty() {
         return (deadEntities.empty() && entitiesData.empty());
