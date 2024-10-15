@@ -23,7 +23,7 @@
 #include <string>
 #include <thread>
 
-#define MAXMESSAGE 255     ///< Maximum number of messages that can be sent before resetting the message ID.
+#define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
 
 namespace network {
 
