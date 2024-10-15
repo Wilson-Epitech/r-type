@@ -23,7 +23,6 @@
 #include <string>
 #include <thread>
 
-#define UPDATE_CLIENT 0.02 ///< Interval for updating the client in seconds.
 #define MAXMESSAGE 255     ///< Maximum number of messages that can be sent before resetting the message ID.
 
 namespace network {
