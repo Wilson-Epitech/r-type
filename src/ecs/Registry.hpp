@@ -52,9 +52,9 @@ namespace ecs {
                 entity = _deadEntities.front();
                 _deadEntities.pop_front();
             } else {
-                entity = _entities.size() + 1;
+                entity = _aliveEntities.size() + 1;
             }
-            _entities.push_back(entity);
+            _aliveEntities.push_back(entity);
             _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
@@ -69,11 +69,11 @@ namespace ecs {
             for (auto &it : _eraseEntity) {
                 it.second(*this, e);
             }
-            for (std::size_t i = 0; i < _entities.size(); i++) {
-                if (_entities[i] == e) {
-                    _deadEntities.push_back(_entities[i]);
-                    _actualTurnDeadEntities.push_back(_entities[i]);
-                    _entities.erase(_entities.begin() + i);
+            for (std::size_t i = 0; i < _aliveEntities.size(); i++) {
+                if (_aliveEntities[i] == e) {
+                    _deadEntities.push_back(_aliveEntities[i]);
+                    _actualTurnDeadEntities.push_back(_aliveEntities[i]);
+                    _aliveEntities.erase(_aliveEntities.begin() + i);
                     break;
                 }
             }
@@ -123,9 +123,9 @@ namespace ecs {
          * @throws Error If no entity is found at the given index.
          */
         entity_t entityFromIndex(std::size_t idx) {
-            auto it = std::find(_entities.begin(), _entities.end(), idx);
+            auto it = std::find(_aliveEntities.begin(), _aliveEntities.end(), idx);
 
-            if (it == _entities.end())
+            if (it == _aliveEntities.end())
                 throw Error("No entity found at this index");
             return *it;
         };
@@ -137,7 +137,7 @@ namespace ecs {
          * @return false If the entity does not exist.
          */
         bool entityExist(const entity_t &ent) {
-            for (auto &it : _entities) {
+            for (auto &it : _aliveEntities) {
                 if (it == ent) {
                     return true;
                 }
@@ -274,7 +274,7 @@ namespace ecs {
         std::list<entity_t> _deadEntities;                            ///< A list of dead entities to be recycled.
         std::list<entity_t> _actualTurnDeadEntities;                  ///< A list of entities that died this turn.
         std::list<entity_t> _actualTurnActualTurnNewEntities;         ///< A list of new entities created this turn.
-        std::vector<entity_t> _entities;                                 ///< A vector of entities IDs.
+        std::vector<entity_t> _aliveEntities;                         ///< A vector of alive entities.
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
             _eraseEntity; ///< Functions to remove components when an entity is deleted.
