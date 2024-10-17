@@ -28,6 +28,7 @@
 #include "PlayerSpawnSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "ScoreSystem.hpp"
 
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"
@@ -43,6 +44,10 @@
 #define SPAWN_BOSS_NAME "boss"
 /** @brief Defines the name of the background music entity */
 #define MUSIC_NAME "music"
+/** @brief Defines the name of the team score entity */
+#define TEAM_SCORE_NAME "team_score"
+/** @brief Defines the name of the title entity */
+#define TITLE_NAME "title"
 
 /** @brief Maximum spawn height for enemies */
 #define MAX_SPAWN_HEIGHT 1040

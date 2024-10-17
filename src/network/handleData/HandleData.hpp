@@ -132,43 +132,58 @@ namespace network {
         static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
 
         /**
+         * @brief Retrieves the indices of text entities in the ECS registry.
+         * @param reg The ECS registry.
+         * @return A vector of text entity indices.
+         */
+        static std::vector<std::size_t> retrieveTextIndex(ecs::Registry &reg);
+
+        /**
+         * @brief Add a vector of EntityData element to the entitiesData vector from DataToSend.
+         * @param reg The vector of EntityData.
+         * @param reg The DataToSend struct.
+         */
+        static void addEntityDataToSend(std::vector<EntityData> entityData, DataToSend &data);
+
+        /**
          * @brief Retrieves updates for a specific component type for all players in the ECS registry.
          * @tparam Component The component type to retrieve updates for.
          * @param reg The ECS registry.
          * @param name The name of the component.
          * @return A vector of EntityData containing updated component data for the players.
          */
-        template <typename Component>
-        static std::vector<EntityData> retrievePlayersComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
-            static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersValues;
-            ecs::SparseArray<Component> &shootings = reg.getComponents<Component>();
-            std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
-            std::vector<EntityData> playersData;
-            EntityData playerData = EntityData{};
+        template <typename Component, typename Function>
+        static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name,
+                                                                Function const &retriveEntityTypesIndex) {
+            static std::vector<typename ecs::SparseArray<Component>::value_type> lastEntityTypesValues;
+            ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
+            std::vector<std::size_t> entityTypesIndex = retriveEntityTypesIndex(reg);
+            std::vector<EntityData> entityTypesData;
+            EntityData entityTypeData = EntityData{};
             std::size_t turn = 0;
 
-            for (auto &playerIndex : playersIndex) {
-                if (playerIndex == 0 || !shootings[playerIndex]) {
+            for (auto &entityTypeIndex : entityTypesIndex) {
+                if (entityTypeIndex == 0 || !componentInfos[entityTypeIndex]) {
                     continue;
                 }
-                if (lastPlayersValues.size() >= turn + 1) {
-                    if (!(lastPlayersValues[turn] == shootings[playerIndex].value())) {
-                        playerData.entityID = playerIndex;
-                        playerData.component = shootings[playerIndex].value();
-                        playerData.name = name;
-                        playersData.push_back(playerData);
-                        lastPlayersValues[turn] = shootings[playerIndex].value();
+                if (lastEntityTypesValues.size() >= turn + 1) {
+                    if (!(lastEntityTypesValues[turn] == componentInfos[entityTypeIndex].value())) {
+                        entityTypeData.entityID = entityTypeIndex;
+                        entityTypeData.component = componentInfos[entityTypeIndex].value();
+                        entityTypeData.name = name;
+                        entityTypesData.push_back(entityTypeData);
+                        lastEntityTypesValues[turn] = componentInfos[entityTypeIndex].value();
                     }
                 } else {
-                    playerData.entityID = playerIndex;
-                    playerData.component = shootings[playerIndex].value();
-                    playerData.name = name;
-                    playersData.push_back(playerData);
-                    lastPlayersValues.push_back(shootings[playerIndex].value());
+                    entityTypeData.entityID = entityTypeIndex;
+                    entityTypeData.component = componentInfos[entityTypeIndex].value();
+                    entityTypeData.name = name;
+                    entityTypesData.push_back(entityTypeData);
+                    lastEntityTypesValues.push_back(componentInfos[entityTypeIndex].value());
                 }
                 turn++;
             }
-            return playersData;
+            return entityTypesData;
         }
 
         /**

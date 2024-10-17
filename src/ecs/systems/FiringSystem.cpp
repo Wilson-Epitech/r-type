@@ -56,6 +56,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::ShootPlayerIndex> &shootPlayerIndex = reg.getComponents<component::ShootPlayerIndex>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
     if (playerShootIndex == 0 || !spritesSizes[playerShootIndex])
         return;
@@ -75,6 +76,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
                                             spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
+    shootPlayerIndex.insertAt(entity, ecs::component::ShootPlayerIndex{playerIndex});
 
     if (!soundEffect[playerShootIndex])
         return;
