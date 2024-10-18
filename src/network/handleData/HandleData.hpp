@@ -146,11 +146,12 @@ namespace network {
         static void addEntityDataToSend(std::vector<EntityData> entityData, DataToSend &data);
 
         /**
-         * @brief Retrieves updates for a specific component type for all players in the ECS registry.
+         * @brief Retrieves updates for a specific component type for all specific entity in the ECS registry.
          * @tparam Component The component type to retrieve updates for.
          * @param reg The ECS registry.
          * @param name The name of the component.
-         * @return A vector of EntityData containing updated component data for the players.
+         * @param retriveEntityTypesIndex function that retrive the index of an entity type in the ECS registry.
+         * @return A vector of EntityData containing updated component data for the specific entity.
          */
         template <typename Component, typename Function>
         static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name,
