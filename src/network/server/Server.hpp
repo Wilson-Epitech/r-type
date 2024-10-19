@@ -34,145 +34,32 @@ namespace network {
      */
     class Server {
       public:
-        /**
-         * @brief Constructs a Server object, binds the socket, and begins receiving messages.
-         * @param ioContext The asio context to manage asynchronous operations.
-         * @param host The IP address of the server.
-         * @param port The port on which the server listens.
-         * @param pool A thread pool to manage concurrent tasks.
-         */
         Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
-
-        /**
-         * @brief Destructor that stops the server and joins the IO thread.
-         */
         ~Server();
 
-        /**
-         * @brief Sends a message to a specific client.
-         * @param idClient The ID of the client to send the message to.
-         * @param message The message content to send.
-         * @param messageType The type of message being sent.
-         */
-        void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
-
-        /**
-         * @brief Sends a message to all connected clients.
-         * @param message The message content to send.
-         * @param messageType The type of message being sent.
-         */
-        void sendToAllClient(const std::string message, uint8_t messageType);
-
-        /**
-         * @brief Retrieves the ID of the last client that connected.
-         * @return The ID of the most recently connected client.
-         */
-        std::size_t getLastConnectedClientId();
-
-        /**
-         * @brief Retrieves the map indicating whether each client's world has been set.
-         * @return A map of client IDs and their world initialization status.
-         */
-        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
-
-        /**
-         * @brief Retrieves the entity data sent from clients.
-         * @return A DataToSend structure containing entity data.
-         */
         DataToSend getData();
-
-        /**
-         * @brief Checks whether the received data has been processed.
-         * @return A boolean indicating whether the data has been used.
-         */
         bool getDataHasBeenUsed();
-
-        /**
-         * @brief Sets the flag indicating whether the received data has been processed.
-         * @param value A boolean to set the data usage status.
-         */
         void setDataHasBeenUsed(bool value);
-
-        /**
-         * @brief Retrieves the heartbeat timestamps for each connected client.
-         * @return A map of client IDs and their last heartbeat timestamps.
-         */
-        std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
-
-        /**
-         * @brief Sends updates to the client in order to display informations.
-         * @param reg The ECS registry managing entities and components.
-         */
         void sendUpdatedData(ecs::Registry &reg);
-
-        /**
-         * @brief Check if the client has missed to many heartbeat. If it did, it considers the client as disconnected.
-         * @return The ID of the newly deconnected clients.
-         */
         std::size_t checkConnectedHeartbeat();
-
-        /**
-         * @brief Updates the heartbeat timestamps for clients.
-         * @param map A map containing the updated heartbeat timestamps.
-         */
-        void setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
-
-        /**
-         * @brief get the map _clientStillHere.
-         * @return map A map containing the list of all client once connected and if they are still connected.
-         */
-        std::unordered_map<std::size_t, bool> getClientStillHere();
-
-        /**
-         * @brief set the map _clientStillHere to new values.
-         * @param unordered_map A map containing the list of all client once connected and if they are still connected.
-         */
-        void setClientStillHere(std::unordered_map<std::size_t, bool>);
-
-        /**
-         * @brief get the map _corresOwnPlayerId.
-         * @return unordered_map A map containing the list of all client once connected and their ID clients.
-         */
-        std::unordered_map<std::size_t, std::size_t> getCorrespondence();
-
-        /**
-         * @brief count the number of client that are still alive.
-         * @return size_t a size_t containing the number of client stll alive.
-         */
         std::size_t getStillAliveClientNumber();
 
       private:
-        /**
-         * @brief Begins receiving data asynchronously from clients.
-         */
+
         void startReceiving();
-
-        /**
-         * @brief Deserializes an incoming message received from a client.
-         * @param message The message string to deserialize.
-         */
+        void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
+        void sendToAllClient(const std::string message, uint8_t messageType);
         void deserializeMessage(const std::string message);
-
-        /**
-         * @brief Handles data reception from a client.
-         * @param error The error code from the receive operation.
-         * @param bytesTransferred The number of bytes transferred in the operation.
-         */
         void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
-
-        /**
-         * @brief Handles the sending of data to a client.
-         * @param error The error code from the send operation.
-         * @param bytesTransferred The number of bytes transferred in the operation.
-         */
         void handleSend(const std::error_code &error, std::size_t bytesTransferred);
-
-        /**
-         * @brief Logs a new client connection and assigns a unique ID.
-         * @param endpoint The UDP endpoint of the new client.
-         * @return The ID assigned to the client.
-         */
         std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
+        void setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
+        void setClientStillHere(std::unordered_map<std::size_t, bool>);
+        std::size_t getLastConnectedClientId();
+        std::unordered_map<std::size_t, bool> getClientStillHere();
+        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
+        std::unordered_map<std::size_t, std::size_t> getCorrespondence();
+        std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
 
         std::thread _ioThread;                   ///< The thread running the asio context.
         asio::ip::udp::socket _socket;           ///< The UDP socket used for communication.

@@ -35,75 +35,22 @@ namespace network {
      */
     class Client {
       public:
-        /**
-         * @brief Constructs a `Client` and establishes a connection to the server.
-         * Initializes the client, opens a UDP socket, resolves the server address, and starts threads for
-         * receiving messages and sending heartbeat messages.
-         * @param ioContext The `asio::io_context` object used to manage asynchronous operations.
-         * @param host The server's hostname or IP address.
-         * @param port The server's port number.
-         */
         Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
-
-        /**
-         * @brief Destructor for the `Client` class.
-         * Stops the client by terminating threads and closing the socket.
-         */
         ~Client();
 
-        /**
-         * @brief Sends a message to the server.
-         * Serializes the message and sends it over the UDP socket.
-         * @param message The message to send.
-         * @param messageType The type of the message, which is used for server-side processing.
-         */
         void sendMessage(const std::string &message, uint8_t messageType);
-
-        /**
-         * @brief Catch the ctrl C signal.
-         * @param signal Retrieve the signal sent.
-         */
-        static void handleCtrlC(int signal);
-        sig_atomic_t handleClient(const sig_atomic_t new_status);
-
-        /**
-         * @brief Checks if the client is still running.
-         * @return true If the client is active and running.
-         * @return false If the client has stopped.
-         */
-        bool getIsRunning();
-
-        /**
-         * @brief Retrieves the data received from the server.
-         * @return std::list<DataToSend> The data received from the server.
-         */
-        std::list<DataToSend> getData();
-
-        /**
-         * @brief Retrieves the player's ID.
-         * @return std::size_t The player's ID.
-         */
-        std::size_t getPlayerId();
-        /**
-         * @brief Clear the list of Data received by the server
-         */
         void clearData();
+        std::list<DataToSend> getData();
         void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
+        sig_atomic_t handleClient(const sig_atomic_t new_status);
+        bool getIsRunning();
+        std::size_t getPlayerId();
 
       private:
-        /**
-         * @brief Listens for and processes messages from the server.
-         * This function runs in a separate thread and continuously listens for messages from the server. It processes
-         * the messages and handles updates to the client's state.
-         */
-        void msgFromServer();
 
-        /**
-         * @brief Sends periodic heartbeat messages to the server to maintain the connection.
-         * This function runs in a separate thread and sends heartbeat messages at regular intervals to notify the server
-         * that the client is still connected and active.
-         */
+        void msgFromServer();
         void heartbeatToServer();
+        void handleCtrlC(int signal);
 
         asio::ip::udp::socket _socket;            ///< The UDP socket used for communication with the server.
         asio::ip::udp::endpoint _receiveEndpoint; ///< The server's endpoint (address and port).
