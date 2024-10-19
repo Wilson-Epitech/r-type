@@ -15,9 +15,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "HandleData.hpp"
-#include <array>
-#include <asio.hpp>
+#include "INetwork.hpp"
 #include <map>
 #include <memory>
 
@@ -32,20 +30,21 @@ namespace network {
      * The server listens for incoming client connections, manages multiple clients,
      * and handles message sending/receiving operations using the asio library.
      */
-    class Server {
+    class Server : virtual public network::INetwork {
       public:
         Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
         ~Server();
 
-        sig_atomic_t handleNetwork(const sig_atomic_t new_status);
-        void sendMessage(const std::string &message, uint8_t messageType);
-        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend>);
-        void clearData();
-        std::list<DataToSend> getData();
-        bool getIsRunning();
+        sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
+        void sendMessage(const std::string &message, uint8_t messageType) override;
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
+        void clearData() override;
+        std::list<DataToSend> getData() override;
+        bool isConnectedInNetwork() override;
 
-        std::size_t checkConnectedHeartbeat(); //
-        std::size_t getStillAliveClientNumber(); //
+        std::size_t getPlayerId() override {return 0;}
+        std::size_t checkConnectedHeartbeat() override;
+
       private:
 
         void startReceiving();
@@ -57,6 +56,7 @@ namespace network {
         void setHeartBeatMap(std::unordered_map<std::size_t, std::chrono::steady_clock::time_point>);
         void setClientStillHere(std::unordered_map<std::size_t, bool>);
         std::size_t getLastConnectedClientId();
+        std::size_t getStillAliveClientNumber();
         std::unordered_map<std::size_t, bool> getClientStillHere();
         std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
         std::unordered_map<std::size_t, std::size_t> getCorrespondence();

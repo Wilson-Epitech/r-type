@@ -31,12 +31,28 @@ void network::Client::handleCtrlC(int signal) {
         exit(0);
 }
 
-sig_atomic_t network::Client::handleNetwork(const sig_atomic_t new_status) {
+sig_atomic_t network::Client::handleNetwork(const sig_atomic_t &new_status) {
     static volatile sig_atomic_t status = 1;
 
     if (new_status != 1)
         status = new_status;
     return status;
+}
+
+void network::Client::clearData() {
+    _data.clear();
+}
+
+std::list<DataToSend> network::Client::getData() {
+    return _data;
+}
+
+std::size_t network::Client::getPlayerId() {
+    return _playerId;
+}
+
+bool network::Client::isConnectedInNetwork() {
+    return _isRunning;
 }
 
 void network::Client::msgFromServer() {
@@ -111,22 +127,6 @@ void network::Client::sendMessage(const std::string &message, uint8_t messageTyp
     }
 
     _socket.send_to(asio::buffer(buffer), _receiveEndpoint);
-}
-
-bool network::Client::getIsRunning() {
-    return _isRunning;
-}
-
-std::list<DataToSend> network::Client::getData() {
-    return _data;
-}
-
-std::size_t network::Client::getPlayerId() {
-    return _playerId;
-}
-
-void network::Client::clearData() {
-    _data.clear();
 }
 
 void network::Client::heartbeatToServer() {

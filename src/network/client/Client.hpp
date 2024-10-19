@@ -16,10 +16,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "HandleData.hpp"
-#include <array>
-#include <asio.hpp>
-#include <list>
+#include "INetwork.hpp"
 #include <string>
 #include <thread>
 
@@ -33,19 +30,20 @@ namespace network {
      * The `Client` class handles communication with the server through a UDP socket. It sends and receives
      * messages, maintains the connection using heartbeat messages, and stores the player's game data received from the server.
      */
-    class Client {
+    class Client : virtual public network::INetwork {
       public:
         Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
         ~Client();
 
-        sig_atomic_t handleNetwork(const sig_atomic_t new_status);
-        void sendMessage(const std::string &message, uint8_t messageType);
-        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
-        void clearData();
-        std::list<DataToSend> getData();
-        bool getIsRunning();
+        sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
+        void sendMessage(const std::string &message, uint8_t messageType) override;
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
+        void clearData() override;
+        std::list<DataToSend> getData() override;
+        bool isConnectedInNetwork() override;
 
-        std::size_t getPlayerId(); //
+        std::size_t getPlayerId() override;
+        std::size_t checkConnectedHeartbeat() override {return 0;}
 
       private:
 

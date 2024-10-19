@@ -35,6 +35,7 @@ target_include_directories(rtype_lib PUBLIC
     gameEngine
     games
     runGame
+    network
     network/handleData
     network/server
     network/client

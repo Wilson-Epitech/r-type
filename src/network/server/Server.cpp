@@ -10,8 +10,8 @@
 #include <iostream>
 
 network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
-      _magicNumber(0x9B3D), _isRunning(true) {
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _isRunning(true), _idClient(0), _threadPool(pool),
+    _magicNumber(0x9B3D) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
 }
@@ -21,7 +21,7 @@ network::Server::~Server() {
     _isRunning = false;
 }
 
-sig_atomic_t network::Server::handleNetwork(const sig_atomic_t new_status) {
+sig_atomic_t network::Server::handleNetwork(const sig_atomic_t &new_status) {
     static volatile sig_atomic_t status = 1;
 
     if (new_status != 1)
@@ -45,8 +45,10 @@ std::list<DataToSend> network::Server::getData() {
     return _data;
 }
 
-bool network::Server::getIsRunning() {
-    return _isRunning;
+bool network::Server::isConnectedInNetwork() {
+    if (getStillAliveClientNumber() > 0)
+        return true;
+    return false;
 }
 
 std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::Server::getHeartbeatClient() {
@@ -272,7 +274,7 @@ std::size_t network::Server::checkConnectedHeartbeat() {
     return disconnectedPlayerEntity;
 }
 
-void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend>) {
+void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &) {
 
     std::unordered_map<std::size_t, bool> connectedClients = getClientStillHere();
 

@@ -39,8 +39,8 @@ void RunGame::runServer() {
                 network::HandleData::updateEntitiesData(dataReceived, _reg);
             }
         }
-        if (_server->getStillAliveClientNumber() > 0) {
-            _server->sendUpdatedData(_reg, std::list<DataToSend>{});
+        if (_server->isConnectedInNetwork()) {
+            _server->sendUpdatedData(_reg, dataReceivedList);
             _reg.clearActualTurnNewEntities();
             _reg.clearActualTurnDeadEntities();
         }
@@ -58,7 +58,7 @@ void RunGame::runClient() {
     std::size_t playerId = 0;
 
     while (_client->handleNetwork(1) && !WindowShouldClose()) {
-        if (!_client->getIsRunning()) {
+        if (!_client->isConnectedInNetwork()) {
             _client->sendMessage("Client disconnected", 2);
             break;
         }
