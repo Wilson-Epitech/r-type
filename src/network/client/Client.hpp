@@ -38,13 +38,14 @@ namespace network {
         Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
         ~Client();
 
+        sig_atomic_t handleNetwork(const sig_atomic_t new_status);
         void sendMessage(const std::string &message, uint8_t messageType);
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
         void clearData();
         std::list<DataToSend> getData();
-        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
-        sig_atomic_t handleClient(const sig_atomic_t new_status);
         bool getIsRunning();
-        std::size_t getPlayerId();
+
+        std::size_t getPlayerId(); //
 
       private:
 

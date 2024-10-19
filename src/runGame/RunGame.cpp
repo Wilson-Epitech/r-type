@@ -26,21 +26,21 @@ bool RunGame::isUpdateTimeElapsed() {
 }
 
 void RunGame::runServer() {
-    DataToSend dataReceived;
-    bool dataHasBeenUsed = false;
+    std::list<DataToSend> dataReceivedList;
     std::size_t disconnectedPlayerEntity = 0;
 
     while (1) {
         if (!isUpdateTimeElapsed())
             continue;
-        dataReceived = _server->getData();
-        dataHasBeenUsed = _server->getDataHasBeenUsed();
-        if (!dataReceived.empty() && !dataHasBeenUsed) {
-            network::HandleData::updateEntitiesData(dataReceived, _reg);
-            _server->setDataHasBeenUsed(true);
+        dataReceivedList = _server->getData();
+        _server->clearData();
+        for (auto dataReceived : dataReceivedList) {
+            if (!dataReceived.empty()) {
+                network::HandleData::updateEntitiesData(dataReceived, _reg);
+            }
         }
         if (_server->getStillAliveClientNumber() > 0) {
-            _server->sendUpdatedData(_reg);
+            _server->sendUpdatedData(_reg, std::list<DataToSend>{});
             _reg.clearActualTurnNewEntities();
             _reg.clearActualTurnDeadEntities();
         }
@@ -57,7 +57,7 @@ void RunGame::runClient() {
     std::map<std::size_t, entity_t> player;
     std::size_t playerId = 0;
 
-    while (_client->handleClient(1) && !WindowShouldClose()) {
+    while (_client->handleNetwork(1) && !WindowShouldClose()) {
         if (!_client->getIsRunning()) {
             _client->sendMessage("Client disconnected", 2);
             break;

@@ -37,19 +37,20 @@ namespace network {
         Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
         ~Server();
 
-        DataToSend getData();
-        bool getDataHasBeenUsed();
-        void setDataHasBeenUsed(bool value);
-        void sendUpdatedData(ecs::Registry &reg);
-        std::size_t checkConnectedHeartbeat();
-        std::size_t getStillAliveClientNumber();
+        sig_atomic_t handleNetwork(const sig_atomic_t new_status);
+        void sendMessage(const std::string &message, uint8_t messageType);
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend>);
+        void clearData();
+        std::list<DataToSend> getData();
+        bool getIsRunning();
 
+        std::size_t checkConnectedHeartbeat(); //
+        std::size_t getStillAliveClientNumber(); //
       private:
 
         void startReceiving();
         void sendToAClient(const std::size_t idClient, const std::string message, uint8_t messageType);
         void sendToAllClient(const std::string message, uint8_t messageType);
-        void deserializeMessage(const std::string message);
         void handleReceive(const std::error_code &error, std::size_t bytesTransferred);
         void handleSend(const std::error_code &error, std::size_t bytesTransferred);
         std::size_t logNewConnection(asio::ip::udp::endpoint endpoint);
@@ -65,6 +66,7 @@ namespace network {
         asio::ip::udp::socket _socket;           ///< The UDP socket used for communication.
         asio::ip::udp::endpoint _remoteEndpoint; ///< Endpoint of the client sending data.
         std::array<char, 50000> _receiveBuffer;  ///< Buffer for storing received data.
+        bool _isRunning;                          ///< Indicates whether the server is still running.
 
         std::size_t _idClient;          ///< The ID of the last connected client.
         asio::thread_pool &_threadPool; ///< Thread pool for handling tasks.
@@ -77,8 +79,7 @@ namespace network {
             _isClientStillHere; ///<  Map that set to false the a bool if the client with the std::size_t id was disconnected
         std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId; ///< Create a coresspondence between the _OwnID and the _playerID;
 
-        DataToSend _data;      ///< Data structure containing entity updates from clients.
-        bool _dataHasBeenUsed; ///< Flag indicating whether the received data has been processed.
+        std::list<DataToSend> _data;  ///< A list of Data received from clients, such as players updates.
 
         const uint16_t _magicNumber; ///< Magic number used for message validation.
         uint16_t _receivedMagicNbr;  ///< Received magic number for message validation.

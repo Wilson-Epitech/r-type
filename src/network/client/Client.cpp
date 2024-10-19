@@ -31,7 +31,7 @@ void network::Client::handleCtrlC(int signal) {
         exit(0);
 }
 
-sig_atomic_t network::Client::handleClient(const sig_atomic_t new_status) {
+sig_atomic_t network::Client::handleNetwork(const sig_atomic_t new_status) {
     static volatile sig_atomic_t status = 1;
 
     if (new_status != 1)

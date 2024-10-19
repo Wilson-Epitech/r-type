@@ -11,13 +11,26 @@
 
 network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
     : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
-      _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
+      _magicNumber(0x9B3D), _isRunning(true) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
 }
 
 network::Server::~Server() {
     _ioThread.join();
+    _isRunning = false;
+}
+
+sig_atomic_t network::Server::handleNetwork(const sig_atomic_t new_status) {
+    static volatile sig_atomic_t status = 1;
+
+    if (new_status != 1)
+        status = new_status;
+    return status;
+}
+
+void network::Server::sendMessage(const std::string &message, uint8_t messageType) {
+      return sendToAllClient(message, messageType);
 }
 
 std::size_t network::Server::getLastConnectedClientId() {
@@ -28,16 +41,12 @@ std::unordered_map<std::size_t, bool> network::Server::getAreClientsWorldSet() {
     return _areClientsWorldSet;
 }
 
-DataToSend network::Server::getData() {
+std::list<DataToSend> network::Server::getData() {
     return _data;
 }
 
-bool network::Server::getDataHasBeenUsed() {
-    return _dataHasBeenUsed;
-}
-
-void network::Server::setDataHasBeenUsed(bool value) {
-    _dataHasBeenUsed = value;
+bool network::Server::getIsRunning() {
+    return _isRunning;
 }
 
 std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::Server::getHeartbeatClient() {
@@ -70,16 +79,13 @@ std::size_t network::Server::getStillAliveClientNumber() {
     return numberAlive;
 }
 
+void network::Server::clearData() {
+    _data.clear();
+}
+
 void network::Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
                                std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
-}
-
-void network::Server::deserializeMessage(const std::string message) {
-    _data.deadEntities.clear();
-    _data.entitiesData.clear();
-    _data = network::HandleData::deserializeEntityDataVector(message);
-    _dataHasBeenUsed = false;
 }
 
 void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
@@ -132,7 +138,7 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
             if (!_corresOwnPlayerId[clientId])
                 _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
-            deserializeMessage(message);
+            _data.push_back(network::HandleData::deserializeEntityDataVector(message));
         }
         startReceiving();
         _receiveBuffer.fill(0);
@@ -266,7 +272,7 @@ std::size_t network::Server::checkConnectedHeartbeat() {
     return disconnectedPlayerEntity;
 }
 
-void network::Server::sendUpdatedData(ecs::Registry &reg) {
+void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend>) {
 
     std::unordered_map<std::size_t, bool> connectedClients = getClientStillHere();
 
