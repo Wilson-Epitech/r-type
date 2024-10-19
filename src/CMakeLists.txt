@@ -15,6 +15,7 @@ set(SRC
     ecs/systems/SoundSystem.cpp
     ecs/systems/SpriteAnimationSystem.cpp
     ecs/systems/MusicSystem.cpp
+    ecs/systems/ScoreSystem.cpp
     runGame/RunGame.cpp
     network/client/Client.cpp
     network/server/Server.cpp

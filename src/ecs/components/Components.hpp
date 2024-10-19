@@ -38,7 +38,8 @@ namespace ecs {
         ENEMY_TEMPLATE,      ///< Enemy template entity
         ENEMYSHOT,           ///< Enemy's shot entity
         ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
-        BACKGROUND           ///< Background entity
+        BACKGROUND,          ///< Background entity
+        TEXT                 ///< Text entity
     };
 
     /**
@@ -54,7 +55,9 @@ namespace ecs {
         SHOOTING,    ///< Shooting component
         SPRITEINFOS, ///< Sprite information component
         SOUNDEFFECT, ///< Sound effect component
-        MUSIC        ///< Background music component
+        MUSIC,       ///< Background music component
+        SCORE,       ///< Score component
+        TEXTINFOS    ///< Text component
     };
 
     namespace component {
@@ -194,6 +197,14 @@ namespace ecs {
         };
 
         /**
+         * @struct ShootPlayerIndex
+         * @brief Component representing the index of the player that shot
+         */
+        struct ShootPlayerIndex {
+            std::size_t playerIndex; ///< Index of the player that shot
+        };
+
+        /**
          * @struct BackgroundMusic
          * @brief Component for background music of an entity.
          */
@@ -208,6 +219,41 @@ namespace ecs {
             bool operator==(const BackgroundMusic &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                         hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
+            }
+        };
+
+        /**
+         * @struct Score
+         * @brief Component for the score of an entity
+        */
+        struct Score {
+            std::size_t scoreIncrementation = 0; ///< Incrementation value for score
+            int score = 0; /// < Score of the entity
+
+            bool operator==(const Score &other) const {
+                return (score == other.score && scoreIncrementation == other.scoreIncrementation);
+            }
+        };
+
+        /**
+         * @struct TextInfos
+         * @brief Component for the text information of an entity
+        */
+        struct TextInfos {
+            std::string textToDisplay; ///< Text to display
+            int x; ///< X coordinates of the text
+            int y; ///< Y coordinates of the text
+            int size; ///< Size of the text
+            std::string fontPath; ///< Path of the font used to draw the text
+            Color color = Color{}; ///< Color of the text
+            Font font = Font{}; ///< Font of the text
+            bool fontIsLoaded = false; ///< Indicates if font has been loaded
+            bool hasChanged = false; ///< Indicates if the textToDisplay string has changed
+
+            bool operator==(const TextInfos &other) const {
+                return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
+                        fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
+                        color.b == other.color.b);
             }
         };
     }
@@ -275,6 +321,8 @@ void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect);
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music);
+void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
+void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -287,6 +335,8 @@ void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect);
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music);
+void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
+void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

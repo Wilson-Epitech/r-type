@@ -267,6 +267,31 @@ namespace ecs {
             _initPlayerSystem(*this);
         };
 
+        /**
+         * @brief Adds a collision between two entities.
+         * @param firstEntity The identifier of the first entity involved in the collision.
+         * @param secondEntity The identifier of the second entity involved in the collision.
+         */
+        void addCollision(const std::size_t firstEntity, const std::size_t secondEntity) {
+            _collisionEntity[firstEntity] = secondEntity;
+        }
+
+        /**
+         * @brief Removes a collision entry for a specific entity.
+         * @param index The identifier of the entity whose collision entry will be removed.
+         */
+        void eraseCollision(const std::size_t index) {
+            _collisionEntity.erase(index);
+        }
+
+        /**
+         * @brief Retrieves the map of all collisions between entities.
+         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding entities they collided with.
+         */
+        std::unordered_map<entity_t, entity_t> getCollisionMap(void) {
+            return _collisionEntity;
+        }
+
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
@@ -278,6 +303,7 @@ namespace ecs {
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
             _eraseEntity; ///< Functions to remove components when an entity is deleted.
+        std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
     };
 }
 

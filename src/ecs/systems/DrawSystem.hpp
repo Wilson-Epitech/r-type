@@ -18,6 +18,8 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
+#define LETTER_SPACING 2
+
 #define LIVES_BAR_HEIGHT 5
 
 namespace ecs {
@@ -114,6 +116,18 @@ namespace ecs {
              */
             void drawLife(Registry &reg, SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
                           SparseArray<component::Position> &positions, std::size_t index);
+
+            /**
+            * @brief Renders the text of an entity.
+            * @param reg The ECS Registry.
+            */
+            void drawText(Registry &reg);
+
+            /**
+             * @brief Load the font of a text.
+             * @param textInfos The text informations of an entity.
+             */
+            void loadFonts(SparseArray<component::TextInfos> &textInfos);
         };
     }
 }
