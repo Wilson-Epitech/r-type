@@ -24,6 +24,8 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::SpriteInfos>();
     _reg.registerComponent<ecs::component::SoundEffect>();
     _reg.registerComponent<ecs::component::BackgroundMusic>();
+    _reg.registerComponent<ecs::component::Score>();
+    _reg.registerComponent<ecs::component::TextInfos>();
 }
 
 void game::RtypeGameClient::addComponentsToEntities() {}

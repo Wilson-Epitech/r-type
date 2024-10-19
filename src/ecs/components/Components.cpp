@@ -41,6 +41,15 @@ void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::Score &score) {
+    oss << score.score << ' ' << score.scoreIncrementation;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo) {
+    oss << textInfo.textToDisplay << ' ' << textInfo.x << ' ' << textInfo.y << ' ' << textInfo.size << ' ' << textInfo.fontPath << ' '
+        << textInfo.color.a << ' ' << textInfo.color.r << ' ' << textInfo.color.g << ' ' << textInfo.color.b;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -61,6 +70,10 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityCompotent<ecs::component::SoundEffect>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
         network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusic>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::SCORE)
+        network::HandleData::serializeEntityCompotent<ecs::component::Score>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::TEXTINFOS)
+        network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -111,6 +124,15 @@ void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music)
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::Score &score) {
+    iss >> score.score >> score.scoreIncrementation;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo) {
+    iss >> textInfo.textToDisplay >> textInfo.x >> textInfo.y >> textInfo.size >> textInfo.fontPath >> textInfo.color.a >>
+        textInfo.color.r >> textInfo.color.g >> textInfo.color.b;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -131,4 +153,8 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityCompotent<ecs::component::SoundEffect>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
         network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusic>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::SCORE)
+        network::HandleData::deserializeEntityCompotent<ecs::component::Score>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::TEXTINFOS)
+        network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
 }
