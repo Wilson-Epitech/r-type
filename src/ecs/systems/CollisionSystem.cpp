@@ -41,6 +41,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 if (CheckCollisionRecs(rec1, rec2)) {
                     lives[i]->nbLives--;
                     lives[j]->nbLives--;
+                    reg.addCollision(i, j);
                 }
             }
         }
