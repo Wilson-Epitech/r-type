@@ -24,7 +24,6 @@ NAME = server.so
 all : $(NAME)
 
 $(NAME):	$(OBJ)
-	$(CXX) -c $(CXXFLAGS) $(SRC)
 	$(CXX) $(LDFLAGS) -o $(NAME) $(OBJ)
 	mv $(NAME) $(LIBPATH)
 
