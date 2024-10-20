@@ -15,14 +15,12 @@ network::Client::Client(const std::string &host, const std::string &port) : netw
     asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
     _receiverThread = std::thread(&network::Client::msgFromServer, this);
-    // _heartbeatThread = std::thread(&network::Client::heartbeatToServer, this);
     sendMessage("New client connected.", 1);
 }
 
 network::Client::~Client() {
     _isRunning = false;
     _receiverThread.join();
-    // _heartbeatThread.join();
     _socket.close();
 }
 
@@ -31,16 +29,8 @@ void network::Client::handleCtrlC(int signal) {
         exit(0);
 }
 
-void network::Client::clearData() {
-    _data.clear();
-}
-
 std::list<DataToSend> network::Client::getData() {
     return _data;
-}
-
-std::size_t network::Client::getPlayerId() {
-    return _playerId;
 }
 
 bool network::Client::isConnectedInNetwork() {
@@ -135,6 +125,19 @@ std::size_t network::Client::manageConnection() {
       time0 = std::chrono::steady_clock::now();
     }
     return 0;
+}
+
+void network::Client::updateData(ecs::Registry &reg) {
+  std::map<std::size_t, entity_t> player = reg.getPlayers();
+  if (_playerId != 0 && player.size() == 0)
+      reg.addPlayer(0, _playerId);
+    for (auto dataReceived : _data) {
+        if (!dataReceived.empty()) {
+            network::HandleData::updateDeadEntities(dataReceived, reg);
+            network::HandleData::updateEntitiesData(dataReceived, reg);
+        }
+    }
+  _data.clear();
 }
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {

@@ -76,14 +76,6 @@ std::size_t network::Server::getStillAliveClientNumber() {
     return numberAlive;
 }
 
-std::size_t network::Server::getPlayerId() {
-    return 0;
-}
-
-void network::Server::clearData() {
-    _data.clear();
-}
-
 void network::Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
                                std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
@@ -271,6 +263,15 @@ std::size_t network::Server::manageConnection() {
     setHeartBeatMap(lastSeenClient);
     setClientStillHere(clientStillHere);
     return disconnectedPlayerEntity;
+}
+
+void network::Server::updateData(ecs::Registry &reg) {
+    for (auto dataReceived : _data) {
+        if (!dataReceived.empty()) {
+            network::HandleData::updateEntitiesData(dataReceived, reg);
+        }
+    }
+    _data.clear();
 }
 
 void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &) {

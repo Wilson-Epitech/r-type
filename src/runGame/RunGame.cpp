@@ -30,16 +30,11 @@ void RunGame::runServer() {
     std::list<DataToSend> dataReceivedList;
     std::size_t disconnectedPlayerEntity = 0;
 
-    while (1) {
+    while (_networkInstance->handleNetwork(1)) {
         if (!isUpdateTimeElapsed())
             continue;
         dataReceivedList = _networkInstance->getData();
-        _networkInstance->clearData();
-        for (auto dataReceived : dataReceivedList) {
-            if (!dataReceived.empty()) {
-                network::HandleData::updateEntitiesData(dataReceived, _reg);
-            }
-        }
+        _networkInstance->updateData(_reg);
         if (_networkInstance->isConnectedInNetwork()) {
             _networkInstance->sendUpdatedData(_reg, dataReceivedList);
             _reg.clearActualTurnNewEntities();
@@ -53,10 +48,8 @@ void RunGame::runServer() {
 }
 
 void RunGame::runClient() {
-    static std::list<DataToSend> lastDataReceivedList;
     std::list<DataToSend> dataReceivedList;
-    std::map<std::size_t, entity_t> player;
-    std::size_t playerId = 0;
+
     while (_networkInstance->handleNetwork(1) && !WindowShouldClose()) {
         if (!_networkInstance->isConnectedInNetwork()) {
             _networkInstance->sendMessage("Client disconnected", 2);
@@ -67,19 +60,8 @@ void RunGame::runClient() {
         BeginDrawing();
         ClearBackground(RAYWHITE);
         dataReceivedList = _networkInstance->getData();
-        _networkInstance->clearData();
-        player = _reg.getPlayers();
-        playerId = _networkInstance->getPlayerId();
-        if (playerId != 0 && player.size() == 0)
-            _reg.addPlayer(0, playerId);
-        for (auto dataReceived : dataReceivedList) {
-            if (!dataReceived.empty()) {
-                network::HandleData::updateDeadEntities(dataReceived, _reg);
-                network::HandleData::updateEntitiesData(dataReceived, _reg);
-            }
-            lastDataReceivedList = dataReceivedList;
-        }
-        _networkInstance->sendUpdatedData(_reg, lastDataReceivedList);
+        _networkInstance->updateData(_reg);
+        _networkInstance->sendUpdatedData(_reg, dataReceivedList);
         _reg.clearActualTurnNewEntities();
         _reg.clearActualTurnDeadEntities();
         _reg.runSystems();

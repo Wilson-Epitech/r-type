@@ -38,12 +38,11 @@ namespace network {
 
         void sendMessage(const std::string &message, uint8_t messageType) override;
         void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
-        void clearData() override;
-        std::list<DataToSend> getData() override;
-        bool isConnectedInNetwork() override;
-        network::Type getNetworkType() override;
         std::size_t manageConnection() override;
-        std::size_t getPlayerId() override;
+        void updateData(ecs::Registry &reg) override;
+        std::list<DataToSend> getData() override;
+        network::Type getNetworkType() override;
+        bool isConnectedInNetwork() override;
 
       private:
 

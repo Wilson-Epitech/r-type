@@ -28,13 +28,11 @@ namespace network {
         virtual sig_atomic_t handleNetwork(const sig_atomic_t &new_status) = 0;
         virtual void sendMessage(const std::string &message, uint8_t messageType) = 0;
         virtual void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) = 0;
-        virtual void clearData() = 0;
-        virtual std::list<DataToSend> getData() = 0;
-        virtual bool isConnectedInNetwork() = 0;
-        virtual network::Type getNetworkType() = 0;
-
-        virtual std::size_t getPlayerId() = 0;
         virtual std::size_t manageConnection() = 0;
+        virtual void updateData(ecs::Registry &reg) = 0;
+        virtual std::list<DataToSend> getData() = 0;
+        virtual network::Type getNetworkType() = 0;
+        virtual bool isConnectedInNetwork() = 0;
     };
 }
 
