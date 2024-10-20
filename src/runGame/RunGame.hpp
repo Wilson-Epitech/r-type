@@ -42,10 +42,8 @@ class RunGame {
     RunGame(ecs::Registry &reg, Function const &gameState, const std::string &host, const std::size_t &port, asio::thread_pool &pool)
         : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
           _time1(std::chrono::steady_clock::now()) {
-
         _networkLoader = std::make_unique<DLLoader<network::INetwork>>(SERVER_LIB_PATH);
         _networkInstance = _networkLoader->getInstance(host, port, pool);
-
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     }
     /**
@@ -64,11 +62,11 @@ class RunGame {
           _time1(std::chrono::steady_clock::now()) {
         _networkLoader = std::make_unique<DLLoader<network::INetwork>>(CLIENT_LIB_PATH);
         _networkInstance = _networkLoader->getInstance(host, port);
-
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-        InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
-        MaximizeWindow();
+        InitWindow(900, 450, gameName.c_str());
+        // InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
+        // MaximizeWindow();
         InitAudioDevice();
     }
 

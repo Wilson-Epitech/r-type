@@ -15,7 +15,7 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include "INetwork.hpp"
+#include "ANetwork.hpp"
 #include <map>
 #include <memory>
 
@@ -30,12 +30,11 @@ namespace network {
      * The server listens for incoming client connections, manages multiple clients,
      * and handles message sending/receiving operations using the asio library.
      */
-    class Server : virtual public network::INetwork {
+    class Server : virtual public network::ANetwork {
       public:
         Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool);
         ~Server();
 
-        sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
         void sendMessage(const std::string &message, uint8_t messageType) override;
         void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
         void clearData() override;
@@ -68,7 +67,6 @@ namespace network {
         asio::ip::udp::socket _socket;           ///< The UDP socket used for communication.
         asio::ip::udp::endpoint _remoteEndpoint; ///< Endpoint of the client sending data.
         std::array<char, 50000> _receiveBuffer;  ///< Buffer for storing received data.
-        bool _isRunning;                          ///< Indicates whether the server is still running.
 
         std::size_t _idClient;          ///< The ID of the last connected client.
         asio::thread_pool &_threadPool; ///< Thread pool for handling tasks.
@@ -81,13 +79,8 @@ namespace network {
             _isClientStillHere; ///<  Map that set to false the a bool if the client with the std::size_t id was disconnected
         std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId; ///< Create a coresspondence between the _OwnID and the _playerID;
 
-        std::list<DataToSend> _data;  ///< A list of Data received from clients, such as players updates.
-
-        const uint16_t _magicNumber; ///< Magic number used for message validation.
         uint16_t _receivedMagicNbr;  ///< Received magic number for message validation.
         uint8_t _messageType;        ///< Type of the received message.
-        uint8_t _messageId;          ///< ID of the received message.
-        uint16_t _messageLen;        ///< Length of the received message.
     };
 };
 

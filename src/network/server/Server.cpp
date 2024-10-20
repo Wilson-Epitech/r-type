@@ -9,9 +9,8 @@
 #include <functional>
 #include <iostream>
 
-network::Server::Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool)
-    : _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _isRunning(true), _idClient(0), _threadPool(pool),
-    _magicNumber(0x9B3D) {
+network::Server::Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool) : network::ANetwork(),
+    _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
     _ioThread = std::thread([this]() { _ioContext.run(); });
 }
@@ -21,16 +20,8 @@ network::Server::~Server() {
     _isRunning = false;
 }
 
-sig_atomic_t network::Server::handleNetwork(const sig_atomic_t &new_status) {
-    static volatile sig_atomic_t status = 1;
-
-    if (new_status != 1)
-        status = new_status;
-    return status;
-}
-
 void network::Server::sendMessage(const std::string &message, uint8_t messageType) {
-      return sendToAllClient(message, messageType);
+    return sendToAllClient(message, messageType);
 }
 
 std::size_t network::Server::getLastConnectedClientId() {

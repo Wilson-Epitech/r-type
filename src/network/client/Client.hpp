@@ -16,7 +16,7 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "INetwork.hpp"
+#include "ANetwork.hpp"
 #include <string>
 #include <thread>
 
@@ -30,12 +30,11 @@ namespace network {
      * The `Client` class handles communication with the server through a UDP socket. It sends and receives
      * messages, maintains the connection using heartbeat messages, and stores the player's game data received from the server.
      */
-    class Client : virtual public network::INetwork {
+    class Client : virtual public network::ANetwork {
       public:
         Client(const std::string &host, const std::string &port);
         ~Client();
 
-        sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
         void sendMessage(const std::string &message, uint8_t messageType) override;
         void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
         void clearData() override;
@@ -57,13 +56,7 @@ namespace network {
         asio::ip::udp::endpoint _receiveEndpoint; ///< The server's endpoint (address and port).
         std::thread _receiverThread;              ///< Thread for receiving messages from the server.
         std::thread _heartbeatThread;             ///< Thread for sending heartbeat messages to the server.
-        bool _isRunning;                          ///< Indicates whether the client is still running.
 
-        const uint16_t _magicNumber; ///< Magic number used for message validation.
-        uint8_t _messageId;          ///< ID of the current message being sent.
-        uint16_t _len;               ///< Length of the current message.
-
-        std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
         std::size_t _playerId;       ///< The player's ID assigned by the server.
     };
 };

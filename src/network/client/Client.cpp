@@ -9,8 +9,8 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(const std::string &host, const std::string &port)
-    : _socket(_ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
+network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(),
+    _socket(_ioContext), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -29,14 +29,6 @@ network::Client::~Client() {
 void network::Client::handleCtrlC(int signal) {
     if (signal == SIGINT)
         exit(0);
-}
-
-sig_atomic_t network::Client::handleNetwork(const sig_atomic_t &new_status) {
-    static volatile sig_atomic_t status = 1;
-
-    if (new_status != 1)
-        status = new_status;
-    return status;
 }
 
 void network::Client::clearData() {
@@ -114,14 +106,14 @@ void network::Client::msgFromServer() {
 }
 
 void network::Client::sendMessage(const std::string &message, uint8_t messageType) {
-    _len = static_cast<uint16_t>(message.size());
-    std::vector<char> buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len) + message.size());
+    _messageLen = static_cast<uint16_t>(message.size());
+    std::vector<char> buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_messageLen) + message.size());
 
     std::memcpy(buffer.data(), &_magicNumber, sizeof(_magicNumber));
     std::memcpy(buffer.data() + sizeof(_magicNumber), &messageType, sizeof(messageType));
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType), &_messageId, sizeof(_messageId));
-    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_len, sizeof(_len));
-    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len), message.data(),
+    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_messageLen, sizeof(_messageLen));
+    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_messageLen), message.data(),
                 message.size());
 
     if (_messageId >= MAXMESSAGE) {
