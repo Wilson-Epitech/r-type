@@ -13,6 +13,13 @@
 #include <asio.hpp>
 
 namespace network {
+
+    enum Type {
+      NONE,
+      SERVER,
+      CLIENT
+    };
+
     class INetwork {
       public:
         INetwork() = default;
@@ -24,6 +31,7 @@ namespace network {
         virtual void clearData() = 0;
         virtual std::list<DataToSend> getData() = 0;
         virtual bool isConnectedInNetwork() = 0;
+        virtual network::Type getNetworkType() = 0;
 
         virtual std::size_t getPlayerId() = 0;
         virtual std::size_t checkConnectedHeartbeat() = 0;

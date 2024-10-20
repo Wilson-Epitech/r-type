@@ -9,10 +9,10 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port)
-    : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
+network::Client::Client(const std::string &host, const std::string &port)
+    : _socket(_ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
-    asio::ip::udp::resolver resolver(ioContext);
+    asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
     _receiverThread = std::thread(&network::Client::msgFromServer, this);
     _heartbeatThread = std::thread(&network::Client::heartbeatToServer, this);
@@ -53,6 +53,10 @@ std::size_t network::Client::getPlayerId() {
 
 bool network::Client::isConnectedInNetwork() {
     return _isRunning;
+}
+
+network::Type network::Client::getNetworkType() {
+    return network::Type::CLIENT;
 }
 
 void network::Client::msgFromServer() {

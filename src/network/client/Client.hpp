@@ -32,7 +32,7 @@ namespace network {
      */
     class Client : virtual public network::INetwork {
       public:
-        Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
+        Client(const std::string &host, const std::string &port);
         ~Client();
 
         sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
@@ -41,6 +41,7 @@ namespace network {
         void clearData() override;
         std::list<DataToSend> getData() override;
         bool isConnectedInNetwork() override;
+        network::Type getNetworkType() override;
 
         std::size_t getPlayerId() override;
         std::size_t checkConnectedHeartbeat() override {return 0;}
@@ -51,6 +52,7 @@ namespace network {
         void heartbeatToServer();
         void handleCtrlC(int signal);
 
+        asio::io_context _ioContext;
         asio::ip::udp::socket _socket;            ///< The UDP socket used for communication with the server.
         asio::ip::udp::endpoint _receiveEndpoint; ///< The server's endpoint (address and port).
         std::thread _receiverThread;              ///< Thread for receiving messages from the server.
@@ -65,5 +67,12 @@ namespace network {
         std::size_t _playerId;       ///< The player's ID assigned by the server.
     };
 };
+
+extern "C"
+{
+    network::Client* entryPoint(const std::string &host, const std::string &port) {
+        return new network::Client(host, port);
+    }
+}
 
 #endif /* !CLIENT_HPP_ */

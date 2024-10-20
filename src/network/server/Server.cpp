@@ -9,11 +9,11 @@
 #include <functional>
 #include <iostream>
 
-network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _isRunning(true), _idClient(0), _threadPool(pool),
+network::Server::Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool)
+    : _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _isRunning(true), _idClient(0), _threadPool(pool),
     _magicNumber(0x9B3D) {
     startReceiving();
-    _ioThread = std::thread([&io_context]() { io_context.run(); });
+    _ioThread = std::thread([this]() { _ioContext.run(); });
 }
 
 network::Server::~Server() {
@@ -49,6 +49,10 @@ bool network::Server::isConnectedInNetwork() {
     if (getStillAliveClientNumber() > 0)
         return true;
     return false;
+}
+
+network::Type network::Server::getNetworkType() {
+    return network::Type::SERVER;
 }
 
 std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::Server::getHeartbeatClient() {

@@ -32,7 +32,7 @@ namespace network {
      */
     class Server : virtual public network::INetwork {
       public:
-        Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
+        Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool);
         ~Server();
 
         sig_atomic_t handleNetwork(const sig_atomic_t &new_status) override;
@@ -41,6 +41,7 @@ namespace network {
         void clearData() override;
         std::list<DataToSend> getData() override;
         bool isConnectedInNetwork() override;
+        network::Type getNetworkType() override;
 
         std::size_t getPlayerId() override {return 0;}
         std::size_t checkConnectedHeartbeat() override;
@@ -62,6 +63,7 @@ namespace network {
         std::unordered_map<std::size_t, std::size_t> getCorrespondence();
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> getHeartbeatClient();
 
+        asio::io_context _ioContext;
         std::thread _ioThread;                   ///< The thread running the asio context.
         asio::ip::udp::socket _socket;           ///< The UDP socket used for communication.
         asio::ip::udp::endpoint _remoteEndpoint; ///< Endpoint of the client sending data.
@@ -88,5 +90,12 @@ namespace network {
         uint16_t _messageLen;        ///< Length of the received message.
     };
 };
+
+extern "C"
+{
+    network::Server* entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
+        return new network::Server(host, port, pool);
+    }
+}
 
 #endif

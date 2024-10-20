@@ -14,14 +14,16 @@
 #ifndef RUNGAME_HPP_
 #define RUNGAME_HPP_
 
-#include "Client.hpp"
 #include "Components.hpp"
 #include "IGame.hpp"
-#include "Server.hpp"
+#include "INetwork.hpp"
+#include "DLLoader.hpp"
 #include <functional>
 #include <raylib.h>
 
 #define UPDATE_TIME 0.02 ///< Set the time to update the game.
+#define SERVER_LIB_PATH "sharedLibraries/server.so"
+#define CLIENT_LIB_PATH "sharedLibraries/client.so"
 
 class RunGame {
   public:
@@ -35,10 +37,15 @@ class RunGame {
      * @param gameName The name of the game, used as the window title.
      * @param gameState A function that manages the game's state transitions.
      */
+
     template <typename Function>
-    RunGame(std::unique_ptr<network::Server> &server, ecs::Registry &reg, Function const &gameState)
-        : _server(std::move(server)), _client(nullptr), _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
+    RunGame(ecs::Registry &reg, Function const &gameState, const std::string &host, const std::size_t &port, asio::thread_pool &pool)
+        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
           _time1(std::chrono::steady_clock::now()) {
+
+        _networkLoader = std::make_unique<DLLoader<network::INetwork>>(SERVER_LIB_PATH);
+        _networkInstance = _networkLoader->getInstance(host, port, pool);
+
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     }
     /**
@@ -52,9 +59,12 @@ class RunGame {
      * @param gameState A function that manages the game's state transitions.
      */
     template <typename Function>
-    RunGame(std::unique_ptr<network::Client> &client, ecs::Registry &reg, const std::string &gameName, Function const &gameState)
-        : _server(nullptr), _client(std::move(client)), _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
+    RunGame(ecs::Registry &reg, const std::string &gameName, Function const &gameState, const std::string &host, const std::string &port)
+        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
           _time1(std::chrono::steady_clock::now()) {
+        _networkLoader = std::make_unique<DLLoader<network::INetwork>>(CLIENT_LIB_PATH);
+        _networkInstance = _networkLoader->getInstance(host, port);
+
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
         SetConfigFlags(FLAG_WINDOW_RESIZABLE);
         InitWindow(Lib::getScreenWidth(), Lib::getScreenHeight(), gameName.c_str());
@@ -75,13 +85,6 @@ class RunGame {
      */
     void run();
 
-  private:
-    /**
-     * @brief Runs the game loop.
-     * This method is responsible for checking if the Elapsed Time is bigger than the Update_Time define.
-     */
-    bool isUpdateTimeElapsed();
-
     /**
      * @brief Runs the server loop.
      * This method is responsible for running the main server loop, handling clients, updating the state of the ongoing game.
@@ -96,8 +99,15 @@ class RunGame {
      */
     void runClient();
 
-    std::unique_ptr<network::Server> _server;                    ///< Unique pointer to an instance of the server
-    std::unique_ptr<network::Client> _client;                    ///< Unique Pointer to an instance of the client
+  private:
+    /**
+     * @brief Runs the game loop.
+     * This method is responsible for checking if the Elapsed Time is bigger than the Update_Time define.
+     */
+    bool isUpdateTimeElapsed();
+
+    std::unique_ptr<DLLoader<network::INetwork>> _networkLoader;
+    std::unique_ptr<network::INetwork> _networkInstance;         ///< Unique pointer to an instance of a network instance
     ecs::Registry _reg;                                          ///< The ECS registry managing entities and components.
     std::function<game::GameStatus(ecs::Registry &)> _gameState; ///< Function to manage the current game state.
     std::chrono::steady_clock::time_point _time0;                ///< Base Clock
