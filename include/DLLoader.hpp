@@ -19,7 +19,9 @@ class DLLoader {
             if (!_handle)
                 throw Error(dlerror());
         };
-        ~DLLoader() = default;
+        ~DLLoader() {
+            closeLib();
+        }
 
         std::unique_ptr<T> getInstance(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
             T *(*cosine)(const std::string &, const std::size_t &, asio::thread_pool &);
@@ -41,10 +43,10 @@ class DLLoader {
             return std::unique_ptr<T>((*cosine)(host, port));
         };
 
-        // void closeLib() {
-        //     if (dlclose(_handle) != 0)
-        //         throw Error(dlerror());
-        // };
+        void closeLib() {
+            if (dlclose(_handle) != 0)
+                throw Error(dlerror());
+        };
 
     private:
         void *_handle;
