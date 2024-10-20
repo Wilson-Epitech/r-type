@@ -46,7 +46,7 @@ void RunGame::runServer() {
             _reg.clearActualTurnDeadEntities();
         }
         _reg.runSystems();
-        disconnectedPlayerEntity = _networkInstance->checkConnectedHeartbeat();
+        disconnectedPlayerEntity = _networkInstance->manageConnection();
         if (disconnectedPlayerEntity != 0)
             _reg.killEntity(disconnectedPlayerEntity);
     }
@@ -57,7 +57,6 @@ void RunGame::runClient() {
     std::list<DataToSend> dataReceivedList;
     std::map<std::size_t, entity_t> player;
     std::size_t playerId = 0;
-
     while (_networkInstance->handleNetwork(1) && !WindowShouldClose()) {
         if (!_networkInstance->isConnectedInNetwork()) {
             _networkInstance->sendMessage("Client disconnected", 2);
@@ -71,7 +70,6 @@ void RunGame::runClient() {
         _networkInstance->clearData();
         player = _reg.getPlayers();
         playerId = _networkInstance->getPlayerId();
-
         if (playerId != 0 && player.size() == 0)
             _reg.addPlayer(0, playerId);
         for (auto dataReceived : dataReceivedList) {
@@ -81,11 +79,11 @@ void RunGame::runClient() {
             }
             lastDataReceivedList = dataReceivedList;
         }
-
         _networkInstance->sendUpdatedData(_reg, lastDataReceivedList);
         _reg.clearActualTurnNewEntities();
         _reg.clearActualTurnDeadEntities();
         _reg.runSystems();
+        _networkInstance->manageConnection();
         EndDrawing();
     }
     CloseWindow();

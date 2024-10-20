@@ -21,6 +21,7 @@
 #include <thread>
 
 #define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
+#define HEARTBEAT_TIME 1
 
 namespace network {
 
@@ -41,14 +42,12 @@ namespace network {
         std::list<DataToSend> getData() override;
         bool isConnectedInNetwork() override;
         network::Type getNetworkType() override;
-
+        std::size_t manageConnection() override;
         std::size_t getPlayerId() override;
-        std::size_t checkConnectedHeartbeat() override {return 0;}
 
       private:
 
         void msgFromServer();
-        void heartbeatToServer();
         void handleCtrlC(int signal);
 
         asio::io_context _ioContext;

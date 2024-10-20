@@ -76,6 +76,10 @@ std::size_t network::Server::getStillAliveClientNumber() {
     return numberAlive;
 }
 
+std::size_t network::Server::getPlayerId() {
+    return 0;
+}
+
 void network::Server::clearData() {
     _data.clear();
 }
@@ -102,8 +106,8 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
 
         if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
             std::cerr << "Incomplete message received" << std::endl;
-            startReceiving();
-            return;
+            // startReceiving();
+            // return;
         }
 
         std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
@@ -242,7 +246,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     return _idClient;
 }
 
-std::size_t network::Server::checkConnectedHeartbeat() {
+std::size_t network::Server::manageConnection() {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = getHeartbeatClient();
     std::unordered_map<std::size_t, std::size_t> coressClient = getCorrespondence();
     std::unordered_map<std::size_t, bool> clientStillHere = getClientStillHere();
@@ -251,7 +255,7 @@ std::size_t network::Server::checkConnectedHeartbeat() {
     std::size_t disconnectedPlayerEntity = 0;
 
     while (it != lastSeenClient.end()) {
-        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > CHECK_HEARTBEAT_TIME) {
             sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
             auto corresponenceFound = coressClient.find(it->first);

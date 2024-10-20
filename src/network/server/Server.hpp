@@ -21,6 +21,7 @@
 
 #define NB_CLIENTS_AUTHORIZED 4
 #define MAXMESSAGE 255
+#define CHECK_HEARTBEAT_TIME 5
 
 namespace network {
 
@@ -41,9 +42,8 @@ namespace network {
         std::list<DataToSend> getData() override;
         bool isConnectedInNetwork() override;
         network::Type getNetworkType() override;
-
-        std::size_t getPlayerId() override {return 0;}
-        std::size_t checkConnectedHeartbeat() override;
+        std::size_t manageConnection() override;
+        std::size_t getPlayerId() override;
 
       private:
 
@@ -76,7 +76,7 @@ namespace network {
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
         std::unordered_map<std::size_t, bool>
-            _isClientStillHere; ///<  Map that set to false the a bool if the client with the std::size_t id was disconnected
+            _isClientStillHere; ///<  Map that set to false the bool if the client with the std::size_t id was disconnected
         std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId; ///< Create a coresspondence between the _OwnID and the _playerID;
 
         uint16_t _receivedMagicNbr;  ///< Received magic number for message validation.

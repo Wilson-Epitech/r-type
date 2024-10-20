@@ -34,7 +34,7 @@ namespace network {
         virtual network::Type getNetworkType() = 0;
 
         virtual std::size_t getPlayerId() = 0;
-        virtual std::size_t checkConnectedHeartbeat() = 0;
+        virtual std::size_t manageConnection() = 0;
     };
 }
 

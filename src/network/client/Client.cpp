@@ -15,14 +15,14 @@ network::Client::Client(const std::string &host, const std::string &port) : netw
     asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
     _receiverThread = std::thread(&network::Client::msgFromServer, this);
-    _heartbeatThread = std::thread(&network::Client::heartbeatToServer, this);
+    // _heartbeatThread = std::thread(&network::Client::heartbeatToServer, this);
     sendMessage("New client connected.", 1);
 }
 
 network::Client::~Client() {
     _isRunning = false;
     _receiverThread.join();
-    _heartbeatThread.join();
+    // _heartbeatThread.join();
     _socket.close();
 }
 
@@ -125,12 +125,16 @@ void network::Client::sendMessage(const std::string &message, uint8_t messageTyp
     _socket.send_to(asio::buffer(buffer), _receiveEndpoint);
 }
 
-void network::Client::heartbeatToServer() {
-    while (_isRunning) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        if (_playerId != 0)
-            sendMessage("Alive: " + std::to_string(_playerId), 4);
+std::size_t network::Client::manageConnection() {
+    static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(time1 - time0);
+
+    if (timeElapsed.count() > HEARTBEAT_TIME && _playerId != 0) {
+      sendMessage("Alive: " + std::to_string(_playerId), 4);
+      time0 = std::chrono::steady_clock::now();
     }
+    return 0;
 }
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
