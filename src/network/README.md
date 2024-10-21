@@ -36,7 +36,7 @@ Even though many actions are taken inside the client, the server remains the sol
 
 ## Connection && Disconnection
 
-The server is in charge of every client that its related to. The client ddoes not have knowledge on other clients state or actions, it only knows what the server decide to send it. In the light of this, The server must inform every client of the connection and disconnection of a client.
+The server is in charge of every client that its related to. The client does not have knowledge on other clients state or actions, it only knows what the server decide to send it. In the light of this, The server must inform every client of the connection and disconnection of a client.
 
 ```c++
 _idClient++;
