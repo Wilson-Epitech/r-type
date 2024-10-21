@@ -119,7 +119,8 @@ std::size_t network::Client::manageConnection() {
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(time1 - time0);
-
+    if (!_isRunning)
+        return 0;
     if (timeElapsed.count() > HEARTBEAT_TIME && _playerId != 0) {
       sendMessage("Alive: " + std::to_string(_playerId), 4);
       time0 = std::chrono::steady_clock::now();

@@ -21,7 +21,7 @@
 #include <thread>
 
 #define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
-#define HEARTBEAT_TIME 1
+#define HEARTBEAT_TIME 1 ///< Time in second where the client has to send a heartbeat to the server.
 
 namespace network {
 
@@ -33,7 +33,18 @@ namespace network {
      */
     class Client : virtual public network::ANetwork {
       public:
+        /**
+         * @brief Constructs a `Client` and establishes a connection to the server.
+         * Initializes the client, opens a UDP socket, resolves the server address, and starts threads for
+         * receiving messages and sending heartbeat messages.
+         * @param host The server's hostname or IP address.
+         * @param port The server's port number.
+         */
         Client(const std::string &host, const std::string &port);
+        /**
+         * @brief Destructor for the `Client` class.
+         * Stops the client by terminating threads and closing the socket.
+         */
         ~Client();
 
         void sendMessage(const std::string &message, uint8_t messageType) override;
@@ -46,7 +57,16 @@ namespace network {
 
       private:
 
+        /**
+         * @brief Listens for and processes messages from the server.
+         * This function runs in a separate thread and continuously listens for messages from the server. It processes
+         * the messages and handles updates to the client's state.
+         */
         void msgFromServer();
+        /**
+         * @brief Catch the ctrl C signal.
+         * @param signal Retrieve the signal sent.
+         */
         void handleCtrlC(int signal);
 
         asio::io_context _ioContext;
@@ -55,10 +75,16 @@ namespace network {
         std::thread _receiverThread;              ///< Thread for receiving messages from the server.
         std::thread _heartbeatThread;             ///< Thread for sending heartbeat messages to the server.
 
-        std::size_t _playerId;       ///< The player's ID assigned by the server.
+        std::size_t _playerId;                    ///< The player's ID assigned by the server.
     };
 };
 
+/**
+ * @brief Used to create a new client instance by loading a shared library from this class.
+ * @param host The server's hostname or IP address.
+ * @param port The server's port number.
+ * @return network::Client* Pointer to the newly created client instance
+ */
 extern "C"
 {
     network::Client* entryPoint(const std::string &host, const std::string &port) {
