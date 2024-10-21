@@ -114,7 +114,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[TITLE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
     textInfos.insertAt(_stringToEntity[TITLE_NAME], ecs::component::TextInfos{"RType", SCREEN_WIDTH / 2, 50, 20, FONT_PATH, ORANGE});
 
-    powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::LIFE_POWERUP, 1, 3});
+    powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::LIFE_POWERUP, 5, 3});
     types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP});
     spriteInfos.insertAt(
         _stringToEntity[POWERUP_NAME],

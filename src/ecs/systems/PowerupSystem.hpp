@@ -31,6 +31,7 @@ namespace ecs {
                 void clearMegaShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &megaShootTimer);
                 ecs::Poweruptype selectPowerup(void);
                 std::size_t getPlayerShootSpriteEntity(Registry &reg);
+                bool isTimeElapsed(std::chrono::steady_clock::time_point time, float duration);
         };
     }
 }
