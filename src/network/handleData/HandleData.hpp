@@ -13,7 +13,7 @@
 
 namespace network {
     /**
-     * @class HandleData.hpp
+     * @class HandleData
      * @brief Class providing static functions for managing and retrieving game data.
      * Contains helper methods for data serialization/deserialization, entity data and component manipulation.
      */

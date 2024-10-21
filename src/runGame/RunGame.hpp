@@ -5,12 +5,6 @@
 ** RunGame
 */
 
-/**
- * @file RunGame.hpp
- * @brief Declares the `RunGame` class responsible for running the game and managing the game loop.
- * This file contains the `RunGame` class, which sets up the game environment, initializes the window and audio device,
- * and runs the main game loop. It provides a framework for managing game states and processing systems within the ECS.
- */
 #ifndef RUNGAME_HPP_
 #define RUNGAME_HPP_
 
@@ -22,20 +16,28 @@
 #include <raylib.h>
 
 #define UPDATE_TIME 0.02 ///< Set the time to update the game.
-#define SERVER_LIB_PATH "sharedLibraries/server.so"
-#define CLIENT_LIB_PATH "sharedLibraries/client.so"
+#define SERVER_LIB_PATH "sharedLibraries/server.so" ///< Path to the server shared library
+#define CLIENT_LIB_PATH "sharedLibraries/client.so" ///< Path to the client shared library
+
+/**
+ * @class RunGame
+ * @brief Class responsible for running the game and managing the game loop.
+ * It sets up the game environment, initializes the window and audio device, and runs the main game loop.
+ * It provides a framework for managing game states and processing systems within the ECS.
+*/
 
 class RunGame {
   public:
     /**
      * @brief Constructs the game serverside.
-     * This constructor sets up the necessary game variables before running the game server loop.
+     * This constructor sets up the necessary game variables before running the game server loop, such as the server instance that is loaded dynamically
      * It also sets a custom logging level and defines a callback function to manage the game state.
      * @tparam Function The type of the game state function, which defines the current state of the game.
-     * @param server The server instance that will manage the game.
      * @param reg The ECS registry that manages entities and components.
-     * @param gameName The name of the game, used as the window title.
      * @param gameState A function that manages the game's state transitions.
+     * @param host The IP address of the server.
+     * @param port The port on which the server listens.
+     * @param pool A thread pool to manage concurrent tasks.
      */
 
     template <typename Function>
@@ -48,13 +50,15 @@ class RunGame {
     }
     /**
      * @brief Constructs the game clientside.
-     * This constructor sets up the game before running the game client loop. It initializes the window, maximizes it, and initializes the
+     * This constructor sets up the game before running the game client loop, such as the client instance that is loaded dynamically. It initializes the window, maximizes it, and initializes the
      * audio device. It also sets a custom logging level and defines a callback function to manage the game state.
      * @tparam Function The type of the game state function, which defines the current state of the game.
      * @param client The client instance that will receive game data from the server.
      * @param reg The ECS registry that manages entities and components.
      * @param gameName The name of the game, used as the window title.
      * @param gameState A function that manages the game's state transitions.
+     * @param host The server's hostname or IP address.
+     * @param port The server's port number.
      */
     template <typename Function>
     RunGame(ecs::Registry &reg, const std::string &gameName, Function const &gameState, const std::string &host, const std::string &port)
@@ -77,7 +81,7 @@ class RunGame {
     ~RunGame() = default;
 
     /**
-     * @brief Runs the game loop.
+     * @brief Runs the game loop, based on the network instance type.
      * This method is responsible for running the main game loop, handling input, updating systems, and rendering.
      * It continues running the loop until the game state indicates that the game should end.
      */
@@ -104,8 +108,8 @@ class RunGame {
      */
     bool isUpdateTimeElapsed();
 
-    std::unique_ptr<DLLoader<network::INetwork>> _networkLoader;
-    std::unique_ptr<network::INetwork> _networkInstance;         ///< Unique pointer to an instance of a network instance
+    std::unique_ptr<DLLoader<network::INetwork>> _networkLoader; ///< Unique pointer to a DLLoader network instance
+    std::unique_ptr<network::INetwork> _networkInstance;         ///< Unique pointer to a network instance
     ecs::Registry _reg;                                          ///< The ECS registry managing entities and components.
     std::function<game::GameStatus(ecs::Registry &)> _gameState; ///< Function to manage the current game state.
     std::chrono::steady_clock::time_point _time0;                ///< Base Clock
