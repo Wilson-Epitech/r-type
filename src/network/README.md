@@ -32,7 +32,7 @@ if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
 
 ## Importance of the Server
 
-Even though many actions are taken inside the client, the server remains the sole commandant. Indeed, ir handles most of the game aspect, from the creation of ennemy to the display of everything on the screen. Only the keys are handled in each separate client, however, what those keys do is decided by the server.
+Even though many actions are taken inside the client, the server remains the sole commandant. Indeed, the server handles most of the game aspect, from the creation of ennemy to the display of everything on the screen. Only the keys are handled in each separate client, however, what those keys do is decided by the server.
 
 ## Connection && Disconnection
 
