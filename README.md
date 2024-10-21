@@ -12,7 +12,7 @@ R-type is an advanced C++ project. The goal of the project is to recreate the in
 
 ## Project Description
 
-If we go deeper, the aim of the project is to create a server and a client, that communicates to create a fluid game. Our R-type is based on our own Gam Engine, uses Asio for the netwroking and the Raylib for the graphical aspect. Clients as well as the server is multi-threaded create a smooth experience as different handling are doen asynchronously.
+If we go deeper, the aim of the project is to create a server and a client, that communicates to create a fluid game. Our R-type is based on our own Game Engine, uses Asio for the netwroking and the Raylib for the graphical aspect. Clients as well as the server are multi-threaded, which create a smooth experience as different handling are done asynchronously.
 
 For now, our server can only handle one lobby at a time, we long to implement a server that can handle multiple session at the same time. Moreover, we want to diversify our bestiary and create more accessibility features to allow our game to be playable by everyone.
 
@@ -38,7 +38,7 @@ cmake --build build
 **Launch the Server**
 
 ```sh
-./rtype_server [host ip] [port]
+./rtype_server [port]
 ```
 
 **Launch Clients**
@@ -61,6 +61,12 @@ Down Arrow  | Go Down
 Left Arrow  | Go Left
 Right Arrow | Go Right
 Space       | Shoot
+
+# Documentation
+
+[Server Documentation](src/network/README.md)<br>
+[Game Documentation](src/games/README.md)<br>
+[Game Engine Documentation](src/ecs/README.md)
 
 ## Authors
 

@@ -41,7 +41,7 @@ namespace network {
          * @param port The port on which the server listens.
          * @param pool A thread pool to manage concurrent tasks.
          */
-        Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
+        Server(asio::io_context &ioContext, std::size_t port, asio::thread_pool &pool);
 
         /**
          * @brief Destructor that stops the server and joins the IO thread.
@@ -68,12 +68,6 @@ namespace network {
          * @return The ID of the most recently connected client.
          */
         std::size_t getLastConnectedClientId();
-
-        /**
-         * @brief Retrieves the map indicating whether each client's world has been set.
-         * @return A map of client IDs and their world initialization status.
-         */
-        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
 
         /**
          * @brief Retrieves the entity data sent from clients.
@@ -183,7 +177,6 @@ namespace network {
         asio::thread_pool &_threadPool; ///< Thread pool for handling tasks.
 
         std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients; ///< Map of connected clients and their endpoints.
-        std::unordered_map<std::size_t, bool> _areClientsWorldSet;        ///< Map indicating whether each client's world is initialized.
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
         std::unordered_map<std::size_t, bool>
