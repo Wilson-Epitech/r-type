@@ -19,6 +19,7 @@
 #include <map>
 #include <memory>
 
+#define NB_CLIENTS_AUTHORIZED 4 ///< Number of maximum clients authorized
 #define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
 #define CHECK_HEARTBEAT_TIME                                                                                                               \
     5 ///< Time in second where the server has to disconnect a client if he hasn't received a heartbeat in this elapsed time.

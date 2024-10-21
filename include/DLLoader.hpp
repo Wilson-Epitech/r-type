@@ -10,6 +10,7 @@
 
 #include "Error.hpp"
 #include <dlfcn.h>
+#include <asio.hpp>
 
 /**
  * @class DLLoader
