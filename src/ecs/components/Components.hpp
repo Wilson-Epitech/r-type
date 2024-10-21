@@ -65,6 +65,7 @@ namespace ecs {
         LIFE_POWERUP,
         POWERSHOOT_POWERUP,
         INVINCIBLE_POWERUP,
+        MEGASHOOT_POWERUP,
         NOPOWERUP           ///< No powerup, must be at the end of the enum
     };
 
@@ -129,9 +130,10 @@ namespace ecs {
         struct Shooting {
             bool isShooting = false; ///< Boolean indicating if the entity is shooting
             std::size_t shootPower = 1;
+            float shootSize = 1;
 
             bool operator==(const Shooting &other) const {
-                return (isShooting == other.isShooting && shootPower == other.shootPower);
+                return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
             }
         };
 

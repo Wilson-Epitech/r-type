@@ -22,7 +22,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spri
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {
-    oss << shooting.isShooting << ' ' << shooting.shootPower;
+    oss << shooting.isShooting << ' ' << shooting.shootPower << ' ' << shooting.shootSize;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
@@ -105,7 +105,7 @@ void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfo
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting) {
-    iss >> shooting.isShooting >> shooting.shootPower;
+    iss >> shooting.isShooting >> shooting.shootPower >> shooting.shootSize;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Type &type) {

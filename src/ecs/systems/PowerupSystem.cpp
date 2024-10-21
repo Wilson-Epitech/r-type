@@ -13,6 +13,7 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> powerShootTimer;
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> invincibleTimer;
+    static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> megaShootTimer;
     std::pair<std::size_t, ecs::Poweruptype> usedPowerup = {0, ecs::Poweruptype::NOPOWERUP};
 
     for (std::size_t i = 0; i < lives.size() && i < type.size(); ++i) {
@@ -32,6 +33,9 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
                 case ecs::Poweruptype::INVINCIBLE_POWERUP:
                     invincibleTimer.push_back({usedPowerup.first, std::chrono::steady_clock::now()});
                     break;
+                case ecs::Poweruptype::MEGASHOOT_POWERUP:
+                    megaShootTimer.push_back({usedPowerup.first, std::chrono::steady_clock::now()});
+                    break;
                 default:
                     break;
             }
@@ -39,6 +43,7 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
     }
     clearPowerShootEffect(reg, powerShootTimer);
     clearInvicibleEffect(reg, invincibleTimer);
+    clearMegaShootEffect(reg, megaShootTimer);
 }
 
 std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(Registry &reg, const std::size_t index)
@@ -46,6 +51,7 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     std::size_t powerupIndex = getPowerupIndex(reg);
 
     if (powerup.size() < index)
@@ -65,7 +71,27 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
         lives[powerup[powerupIndex]->playerIndex]->isInvincible = true;
         return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::INVINCIBLE_POWERUP};
     }
+    if (powerup[index]->powerupType == ecs::Poweruptype::MEGASHOOT_POWERUP) {
+        shootings[powerup[powerupIndex]->playerIndex]->shootSize = 2;
+        return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::MEGASHOOT_POWERUP};
+    }
     return {0, ecs::Poweruptype::NOPOWERUP};
+}
+
+void ecs::system::PowerupSystem::clearMegaShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &megaShootTimer) {
+    SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
+    std::chrono::steady_clock::time_point time = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time - time1);
+
+    for (std::size_t i = 0; i < megaShootTimer.size(); i++) {
+        time1 = megaShootTimer[i].second;
+        timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time - time1);
+        if (timeElapsed.count() >= Lib::toMilliseconds(EFFECT_DURATION)) {
+            shootings[megaShootTimer[i].first]->shootSize = 1;
+            megaShootTimer.erase(megaShootTimer.begin() + i);
+        }
+    }
 }
 
 void ecs::system::PowerupSystem::clearPowerShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &powerShootTimer) {
@@ -129,7 +155,8 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::POWERUP});
     lives.insertAt(entity, ecs::component::Life{1});
-    powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
+    // powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
+    powerup.insertAt(entity, ecs::component::Powerup{ecs::Poweruptype::MEGASHOOT_POWERUP, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
 }
 
 std::size_t ecs::system::PowerupSystem::getPowerupIndex(Registry &reg) {

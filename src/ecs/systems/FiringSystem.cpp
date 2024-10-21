@@ -35,7 +35,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
             timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate)) {
                 if (shootings[i]->isShooting) {
-                    addShot(i, reg, shootings[i]->shootPower);
+                    addShot(i, reg, shootings[i]->shootPower, shootings[i]->shootSize);
                     shootings[i]->isShooting = false;
                 }
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -49,7 +49,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, std::size_t shootPower) {
+void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, std::size_t shootPower, float shootSize) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -74,7 +74,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, 
                                                          velocities[playerShootIndex]->possibleVelocity});
     spriteInfos.insertAt(
         entity, ecs::component::SpriteInfos{spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
-                                            spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
+                                            spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor * shootSize});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
     lives.insertAt(entity, ecs::component::Life{shootPower});
     shootPlayerIndex.insertAt(entity, ecs::component::ShootPlayerIndex{playerIndex});

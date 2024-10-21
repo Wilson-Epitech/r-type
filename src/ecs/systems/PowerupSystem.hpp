@@ -28,7 +28,9 @@ namespace ecs {
                 std::size_t getPowerupIndex(Registry &reg);
                 void clearPowerShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &powerShootTimer);
                 void clearInvicibleEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &invincibleTimer);
+                void clearMegaShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &megaShootTimer);
                 ecs::Poweruptype selectPowerup(void);
+                std::size_t getPlayerShootSpriteEntity(Registry &reg);
         };
     }
 }
