@@ -9,13 +9,13 @@
 #define RUNGAME_HPP_
 
 #include "Components.hpp"
+#include "DLLoader.hpp"
 #include "IGame.hpp"
 #include "INetwork.hpp"
-#include "DLLoader.hpp"
 #include <functional>
 #include <raylib.h>
 
-#define UPDATE_TIME 0.02 ///< Set the time to update the game.
+#define UPDATE_TIME 0.02                            ///< Set the time to update the game.
 #define SERVER_LIB_PATH "sharedLibraries/server.so" ///< Path to the server shared library
 #define CLIENT_LIB_PATH "sharedLibraries/client.so" ///< Path to the client shared library
 
@@ -24,14 +24,14 @@
  * @brief Class responsible for running the game and managing the game loop.
  * It sets up the game environment, initializes the window and audio device, and runs the main game loop.
  * It provides a framework for managing game states and processing systems within the ECS.
-*/
+ */
 
 class RunGame {
   public:
     /**
      * @brief Constructs the game serverside.
-     * This constructor sets up the necessary game variables before running the game server loop, such as the server instance that is loaded dynamically
-     * It also sets a custom logging level and defines a callback function to manage the game state.
+     * This constructor sets up the necessary game variables before running the game server loop, such as the server instance that is loaded
+     * dynamically It also sets a custom logging level and defines a callback function to manage the game state.
      * @tparam Function The type of the game state function, which defines the current state of the game.
      * @param reg The ECS registry that manages entities and components.
      * @param gameState A function that manages the game's state transitions.
@@ -42,16 +42,16 @@ class RunGame {
 
     template <typename Function>
     RunGame(ecs::Registry &reg, Function const &gameState, const std::string &host, const std::size_t &port, asio::thread_pool &pool)
-        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
-          _time1(std::chrono::steady_clock::now()) {
+        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()), _time1(std::chrono::steady_clock::now()) {
         _networkLoader = std::make_unique<DLLoader<network::INetwork>>(SERVER_LIB_PATH);
         _networkInstance = _networkLoader->getInstance(host, port, pool);
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     }
     /**
      * @brief Constructs the game clientside.
-     * This constructor sets up the game before running the game client loop, such as the client instance that is loaded dynamically. It initializes the window, maximizes it, and initializes the
-     * audio device. It also sets a custom logging level and defines a callback function to manage the game state.
+     * This constructor sets up the game before running the game client loop, such as the client instance that is loaded dynamically. It
+     * initializes the window, maximizes it, and initializes the audio device. It also sets a custom logging level and defines a callback
+     * function to manage the game state.
      * @tparam Function The type of the game state function, which defines the current state of the game.
      * @param client The client instance that will receive game data from the server.
      * @param reg The ECS registry that manages entities and components.
@@ -62,8 +62,7 @@ class RunGame {
      */
     template <typename Function>
     RunGame(ecs::Registry &reg, const std::string &gameName, Function const &gameState, const std::string &host, const std::string &port)
-        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
-          _time1(std::chrono::steady_clock::now()) {
+        : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()), _time1(std::chrono::steady_clock::now()) {
         _networkLoader = std::make_unique<DLLoader<network::INetwork>>(CLIENT_LIB_PATH);
         _networkInstance = _networkLoader->getInstance(host, port);
         SetTraceLogLevel(TraceLogLevel::LOG_FATAL);

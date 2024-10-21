@@ -225,10 +225,10 @@ namespace ecs {
         /**
          * @struct Score
          * @brief Component for the score of an entity
-        */
+         */
         struct Score {
             std::size_t scoreIncrementation = 0; ///< Incrementation value for score
-            int score = 0; /// < Score of the entity
+            int score = 0;                       /// < Score of the entity
 
             bool operator==(const Score &other) const {
                 return (score == other.score && scoreIncrementation == other.scoreIncrementation);
@@ -238,17 +238,17 @@ namespace ecs {
         /**
          * @struct TextInfos
          * @brief Component for the text information of an entity
-        */
+         */
         struct TextInfos {
             std::string textToDisplay; ///< Text to display
-            int x; ///< X coordinates of the text
-            int y; ///< Y coordinates of the text
-            int size; ///< Size of the text
-            std::string fontPath; ///< Path of the font used to draw the text
-            Color color = Color{}; ///< Color of the text
-            Font font = Font{}; ///< Font of the text
+            int x;                     ///< X coordinates of the text
+            int y;                     ///< Y coordinates of the text
+            int size;                  ///< Size of the text
+            std::string fontPath;      ///< Path of the font used to draw the text
+            Color color = Color{};     ///< Color of the text
+            Font font = Font{};        ///< Font of the text
             bool fontIsLoaded = false; ///< Indicates if font has been loaded
-            bool hasChanged = false; ///< Indicates if the textToDisplay string has changed
+            bool hasChanged = false;   ///< Indicates if the textToDisplay string has changed
 
             bool operator==(const TextInfos &other) const {
                 return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&

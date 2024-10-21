@@ -20,7 +20,7 @@
 #include <string>
 #include <thread>
 
-#define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
+#define MAXMESSAGE 255   ///< Maximum number of messages that can be sent before resetting the message ID.
 #define HEARTBEAT_TIME 1 ///< Time in second where the client has to send a heartbeat to the server.
 
 namespace network {
@@ -56,7 +56,6 @@ namespace network {
         bool isConnectedInNetwork() override;
 
       private:
-
         /**
          * @brief Listens for and processes messages from the server.
          * This function runs in a separate thread and continuously listens for messages from the server. It processes
@@ -75,7 +74,7 @@ namespace network {
         std::thread _receiverThread;              ///< Thread for receiving messages from the server.
         std::thread _heartbeatThread;             ///< Thread for sending heartbeat messages to the server.
 
-        std::size_t _playerId;                    ///< The player's ID assigned by the server.
+        std::size_t _playerId; ///< The player's ID assigned by the server.
     };
 };
 
@@ -85,11 +84,10 @@ namespace network {
  * @param port The server's port number.
  * @return network::Client* Pointer to the newly created client instance
  */
-extern "C"
-{
-    network::Client* entryPoint(const std::string &host, const std::string &port) {
-        return new network::Client(host, port);
-    }
+extern "C" {
+network::Client *entryPoint(const std::string &host, const std::string &port) {
+    return new network::Client(host, port);
+}
 }
 
 #endif /* !CLIENT_HPP_ */

@@ -9,8 +9,7 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(),
-    _socket(_ioContext), _playerId(0) {
+network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(), _socket(_ioContext), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
     asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
@@ -122,23 +121,23 @@ std::size_t network::Client::manageConnection() {
     if (!_isRunning)
         return 0;
     if (timeElapsed.count() > HEARTBEAT_TIME && _playerId != 0) {
-      sendMessage("Alive: " + std::to_string(_playerId), 4);
-      time0 = std::chrono::steady_clock::now();
+        sendMessage("Alive: " + std::to_string(_playerId), 4);
+        time0 = std::chrono::steady_clock::now();
     }
     return 0;
 }
 
 void network::Client::updateData(ecs::Registry &reg) {
-  std::map<std::size_t, entity_t> player = reg.getPlayers();
-  if (_playerId != 0 && player.size() == 0)
-      reg.addPlayer(0, _playerId);
+    std::map<std::size_t, entity_t> player = reg.getPlayers();
+    if (_playerId != 0 && player.size() == 0)
+        reg.addPlayer(0, _playerId);
     for (auto dataReceived : _data) {
         if (!dataReceived.empty()) {
             network::HandleData::updateDeadEntities(dataReceived, reg);
             network::HandleData::updateEntitiesData(dataReceived, reg);
         }
     }
-  _data.clear();
+    _data.clear();
 }
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {

@@ -25,9 +25,9 @@ namespace network {
      * @brief Enum representing different types of network instances.
      */
     enum Type {
-      NONE,   ///< No type instance
-      SERVER, ///< Server instance
-      CLIENT  ///< Client instance
+        NONE,   ///< No type instance
+        SERVER, ///< Server instance
+        CLIENT  ///< Client instance
     };
 
     class INetwork {
@@ -52,7 +52,8 @@ namespace network {
         /**
          * @brief Sends updates to the other-side network instance in order to process informations.
          * @param reg The ECS registry managing entities and components.
-         * @param lastDataReceivedList The last data received from the other-side network instance, used to check what new informations can be send.
+         * @param lastDataReceivedList The last data received from the other-side network instance, used to check what new informations can
+         * be send.
          */
         virtual void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) = 0;
 

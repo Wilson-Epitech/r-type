@@ -20,7 +20,7 @@ namespace network {
 
     class ANetwork : virtual public network::INetwork {
       public:
-        ANetwork() : _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {};
+        ANetwork() : _isRunning(true), _magicNumber(0x9B3D), _messageId(0){};
         ~ANetwork() = default;
 
         sig_atomic_t handleNetwork(const sig_atomic_t &newStatus) {
@@ -32,12 +32,12 @@ namespace network {
         }
 
       protected:
-          bool _isRunning;             ///< Indicates whether the Network instance is still running.
-          std::list<DataToSend> _data; ///< A list of Data received such as game state updates.
+        bool _isRunning;             ///< Indicates whether the Network instance is still running.
+        std::list<DataToSend> _data; ///< A list of Data received such as game state updates.
 
-          const uint16_t _magicNumber; ///< Magic number used for message validation.
-          uint8_t _messageId;          ///< ID of the received message.
-          uint16_t _messageLen;        ///< Length of the received message.
+        const uint16_t _magicNumber; ///< Magic number used for message validation.
+        uint8_t _messageId;          ///< ID of the received message.
+        uint16_t _messageLen;        ///< Length of the received message.
     };
 }
 

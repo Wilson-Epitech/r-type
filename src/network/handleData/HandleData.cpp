@@ -48,12 +48,18 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
 
 DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
-    std::vector<EntityData> playersVelocitiesData = retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY, retrievePlayersIndex);
-    std::vector<EntityData> playersShootingsData = retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING, retrievePlayersIndex);
-    std::vector<EntityData> playersLivesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE, retrievePlayersIndex);
-    std::vector<EntityData> playersScoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE, retrievePlayersIndex);
-    std::vector<EntityData> playersTextInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrievePlayersIndex);
-    std::vector<EntityData> teamScoresInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrieveTextIndex);
+    std::vector<EntityData> playersVelocitiesData =
+        retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY, retrievePlayersIndex);
+    std::vector<EntityData> playersShootingsData =
+        retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING, retrievePlayersIndex);
+    std::vector<EntityData> playersLivesData =
+        retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE, retrievePlayersIndex);
+    std::vector<EntityData> playersScoresData =
+        retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE, retrievePlayersIndex);
+    std::vector<EntityData> playersTextInfosData =
+        retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrievePlayersIndex);
+    std::vector<EntityData> teamScoresInfosData =
+        retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrieveTextIndex);
 
     DataToSend data;
 
@@ -88,7 +94,8 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
-    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size(); i++) {
+    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size();
+         i++) {
         fillEntityComponentData<ecs::component::Position>(reg, i, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, i, data, ecs::ComponentName::VELOCITY);
         fillEntityComponentData<ecs::component::Type>(reg, i, data, ecs::ComponentName::TYPE);

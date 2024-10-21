@@ -285,7 +285,8 @@ namespace ecs {
 
         /**
          * @brief Retrieves the map of all collisions between entities.
-         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding entities they collided with.
+         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding
+         * entities they collided with.
          */
         std::unordered_map<entity_t, entity_t> getCollisionMap(void) {
             return _collisionEntity;
@@ -301,7 +302,7 @@ namespace ecs {
         std::map<std::size_t, entity_t> _indexToEntities;                ///< A map of entity indices to entity IDs.
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
-            _eraseEntity; ///< Functions to remove components when an entity is deleted.
+            _eraseEntity;                                        ///< Functions to remove components when an entity is deleted.
         std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
     };
 }

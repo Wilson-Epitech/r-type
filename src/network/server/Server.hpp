@@ -20,7 +20,8 @@
 #include <memory>
 
 #define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
-#define CHECK_HEARTBEAT_TIME 5 ///< Time in second where the server has to disconnect a client if he hasn't received a heartbeat in this elapsed time.
+#define CHECK_HEARTBEAT_TIME                                                                                                               \
+    5 ///< Time in second where the server has to disconnect a client if he hasn't received a heartbeat in this elapsed time.
 
 namespace network {
 
@@ -160,8 +161,8 @@ namespace network {
             _isClientStillHere; ///<  Map that set to false the bool if the client with the std::size_t id was disconnected
         std::unordered_map<std::size_t, std::size_t> _corresOwnPlayerId; ///< Create a coresspondence between the _OwnID and the _playerID;
 
-        uint16_t _receivedMagicNbr;  ///< Received magic number for message validation.
-        uint8_t _messageType;        ///< Type of the received message.
+        uint16_t _receivedMagicNbr; ///< Received magic number for message validation.
+        uint8_t _messageType;       ///< Type of the received message.
     };
 };
 
@@ -172,11 +173,10 @@ namespace network {
  * @param pool A thread pool to manage concurrent tasks.
  * @return network::Server* Pointer to the newly created server instance
  */
-extern "C"
-{
-    network::Server* entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
-        return new network::Server(host, port, pool);
-    }
+extern "C" {
+network::Server *entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
+    return new network::Server(host, port, pool);
+}
 }
 
 #endif

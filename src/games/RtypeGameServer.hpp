@@ -27,8 +27,8 @@
 #include "LifeSystem.hpp"
 #include "PlayerSpawnSystem.hpp"
 #include "PositionSystem.hpp"
-#include "SpriteAnimationSystem.hpp"
 #include "ScoreSystem.hpp"
+#include "SpriteAnimationSystem.hpp"
 
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"

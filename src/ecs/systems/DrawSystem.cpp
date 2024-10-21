@@ -47,7 +47,8 @@ void ecs::system::DrawSystem::drawText(Registry &reg) {
             if (types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity)
                 continue;
             if (textInfos[i]->textToDisplay.length() > 0) {
-                DrawTextEx(textInfos[i]->font, textInfos[i]->textToDisplay.c_str(), {(float)textInfos[i]->x / screenRatio.x, (float)textInfos[i]->y / screenRatio.y},
+                DrawTextEx(textInfos[i]->font, textInfos[i]->textToDisplay.c_str(),
+                           {(float)textInfos[i]->x / screenRatio.x, (float)textInfos[i]->y / screenRatio.y},
                            textInfos[i]->size / screenRatio.x, LETTER_SPACING, textInfos[i]->color);
             }
         }

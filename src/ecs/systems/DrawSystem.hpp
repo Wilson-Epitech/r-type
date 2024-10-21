@@ -118,9 +118,9 @@ namespace ecs {
                           SparseArray<component::Position> &positions, std::size_t index);
 
             /**
-            * @brief Renders the text of an entity.
-            * @param reg The ECS Registry.
-            */
+             * @brief Renders the text of an entity.
+             * @param reg The ECS Registry.
+             */
             void drawText(Registry &reg);
 
             /**
