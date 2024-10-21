@@ -165,6 +165,13 @@ namespace network {
     };
 };
 
+/**
+ * @brief Used to create a new server instance by loading a shared library from this class.
+ * @param host The IP address of the server.
+ * @param port The port on which the server listens.
+ * @param pool A thread pool to manage concurrent tasks.
+ * @return network::Server* Pointer to the newly created server instance
+ */
 extern "C"
 {
     network::Server* entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
