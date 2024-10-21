@@ -41,7 +41,7 @@ namespace network {
          * @param port The port on which the server listens.
          * @param pool A thread pool to manage concurrent tasks.
          */
-        Server(asio::io_context &ioContext, std::string host, std::size_t port, asio::thread_pool &pool);
+        Server(asio::io_context &ioContext, std::size_t port, asio::thread_pool &pool);
 
         /**
          * @brief Destructor that stops the server and joins the IO thread.

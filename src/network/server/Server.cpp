@@ -9,8 +9,8 @@
 #include <functional>
 #include <iostream>
 
-network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
+network::Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool),
       _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
