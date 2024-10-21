@@ -24,6 +24,7 @@
 #include <map>
 #include <typeindex>
 #include <unordered_map>
+#include <algorithm>
 
 using entity_t = std::size_t;
 

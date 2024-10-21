@@ -29,6 +29,7 @@
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 #include "ScoreSystem.hpp"
+#include "PowerupSystem.hpp"
 
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"
@@ -48,6 +49,8 @@
 #define TEAM_SCORE_NAME "team_score"
 /** @brief Defines the name of the title entity */
 #define TITLE_NAME "title"
+/** @brief Defines the name of the powerup entity */
+#define POWERUP_NAME "powerup"
 
 /** @brief Maximum spawn height for enemies */
 #define MAX_SPAWN_HEIGHT 1040

@@ -39,6 +39,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Score>();
     _reg.registerComponent<ecs::component::ShootPlayerIndex>();
     _reg.registerComponent<ecs::component::TextInfos>();
+    _reg.registerComponent<ecs::component::Powerup>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -54,6 +55,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::BackgroundMusic> &backgroundMusic = _reg.getComponents<ecs::component::BackgroundMusic>();
     ecs::SparseArray<ecs::component::Score> &score = _reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
+    ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -83,7 +85,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
         _stringToEntity[SPAWN_ENEMY_NAME],
         ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, 3, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
-    lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
+    lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1, false, true});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
     soundEffect.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
 
@@ -111,6 +113,12 @@ void game::RtypeGameServer::addComponentsToEntities() {
 
     types.insertAt(_stringToEntity[TITLE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
     textInfos.insertAt(_stringToEntity[TITLE_NAME], ecs::component::TextInfos{"RType", SCREEN_WIDTH / 2, 50, 20, FONT_PATH, ORANGE});
+
+    powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::LIFE_POWERUP, 1, 3});
+    types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP});
+    spriteInfos.insertAt(
+        _stringToEntity[POWERUP_NAME],
+        ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
@@ -121,6 +129,7 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::EnemyFiringSystem());
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::ScoreSystem());
+    _reg.addSystem(ecs::system::PowerupSystem());
     _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
 }

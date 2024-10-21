@@ -39,7 +39,8 @@ namespace ecs {
         ENEMYSHOT,           ///< Enemy's shot entity
         ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
         BACKGROUND,          ///< Background entity
-        TEXT                 ///< Text entity
+        TEXT,                ///< Text entity
+        POWERUP              ///< Powerup entity
     };
 
     /**
@@ -58,6 +59,10 @@ namespace ecs {
         MUSIC,       ///< Background music component
         SCORE,       ///< Score component
         TEXTINFOS    ///< Text component
+    };
+
+    enum Poweruptype {
+        LIFE_POWERUP
     };
 
     namespace component {
@@ -105,6 +110,7 @@ namespace ecs {
         struct Life {
             std::size_t nbLives;      ///< Number of lives the entity has
             bool displayLife = false; ///< Indicates if the life has to be displayed
+            bool hasToSummonPowerup = false;
             std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
 
             bool operator==(const Life &other) const {
@@ -255,6 +261,14 @@ namespace ecs {
                         fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
                         color.b == other.color.b);
             }
+        };
+
+        struct Powerup {
+            Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
+            int spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            float duration = 3;
+            bool hasBeenActivated = false;
+            std::size_t playerIndex = 0;
         };
     }
 }

@@ -70,7 +70,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerup});
     if (shootingRate.size() > i) {
         if (shootingRate[i])
             shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
