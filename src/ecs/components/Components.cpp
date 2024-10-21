@@ -22,7 +22,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spri
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {
-    oss << shooting.isShooting;
+    oss << shooting.isShooting << ' ' << shooting.shootPower;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
@@ -30,7 +30,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
-    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives;
+    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives << ' ' << life.isInvincible;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect) {
@@ -105,7 +105,7 @@ void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfo
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting) {
-    iss >> shooting.isShooting;
+    iss >> shooting.isShooting >> shooting.shootPower;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Type &type) {
@@ -113,7 +113,7 @@ void operator>>(std::istringstream &iss, ecs::component::Type &type) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Life &life) {
-    iss >> life.nbLives >> life.displayLife >> life.maxLives;
+    iss >> life.nbLives >> life.displayLife >> life.maxLives >> life.isInvincible;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect) {

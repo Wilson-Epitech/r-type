@@ -39,8 +39,10 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
                 positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (CheckCollisionRecs(rec1, rec2)) {
-                    lives[i]->nbLives--;
-                    lives[j]->nbLives--;
+                    if (!lives[i]->isInvincible)
+                        lives[i]->nbLives--;
+                    if (!lives[j]->isInvincible)
+                        lives[j]->nbLives--;
                     powerUpLives(reg, i, j);
                     reg.addCollision(i, j);
                 }
@@ -81,10 +83,10 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     std::size_t powerupIndex = getPowerupIndex(reg);
 
-    if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == ecs::EntityType::POWERUP) {
+    if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == ecs::EntityType::POWERUP && !lives[i]->isInvincible) {
         powerup[powerupIndex]->playerIndex = i;
         lives[i]->nbLives++;
-    } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER) {
+    } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
         powerup[powerupIndex]->playerIndex = j;
         lives[j]->nbLives++;
     }

@@ -91,6 +91,8 @@ void ecs::system::DrawSystem::drawLife(Registry &reg, SparseArray<component::Dra
         lifeColor = RED;
     else if ((float)lifes[index]->nbLives / (float)lifes[index]->maxLives <= (float)2 / 3)
         lifeColor = ORANGE;
+    else if (lifes[index]->isInvincible)
+        lifeColor = PINK;
     DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x, positions[index]->y / screenRatio.y,
                   lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, lifeColor);
     if (LIVES_BAR_HEIGHT / screenRatio.y > 3)

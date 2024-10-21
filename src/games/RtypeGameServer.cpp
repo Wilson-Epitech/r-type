@@ -118,7 +118,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP});
     spriteInfos.insertAt(
         _stringToEntity[POWERUP_NAME],
-        ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
+        ecs::component::SpriteInfos{POWERUP_PATH, 10, 1, 0.5});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

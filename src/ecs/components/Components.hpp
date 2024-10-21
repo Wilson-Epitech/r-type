@@ -62,7 +62,10 @@ namespace ecs {
     };
 
     enum Poweruptype {
-        LIFE_POWERUP
+        LIFE_POWERUP,
+        POWERSHOOT_POWERUP,
+        INVINCIBLE_POWERUP,
+        NOPOWERUP           ///< No powerup, must be at the end of the enum
     };
 
     namespace component {
@@ -110,11 +113,12 @@ namespace ecs {
         struct Life {
             std::size_t nbLives;      ///< Number of lives the entity has
             bool displayLife = false; ///< Indicates if the life has to be displayed
-            bool hasToSummonPowerup = false;
+            bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
             std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
+            bool isInvincible = false; ///< Indicates if the entity is invincible
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
             }
         };
 
@@ -124,9 +128,10 @@ namespace ecs {
          */
         struct Shooting {
             bool isShooting = false; ///< Boolean indicating if the entity is shooting
+            std::size_t shootPower = 1;
 
             bool operator==(const Shooting &other) const {
-                return (isShooting == other.isShooting);
+                return (isShooting == other.isShooting && shootPower == other.shootPower);
             }
         };
 
