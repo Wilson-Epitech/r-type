@@ -77,7 +77,6 @@ void network::Client::msgFromServer() {
             receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType) + sizeof(messageId) + sizeof(messageLen), messageLen);
         std::string newConnectionMessage = "New connection: ";
         std::string playerIdMessage = "playerId:";
-        std::string createWorldMessage = "Create World:";
         std::string disconnectedClient = "Disconnected:";
 
         if (receivedMessage.compare(0, playerIdMessage.length(), playerIdMessage) == 0) {
@@ -139,14 +138,9 @@ void network::Client::heartbeatToServer() {
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
     DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg);
-    static bool hasSendWorldSet = 0;
 
     for (auto lastDataReceived : lastDataReceivedList)
         network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
-    if (!lastDataReceivedList.empty() && !hasSendWorldSet) {
-        sendMessage("World set", 3);
-        hasSendWorldSet = true;
-    }
     if (!data.empty()) {
         std::string serialized = network::HandleData::serializeEntityDataVector(data);
         sendMessage(serialized, 3);
