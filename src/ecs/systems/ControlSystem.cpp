@@ -26,11 +26,11 @@ void ecs::system::ControlSystem::operator()(Registry &reg) {
             velocities[playerEntity]->vx = 0;
             velocities[playerEntity]->vy = velocities[playerEntity]->possibleVelocity;
         } else if (IsKeyDown(KEY_LEFT)) {
-            velocities[playerEntity]->vy = 0;
             velocities[playerEntity]->vx = -velocities[playerEntity]->possibleVelocity;
-        } else if (IsKeyDown(KEY_RIGHT)) {
             velocities[playerEntity]->vy = 0;
+        } else if (IsKeyDown(KEY_RIGHT)) {
             velocities[playerEntity]->vx = velocities[playerEntity]->possibleVelocity;
+            velocities[playerEntity]->vy = 0;
         } else if (IsGamepadAvailable(gamepad)) {
             handleController(gamepad, velocities, playerEntity);
         }
@@ -47,12 +47,20 @@ void ecs::system::ControlSystem::handleController(int &gamepad, SparseArray<comp
     float leftJoystickX = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
     float leftJoystickY = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
 
-    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_UP) || leftJoystickY < -JOYSTICK_SENSIBILITY)
+    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_UP) || leftJoystickY < -JOYSTICK_SENSIBILITY) {
+        velocities[playerIndex]->vx = 0;
         velocities[playerIndex]->vy = -velocities[playerIndex]->possibleVelocity;
-    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || leftJoystickY > JOYSTICK_SENSIBILITY)
+    }
+    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_DOWN) || leftJoystickY > JOYSTICK_SENSIBILITY) {
+        velocities[playerIndex]->vx = 0;
         velocities[playerIndex]->vy = velocities[playerIndex]->possibleVelocity;
-    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_LEFT) || leftJoystickX < -JOYSTICK_SENSIBILITY)
+    }
+    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_LEFT) || leftJoystickX < -JOYSTICK_SENSIBILITY) {
         velocities[playerIndex]->vx = -velocities[playerIndex]->possibleVelocity;
-    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || leftJoystickX > JOYSTICK_SENSIBILITY)
+        velocities[playerIndex]->vy = 0;
+    }
+    if (IsGamepadButtonDown(gamepad, GAMEPAD_BUTTON_LEFT_FACE_RIGHT) || leftJoystickX > JOYSTICK_SENSIBILITY) {
         velocities[playerIndex]->vx = velocities[playerIndex]->possibleVelocity;
+        velocities[playerIndex]->vy = 0;
+    }
 }
