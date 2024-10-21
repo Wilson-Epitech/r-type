@@ -1,6 +1,6 @@
 # R-Type - The Network
 
-This documentation has for purpose to inform on the way of server and client work. Both will be detailled in separate paragraph.
+This documentation has for purpose to inform on the way the server and client work. Both will be detailled in separate paragraph.
 
 # The Server
 
@@ -11,7 +11,7 @@ The server is a UDP protocole, as our game favors fluidity over accuracy and con
 ## Heartbeat System
 
 However, our server must still retrieve important informations and not miss it. Thus we implemented a heartbeat system. <br>
-This system listens, all time, to every clients. If after 5 seconds the clients has not sent a proof of aliveness, the server consider that this perticular client is deconnected.
+This system listens, all time, to every client. If after 5 seconds the client has not sent a proof of aliveness, the server consider that this perticular client is deconnected.
 
 ```c++
 if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
@@ -32,11 +32,11 @@ if (_connectedClients.size() >= NB_CLIENTS_AUTHORIZED) {
 
 ## Importance of the Server
 
-Even though many actions are taken inside the clients, the server remains the sole commandant. Indeed, handles most of the game aspect, from the creation of ennemy to the display of everything on the screen. Only the keys are handled in each separate clients, however, what those keys do is decided by the server.
+Even though many actions are taken inside the client, the server remains the sole commandant. Indeed, ir handles most of the game aspect, from the creation of ennemy to the display of everything on the screen. Only the keys are handled in each separate client, however, what those keys do is decided by the server.
 
 ## Connection && Disconnection
 
-The server is in charge of every client that its related to. The clients don't have knowledge about the other clients state or actions, it only knows what the server decide to send it. In the light of this, The server must inform every client of the connection and disconnection of a client.
+The server is in charge of every client that its related to. The client ddoes not have knowledge on other clients state or actions, it only knows what the server decide to send it. In the light of this, The server must inform every client of the connection and disconnection of a client.
 
 ```c++
 _idClient++;
@@ -50,5 +50,5 @@ The client does not handle much in our game, as the server is the decisionnary o
 
 ## Heartbeat System
 
-The client is in charge of proving its aliveness to the server. As such, it sends every seconds an "Alive" message with his ID.
+The client is in charge of proving its aliveness to the server. As such, it sends every seconds an "Alive" message with its ID.
 
