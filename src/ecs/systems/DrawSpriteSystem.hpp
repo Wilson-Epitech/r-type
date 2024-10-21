@@ -2,39 +2,28 @@
 ** R_TYPE PROJECT, 2024
 ** r-type
 ** File description:
-** DrawSystem
+** DrawSpriteSystem
 */
 
-/**
- * @file DrawSystem.hpp
- * @brief Declares the draw system responsible for rendering entities in the game engine ECS.
- * This file contains the `DrawSystem` class, which manages the rendering of entities, loading of textures,
- * and background drawing. It ensures that all drawable entities are properly displayed on the screen.
- */
-
-#ifndef DRAWSYSTEM_HPP_
-#define DRAWSYSTEM_HPP_
+#ifndef DRAWSPRITESYSTEM_HPP_
+#define DRAWSPRITESYSTEM_HPP_
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-
-#define LETTER_SPACING 2
-
-#define LIVES_BAR_HEIGHT 5
 
 namespace ecs {
     namespace system {
 
         /**
-         * @class DrawSystem
+         * @class DrawSpriteSystem
          * @brief System responsible for rendering entities in the game.
-         * The `DrawSystem` handles the rendering of entities by drawing their textures on the screen.
+         * The `DrawSpriteSystem` handles the rendering of entities by drawing their textures on the screen.
          * It manages texture loading, background rendering, and ensures that entities are displayed correctly.
          */
-        class DrawSystem : virtual public ecs::system::ISystem {
+        class DrawSpriteSystem : virtual public ecs::system::ISystem {
           public:
-            DrawSystem() = default;
-            ~DrawSystem() = default;
+            DrawSpriteSystem() = default;
+            ~DrawSpriteSystem() = default;
 
             /**
              * @brief Executes the draw system to render entities.
@@ -105,31 +94,8 @@ namespace ecs {
              * @return int The number of repetitions required.
              */
             int getNbrRepeatBackground(float spriteSize, int screenSize);
-
-            /**
-             * @brief Renders the life of an entity.
-             * @param reg The ECS Registry.
-             * @param drawables Array of drawable components for entities.
-             * @param spriteInfos Array of sprite information components for entities.
-             * @param positions Array of position components for entities.
-             * @param index The index of the entity life being drawn.
-             */
-            void drawLife(Registry &reg, SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
-                          SparseArray<component::Position> &positions, std::size_t index);
-
-            /**
-            * @brief Renders the text of an entity.
-            * @param reg The ECS Registry.
-            */
-            void drawText(Registry &reg);
-
-            /**
-             * @brief Load the font of a text.
-             * @param textInfos The text informations of an entity.
-             */
-            void loadFonts(SparseArray<component::TextInfos> &textInfos);
         };
     }
 }
 
-#endif /* !DRAWSYSTEM_HPP_ */
+#endif /* !DRAWSPRITESYSTEM_HPP_ */

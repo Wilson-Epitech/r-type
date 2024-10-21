@@ -33,7 +33,9 @@ void game::RtypeGameClient::addComponentsToEntities() {}
 void game::RtypeGameClient::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::ControlSystem());
     _reg.addSystem(ecs::system::PositionSystem());
-    _reg.addSystem(ecs::system::DrawSystem());
+    _reg.addSystem(ecs::system::DrawSpriteSystem());
+    _reg.addSystem(ecs::system::DrawLifeBarSystem());
+    _reg.addSystem(ecs::system::DrawTextSystem());
     _reg.addSystem(ecs::system::SpriteAnimationSystem());
     _reg.addSystem(ecs::system::SoundSystem());
     _reg.addSystem(ecs::system::MusicSystem());
