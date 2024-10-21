@@ -87,8 +87,8 @@ namespace network {
         template <typename Component>
         static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
                                              const std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance = getComponentCorrespondance();
-            for (auto &it : componentCorrespondance) {
+            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence = getComponentCorrespondence();
+            for (auto &it : componentCorrespondence) {
                 if (entityComponentName == it.first) {
                     auto tmpComponent = std::any_cast<Component>(component);
                     oss << tmpComponent;
@@ -107,8 +107,8 @@ namespace network {
         template <typename Component>
         static void deserializeEntityCompotent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
                                                std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance = getComponentCorrespondance();
-            for (auto &it : componentCorrespondance) {
+            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence = getComponentCorrespondence();
+            for (auto &it : componentCorrespondence) {
                 if (entityComponentName == it.first) {
                     auto tmpComponent = std::any_cast<Component>(it.second);
                     iss >> tmpComponent;
@@ -123,20 +123,7 @@ namespace network {
          * @brief Retrieves the list of component types and their corresponding default values.
          * @return A vector of pairs containing the component names and their default values.
          */
-        static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
-        /**
-         * @brief Retrieves the indices of player entities in the ECS registry.
-         * @param reg The ECS registry.
-         * @return A vector of player entity indices.
-         */
-        static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
-
-        /**
-         * @brief Retrieves the indices of text entities in the ECS registry.
-         * @param reg The ECS registry.
-         * @return A vector of text entity indices.
-         */
-        static std::vector<std::size_t> retrieveTextIndex(ecs::Registry &reg);
+        static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondence();
 
         /**
          * @brief Add a vector of EntityData element to the entitiesData vector from DataToSend.
@@ -153,34 +140,31 @@ namespace network {
          * @param retriveEntityTypesIndex function that retrive the index of an entity type in the ECS registry.
          * @return A vector of EntityData containing updated component data for the specific entity.
          */
-        template <typename Component, typename Function>
-        static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name,
-                                                                Function const &retriveEntityTypesIndex) {
+        template <typename Component>
+        static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
             static std::vector<typename ecs::SparseArray<Component>::value_type> lastEntityTypesValues;
             ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
-            std::vector<std::size_t> entityTypesIndex = retriveEntityTypesIndex(reg);
             std::vector<EntityData> entityTypesData;
             EntityData entityTypeData = EntityData{};
             std::size_t turn = 0;
 
-            for (auto &entityTypeIndex : entityTypesIndex) {
-                if (entityTypeIndex == 0 || !componentInfos[entityTypeIndex]) {
+            for (std::size_t i = 0; i < componentInfos.size(); ++i) {
+                if (!componentInfos[i])
                     continue;
-                }
                 if (lastEntityTypesValues.size() >= turn + 1) {
-                    if (!(lastEntityTypesValues[turn] == componentInfos[entityTypeIndex].value())) {
-                        entityTypeData.entityID = entityTypeIndex;
-                        entityTypeData.component = componentInfos[entityTypeIndex].value();
+                    if (!(lastEntityTypesValues[turn] == componentInfos[i].value())) {
+                        entityTypeData.entityID = i;
+                        entityTypeData.component = componentInfos[i].value();
                         entityTypeData.name = name;
                         entityTypesData.push_back(entityTypeData);
-                        lastEntityTypesValues[turn] = componentInfos[entityTypeIndex].value();
+                        lastEntityTypesValues[turn] = componentInfos[i].value();
                     }
                 } else {
-                    entityTypeData.entityID = entityTypeIndex;
-                    entityTypeData.component = componentInfos[entityTypeIndex].value();
+                    entityTypeData.entityID = i;
+                    entityTypeData.component = componentInfos[i].value();
                     entityTypeData.name = name;
                     entityTypesData.push_back(entityTypeData);
-                    lastEntityTypesValues.push_back(componentInfos[entityTypeIndex].value());
+                    lastEntityTypesValues.push_back(componentInfos[i].value());
                 }
                 turn++;
             }

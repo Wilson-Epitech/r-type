@@ -7,39 +7,39 @@
 
 #include "HandleData.hpp"
 
-std::vector<std::size_t> network::HandleData::retrievePlayersIndex(ecs::Registry &reg) {
-    ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
-    std::map<std::size_t, entity_t> players = reg.getPlayers();
-    std::vector<std::size_t> playersIndex;
+// std::vector<std::size_t> network::HandleData::retrievePlayersIndex(ecs::Registry &reg) {
+//     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+//     std::map<std::size_t, entity_t> players = reg.getPlayers();
+//     std::vector<std::size_t> playersIndex;
 
-    for (std::size_t i = 0; i < types.size(); ++i) {
-        if (!types[i])
-            continue;
-        if (types[i]->entityType == ecs::EntityType::PLAYER) {
-            for (auto &player : players) {
-                if (player.second == i)
-                    playersIndex.push_back(i);
-            }
-        }
-    }
-    return playersIndex;
-}
+//     for (std::size_t i = 0; i < types.size(); ++i) {
+//         if (!types[i])
+//             continue;
+//         if (types[i]->entityType == ecs::EntityType::PLAYER) {
+//             for (auto &player : players) {
+//                 if (player.second == i)
+//                     playersIndex.push_back(i);
+//             }
+//         }
+//     }
+//     return playersIndex;
+// }
 
-std::vector<std::size_t> network::HandleData::retrieveTextIndex(ecs::Registry &reg) {
-    ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
-    ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
-    std::vector<std::size_t> textIndex;
+// std::vector<std::size_t> network::HandleData::retrieveTextIndex(ecs::Registry &reg) {
+//     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+//     ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
+//     std::vector<std::size_t> textIndex;
 
-    for (std::size_t i = 0; i < types.size() && i < textInfos.size(); ++i) {
-        if (!types[i] || !textInfos[i])
-            continue;
-        if (types[i]->entityType == ecs::EntityType::TEXT && textInfos[i]->hasChanged) {
-            textInfos[i]->hasChanged = false;
-            textIndex.push_back(i);
-        }
-    }
-    return textIndex;
-}
+//     for (std::size_t i = 0; i < types.size() && i < textInfos.size(); ++i) {
+//         if (!types[i] || !textInfos[i])
+//             continue;
+//         if (types[i]->entityType == ecs::EntityType::TEXT && textInfos[i]->hasChanged) {
+//             textInfos[i]->hasChanged = false;
+//             textIndex.push_back(i);
+//         }
+//     }
+//     return textIndex;
+// }
 
 void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData, DataToSend &data) {
     for (auto &dataToSend : entityData)
@@ -48,22 +48,19 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
 
 DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::list<entity_t> newEntities = reg.getActualTurnNewEntities();
-    std::vector<EntityData> playersVelocitiesData = retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY, retrievePlayersIndex);
-    std::vector<EntityData> playersShootingsData = retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING, retrievePlayersIndex);
-    std::vector<EntityData> playersLivesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE, retrievePlayersIndex);
-    std::vector<EntityData> playersScoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE, retrievePlayersIndex);
-    std::vector<EntityData> playersTextInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrievePlayersIndex);
-    std::vector<EntityData> teamScoresInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS, retrieveTextIndex);
-
+    std::vector<EntityData> velocitiesData = retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
+    std::vector<EntityData> shootingsData = retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
+    std::vector<EntityData> livesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
+    std::vector<EntityData> scoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE);
+    std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
-    network::HandleData::addEntityDataToSend(playersVelocitiesData, data);
-    network::HandleData::addEntityDataToSend(playersShootingsData, data);
-    network::HandleData::addEntityDataToSend(playersLivesData, data);
-    network::HandleData::addEntityDataToSend(playersScoresData, data);
-    network::HandleData::addEntityDataToSend(playersTextInfosData, data);
-    network::HandleData::addEntityDataToSend(teamScoresInfosData, data);
+    network::HandleData::addEntityDataToSend(velocitiesData, data);
+    network::HandleData::addEntityDataToSend(shootingsData, data);
+    network::HandleData::addEntityDataToSend(livesData, data);
+    network::HandleData::addEntityDataToSend(scoresData, data);
+    network::HandleData::addEntityDataToSend(textInfosData, data);
     for (auto &newEntity : newEntities) {
         fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);
@@ -103,20 +100,20 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     return data;
 }
 
-std::vector<std::pair<ecs::ComponentName, std::any>> network::HandleData::getComponentCorrespondance() {
-    std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance;
+std::vector<std::pair<ecs::ComponentName, std::any>> network::HandleData::getComponentCorrespondence() {
+    std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence;
 
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::POSITION, ecs::component::Position{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::VELOCITY, ecs::component::Velocity{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::SPRITEINFOS, ecs::component::SpriteInfos{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::SHOOTING, ecs::component::Shooting{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::TYPE, ecs::component::Type{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::LIFE, ecs::component::Life{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffect{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::MUSIC, ecs::component::BackgroundMusic{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::SCORE, ecs::component::Score{}));
-    componentCorrespondance.push_back(std::make_pair(ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}));
-    return componentCorrespondance;
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::POSITION, ecs::component::Position{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::VELOCITY, ecs::component::Velocity{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SPRITEINFOS, ecs::component::SpriteInfos{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SHOOTING, ecs::component::Shooting{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::TYPE, ecs::component::Type{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::LIFE, ecs::component::Life{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffect{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::MUSIC, ecs::component::BackgroundMusic{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SCORE, ecs::component::Score{}));
+    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}));
+    return componentCorrespondence;
 }
 
 std::string network::HandleData::serializeEntityDataVector(const DataToSend &data) {
