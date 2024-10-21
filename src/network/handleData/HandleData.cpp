@@ -47,7 +47,7 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
 }
 
 DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
-    std::list<std::size_t> newEntities = reg.getActualTurnNewEntities();
+    std::list<entity_t> newEntities = reg.getActualTurnNewEntities();
     std::vector<EntityData> playersVelocitiesData = retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY, retrievePlayersIndex);
     std::vector<EntityData> playersShootingsData = retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING, retrievePlayersIndex);
     std::vector<EntityData> playersLivesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE, retrievePlayersIndex);
