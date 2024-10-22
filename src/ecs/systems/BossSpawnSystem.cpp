@@ -1,0 +1,64 @@
+/*
+** R_TYPE PROJECT, 2024
+** r-type
+** File description:
+** BossSpawnSystem
+*/
+
+#include "BossSpawnSystem.hpp"
+
+#include <iostream>
+
+int ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<component::Type> &types)
+{
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+            return i;
+    }
+    return 0;
+}
+
+void ecs::system::BossSpawnSystem::operator()(Registry &reg)
+{
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
+    SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
+    static bool bossSpawned = false;
+
+    for (std::size_t i = 0; i < types.size() && i < scores.size() && i < textInfos.size(); ++i) {
+        if (!types[i] || !scores[i] || !textInfos[i])
+            continue;
+        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == 500 && !bossSpawned) {
+            createNewEnemy(reg, types, findLevel1BossEntity(types));
+            bossSpawned = true;
+        }
+    }
+}
+
+void ecs::system::BossSpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i)
+{
+    SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
+    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+
+    entity_t entity = reg.spawnEntity();
+
+    positions.insertAt(entity, ecs::component::Position{1400, 500});
+    velocities.insertAt(entity, ecs::component::Velocity{0, 0, 0});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
+                                                             spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
+    types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
+    if (shootingRate.size() > i) {
+        if (shootingRate[i])
+            shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
+    }
+    if (soundEffect.size() > i) {
+        if (soundEffect[i])
+            soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[i]->soundPath});
+    }
+}
