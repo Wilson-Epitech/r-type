@@ -30,4 +30,9 @@
 #define ENEMYSHOT_SCALE_FACTOR 2
 #define BOSS_SCALE_FACTOR 1.5
 
+
+#define STAGE1_BOSS_PATH "assets/r-typesheet41.gif"
+#define STAGE1_BOSS_PATTERN 5
+
+
 #endif /* !ASSETS_HPP_ */
