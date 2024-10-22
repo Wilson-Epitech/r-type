@@ -211,14 +211,40 @@ enum ComponentName {
       }
    };
    ```
-   ```
-11. **BackgroundMusicObject**
+12. **BackgroundMusicObject**
    - Store the music object that has to be played
    ```c++
    struct BackgroundMusicObject {
       Music music = Music{};
    };
    ```
+13.   **TextInfos**
+   - Store informations about the text of an entity
+   ```c++
+        struct TextInfos {
+            std::string textToDisplay;
+            int x;
+            int y;
+            int size;
+            std::string fontPath;
+            CustomColor color = { 245, 245, 245, 255 };
+            bool fontIsLoaded = false;
+            bool hasChanged = false;
+
+            bool operator==(const TextInfos &other) const {
+                return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
+                        fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b);
+            }
+        };
+   ```
+   **TextFont**
+   - Store the text font linked to a text of an entity
+   ```c++
+      struct TextFont {
+            Font font = Font{};
+      };
+   ```
+
 <div id='AddComponents'/>
 
 ## How to add a new component

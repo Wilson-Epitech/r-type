@@ -22,6 +22,12 @@
 #include <sstream>
 #include <string>
 
+#define ORANGE_COLOR (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
+#define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color
+#define BEIGE_COLOR (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
+#define GOLD_COLOR (ecs::CustomColor) { 255, 203, 0, 255 }   ///< Gold color
+#define PINK_COLOR (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
+
 namespace ecs {
 
     /**
@@ -263,7 +269,7 @@ namespace ecs {
 
         /**
          * @struct TextInfos
-         * @brief Component for the text information of an entity
+         * @brief Component for text informations of an entity
         */
         struct TextInfos {
             std::string textToDisplay; ///< Text to display
@@ -271,16 +277,23 @@ namespace ecs {
             int y; ///< Y coordinates of the text
             int size; ///< Size of the text
             std::string fontPath; ///< Path of the font used to draw the text
-            Color color = Color{}; ///< Color of the text
-            Font font = Font{}; ///< Font of the text
-            bool fontIsLoaded = false; ///< Indicates if font has been loaded
+            CustomColor color = { 245, 245, 245, 255 }; ///< Color of the text, white by default
             bool hasChanged = false; ///< Indicates if the textToDisplay string has changed
+            bool fontIsLoaded = false; ///< Indicates if font has been loaded
 
             bool operator==(const TextInfos &other) const {
                 return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
                         fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
                         color.b == other.color.b);
             }
+        };
+
+        /**
+         * @struct TextFont
+         * @brief Component for the text font linked to a text of an entity
+        */
+        struct TextFont {
+            Font font = Font{}; ///< Font of the text
         };
     }
 }

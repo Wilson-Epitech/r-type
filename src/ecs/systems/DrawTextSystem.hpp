@@ -40,8 +40,9 @@ namespace ecs {
             /**
              * @brief Load the font of a text.
              * @param textInfos The text informations of an entity.
+             * @param textFonts The text fonts of an entity.
              */
-            void loadFonts(SparseArray<component::TextInfos> &textInfos);
+            void loadFonts(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts);
         };
     }
 }
