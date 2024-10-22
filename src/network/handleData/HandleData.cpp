@@ -7,40 +7,6 @@
 
 #include "HandleData.hpp"
 
-// std::vector<std::size_t> network::HandleData::retrievePlayersIndex(ecs::Registry &reg) {
-//     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
-//     std::map<std::size_t, entity_t> players = reg.getPlayers();
-//     std::vector<std::size_t> playersIndex;
-
-//     for (std::size_t i = 0; i < types.size(); ++i) {
-//         if (!types[i])
-//             continue;
-//         if (types[i]->entityType == ecs::EntityType::PLAYER) {
-//             for (auto &player : players) {
-//                 if (player.second == i)
-//                     playersIndex.push_back(i);
-//             }
-//         }
-//     }
-//     return playersIndex;
-// }
-
-// std::vector<std::size_t> network::HandleData::retrieveTextIndex(ecs::Registry &reg) {
-//     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
-//     ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
-//     std::vector<std::size_t> textIndex;
-
-//     for (std::size_t i = 0; i < types.size() && i < textInfos.size(); ++i) {
-//         if (!types[i] || !textInfos[i])
-//             continue;
-//         if (types[i]->entityType == ecs::EntityType::TEXT && textInfos[i]->hasChanged) {
-//             textInfos[i]->hasChanged = false;
-//             textIndex.push_back(i);
-//         }
-//     }
-//     return textIndex;
-// }
-
 void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData, DataToSend &data) {
     for (auto &dataToSend : entityData)
         data.entitiesData.push_back(dataToSend);
