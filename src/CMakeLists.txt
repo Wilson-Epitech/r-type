@@ -7,6 +7,7 @@ set(SRC
     ecs/systems/DrawSystem.cpp
     ecs/systems/EnemyFiringSystem.cpp
     ecs/systems/EnemySpawnSystem.cpp
+    ecs/systems/BossSpawnSystem.cpp
     ecs/systems/FiringSystem.cpp
     ecs/systems/KillOffscreenEntitiesSystem.cpp
     ecs/systems/LifeSystem.cpp
