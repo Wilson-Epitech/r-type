@@ -28,7 +28,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < textInfos.size(); ++i) {
         if (!types[i] || !scores[i] || !textInfos[i])
             continue;
-        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == 500 && !bossSpawned) {
+        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !bossSpawned) {
             createNewEnemy(reg, types, findLevel1BossEntity(types));
             bossSpawned = true;
         }
@@ -37,7 +37,6 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
 
 void ecs::system::BossSpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i)
 {
-    SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -47,7 +46,7 @@ void ecs::system::BossSpawnSystem::createNewEnemy(Registry &reg, SparseArray<com
 
     entity_t entity = reg.spawnEntity();
 
-    positions.insertAt(entity, ecs::component::Position{1400, 500});
+    positions.insertAt(entity, ecs::component::Position{1200, 150});
     velocities.insertAt(entity, ecs::component::Velocity{0, 0, 0});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});

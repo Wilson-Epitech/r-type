@@ -19,6 +19,8 @@
 #include "Registry.hpp"
 #include <chrono>
 
+#define SCORE_FINAL_BOSS_LEVEL1 100
+
 namespace ecs {
     namespace system {
 

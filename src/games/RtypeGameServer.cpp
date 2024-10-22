@@ -112,7 +112,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
 
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME],
-                         ecs::component::SpriteInfos{STAGE1_BOSS_PATH, STAGE1_BOSS_PATTERN, 0, BOSS_SCALE_FACTOR});
+                         ecs::component::SpriteInfos{STAGE1_BOSS_PATH, STAGE1_BOSS_PATTERN, 0, 10});
     bossSpawns.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::BossSpawn{1, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::Velocity{0, 0});
     lives.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::Life{100});
