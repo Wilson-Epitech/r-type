@@ -245,7 +245,7 @@ std::size_t network::Server::checkConnectedHeartbeat() {
             disconnectedPlayerEntity = it->first;
             auto corresponenceFound = coressClient.find(it->first);
             if (corresponenceFound == coressClient.end())
-                throw Error("Correspondance no set yet");
+                throw Error("Correspondence no set yet");
             it = lastSeenClient.erase(it);
             std::size_t _ownId = corresponenceFound->second;
             clientStillHere[_ownId] = false;

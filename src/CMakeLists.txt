@@ -4,7 +4,9 @@ set(SRC
     ecs/components/Components.cpp
     ecs/systems/CollisionSystem.cpp
     ecs/systems/ControlSystem.cpp
-    ecs/systems/DrawSystem.cpp
+    ecs/systems/DrawSpriteSystem.cpp
+    ecs/systems/DrawLifeBarSystem.cpp
+    ecs/systems/DrawTextSystem.cpp
     ecs/systems/EnemyFiringSystem.cpp
     ecs/systems/EnemySpawnSystem.cpp
     ecs/systems/FiringSystem.cpp
