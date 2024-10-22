@@ -124,16 +124,9 @@ DataToSend network::HandleData::deserializeEntityDataVector(const std::string &m
 }
 
 void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
-    ecs::SparseArray<ecs::component::Drawable> &drawables = reg.getComponents<ecs::component::Drawable>();
 
     if (!reg.entityExist(data.entityID))
         reg.spawnEntity();
-    if (data.entityID < drawables.size()) {
-        if (!(drawables[data.entityID]))
-            drawables.insertAt(data.entityID, ecs::component::Drawable({}));
-    } else {
-        drawables.insertAt(data.entityID, ecs::component::Drawable({}));
-    }
     insertComponent<ecs::component::Position>(reg, data, ecs::ComponentName::POSITION);
     insertComponent<ecs::component::Velocity>(reg, data, ecs::ComponentName::VELOCITY);
     insertComponent<ecs::component::Type>(reg, data, ecs::ComponentName::TYPE);

@@ -34,9 +34,11 @@ void ecs::system::DrawSpriteSystem::loadTextures(SparseArray<component::Drawable
     float offset = 0.0;
     float firstPatternLocation = 0.0;
 
-    for (std::size_t i = 0; i < drawables.size() && i < spriteInfos.size(); ++i) {
-        if (!drawables[i] || !spriteInfos[i])
+    for (std::size_t i = 0; i < spriteInfos.size(); ++i) {
+        if (!spriteInfos[i])
             continue;
+        if (!drawables[i])
+            drawables.insertAt(i, ecs::component::Drawable({}));
         if (drawables[i]->isLoaded == false && spriteInfos[i]->spritePath.length() > 0) {
             if (!FileExists(spriteInfos[i]->spritePath.c_str()))
                 throw Error("Invalid sprite path");
