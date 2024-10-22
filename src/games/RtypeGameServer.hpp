@@ -19,7 +19,6 @@
 #include "AGame.hpp"
 #include "CollisionSystem.hpp"
 #include "ControlSystem.hpp"
-#include "DrawSystem.hpp"
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "BossSpawnSystem.hpp"
