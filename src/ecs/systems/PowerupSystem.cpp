@@ -63,12 +63,15 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::LIFE_POWERUP};
         case ecs::Poweruptype::POWERSHOOT_POWERUP:
             shootings[powerup[powerupIndex]->playerIndex]->shootPower = 3;
+            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, POWERSHOOT_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::POWERSHOOT_POWERUP};
         case ecs::Poweruptype::INVINCIBLE_POWERUP:
             lives[powerup[powerupIndex]->playerIndex]->isInvincible = true;
+            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, INVINCIBLE_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::INVINCIBLE_POWERUP};
         case ecs::Poweruptype::MEGASHOOT_POWERUP:
             shootings[powerup[powerupIndex]->playerIndex]->shootSize = 2;
+            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, MEGASHOOT_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::MEGASHOOT_POWERUP};
         default:
             break;
@@ -82,6 +85,7 @@ void ecs::system::PowerupSystem::clearMegaShootEffect(Registry &reg, std::vector
     for (std::size_t i = 0; i < megaShootTimer.size(); i++) {
         if (isTimeElapsed(megaShootTimer[i].second, EFFECT_DURATION)) {
             shootings[megaShootTimer[i].first]->shootSize = 1;
+            updateActivePowerup(reg, megaShootTimer[i].first, MEGASHOOT_POWERUP, false);
             megaShootTimer.erase(megaShootTimer.begin() + i);
         }
     }
@@ -93,6 +97,7 @@ void ecs::system::PowerupSystem::clearPowerShootEffect(Registry &reg, std::vecto
     for (std::size_t i = 0; i < powerShootTimer.size(); i++) {
         if (isTimeElapsed(powerShootTimer[i].second, EFFECT_DURATION)) {
             shootings[powerShootTimer[i].first]->shootPower = 1;
+            updateActivePowerup(reg, powerShootTimer[i].first, POWERSHOOT_POWERUP, false);
             powerShootTimer.erase(powerShootTimer.begin() + i);
         }
     }
@@ -104,6 +109,7 @@ void ecs::system::PowerupSystem::clearInvicibleEffect(Registry &reg, std::vector
     for (std::size_t i = 0; i < invincibleTimer.size(); i++) {
         if (isTimeElapsed(invincibleTimer[i].second, EFFECT_DURATION)) {
             lives[invincibleTimer[i].first]->isInvincible = false;
+            updateActivePowerup(reg, invincibleTimer[i].first, INVINCIBLE_POWERUP, false);
             invincibleTimer.erase(invincibleTimer.begin() + i);
         }
     }
@@ -167,4 +173,24 @@ bool ecs::system::PowerupSystem::isTimeElapsed(std::chrono::steady_clock::time_p
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(actualTime - time);
 
     return timeElapsed.count() >= Lib::toMilliseconds(duration);
+}
+
+void ecs::system::PowerupSystem::updateActivePowerup(Registry &reg, std::size_t playerEntity, ecs::Poweruptype powerupType, bool isActive) {
+    SparseArray<component::ActivePowerup> &activePowerup = reg.getComponents<component::ActivePowerup>();
+
+    if (!activePowerup[playerEntity])
+        return;
+    switch (powerupType) {
+        case ecs::Poweruptype::POWERSHOOT_POWERUP:
+            activePowerup[playerEntity]->isPowershootActive = isActive;
+            break;
+        case ecs::Poweruptype::INVINCIBLE_POWERUP:
+            activePowerup[playerEntity]->isInvincibleActive = isActive;
+            break;
+        case ecs::Poweruptype::MEGASHOOT_POWERUP:
+            activePowerup[playerEntity]->isMegaShootActive = isActive;
+            break;
+        default:
+            break;
+    }
 }

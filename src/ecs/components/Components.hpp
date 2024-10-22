@@ -58,7 +58,8 @@ namespace ecs {
         SOUNDEFFECT, ///< Sound effect component
         MUSIC,       ///< Background music component
         SCORE,       ///< Score component
-        TEXTINFOS    ///< Text component
+        TEXTINFOS,   ///< Text component
+        ACTIVEPOWERUP
     };
 
     enum Poweruptype {
@@ -277,6 +278,18 @@ namespace ecs {
             bool hasBeenActivated = false;
             std::size_t playerIndex = 0;
         };
+
+        struct ActivePowerup {
+            bool isPowershootActive = false;
+            bool isInvincibleActive = false;
+            bool isMegaShootActive = false;
+
+            bool operator==(const ActivePowerup &other) const {
+                return (isPowershootActive == other.isPowershootActive &&
+                        isInvincibleActive == other.isInvincibleActive &&
+                        isMegaShootActive == other.isMegaShootActive);
+            }
+        };
     }
 }
 
@@ -299,6 +312,7 @@ struct EntityData {
                     areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                     areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
+                    areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                     areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
         }
         return false;
@@ -344,6 +358,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soun
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music);
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
+void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -358,6 +373,7 @@ void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffec
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music);
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
+void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

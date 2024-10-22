@@ -40,6 +40,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::ShootPlayerIndex>();
     _reg.registerComponent<ecs::component::TextInfos>();
     _reg.registerComponent<ecs::component::Powerup>();
+    _reg.registerComponent<ecs::component::ActivePowerup>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -56,6 +57,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Score> &score = _reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
+    ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -73,6 +75,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     shootingRate.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::ShootingRate{0.3});
     score.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Score{100});
     textInfos.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::TextInfos{"Score:", 50, 50, 20, FONT_PATH, ORANGE});
+    activePowerups.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::ActivePowerup{});
 
     velocities.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Velocity{10, 0});
     spriteInfos.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
@@ -114,7 +117,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[TITLE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
     textInfos.insertAt(_stringToEntity[TITLE_NAME], ecs::component::TextInfos{"RType", SCREEN_WIDTH / 2, 50, 20, FONT_PATH, ORANGE});
 
-    powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::LIFE_POWERUP, 5, 3});
+    powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::NOPOWERUP, 1, 3});
     types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP});
     spriteInfos.insertAt(
         _stringToEntity[POWERUP_NAME],

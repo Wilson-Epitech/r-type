@@ -26,6 +26,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
     ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = reg.getComponents<ecs::component::ShootingRate>();
     ecs::SparseArray<ecs::component::Score> &score = reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
+    ecs::SparseArray<ecs::component::ActivePowerup> &activePowerup = reg.getComponents<ecs::component::ActivePowerup>();
     std::size_t playerTemplateIndex = getPlayerTemplateIndex(reg);
 
     if (playerTemplateIndex == 0)
@@ -53,6 +54,8 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
         score.insertAt(entity, ecs::component::Score{score[playerTemplateIndex].value()});
     if (textInfos[playerTemplateIndex] && !textInfos[entity])
         textInfos.insertAt(entity, ecs::component::TextInfos{textInfos[playerTemplateIndex].value()});
+    if (activePowerup[playerTemplateIndex] && !activePowerup[entity])
+        activePowerup.insertAt(entity, ecs::component::ActivePowerup{activePowerup[playerTemplateIndex].value()});
 }
 
 std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg) {

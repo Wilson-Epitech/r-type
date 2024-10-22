@@ -32,6 +32,7 @@ namespace ecs {
                 ecs::Poweruptype selectPowerup(void);
                 std::size_t getPlayerShootSpriteEntity(Registry &reg);
                 bool isTimeElapsed(std::chrono::steady_clock::time_point time, float duration);
+                void updateActivePowerup(Registry &reg, std::size_t playerEntity, ecs::Poweruptype powerupType, bool isActive);
         };
     }
 }

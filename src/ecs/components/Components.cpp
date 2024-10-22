@@ -50,6 +50,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textIn
         << textInfo.color.a << ' ' << textInfo.color.r << ' ' << textInfo.color.g << ' ' << textInfo.color.b;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup) {
+    oss << activePowerup.isPowershootActive << ' ' << activePowerup.isInvincibleActive << ' ' << activePowerup.isMegaShootActive;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -74,6 +78,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityCompotent<ecs::component::Score>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
         network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
+        network::HandleData::serializeEntityCompotent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -133,6 +139,10 @@ void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo) {
         textInfo.color.r >> textInfo.color.g >> textInfo.color.b;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup) {
+    iss >> activePowerup.isPowershootActive >> activePowerup.isInvincibleActive >> activePowerup.isMegaShootActive;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -157,4 +167,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityCompotent<ecs::component::Score>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
         network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
+        network::HandleData::deserializeEntityCompotent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
 }
