@@ -39,7 +39,8 @@ namespace ecs {
         ENEMYSHOT,           ///< Enemy's shot entity
         ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
         BACKGROUND,          ///< Background entity
-        TEXT                 ///< Text entity
+        TEXT,                ///< Text entity
+        BOSS_LEVEL1          ///< Level1 Boss' entity
     };
 
     /**
@@ -182,6 +183,18 @@ namespace ecs {
         struct EnemySpawn {
             float timeBeforeSpawn;                       ///< Time before the next spawn
             int waveSize;                                ///< Size of the enemy wave to spawn
+            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
+            int minSpawnWidth = 0;                       ///< Minimum spawn width
+            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
+            int minSpawnHeight = 0;                      ///< Minimum spawn height
+        };
+
+        /**
+         * @struct EnemySpawn
+         * @brief Component representing the enemy spawn information.
+         */
+        struct BossSpawn {
+            int nbOfLevel = 0;
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height

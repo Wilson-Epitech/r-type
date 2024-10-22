@@ -22,6 +22,7 @@
 #include "DrawSystem.hpp"
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
+#include "BossSpawnSystem.hpp"
 #include "FiringSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
@@ -42,6 +43,8 @@
 #define ENEMY_SHOT "enemy_shot"
 /** @brief Defines the name of the boss spawn entity */
 #define SPAWN_BOSS_NAME "boss"
+/** @brief Defines the name of the boss of level 1 spawn entity */
+#define SPAWN_BOSS_LEVEL1_NAME "boss_level1"
 /** @brief Defines the name of the background music entity */
 #define MUSIC_NAME "music"
 /** @brief Defines the name of the team score entity */
