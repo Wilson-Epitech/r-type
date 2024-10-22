@@ -52,7 +52,7 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -78,10 +78,10 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     lives.insertAt(entity, ecs::component::Life{1});
     shootPlayerIndex.insertAt(entity, ecs::component::ShootPlayerIndex{playerIndex});
 
-    if (!soundEffect[playerShootIndex])
+    if (!soundEffectInfos[playerShootIndex])
         return;
-    if (soundEffect[playerShootIndex]->soundPath.length() > 0)
-        soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[playerShootIndex]->soundPath, false, true});
+    if (soundEffectInfos[playerShootIndex]->soundPath.length() > 0)
+        soundEffectInfos.insertAt(entity, ecs::component::SoundEffectInfos{soundEffectInfos[playerShootIndex]->soundPath, false, true});
 }
 
 std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {

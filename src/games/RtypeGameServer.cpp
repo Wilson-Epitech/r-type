@@ -32,7 +32,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::SpriteSize>();
-    _reg.registerComponent<ecs::component::SoundEffect>();
+    _reg.registerComponent<ecs::component::SoundEffectInfos>();
     _reg.registerComponent<ecs::component::ShootingRate>();
     _reg.registerComponent<ecs::component::BackgroundMusic>();
     _reg.registerComponent<ecs::component::Score>();
@@ -48,7 +48,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = _reg.getComponents<ecs::component::SpriteInfos>();
-    ecs::SparseArray<ecs::component::SoundEffect> &soundEffect = _reg.getComponents<ecs::component::SoundEffect>();
+    ecs::SparseArray<ecs::component::SoundEffectInfos> &soundEffectInfos = _reg.getComponents<ecs::component::SoundEffectInfos>();
     ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = _reg.getComponents<ecs::component::ShootingRate>();
     ecs::SparseArray<ecs::component::BackgroundMusic> &backgroundMusic = _reg.getComponents<ecs::component::BackgroundMusic>();
     ecs::SparseArray<ecs::component::Score> &score = _reg.getComponents<ecs::component::Score>();
@@ -66,7 +66,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     shootings.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Shooting{false});
     types.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
     lives.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Life{5, true});
-    soundEffect.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
+    soundEffectInfos.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     shootingRate.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::ShootingRate{0.3});
     score.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::Score{100});
     textInfos.insertAt(_stringToEntity[PLAYER_NAME], ecs::component::TextInfos{"Score:", 50, 50, 20, FONT_PATH, ORANGE});
@@ -74,7 +74,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     velocities.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Velocity{10, 0});
     spriteInfos.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::SpriteInfos{PLAYERSHOT_PATH, PLAYERSHOT_SPRITE_NB_PATTERN});
     types.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::Type{ecs::EntityType::PLAYERSHOT_TEMPLATE});
-    soundEffect.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
+    soundEffectInfos.insertAt(_stringToEntity[PLAYER_SHOT], ecs::component::SoundEffectInfos{SHOOT_SOUND_PATH});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME],
                          ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
@@ -84,13 +84,13 @@ void game::RtypeGameServer::addComponentsToEntities() {
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
-    soundEffect.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
+    soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Velocity{-10, 0});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT],
                          ecs::component::SpriteInfos{ENEMYSHOT_PATH, ENEMYSHOT_SPRITE_NB_PATTERN, 0, ENEMYSHOT_SCALE_FACTOR});
     types.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
-    soundEffect.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
+    soundEffectInfos.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::SoundEffectInfos{SHOOT_SOUND_PATH});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
                          ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
@@ -100,7 +100,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     velocities.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::Life{10});
     shootingRate.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::ShootingRate{6});
-    soundEffect.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SoundEffect{EXPLOSION_SOUND_PATH});
+    soundEffectInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
     backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusic{BACKGROUND_MUSIC_PATH, 0.5, true});
 

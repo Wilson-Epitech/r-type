@@ -129,7 +129,7 @@ enum ComponentName {
       std::size_t patternNb = 1;
       std::size_t firstPattern = 0;
       float scaleFactor = 1.0;
-      Color color = RAYWHITE;
+      CustomColor color = { 245, 245, 245, 255 };
 
       bool operator==(const SpriteInfos &other) const {
           return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
@@ -138,16 +138,16 @@ enum ComponentName {
       }
    };
    ```
-6. **SoundEffect**
+6. **SoundEffectInfos**
    - Store a sound and and its characteristics
    ```c++
-   struct SoundEffect {
+   struct SoundEffectInfos {
       std::string soundPath;
       bool isLoaded = false;
       bool hasToBePlayed = false;
       Sound sound = Sound{};
 
-      bool operator==(const SoundEffect &other) const {
+      bool operator==(const SoundEffectInfos &other) const {
          return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
       }
    };
