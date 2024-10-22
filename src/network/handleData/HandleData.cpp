@@ -35,7 +35,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Shooting>(reg, newEntity, data, ecs::ComponentName::SHOOTING);
         fillEntityComponentData<ecs::component::SpriteInfos>(reg, newEntity, data, ecs::ComponentName::SPRITEINFOS);
         fillEntityComponentData<ecs::component::SoundEffectInfos>(reg, newEntity, data, ecs::ComponentName::SOUNDEFFECT);
-        fillEntityComponentData<ecs::component::BackgroundMusic>(reg, newEntity, data, ecs::ComponentName::MUSIC);
+        fillEntityComponentData<ecs::component::BackgroundMusicInfos>(reg, newEntity, data, ecs::ComponentName::MUSIC);
         fillEntityComponentData<ecs::component::Score>(reg, newEntity, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, newEntity, data, ecs::ComponentName::TEXTINFOS);
     }
@@ -59,7 +59,7 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Shooting>(reg, i, data, ecs::ComponentName::SHOOTING);
         fillEntityComponentData<ecs::component::SpriteInfos>(reg, i, data, ecs::ComponentName::SPRITEINFOS);
         fillEntityComponentData<ecs::component::SoundEffectInfos>(reg, i, data, ecs::ComponentName::SOUNDEFFECT);
-        fillEntityComponentData<ecs::component::BackgroundMusic>(reg, i, data, ecs::ComponentName::MUSIC);
+        fillEntityComponentData<ecs::component::BackgroundMusicInfos>(reg, i, data, ecs::ComponentName::MUSIC);
         fillEntityComponentData<ecs::component::Score>(reg, i, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, i, data, ecs::ComponentName::TEXTINFOS);
     }
@@ -76,7 +76,7 @@ std::unordered_map<ecs::ComponentName, std::any> network::HandleData::getCompone
     componentCorrespondence.insert({ecs::ComponentName::TYPE, ecs::component::Type{}});
     componentCorrespondence.insert({ecs::ComponentName::LIFE, ecs::component::Life{}});
     componentCorrespondence.insert({ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffectInfos{}});
-    componentCorrespondence.insert({ecs::ComponentName::MUSIC, ecs::component::BackgroundMusic{}});
+    componentCorrespondence.insert({ecs::ComponentName::MUSIC, ecs::component::BackgroundMusicInfos{}});
     componentCorrespondence.insert({ecs::ComponentName::SCORE, ecs::component::Score{}});
     componentCorrespondence.insert({ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}});
     return componentCorrespondence;
@@ -134,7 +134,7 @@ void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::Shooting>(reg, data, ecs::ComponentName::SHOOTING);
     insertComponent<ecs::component::SpriteInfos>(reg, data, ecs::ComponentName::SPRITEINFOS);
     insertComponent<ecs::component::SoundEffectInfos>(reg, data, ecs::ComponentName::SOUNDEFFECT);
-    insertComponent<ecs::component::BackgroundMusic>(reg, data, ecs::ComponentName::MUSIC);
+    insertComponent<ecs::component::BackgroundMusicInfos>(reg, data, ecs::ComponentName::MUSIC);
     insertComponent<ecs::component::Score>(reg, data, ecs::ComponentName::SCORE);
     insertComponent<ecs::component::TextInfos>(reg, data, ecs::ComponentName::TEXTINFOS);
 }

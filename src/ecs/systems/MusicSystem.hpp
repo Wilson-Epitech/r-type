@@ -43,12 +43,12 @@ namespace ecs {
           private:
             /**
              * @brief Loads the background music for an entity if not already loaded.
-             * This method checks if the music for an entity is loaded, and if not, it loads the music
-             * from the specified file path in the `BackgroundMusic` component.
-             * @param i The index of the entity in the registry.
-             * @param music Array of background music components for entities.
+             * This method checks if the music for an entity is loaded, and if not, it loads the music in the `BackgroundMusicObject` component
+             * from the specified file path from the `BackgroundMusicInfos` component.
+             * @param backgroundMusicInfos Array of background music infos components for entities.
+             * @param backgroundMusicObject Array of background music objects components for entities.
              */
-            void loadMusic(std::size_t i, SparseArray<component::BackgroundMusic> &music);
+            void loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos, SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects);
         };
     }
 }

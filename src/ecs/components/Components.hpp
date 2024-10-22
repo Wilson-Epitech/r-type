@@ -224,21 +224,28 @@ namespace ecs {
         };
 
         /**
-         * @struct BackgroundMusic
-         * @brief Component for background music of an entity.
+         * @struct BackgroundMusicInfos
+         * @brief Component for background music informations of an entity.
          */
-        struct BackgroundMusic {
+        struct BackgroundMusicInfos {
             std::string musicPath;          ///< Path to the music file
             float volume;                   ///< Volume level of the music
             bool hasToBePlayed = false;     ///< Indicates if the music should be played
             bool isLoaded = false;          ///< Indicates if the music is loaded
             bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
-            Music music = Music{};          ///< Music object
 
-            bool operator==(const BackgroundMusic &other) const {
+            bool operator==(const BackgroundMusicInfos &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                         hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
             }
+        };
+
+        /**
+         * @struct BackgroundMusicInfos
+         * @brief Component that stores the background music object of an entity.
+         */
+        struct BackgroundMusicObject {
+            Music music = Music{};          ///< Music object
         };
 
         /**
@@ -297,7 +304,7 @@ struct EntityData {
                     areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                     areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                    areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
+                    areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
         }
         return false;
     }
@@ -339,7 +346,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shootin
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos &soundEffectInfos);
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music);
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music);
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
@@ -353,7 +360,7 @@ void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting);
 void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
 void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &soundEffectInfos);
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music);
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music);
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, EntityData &entityData);

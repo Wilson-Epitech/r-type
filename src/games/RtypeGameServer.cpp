@@ -34,7 +34,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::SpriteSize>();
     _reg.registerComponent<ecs::component::SoundEffectInfos>();
     _reg.registerComponent<ecs::component::ShootingRate>();
-    _reg.registerComponent<ecs::component::BackgroundMusic>();
+    _reg.registerComponent<ecs::component::BackgroundMusicInfos>();
     _reg.registerComponent<ecs::component::Score>();
     _reg.registerComponent<ecs::component::ShootPlayerIndex>();
     _reg.registerComponent<ecs::component::TextInfos>();
@@ -50,7 +50,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = _reg.getComponents<ecs::component::SpriteInfos>();
     ecs::SparseArray<ecs::component::SoundEffectInfos> &soundEffectInfos = _reg.getComponents<ecs::component::SoundEffectInfos>();
     ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = _reg.getComponents<ecs::component::ShootingRate>();
-    ecs::SparseArray<ecs::component::BackgroundMusic> &backgroundMusic = _reg.getComponents<ecs::component::BackgroundMusic>();
+    ecs::SparseArray<ecs::component::BackgroundMusicInfos> &backgroundMusic = _reg.getComponents<ecs::component::BackgroundMusicInfos>();
     ecs::SparseArray<ecs::component::Score> &score = _reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
 
@@ -102,7 +102,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     shootingRate.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::ShootingRate{6});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusic{BACKGROUND_MUSIC_PATH, 0.5, true});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH, 0.5, true});
 
     types.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
     textInfos.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::TextInfos{"Team_score:", 50, 100, 20, FONT_PATH, ORANGE});

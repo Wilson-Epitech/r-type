@@ -83,6 +83,7 @@ void network::Client::msgFromServer() {
             _playerId = std::atoi(receivedMessage.substr(playerIdMessage.length()).c_str());
         } else if (receivedMessage.compare(0, newConnectionMessage.length(), newConnectionMessage) != 0 &&
                    receivedMessage.find(disconnectedClient) == std::string::npos && receivedMessage.length() > 0) {
+            std::cout << "data received:" << receivedMessage << std::endl;
             _data.push_back(network::HandleData::deserializeEntityDataVector(receivedMessage));
         }
         if (receivedMessage == "Could not connect") {

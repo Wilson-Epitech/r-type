@@ -139,17 +139,25 @@ enum ComponentName {
    };
    ```
 6. **SoundEffectInfos**
-   - Store a sound and and its characteristics
+   - Store characteristics about a sound
    ```c++
    struct SoundEffectInfos {
       std::string soundPath;
       bool isLoaded = false;
       bool hasToBePlayed = false;
-      Sound sound = Sound{};
 
       bool operator==(const SoundEffectInfos &other) const {
          return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
       }
+   };
+
+   ```
+   ```
+6. **SoundEffectObject**
+   - Store a sound to be played
+   ```c++
+   struct SoundEffectInfos {
+      Sound sound = Sound{};
    };
    ```
 7. **Drawable**
@@ -187,21 +195,28 @@ enum ComponentName {
       float shootRate = 0;
    };
    ```
-11. **BackgroundMusic**
-   - Define the background music (or game music), store the volume and if the music has to be played
+11. **BackgroundMusicInfos**
+   - Store informations about the background music of an entity, such as the music path, the volume and if the music has to be played
    ```c++
-   struct BackgroundMusic {
+   struct BackgroundMusicInfos {
       std::string musicPath;
       float volume;
       bool hasToBePlayed = false;
       bool isLoaded = false;
       bool isCurrentlyPlayed = false;
-      Music music = Music{};
 
-      bool operator==(const BackgroundMusic &other) const {
+      bool operator==(const BackgroundMusicInfos &other) const {
          return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                   hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
       }
+   };
+   ```
+   ```
+11. **BackgroundMusicObject**
+   - Store the music object that has to be played
+   ```c++
+   struct BackgroundMusicObject {
+      Music music = Music{};
    };
    ```
 <div id='AddComponents'/>
@@ -225,7 +240,7 @@ bool operator==(const EntityData &other) const {
         return (
          areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
          areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
-         areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
+         areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
     }
     return false;
 }
@@ -233,12 +248,12 @@ bool operator==(const EntityData &other) const {
 You also have to add the prototype of `<<` and `>>` at the end of the file.<br>
 Now you have to go in Components.cpp and add your overload operator, one for the serialization and one for deserialization.
 ```c++
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 ```
 ```c++
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 ```

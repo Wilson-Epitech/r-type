@@ -37,7 +37,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos 
     oss << soundEffectInfos.isLoaded << ' ' << soundEffectInfos.hasToBePlayed << ' ' << soundEffectInfos.soundPath;
 }
 
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 
@@ -69,7 +69,7 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
         network::HandleData::serializeEntityCompotent<ecs::component::SoundEffectInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusic>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusicInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SCORE)
         network::HandleData::serializeEntityCompotent<ecs::component::Score>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
@@ -120,7 +120,7 @@ void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &sound
     iss >> soundEffectInfos.isLoaded >> soundEffectInfos.hasToBePlayed >> soundEffectInfos.soundPath;
 }
 
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 
@@ -152,7 +152,7 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
         network::HandleData::deserializeEntityCompotent<ecs::component::SoundEffectInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusic>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusicInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SCORE)
         network::HandleData::deserializeEntityCompotent<ecs::component::Score>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
