@@ -23,14 +23,19 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
     SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     static bool bossSpawned = false;
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < textInfos.size(); ++i) {
-        if (!types[i] || !scores[i] || !textInfos[i])
+        if (!types[i])
             continue;
         if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !bossSpawned) {
             createNewEnemy(reg, types, findLevel1BossEntity(types));
             bossSpawned = true;
+        }
+        if(bossSpawned && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && positions[i]->x <= 1200) {
+            velocities[i]->vx = 0;
         }
     }
 }
@@ -46,11 +51,11 @@ void ecs::system::BossSpawnSystem::createNewEnemy(Registry &reg, SparseArray<com
 
     entity_t entity = reg.spawnEntity();
 
-    positions.insertAt(entity, ecs::component::Position{1200, 150});
-    velocities.insertAt(entity, ecs::component::Velocity{0, 0, 0});
+    positions.insertAt(entity, ecs::component::Position{1940, 150});
+    velocities.insertAt(entity, ecs::component::Velocity{-1, 0, 0});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
-    types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
+    types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS_LEVEL1});
     lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
     if (shootingRate.size() > i) {
         if (shootingRate[i])
