@@ -60,6 +60,17 @@ namespace ecs {
         TEXTINFOS    ///< Text component
     };
 
+    /**
+     * @struct CustomColor
+     * @brief Custom Structure to handle colors.
+     */
+    struct CustomColor {
+        unsigned char r; ///< red value
+        unsigned char g; ///< green value
+        unsigned char b; ///< blue value
+        unsigned char a; ///< alpha value
+    };
+
     namespace component {
 
         /**
@@ -133,7 +144,7 @@ namespace ecs {
             std::size_t patternNb = 1;    ///< Number of patterns in the sprite
             std::size_t firstPattern = 0; ///< First pattern in the sprite
             float scaleFactor = 1.0;      ///< Scale factor for the sprite
-            Color color = RAYWHITE;       ///< Color applied to the sprite
+            CustomColor color = { 245, 245, 245, 255 };  ///< Color applied to the sprite, white by default
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&

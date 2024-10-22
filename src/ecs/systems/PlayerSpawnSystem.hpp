@@ -19,8 +19,10 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define CYAN                                                                                                                               \
-    CLITERAL(Color) { 120, 200, 225, 255 } ///< Default color for a player
+#define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color for a player
+#define BEIGE_COLOR (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color for a player
+#define GOLD_COLOR (ecs::CustomColor) { 255, 203, 0, 255 }   ///< Gold color for a player
+#define PINK_COLOR (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color for a player
 
 namespace ecs {
     namespace system {
