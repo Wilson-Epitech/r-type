@@ -41,11 +41,11 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     if (!activePowerup[playerEntity])
         return;
     if (activePowerup[playerEntity]->isInvincibleActive)
-        powerupString += "Invincible|";
+        powerupString += INVISIBLE_POWERUP_TEXT;
     if (activePowerup[playerEntity]->isMegaShootActive)
-        powerupString += "MagaShoot|";
+        powerupString += MEGASHOOT_POWERUP_TEXT;
     if (activePowerup[playerEntity]->isPowershootActive)
-        powerupString += "Powershoot|";
+        powerupString += POWERSHOOT_POWERUP_TEXT;
     DrawTextEx(lastUsedFont, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - lastSize - LETTER_SPACING) / screenRatio.y},
             lastSize / screenRatio.x, LETTER_SPACING, lastUsedColor);
 }

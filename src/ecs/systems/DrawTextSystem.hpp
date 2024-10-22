@@ -12,6 +12,9 @@
 #include "ISystem.hpp"
 
 #define LETTER_SPACING 2 ///< The spacing between two characters displayed
+#define INVISIBLE_POWERUP_TEXT "Invincible|"
+#define MEGASHOOT_POWERUP_TEXT "MagaShoot|"
+#define POWERSHOOT_POWERUP_TEXT "Powershoot|"
 
 namespace ecs {
     namespace system {
