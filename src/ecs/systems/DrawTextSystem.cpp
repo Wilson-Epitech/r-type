@@ -6,7 +6,6 @@
 */
 
 #include "DrawTextSystem.hpp"
-#include <iostream>
 
 void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
@@ -20,8 +19,6 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     Font lastUsedFont = GetFontDefault();
     Color lastUsedColor = WHITE;
     float lastSize = 10;
-    float x = 0;
-    float y = Lib::getScreenHeight();
     std::string powerupString = "";
 
     loadFonts(textInfos);
@@ -49,7 +46,7 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
         powerupString += "MagaShoot|";
     if (activePowerup[playerEntity]->isPowershootActive)
         powerupString += "Powershoot|";
-    DrawTextEx(lastUsedFont, powerupString.c_str(), {(x + powerupString.size()) / screenRatio.x, (y - lastSize - LETTER_SPACING) / screenRatio.y},
+    DrawTextEx(lastUsedFont, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - lastSize - LETTER_SPACING) / screenRatio.y},
             lastSize / screenRatio.x, LETTER_SPACING, lastUsedColor);
 }
 

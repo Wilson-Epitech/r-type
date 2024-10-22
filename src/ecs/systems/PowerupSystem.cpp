@@ -38,6 +38,7 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
                 default:
                     break;
             }
+            updateActivePowerup(reg, usedPowerup.first, usedPowerup.second, true);
         }
     }
     clearPowerShootEffect(reg, powerShootTimer);
@@ -63,15 +64,12 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::LIFE_POWERUP};
         case ecs::Poweruptype::POWERSHOOT_POWERUP:
             shootings[powerup[powerupIndex]->playerIndex]->shootPower = 3;
-            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, POWERSHOOT_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::POWERSHOOT_POWERUP};
         case ecs::Poweruptype::INVINCIBLE_POWERUP:
             lives[powerup[powerupIndex]->playerIndex]->isInvincible = true;
-            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, INVINCIBLE_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::INVINCIBLE_POWERUP};
         case ecs::Poweruptype::MEGASHOOT_POWERUP:
             shootings[powerup[powerupIndex]->playerIndex]->shootSize = 2;
-            updateActivePowerup(reg, powerup[powerupIndex]->playerIndex, MEGASHOOT_POWERUP, true);
             return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::MEGASHOOT_POWERUP};
         default:
             break;
@@ -144,7 +142,7 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::POWERUP});
     lives.insertAt(entity, ecs::component::Life{1});
-    powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
+    powerup.insertAt(entity, ecs::component::Powerup{MEGASHOOT_POWERUP, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
 }
 
 std::size_t ecs::system::PowerupSystem::getPowerupIndex(Registry &reg) {
