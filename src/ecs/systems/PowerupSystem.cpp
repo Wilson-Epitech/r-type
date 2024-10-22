@@ -142,7 +142,7 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
     drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::POWERUP});
     lives.insertAt(entity, ecs::component::Life{1});
-    powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, powerup[powerupIndex]->duration, true, powerup[powerupIndex]->playerIndex});
+    powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, true, powerup[powerupIndex]->playerIndex});
 }
 
 std::size_t ecs::system::PowerupSystem::getPowerupIndex(Registry &reg) {

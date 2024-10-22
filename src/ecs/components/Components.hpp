@@ -48,25 +48,25 @@ namespace ecs {
      * @brief Enum representing different component types in the ECS.
      */
     enum ComponentName {
-        NONE,        ///< No component
-        POSITION,    ///< Position component
-        VELOCITY,    ///< Velocity component
-        TYPE,        ///< Type component
-        LIFE,        ///< Life component
-        SHOOTING,    ///< Shooting component
-        SPRITEINFOS, ///< Sprite information component
-        SOUNDEFFECT, ///< Sound effect component
-        MUSIC,       ///< Background music component
-        SCORE,       ///< Score component
-        TEXTINFOS,   ///< Text component
-        ACTIVEPOWERUP
+        NONE,           ///< No component
+        POSITION,       ///< Position component
+        VELOCITY,       ///< Velocity component
+        TYPE,           ///< Type component
+        LIFE,           ///< Life component
+        SHOOTING,       ///< Shooting component
+        SPRITEINFOS,    ///< Sprite information component
+        SOUNDEFFECT,    ///< Sound effect component
+        MUSIC,          ///< Background music component
+        SCORE,          ///< Score component
+        TEXTINFOS,      ///< Text component
+        ACTIVEPOWERUP   ///< Activated powerup component
     };
 
     enum Poweruptype {
-        LIFE_POWERUP,
-        POWERSHOOT_POWERUP,
-        INVINCIBLE_POWERUP,
-        MEGASHOOT_POWERUP,
+        LIFE_POWERUP,       ///< Powerup type, give one pv to the player
+        POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
+        INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
+        MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
         NOPOWERUP           ///< No powerup, must be at the end of the enum
     };
 
@@ -130,8 +130,8 @@ namespace ecs {
          */
         struct Shooting {
             bool isShooting = false; ///< Boolean indicating if the entity is shooting
-            std::size_t shootPower = 1;
-            float shootSize = 1;
+            std::size_t shootPower = 1; ///< How much damage do the shoot
+            float shootSize = 1;    ///< Size of the shoot
 
             bool operator==(const Shooting &other) const {
                 return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
@@ -274,15 +274,14 @@ namespace ecs {
         struct Powerup {
             Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
             int spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
-            float duration = 3;
-            bool hasBeenActivated = false;
-            std::size_t playerIndex = 0;
+            bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
+            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
         };
 
         struct ActivePowerup {
-            bool isPowershootActive = false;
-            bool isInvincibleActive = false;
-            bool isMegaShootActive = false;
+            bool isPowershootActive = false;    ///< Indicates if the powerup Powershoot is activated
+            bool isInvincibleActive = false;    ///< Indicates if the powerup Invincible is activated
+            bool isMegaShootActive = false;     ///< Indicates if the powerup MegaShoot is activated
 
             bool operator==(const ActivePowerup &other) const {
                 return (isPowershootActive == other.isPowershootActive &&
