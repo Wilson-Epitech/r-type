@@ -66,19 +66,19 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     return data;
 }
 
-std::vector<std::pair<ecs::ComponentName, std::any>> network::HandleData::getComponentCorrespondence() {
-    std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence;
+std::unordered_map<ecs::ComponentName, std::any> network::HandleData::getComponentCorrespondence() {
+    std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence;
 
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::POSITION, ecs::component::Position{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::VELOCITY, ecs::component::Velocity{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SPRITEINFOS, ecs::component::SpriteInfos{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SHOOTING, ecs::component::Shooting{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::TYPE, ecs::component::Type{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::LIFE, ecs::component::Life{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffect{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::MUSIC, ecs::component::BackgroundMusic{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::SCORE, ecs::component::Score{}));
-    componentCorrespondence.push_back(std::make_pair(ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}));
+    componentCorrespondence.insert({ecs::ComponentName::POSITION, ecs::component::Position{}});
+    componentCorrespondence.insert({ecs::ComponentName::VELOCITY, ecs::component::Velocity{}});
+    componentCorrespondence.insert({ecs::ComponentName::SPRITEINFOS, ecs::component::SpriteInfos{}});
+    componentCorrespondence.insert({ecs::ComponentName::SHOOTING, ecs::component::Shooting{}});
+    componentCorrespondence.insert({ecs::ComponentName::TYPE, ecs::component::Type{}});
+    componentCorrespondence.insert({ecs::ComponentName::LIFE, ecs::component::Life{}});
+    componentCorrespondence.insert({ecs::ComponentName::SOUNDEFFECT, ecs::component::SoundEffect{}});
+    componentCorrespondence.insert({ecs::ComponentName::MUSIC, ecs::component::BackgroundMusic{}});
+    componentCorrespondence.insert({ecs::ComponentName::SCORE, ecs::component::Score{}});
+    componentCorrespondence.insert({ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}});
     return componentCorrespondence;
 }
 

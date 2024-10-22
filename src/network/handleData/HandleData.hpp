@@ -87,13 +87,12 @@ namespace network {
         template <typename Component>
         static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
                                              const std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence = getComponentCorrespondence();
-            for (auto &it : componentCorrespondence) {
-                if (entityComponentName == it.first) {
-                    auto tmpComponent = std::any_cast<Component>(component);
-                    oss << tmpComponent;
-                    return;
-                }
+            std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
+            auto it = componentCorrespondence.find(entityComponentName);
+
+            if (it != componentCorrespondence.end()) {
+                auto tmpComponent = std::any_cast<Component>(component);
+                oss << tmpComponent;
             }
         }
 
@@ -107,23 +106,22 @@ namespace network {
         template <typename Component>
         static void deserializeEntityCompotent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
                                                std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondence = getComponentCorrespondence();
-            for (auto &it : componentCorrespondence) {
-                if (entityComponentName == it.first) {
-                    auto tmpComponent = std::any_cast<Component>(it.second);
-                    iss >> tmpComponent;
-                    component = tmpComponent;
-                    return;
-                }
+            std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
+            auto it = componentCorrespondence.find(entityComponentName);
+
+            if (it != componentCorrespondence.end()) {
+                auto tmpComponent = std::any_cast<Component>(it->second);
+                iss >> tmpComponent;
+                component = tmpComponent;
             }
         }
 
       private:
         /**
          * @brief Retrieves the list of component types and their corresponding default values.
-         * @return A vector of pairs containing the component names and their default values.
+         * @return An unordered map containing the component names and their default values.
          */
-        static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondence();
+        static std::unordered_map<ecs::ComponentName, std::any> getComponentCorrespondence();
 
         /**
          * @brief Add a vector of EntityData element to the entitiesData vector from DataToSend.
