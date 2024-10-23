@@ -53,20 +53,18 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
-    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootPlayerIndex> &shootPlayerIndex = reg.getComponents<component::ShootPlayerIndex>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
-    if (playerShootIndex == 0 || !spritesSizes[playerShootIndex])
+
+    if (playerShootIndex == 0 || spriteInfos[playerIndex]->spriteWidth == 0 || spriteInfos[playerIndex]->spriteHeight == 0
+        || spriteInfos[playerShootIndex]->spriteWidth == 0 || spriteInfos[playerShootIndex]->spriteHeight == 0)
         return;
-    Image tmpShotImage = LoadImage(spriteInfos[playerShootIndex]->spritePath.c_str());
-    float offset = float(tmpShotImage.width) / spriteInfos[playerShootIndex]->patternNb;
-    Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
+    ecs::CustomRectangle shotSpriteRect = {0, 0, spriteInfos[playerShootIndex]->spriteWidth, spriteInfos[playerShootIndex]->spriteHeight};
+    float shotX = positions[playerIndex]->x + ((shotSpriteRect.width * 3));
+    float shotY = positions[playerIndex]->y + (spriteInfos[playerIndex]->spriteHeight / 2);
     entity_t entity = reg.spawnEntity();
-    float shotX = positions[playerIndex]->x + (float((spritesSizes[playerIndex]->spriteWidth)) + ((shotSpriteRect.width) / 2));
-    float shotY = positions[playerIndex]->y + (float((spritesSizes[playerIndex]->spriteHeight) / 2) - ((shotSpriteRect.height) / 2));
-    UnloadImage(tmpShotImage);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,

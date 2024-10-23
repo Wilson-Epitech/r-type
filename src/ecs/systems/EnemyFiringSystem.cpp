@@ -51,20 +51,17 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
-    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t enemyShootIndex = getEnemyShootIndex(reg);
 
-    if (enemyShootIndex == 0 || !spritesSizes[enemyIndex])
+    if (enemyShootIndex == 0 || spriteInfos[enemyIndex]->spriteWidth == 0 || spriteInfos[enemyIndex]->spriteHeight == 0 ||
+        spriteInfos[enemyShootIndex]->spriteWidth == 0 || spriteInfos[enemyShootIndex]->spriteHeight == 0)
         return;
-    Image tmpShotImage = LoadImage(spriteInfos[enemyShootIndex]->spritePath.c_str());
-    float offset = float(tmpShotImage.width) / spriteInfos[enemyShootIndex]->patternNb;
-    Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
+    ecs::CustomRectangle shotSpriteRect = {0, 0, spriteInfos[enemyShootIndex]->spriteWidth, spriteInfos[enemyShootIndex]->spriteHeight};
+    float shotX = positions[enemyIndex]->x - (shotSpriteRect.width * 3);
+    float shotY = positions[enemyIndex]->y + (spriteInfos[enemyIndex]->spriteHeight/ 2);
     entity_t entity = reg.spawnEntity();
-    float shotX = positions[enemyIndex]->x - (float((spritesSizes[enemyIndex]->spriteWidth)) + ((shotSpriteRect.width) / 2));
-    float shotY = positions[enemyIndex]->y + (float((spritesSizes[enemyIndex]->spriteHeight) / 2) - ((shotSpriteRect.height) / 2));
-    UnloadImage(tmpShotImage);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
@@ -83,11 +80,11 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
 
 std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
-    for (std::size_t i = 0; i < spriteInfos.size() && i < enemyShootVelocities.size() && i < types.size(); ++i) {
-        if (spriteInfos[i] && enemyShootVelocities[i] && types[i]) {
+    for (std::size_t i = 0; i < spriteInfos.size() && i < velocities.size() && i < types.size(); ++i) {
+        if (spriteInfos[i] && velocities[i] && types[i]) {
             if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::ENEMYSHOT_TEMPLATE) {
                 return i;
             }
