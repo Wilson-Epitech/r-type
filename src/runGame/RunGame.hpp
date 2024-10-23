@@ -15,7 +15,6 @@
 #define RUNGAME_HPP_
 
 #include "Client.hpp"
-#include "Components.hpp"
 #include "Lib.hpp"
 #include "IGame.hpp"
 #include "Server.hpp"

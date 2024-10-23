@@ -9,6 +9,7 @@
 #define DRAWSPRITESYSTEM_HPP_
 
 #include "Components.hpp"
+#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
 
 namespace ecs {

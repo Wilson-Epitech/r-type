@@ -130,15 +130,23 @@ enum ComponentName {
       std::size_t firstPattern = 0;
       float scaleFactor = 1.0;
       CustomColor color = { 245, 245, 245, 255 };
+      float spriteWidth = 0, spriteHeight = 0;
 
       bool operator==(const SpriteInfos &other) const {
           return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
-                  color.b == other.color.b);
+                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
       }
    };
    ```
-6. **SoundEffectInfos**
+7. **Drawable**
+   - Defines the texture (image) information associated with an entity.
+   ```c++
+   struct Drawable {
+      bool isLoaded = false;
+      Texture2D spriteTexture = Texture2D{};
+      Rectangle spriteRect = Rectangle{};
+   };
+8. **SoundEffectInfos**
    - Store characteristics about a sound
    ```c++
    struct SoundEffectInfos {
@@ -153,30 +161,15 @@ enum ComponentName {
 
    ```
    ```
-6. **SoundEffectObject**
+9. **SoundEffectObject**
    - Store a sound to be played
    ```c++
    struct SoundEffectInfos {
       Sound sound = Sound{};
    };
    ```
-7. **Drawable**
-   - Defines the texture (image) information associated with an entity.
-   ```c++
-   struct Drawable {
-      bool isLoaded = false;
-      Texture2D spriteTexture = Texture2D{};
-      Rectangle spriteRect = Rectangle{};
-   };
    ```
-8. **SpriteSize**
-   - Store the sprite's size
-   ```c++
-   struct SpriteSize {
-      float spriteWidth = 0, spriteHeight = 0;
-   };
-   ```
-9. **EnemySpawn**
+10. **EnemySpawn**
    - Handles the logic for spawning enemies.
    ```c++
    struct EnemySpawn {
@@ -188,14 +181,14 @@ enum ComponentName {
       int minSpawnHeight = 0;
    };
    ```
-10. **ShootingRate**
+11. **ShootingRate**
    - Defines the shooting rate of the entity (work with Shooting)
    ```c++
    struct ShootingRate {
       float shootRate = 0;
    };
    ```
-11. **BackgroundMusicInfos**
+12. **BackgroundMusicInfos**
    - Store informations about the background music of an entity, such as the music path, the volume and if the music has to be played
    ```c++
    struct BackgroundMusicInfos {
@@ -211,14 +204,14 @@ enum ComponentName {
       }
    };
    ```
-12. **BackgroundMusicObject**
+13. **BackgroundMusicObject**
    - Store the music object that has to be played
    ```c++
    struct BackgroundMusicObject {
       Music music = Music{};
    };
    ```
-13.   **TextInfos**
+14.   **TextInfos**
    - Store informations about the text of an entity
    ```c++
         struct TextInfos {
@@ -237,7 +230,7 @@ enum ComponentName {
             }
         };
    ```
-   **TextFont**
+15.   **TextFont**
    - Store the text font linked to a text of an entity
    ```c++
       struct TextFont {

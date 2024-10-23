@@ -21,7 +21,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-#include <raylib.h>
 
 #define ORANGE_COLOR (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
 #define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color
@@ -196,37 +195,6 @@ namespace ecs {
         };
 
         /**
-         * @struct SoundEffectObject
-         * @brief Component that store the sound effect object to play related to an entity.
-         */
-        struct SoundEffectObject {
-            Sound sound = Sound{};      ///< Sound object
-
-        };
-
-        /**
-         * @struct Drawable
-         * @brief Component representing the drawable texture of an entity.
-         */
-        struct Drawable {
-            bool isLoaded = false;                 ///< Indicates if the texture is loaded
-            Texture2D spriteTexture = Texture2D{}; ///< Texture for the entity
-            Rectangle spriteRect = Rectangle{};    ///< Rectangle of the texture to be drawn
-        };
-
-        // /**
-        //  * @struct SpriteSize
-        //  * @brief Component for the size of the sprite.
-        //  */
-        // struct SpriteSize {
-        //     float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
-
-        //     bool operator==(const SpriteSize &other) const {
-        //         return (spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
-        //     }
-        // };
-
-        /**
          * @struct EnemySpawn
          * @brief Component representing the enemy spawn information.
          */
@@ -273,14 +241,6 @@ namespace ecs {
         };
 
         /**
-         * @struct BackgroundMusicInfos
-         * @brief Component that stores the background music object of an entity.
-         */
-        struct BackgroundMusicObject {
-            Music music = Music{};          ///< Music object
-        };
-
-        /**
          * @struct Score
          * @brief Component for the score of an entity
         */
@@ -312,14 +272,6 @@ namespace ecs {
                         fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
                         color.b == other.color.b);
             }
-        };
-
-        /**
-         * @struct TextFont
-         * @brief Component for the text font linked to a text of an entity
-        */
-        struct TextFont {
-            Font font = Font{}; ///< Font of the text
         };
     }
 }

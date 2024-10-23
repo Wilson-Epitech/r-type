@@ -9,6 +9,7 @@
 #define DRAWTEXTSYSTEM_HPP_
 
 #include "Components.hpp"
+#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
 
 #define LETTER_SPACING 2 ///< The spacing between two characters displayed
