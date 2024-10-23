@@ -15,6 +15,7 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
+#include "Lib.hpp"
 #include <any>
 #include <list>
 #include <memory>
@@ -64,37 +65,6 @@ namespace ecs {
         MUSIC,       ///< Background music component
         SCORE,       ///< Score component
         TEXTINFOS    ///< Text component
-    };
-
-    /**
-     * @struct CustomVector2D
-     * @brief Custom Structure to handle 2D vectors.
-     */
-    struct CustomVector2D {
-        float x = 0;      ///< x value
-        float y = 0;      ///< y value
-    };
-
-    /**
-     * @struct CustomColor
-     * @brief Custom Structure to handle colors.
-     */
-    struct CustomColor {
-        unsigned char r = 0; ///< red value
-        unsigned char g = 0; ///< green value
-        unsigned char b = 0; ///< blue value
-        unsigned char a = 0; ///< alpha value
-    };
-
-    /**
-     * @struct CustomRectangle
-     * @brief Custom Structure to handle rectangles.
-     */
-    struct CustomRectangle {
-        float x = 0;      ///< X coordinate
-        float y = 0;      ///< y coordinate
-        float width = 0;  ///< width value
-        float height = 0; ///< height value
     };
 
     namespace component {
@@ -201,9 +171,9 @@ namespace ecs {
         struct EnemySpawn {
             float timeBeforeSpawn;      ///< Time before the next spawn
             int waveSize;               ///< Size of the enemy wave to spawn
-            int maxSpawnWidth = 1920;   ///< Maximum spawn width
+            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
             int minSpawnWidth = 0;     ///< Minimum spawn width
-            int maxSpawnHeight = 1080; ///< Maximum spawn height
+            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
             int minSpawnHeight = 0;    ///< Minimum spawn height
         };
 

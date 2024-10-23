@@ -14,7 +14,7 @@
 #ifndef LIB_HPP_
 #define LIB_HPP_
 
-#include "Components.hpp"
+#include "CustomTypes.hpp"
 
 #define SCREEN_WIDTH 1920  ///< The default screen width for the game window
 #define SCREEN_HEIGHT 1080 ///< The default screen height for the game window
