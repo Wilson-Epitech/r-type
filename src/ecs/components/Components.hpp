@@ -29,18 +29,20 @@ namespace ecs {
      * @brief Enum representing different types of entities in the game.
      */
     enum EntityType {
-        NOTYPE,              ///< No type entity
-        PLAYER,              ///< Player entity
-        PLAYER_TEMPLATE,     ///< Player template entity
-        PLAYERSHOT,          ///< Player's shot entity
-        PLAYERSHOT_TEMPLATE, ///< Player's shot template entity
-        ENEMY,               ///< Enemy entity
-        ENEMY_TEMPLATE,      ///< Enemy template entity
-        ENEMYSHOT,           ///< Enemy's shot entity
-        ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
-        BACKGROUND,          ///< Background entity
-        TEXT,                ///< Text entity
-        BOSS_LEVEL1          ///< Level1 Boss' entity
+        NOTYPE,                 ///< No type entity
+        PLAYER,                 ///< Player entity
+        PLAYER_TEMPLATE,        ///< Player template entity
+        PLAYERSHOT,             ///< Player's shot entity
+        PLAYERSHOT_TEMPLATE,    ///< Player's shot template entity
+        ENEMY,                  ///< Enemy entity
+        ENEMY_TEMPLATE,         ///< Enemy template entity
+        ENEMYSHOT,              ///< Enemy's shot entity
+        ENEMYSHOT_TEMPLATE,     ///< Enemy's shot template entity
+        BOSS_SHOT_1,            ///< Level 1 boss's shot entity
+        BOSS_SHOT_1_TEMPLATE,   ///< Level 1 boss's shot template entity
+        BACKGROUND,             ///< Background entity
+        TEXT,                   ///< Text entity
+        BOSS_LEVEL1             ///< Level1 Boss' entity
     };
 
     /**

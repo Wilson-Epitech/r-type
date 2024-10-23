@@ -29,6 +29,7 @@
 #include "PositionSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 #include "ScoreSystem.hpp"
+#include "BossFiringSystem.hpp"
 
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"
@@ -42,6 +43,8 @@
 #define ENEMY_SHOT "enemy_shot"
 /** @brief Defines the name of the boss spawn entity */
 #define SPAWN_BOSS_NAME "boss"
+/** @brief Defines the name of the level 1 boss shot entity */
+#define BOSS_SHOT_LEVEl1 "boss_shot_level1"
 /** @brief Defines the name of the boss of level 1 spawn entity */
 #define SPAWN_BOSS_LEVEL1_NAME "boss_level1"
 /** @brief Defines the name of the background music entity */
