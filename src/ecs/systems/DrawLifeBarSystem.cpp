@@ -25,7 +25,8 @@ void ecs::system::DrawLifeBarSystem::operator()(Registry &reg) {
 void ecs::system::DrawLifeBarSystem::drawLife(SparseArray<component::Drawable> &drawables,
                                        SparseArray<component::SpriteInfos> &spriteInfos, SparseArray<component::Position> &positions,
                                        SparseArray<component::Life> &lives, const std::size_t &index) {
-    ecs::CustomVector2D screenRatio = Lib::getScreenRatio();
+    ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
+        (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
     float lifeBarSize = 0;
     CLITERAL(Color) lifeColor = GREEN;
 

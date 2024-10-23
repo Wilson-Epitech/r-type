@@ -47,13 +47,14 @@ namespace ecs {
              * @brief Renders the background by drawing it multiple times if necessary.
              * This method handles the drawing of background entities, including adjusting the background
              * position and repeating the background texture to cover the screen if needed.
+             * @param screenRatio The screen ratio of the client.
              * @param velocities Array of velocity components for entities.
              * @param drawables Array of drawable components for entities.
              * @param positions Array of position components for entities.
              * @param spriteInfos Array of sprite information components for entities.
              * @param index The index of the background entity being drawn.
              */
-            void drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+            void drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
                                 SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
                                 const std::size_t &index);
 

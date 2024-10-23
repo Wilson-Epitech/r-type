@@ -32,13 +32,6 @@ class Lib {
     ~Lib() = delete;
 
     /**
-     * @brief Gets the screen ratio for width and height scaling.
-     * This function calculates the ratio between the game screen's default resolution and the current window size.
-     * @return A Vector2D containing the width and height scaling factors.
-     */
-    static ecs::CustomVector2D getScreenRatio();
-
-    /**
      * @brief Retrieves the default screen height.
      * @return The default screen height.
      */

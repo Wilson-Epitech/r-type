@@ -7,13 +7,6 @@
 
 #include "Lib.hpp"
 
-ecs::CustomVector2D Lib::getScreenRatio() {
-    float widthScaleFactor = (float)SCREEN_WIDTH / (float)GetScreenWidth();
-    float heightScaleFactor = (float)SCREEN_HEIGHT / (float)GetScreenHeight();
-
-    return {widthScaleFactor, heightScaleFactor};
-}
-
 int Lib::getScreenHeight() {
     return SCREEN_HEIGHT;
 }

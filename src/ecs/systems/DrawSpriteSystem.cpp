@@ -13,7 +13,8 @@ void ecs::system::DrawSpriteSystem::operator()(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    ecs::CustomVector2D screenRatio = Lib::getScreenRatio();
+    ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
+        (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
 
     loadTextures(drawables, spriteInfos);
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size() && i < types.size(); ++i) {
@@ -24,7 +25,7 @@ void ecs::system::DrawSpriteSystem::operator()(Registry &reg) {
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0, {spriteInfos[i]->color.r, spriteInfos[i]->color.g, spriteInfos[i]->color.b, spriteInfos[i]->color.a});
             } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
-                drawBackground(velocities, drawables, positions, spriteInfos, i);
+                drawBackground(screenRatio, velocities, drawables, positions, spriteInfos, i);
             }
         }
     }
@@ -53,7 +54,7 @@ void ecs::system::DrawSpriteSystem::loadTextures(SparseArray<component::Drawable
     }
 }
 
-void ecs::system::DrawSpriteSystem::drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+void ecs::system::DrawSpriteSystem::drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
                                              SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
                                              const std::size_t &index) {
     ecs::CustomVector2D backgroundNewPos = {positions[index]->x, positions[index]->y};
@@ -62,7 +63,6 @@ void ecs::system::DrawSpriteSystem::drawBackground(SparseArray<component::Veloci
     int posX = 0;
     int posY = 0;
     int nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
-    ecs::CustomVector2D screenRatio = Lib::getScreenRatio();
 
     changeBackgroundPos(velocities, drawables, positions, spriteInfos, index);
     for (int i = 0; i < getNbrRepeatBackground(spriteHeight, Lib::getScreenHeight()); i++) {
