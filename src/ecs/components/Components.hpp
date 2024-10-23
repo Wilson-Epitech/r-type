@@ -15,13 +15,13 @@
 #ifndef COMPONENTS_HPP_
 #define COMPONENTS_HPP_
 
-#include "Lib.hpp"
 #include <any>
 #include <list>
 #include <memory>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <raylib.h>
 
 #define ORANGE_COLOR (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
 #define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color
@@ -68,6 +68,15 @@ namespace ecs {
     };
 
     /**
+     * @struct CustomVector2D
+     * @brief Custom Structure to handle 2D vectors.
+     */
+    struct CustomVector2D {
+        float x = 0;      ///< x value
+        float y = 0;      ///< y value
+    };
+
+    /**
      * @struct CustomColor
      * @brief Custom Structure to handle colors.
      */
@@ -79,7 +88,7 @@ namespace ecs {
     };
 
     /**
-     * @struct Rectangle
+     * @struct CustomRectangle
      * @brief Custom Structure to handle rectangles.
      */
     struct CustomRectangle {
@@ -222,12 +231,12 @@ namespace ecs {
          * @brief Component representing the enemy spawn information.
          */
         struct EnemySpawn {
-            float timeBeforeSpawn;                       ///< Time before the next spawn
-            int waveSize;                                ///< Size of the enemy wave to spawn
-            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
-            int minSpawnWidth = 0;                       ///< Minimum spawn width
-            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
-            int minSpawnHeight = 0;                      ///< Minimum spawn height
+            float timeBeforeSpawn;      ///< Time before the next spawn
+            int waveSize;               ///< Size of the enemy wave to spawn
+            int maxSpawnWidth = 1920;   ///< Maximum spawn width
+            int minSpawnWidth = 0;     ///< Minimum spawn width
+            int maxSpawnHeight = 1080; ///< Maximum spawn height
+            int minSpawnHeight = 0;    ///< Minimum spawn height
         };
 
         /**

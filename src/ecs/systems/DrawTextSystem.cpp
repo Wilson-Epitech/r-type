@@ -12,7 +12,7 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     SparseArray<component::TextFont> &textFonts = reg.getComponents<component::TextFont>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::map<std::size_t, entity_t> player = reg.getPlayers();
-    Vector2 screenRatio = Lib::getScreenRatio();
+    ecs::CustomVector2D screenRatio = Lib::getScreenRatio();
 
     if (player.size() != 1)
         return;

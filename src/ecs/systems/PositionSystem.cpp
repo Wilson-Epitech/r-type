@@ -26,7 +26,7 @@ bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, 
     // SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     // SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     // SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    // Vector2 pos = {positions[playerIndex]->x + velocities[playerIndex]->vx, positions[playerIndex]->y + velocities[playerIndex]->vy};
+    // ecs::CustomVector2D pos = {positions[playerIndex]->x + velocities[playerIndex]->vx, positions[playerIndex]->y + velocities[playerIndex]->vy};
 
     // try {
     //     drawables = reg.getComponents<component::Drawable>();

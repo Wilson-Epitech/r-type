@@ -81,9 +81,9 @@ namespace ecs {
              * @param spriteInfos Array of sprite information components for entities.
              * @param index The index of the background entity.
              * @param j Index of the current segment being drawn.
-             * @return Vector2 The new position for the background segment.
+             * @return CustomVector2D The new position for the background segment.
              */
-            Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
+            ecs::CustomVector2D changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
                                            SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
                                            const std::size_t &index, int j);
 
