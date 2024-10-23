@@ -54,6 +54,11 @@ void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &ac
     oss << activePowerup.isPowershootActive << ' ' << activePowerup.isInvincibleActive << ' ' << activePowerup.isMegaShootActive;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::PowerupTextInfos &powerupTextInfos) {
+    oss << powerupTextInfos.x << ' ' << powerupTextInfos.y << ' ' << powerupTextInfos.size << ' ' << powerupTextInfos.fontPath << ' '
+        << powerupTextInfos.color.a << ' ' << powerupTextInfos.color.r << ' ' << powerupTextInfos.color.g << ' ' << powerupTextInfos.color.b;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -80,6 +85,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::serializeEntityCompotent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::POWERUP_TEXT_TEMPLATE)
+        network::HandleData::serializeEntityCompotent<ecs::component::PowerupTextInfos>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -143,6 +150,11 @@ void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePo
     iss >> activePowerup.isPowershootActive >> activePowerup.isInvincibleActive >> activePowerup.isMegaShootActive;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::PowerupTextInfos &powerupTextInfos) {
+    iss >> powerupTextInfos.x >> powerupTextInfos.y >> powerupTextInfos.size >> powerupTextInfos.fontPath >> powerupTextInfos.color.a >>
+        powerupTextInfos.color.r >> powerupTextInfos.color.g >> powerupTextInfos.color.b;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -169,4 +181,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::deserializeEntityCompotent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::POWERUP_TEXT_TEMPLATE)
+        network::HandleData::deserializeEntityCompotent<ecs::component::PowerupTextInfos>(iss, entityData.name, entityData.component);
 }

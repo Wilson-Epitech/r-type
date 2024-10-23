@@ -27,6 +27,7 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::Score>();
     _reg.registerComponent<ecs::component::TextInfos>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
+    _reg.registerComponent<ecs::component::PowerupTextInfos>();
 }
 
 void game::RtypeGameClient::addComponentsToEntities() {}

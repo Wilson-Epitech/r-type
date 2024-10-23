@@ -40,6 +40,7 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
             }
             updateActivePowerup(reg, usedPowerup.first, usedPowerup.second, true);
         }
+        usedPowerup = {0, ecs::Poweruptype::NOPOWERUP};
     }
     clearPowerShootEffect(reg, powerShootTimer);
     clearInvicibleEffect(reg, invincibleTimer);
@@ -50,26 +51,33 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
 {
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
     SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
-    std::size_t powerupIndex = getPowerupIndex(reg);
+    std::size_t playerIndex = 0;
 
     if (powerup.size() < index)
         return {0, ecs::Poweruptype::NOPOWERUP};
     if (!powerup[index])
         return {0, ecs::Poweruptype::NOPOWERUP};
 
+    playerIndex = powerup[index]->playerIndex;
+
+    if (shootings.size() < playerIndex)
+        return {0, ecs::Poweruptype::NOPOWERUP};
+    if (!shootings[playerIndex])
+        return {0, ecs::Poweruptype::NOPOWERUP};
+
     switch (powerup[index]->powerupType) {
         case ecs::Poweruptype::LIFE_POWERUP:
-            lives[powerup[powerupIndex]->playerIndex]->nbLives++;
-            return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::LIFE_POWERUP};
+            lives[playerIndex]->nbLives++;
+            return {playerIndex, ecs::Poweruptype::LIFE_POWERUP};
         case ecs::Poweruptype::POWERSHOOT_POWERUP:
-            shootings[powerup[powerupIndex]->playerIndex]->shootPower = 3;
-            return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::POWERSHOOT_POWERUP};
+            shootings[playerIndex]->shootPower = 3;
+            return {playerIndex, ecs::Poweruptype::POWERSHOOT_POWERUP};
         case ecs::Poweruptype::INVINCIBLE_POWERUP:
-            lives[powerup[powerupIndex]->playerIndex]->isInvincible = true;
-            return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::INVINCIBLE_POWERUP};
+            lives[playerIndex]->isInvincible = true;
+            return {playerIndex, ecs::Poweruptype::INVINCIBLE_POWERUP};
         case ecs::Poweruptype::MEGASHOOT_POWERUP:
-            shootings[powerup[powerupIndex]->playerIndex]->shootSize = 2;
-            return {powerup[powerupIndex]->playerIndex, ecs::Poweruptype::MEGASHOOT_POWERUP};
+            shootings[playerIndex]->shootSize = 2;
+            return {playerIndex, ecs::Poweruptype::MEGASHOOT_POWERUP};
         default:
             break;
     }
@@ -78,37 +86,61 @@ std::pair<std::size_t, ecs::Poweruptype> ecs::system::PowerupSystem::usePowerup(
 
 void ecs::system::PowerupSystem::clearMegaShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &megaShootTimer) {
     SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
+    std::vector<std::size_t> indexToRemove;
 
     for (std::size_t i = 0; i < megaShootTimer.size(); i++) {
         if (Lib::isTimeElapsed(megaShootTimer[i].second, EFFECT_DURATION)) {
+            if (megaShootTimer.size() > 1 && indexToRemove.size() < megaShootTimer.size() - 1) {
+                indexToRemove.push_back(i);
+                continue;
+            }
             shootings[megaShootTimer[i].first]->shootSize = 1;
             updateActivePowerup(reg, megaShootTimer[i].first, MEGASHOOT_POWERUP, false);
-            megaShootTimer.erase(megaShootTimer.begin() + i);
+            indexToRemove.push_back(i);
         }
+    }
+    for (std::size_t i = 0; i < indexToRemove.size(); i++) {
+        megaShootTimer.erase(megaShootTimer.begin() + indexToRemove[i]);
     }
 }
 
 void ecs::system::PowerupSystem::clearPowerShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &powerShootTimer) {
     SparseArray<component::Shooting> &shootings = reg.getComponents<component::Shooting>();
+    std::vector<std::size_t> indexToRemove;
 
     for (std::size_t i = 0; i < powerShootTimer.size(); i++) {
         if (Lib::isTimeElapsed(powerShootTimer[i].second, EFFECT_DURATION)) {
+            if (powerShootTimer.size() > 1 && indexToRemove.size() < powerShootTimer.size() - 1) {
+                indexToRemove.push_back(i);
+                continue;
+            }
             shootings[powerShootTimer[i].first]->shootPower = 1;
             updateActivePowerup(reg, powerShootTimer[i].first, POWERSHOOT_POWERUP, false);
-            powerShootTimer.erase(powerShootTimer.begin() + i);
+            indexToRemove.push_back(i);
         }
+    }
+    for (std::size_t i = 0; i < indexToRemove.size(); i++) {
+        powerShootTimer.erase(powerShootTimer.begin() + indexToRemove[i]);
     }
 }
 
 void ecs::system::PowerupSystem::clearInvicibleEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &invincibleTimer) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    std::vector<std::size_t> indexToRemove;
 
     for (std::size_t i = 0; i < invincibleTimer.size(); i++) {
         if (Lib::isTimeElapsed(invincibleTimer[i].second, EFFECT_DURATION)) {
+            if (invincibleTimer.size() > 1 && indexToRemove.size() < invincibleTimer.size() - 1) {
+                indexToRemove.push_back(i);
+                continue;
+            }
             lives[invincibleTimer[i].first]->isInvincible = false;
             updateActivePowerup(reg, invincibleTimer[i].first, INVINCIBLE_POWERUP, false);
-            invincibleTimer.erase(invincibleTimer.begin() + i);
+            indexToRemove.push_back(i);
         }
+    }
+    for (std::size_t i = 0; i < indexToRemove.size(); i++) {
+        invincibleTimer.erase(invincibleTimer.begin() + indexToRemove[i]);
     }
 }
 
@@ -145,11 +177,10 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
 
 std::size_t ecs::system::PowerupSystem::getPowerupIndex(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
 
-    for (std::size_t i = 0; i < types.size() && i < powerup.size() ; ++i) {
-        if (types[i] && powerup[i]) {
-            if (types[i]->entityType == ecs::EntityType::POWERUP_TEMPLATE && !powerup[i]->hasBeenActivated) {
+    for (std::size_t i = 0; i < types.size(); ++i) {
+        if (types[i]) {
+            if (types[i]->entityType == ecs::EntityType::POWERUP_TEMPLATE) {
                 return i;
             }
         }

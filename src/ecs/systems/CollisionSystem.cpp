@@ -81,13 +81,12 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    std::size_t powerupIndex = getPowerupIndex(reg);
 
     if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == ecs::EntityType::POWERUP && !lives[i]->isInvincible) {
-        powerup[powerupIndex]->playerIndex = i;
+        powerup[j]->playerIndex = i;
         lives[i]->nbLives++;
     } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
-        powerup[powerupIndex]->playerIndex = j;
+        powerup[i]->playerIndex = j;
         lives[j]->nbLives++;
     }
 }

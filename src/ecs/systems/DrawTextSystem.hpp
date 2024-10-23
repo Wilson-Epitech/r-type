@@ -44,7 +44,27 @@ namespace ecs {
              * @brief Load the font of a text.
              * @param textInfos The text informations of an entity.
              */
-            void loadFonts(SparseArray<component::TextInfos> &textInfos);
+            void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos);
+
+            template <typename Component>
+            void loadFonts(Registry &reg) {
+                ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
+                for (std::size_t i = 0; i < componentInfos.size(); ++i) {
+                    if (!componentInfos[i])
+                        continue;
+                    if (!componentInfos[i]->fontIsLoaded && componentInfos[i]->fontPath.length() > 0) {
+                        if (!FileExists(componentInfos[i]->fontPath.c_str())) {
+                            componentInfos[i]->font = GetFontDefault();
+                            componentInfos[i]->fontIsLoaded = true;
+                        }
+                        componentInfos[i]->font = LoadFont(componentInfos[i]->fontPath.c_str());
+                        componentInfos[i]->fontIsLoaded = true;
+                    }
+                }
+            }
+
+            void drawPowerupText(Registry &reg, const std::size_t &playerEntity);
+            std::size_t getPowerupTextInfos(Registry &reg);
         };
     }
 }

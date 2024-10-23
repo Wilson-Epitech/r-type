@@ -56,9 +56,9 @@ namespace ecs {
 
                 /**
                 * @brief Retrieves the index of the powerup component.
-                * This method finds the index of the entity with the powerup type that hasen't be used
+                * This method finds the index of the entity with the powerup template type
                 * @param reg The ECS registry containing entities and components.
-                * @return std::size_t The index of the powerup entity that hasen't be used.
+                * @return std::size_t The index of the powerup template entity.
                 */
                 std::size_t getPowerupIndex(Registry &reg);
 

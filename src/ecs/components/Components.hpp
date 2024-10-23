@@ -60,7 +60,8 @@ namespace ecs {
         MUSIC,          ///< Background music component
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
-        ACTIVEPOWERUP   ///< Activated powerup component
+        ACTIVEPOWERUP,  ///< Activated powerup component
+        POWERUP_TEXT_TEMPLATE ///< Template for the powerup text component
     };
 
     /**
@@ -303,6 +304,26 @@ namespace ecs {
                         isMegaShootActive == other.isMegaShootActive);
             }
         };
+
+        /**
+         * @struct PowerupTextInfos
+         * @brief Component for the text information of the powerup display an entity
+        */
+        struct PowerupTextInfos {
+            int x; ///< X coordinates of the text
+            int y; ///< Y coordinates of the text
+            int size; ///< Size of the text
+            std::string fontPath; ///< Path of the font used to draw the text
+            Color color = Color{}; ///< Color of the text
+            Font font = Font{}; ///< Font of the text
+            bool fontIsLoaded = false; ///< Indicates if font has been loaded
+
+            bool operator==(const PowerupTextInfos &other) const {
+                return (x == other.x && y == other.y && size == other.size &&
+                        fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
+                        color.b == other.color.b);
+            }
+        };
     }
 }
 
@@ -326,6 +347,7 @@ struct EntityData {
                     areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                     areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
                     areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
+                    areComponentsEquals<ecs::component::PowerupTextInfos>(name, ecs::ComponentName::POWERUP_TEXT_TEMPLATE, component, other.component) ||
                     areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
         }
         return false;
@@ -372,6 +394,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
+void operator<<(std::ostringstream &oss, const ecs::component::PowerupTextInfos &powerupTextInfos);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -387,6 +410,7 @@ void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music)
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
+void operator>>(std::istringstream &iss, ecs::component::PowerupTextInfos &powerupTextInfos);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

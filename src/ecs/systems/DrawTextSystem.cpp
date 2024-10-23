@@ -10,18 +10,13 @@
 void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::ActivePowerup> &activePowerup = reg.getComponents<component::ActivePowerup>();
     std::map<std::size_t, entity_t> player = reg.getPlayers();
     Vector2 screenRatio = Lib::getScreenRatio();
     if (player.size() != 1)
         return;
     entity_t playerEntity = player[0];
-    Font lastUsedFont = GetFontDefault();
-    Color lastUsedColor = WHITE;
-    float lastSize = 10;
-    std::string powerupString = "";
 
-    loadFonts(textInfos);
+    loadFontsTextInfos(textInfos);
     for (std::size_t i = 0; i < textInfos.size() && i < types.size(); ++i) {
         if (textInfos[i] && types[i]) {
             if (types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity)
@@ -29,16 +24,29 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
             if (textInfos[i]->textToDisplay.length() > 0) {
                 DrawTextEx(textInfos[i]->font, textInfos[i]->textToDisplay.c_str(), {(float)textInfos[i]->x / screenRatio.x, (float)textInfos[i]->y / screenRatio.y},
                            textInfos[i]->size / screenRatio.x, LETTER_SPACING, textInfos[i]->color);
-                lastUsedFont = textInfos[i]->font;
-                lastSize = textInfos[i]->size;
-                lastUsedColor = textInfos[i]->color;
             }
         }
     }
+    drawPowerupText(reg, playerEntity);
+}
 
+void ecs::system::DrawTextSystem::drawPowerupText(Registry &reg, const std::size_t &playerEntity) {
+    SparseArray<component::ActivePowerup> &activePowerup = reg.getComponents<component::ActivePowerup>();
+    SparseArray<component::PowerupTextInfos> &powerupTextInfos = reg.getComponents<component::PowerupTextInfos>();
+    Vector2 screenRatio = Lib::getScreenRatio();
+    std::size_t powerupTextInfosIndex = getPowerupTextInfos(reg);
+    if (powerupTextInfosIndex == 0)
+        return;
+    std::string powerupString = "";
+
+    loadFonts<component::PowerupTextInfos>(reg);
     if (activePowerup.size() < playerEntity)
         return;
     if (!activePowerup[playerEntity])
+        return;
+    if (powerupTextInfos.size() < powerupTextInfosIndex)
+        return;
+    if (!powerupTextInfos[powerupTextInfosIndex])
         return;
     if (activePowerup[playerEntity]->isInvincibleActive)
         powerupString += INVISIBLE_POWERUP_TEXT;
@@ -46,11 +54,11 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
         powerupString += MEGASHOOT_POWERUP_TEXT;
     if (activePowerup[playerEntity]->isPowershootActive)
         powerupString += POWERSHOOT_POWERUP_TEXT;
-    DrawTextEx(lastUsedFont, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - lastSize - LETTER_SPACING) / screenRatio.y},
-            lastSize / screenRatio.x, LETTER_SPACING, lastUsedColor);
+    DrawTextEx(powerupTextInfos[powerupTextInfosIndex]->font, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - powerupTextInfos[powerupTextInfosIndex]->size - LETTER_SPACING) / screenRatio.y},
+            powerupTextInfos[powerupTextInfosIndex]->size / screenRatio.x, LETTER_SPACING, powerupTextInfos[powerupTextInfosIndex]->color);
 }
 
-void ecs::system::DrawTextSystem::loadFonts(SparseArray<component::TextInfos> &textInfos) {
+void ecs::system::DrawTextSystem::loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos) {
     for (std::size_t i = 0; i < textInfos.size(); ++i) {
         if (!textInfos[i])
             continue;
@@ -63,4 +71,17 @@ void ecs::system::DrawTextSystem::loadFonts(SparseArray<component::TextInfos> &t
             textInfos[i]->fontIsLoaded = true;
         }
     }
+}
+
+std::size_t ecs::system::DrawTextSystem::getPowerupTextInfos(Registry &reg) {
+    SparseArray<component::PowerupTextInfos> &powerupTextInfos = reg.getComponents<component::PowerupTextInfos>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < powerupTextInfos.size() && i < types.size(); ++i) {
+        if (!powerupTextInfos[i] || !types[i])
+            continue;
+        if (types[i]->entityType == ecs::EntityType::POWERUP_TEMPLATE)
+            return i;
+    }
+    return 0;
 }
