@@ -52,7 +52,7 @@ namespace ecs {
              * @param shootPower The power of the shoot.
              * @param shootSize The size of the shoot.
              */
-            void addShot(std::size_t index, Registry &reg, std::size_t shootPower, float shootSize);
+            void addShot(std::size_t index, Registry &reg, const std::size_t &shootPower, const float &shootSize);
 
             /**
              * @brief Retrieves the index of the player shot component.

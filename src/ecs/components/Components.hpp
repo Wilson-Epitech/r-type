@@ -40,7 +40,8 @@ namespace ecs {
         ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
         BACKGROUND,          ///< Background entity
         TEXT,                ///< Text entity
-        POWERUP              ///< Powerup entity
+        POWERUP,             ///< Powerup entity
+        POWERUP_TEMPLATE     ///< Powerup template entity
     };
 
     /**
@@ -62,12 +63,17 @@ namespace ecs {
         ACTIVEPOWERUP   ///< Activated powerup component
     };
 
+    /**
+     * @enum Poweruptype
+     * @brief Enum representing different powerup types.
+     */
     enum Poweruptype {
+        NOPOWERUP,          ///< No powerup, must be at the end of the enum
         LIFE_POWERUP,       ///< Powerup type, give one pv to the player
         POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
         INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
         MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
-        NOPOWERUP           ///< No powerup, must be at the end of the enum
+        END_POWERUP_TYPE    ///< End of the powerup type enum
     };
 
     namespace component {
@@ -113,7 +119,7 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives;      ///< Number of lives the entity has
+            std::size_t nbLives = 1;      ///< Number of lives the entity has
             bool displayLife = false; ///< Indicates if the life has to be displayed
             bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
             std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
@@ -271,6 +277,10 @@ namespace ecs {
             }
         };
 
+        /**
+         * @struct Powerup
+         * @brief Component for the powerup information a powerup
+        */
         struct Powerup {
             Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
             int spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
@@ -278,6 +288,10 @@ namespace ecs {
             std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
         };
 
+        /**
+         * @struct ActivePowerup
+         * @brief Component for the powerup that has been used by a player
+        */
         struct ActivePowerup {
             bool isPowershootActive = false;    ///< Indicates if the powerup Powershoot is activated
             bool isInvincibleActive = false;    ///< Indicates if the powerup Invincible is activated

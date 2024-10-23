@@ -12,8 +12,6 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
-    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
 
     for (std::size_t i = 0; i < type.size() && i < enemyShootingRate.size(); ++i) {
@@ -32,8 +30,7 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
                 time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-            if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
+            if (Lib::isTimeElapsed(time0, enemyShootingRate[i]->shootRate)) {
                 addShot(i, reg);
                 for (std::size_t j = 0; j < timer.size(); j++) {
                     if (timer[j].first == i) {

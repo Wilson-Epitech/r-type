@@ -138,7 +138,7 @@ namespace ecs {
              * @return true If one of the entities is a Powerup.
              * @return false Otherwise.
              */
-            void powerUpLives(Registry &reg, const std::size_t i, const std::size_t j);
+            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
 
             /**
              * @brief Checks if either of the entities involved in the collision is a background entity.

@@ -16,6 +16,7 @@
 
 #include <raylib.h>
 #include <vector>
+#include <chrono>
 
 #define SCREEN_WIDTH 1920  ///< The default screen width for the game window
 #define SCREEN_HEIGHT 1080 ///< The default screen height for the game window
@@ -64,6 +65,8 @@ class Lib {
      * @return Time in milliseconds.
      */
     static double toMilliseconds(double time);
+
+    static bool isTimeElapsed(const std::chrono::steady_clock::time_point &time, const float &duration);
 };
 
 #endif /* !LIB_HPP_ */

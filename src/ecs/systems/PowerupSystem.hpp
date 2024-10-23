@@ -43,7 +43,7 @@ namespace ecs {
                 * @param reg The ECS registry containing entities and their components.
                 * @param index The entity of the dead enemy.
                 */
-                void summonPowerUp(Registry &reg, const std::size_t index);
+                void summonPowerUp(Registry &reg, const std::size_t &index);
 
                 /**
                 * @brief use a powerup when a player hit it.
@@ -52,7 +52,7 @@ namespace ecs {
                 * @param index The entity of the dead enemy.
                 * @return std::pair<std::size_t, ecs::Poweruptype> The index of the player entity and the type of the used powerup.
                 */
-                std::pair<std::size_t, ecs::Poweruptype> usePowerup(Registry &reg, const std::size_t index);
+                std::pair<std::size_t, ecs::Poweruptype> usePowerup(Registry &reg, const std::size_t &index, SparseArray<component::Life> &lives);
 
                 /**
                 * @brief Retrieves the index of the powerup component.
@@ -96,14 +96,6 @@ namespace ecs {
                 ecs::Poweruptype selectPowerup(void);
 
                 /**
-                * @brief Return true if the time betwin a time point and now is superior of a duration
-                * @param time The time of when a powerup has been used
-                * @param duration The active duration of a powerup
-                * @return Bool return true if the duration is superior of acutal time minus given time
-                */
-                bool isTimeElapsed(std::chrono::steady_clock::time_point time, float duration);
-
-                /**
                 * @brief Update the activated poweurp of the player
                 * This method store the activated or deactivation powerup of a player
                 * @param reg The ECS registry containing entities and their components.
@@ -111,7 +103,7 @@ namespace ecs {
                 * @param powerupType The type of powerup that has been activated / deactivation
                 * @param isActive Bool that inform if the powerup is activated or desactivated
                 */
-                void updateActivePowerup(Registry &reg, std::size_t playerEntity, ecs::Poweruptype powerupType, bool isActive);
+                void updateActivePowerup(Registry &reg, const std::size_t &playerEntity, const ecs::Poweruptype &powerupType, const bool &isActive);
         };
     }
 }

@@ -76,7 +76,7 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
     return Rectangle{positions[index]->x, positions[index]->y, spritesSizes[index]->spriteWidth, spritesSizes[index]->spriteHeight};
 }
 
-void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t i, const std::size_t j)
+void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j)
 {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
@@ -136,8 +136,8 @@ std::size_t ecs::system::CollisionSystem::getPowerupIndex(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
 
-    for (std::size_t i = 0; i < types.size(); ++i) {
-        if (types[i]) {
+    for (std::size_t i = 0; i < types.size() && i < powerup.size(); ++i) {
+        if (types[i] && powerup[i]) {
             if (types[i]->entityType == ecs::EntityType::POWERUP && !powerup[i]->hasBeenActivated) {
                 return i;
             }
