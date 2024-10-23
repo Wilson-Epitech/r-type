@@ -54,11 +54,9 @@ ecs::CustomRectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<comp
     return ecs::CustomRectangle{positions[index]->x, positions[index]->y, spritesInfos[index]->spriteWidth, spritesInfos[index]->spriteHeight};
 }
 
-bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle firstEntity, ecs::CustomRectangle secondEntity) {
-    if (firstEntity.x <= secondEntity.x + secondEntity.width && firstEntity.x + firstEntity.width >= secondEntity.x &&
-    firstEntity.y <= secondEntity.y + secondEntity.height && firstEntity.y + firstEntity.height >= secondEntity.y)
-        return true;
-    return false;
+bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle rec1, ecs::CustomRectangle rec2) {
+    return (rec1.x <= rec2.x + rec2.width && rec1.x + rec1.width >= rec2.x &&
+    rec1.y <= rec2.y + rec2.height && rec1.y + rec1.height >= rec2.y);
 }
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {

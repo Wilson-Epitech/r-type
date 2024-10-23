@@ -62,8 +62,8 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) 
         || spriteInfos[playerShootIndex]->spriteWidth == 0 || spriteInfos[playerShootIndex]->spriteHeight == 0)
         return;
     ecs::CustomRectangle shotSpriteRect = {0, 0, spriteInfos[playerShootIndex]->spriteWidth, spriteInfos[playerShootIndex]->spriteHeight};
-    float shotX = positions[playerIndex]->x + ((shotSpriteRect.width * 3));
-    float shotY = positions[playerIndex]->y + (spriteInfos[playerIndex]->spriteHeight / 2);
+    float shotX = positions[playerIndex]->x + (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
+    float shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2));
     entity_t entity = reg.spawnEntity();
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});

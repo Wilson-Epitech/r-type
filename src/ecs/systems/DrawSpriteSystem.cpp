@@ -46,7 +46,7 @@ void ecs::system::DrawSpriteSystem::loadTextures(SparseArray<component::Drawable
             drawables[i]->spriteTexture = LoadTexture(spriteInfos[i]->spritePath.c_str());
             offset = float(drawables[i]->spriteTexture.width) / spriteInfos[i]->patternNb;
             spriteInfos[i]->spriteWidth = offset;
-            spriteInfos[i]->spriteHeight = drawables[i]->spriteTexture.height;
+            spriteInfos[i]->spriteHeight = drawables[i]->spriteTexture.height * spriteInfos[i]->scaleFactor;
             firstPatternLocation = spriteInfos[i]->firstPattern * offset;
             drawables[i]->spriteRect = {firstPatternLocation, 0, offset, float(drawables[i]->spriteTexture.height)};
             drawables[i]->isLoaded = true;
