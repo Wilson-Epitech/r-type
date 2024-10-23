@@ -8,6 +8,7 @@ set(SRC
     ecs/systems/DrawLifeBarSystem.cpp
     ecs/systems/DrawTextSystem.cpp
     ecs/systems/EnemyFiringSystem.cpp
+    ecs/systems/BossFiringSystem.cpp
     ecs/systems/EnemySpawnSystem.cpp
     ecs/systems/BossSpawnSystem.cpp
     ecs/systems/FiringSystem.cpp
