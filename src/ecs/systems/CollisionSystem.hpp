@@ -103,6 +103,34 @@ namespace ecs {
              * @return false Otherwise.
              */
             bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if either of the entities involved in the collision is a background entity.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and a Level1 boss shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndBossLevel1Shot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if either of the entities involved in the collision is a background entity.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if either of the entities involved in the collision is a background entity.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemy(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
         };
     }
 }

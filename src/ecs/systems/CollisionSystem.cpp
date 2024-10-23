@@ -75,7 +75,9 @@ Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Posi
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
-            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType));
+            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) &&
+            !isBossLevel1AndBossLevel1Shot(firstType, secondType) && !isBossLevel1AndEnemyShot(firstType, secondType) &&
+            !isBossLevel1AndEnemy(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -91,6 +93,21 @@ bool ecs::system::CollisionSystem::isEnemyAndEnemyShot(const ecs::EntityType &fi
 bool ecs::system::CollisionSystem::isPlayerShotAndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::ENEMYSHOT) ||
             (firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::PLAYERSHOT));
+}
+
+bool ecs::system::CollisionSystem::isBossLevel1AndBossLevel1Shot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::BOSS_LEVEL1) ||
+            (firstType == ecs::EntityType::BOSS_LEVEL1 && secondType == ecs::EntityType::BOSS_SHOT_1));
+}
+
+bool ecs::system::CollisionSystem::isBossLevel1AndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::BOSS_LEVEL1) ||
+            (firstType == ecs::EntityType::BOSS_LEVEL1 && secondType == ecs::EntityType::ENEMYSHOT));
+}
+
+bool ecs::system::CollisionSystem::isBossLevel1AndEnemy(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMY && secondType == ecs::EntityType::BOSS_LEVEL1) ||
+            (firstType == ecs::EntityType::BOSS_LEVEL1 && secondType == ecs::EntityType::ENEMY));
 }
 
 bool ecs::system::CollisionSystem::isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
