@@ -44,7 +44,8 @@ enum EntityType {
    ENEMY_TEMPLATE,
    ENEMYSHOT,
    ENEMYSHOT_TEMPLATE,
-   BACKGROUND
+   BACKGROUND,
+   TEXT
 };
 ```
 The seconde one is to store the name of our components
@@ -58,7 +59,9 @@ enum ComponentName {
    SHOOTING,
    SPRITEINFOS,
    SOUNDEFFECT,
-   MUSIC
+   MUSIC,
+   SCORE,
+   TEXTINFOS
 };
 ```
 
@@ -146,6 +149,7 @@ enum ComponentName {
       Texture2D spriteTexture = Texture2D{};
       Rectangle spriteRect = Rectangle{};
    };
+   ```
 8. **SoundEffectInfos**
    - Store characteristics about a sound
    ```c++
@@ -175,9 +179,9 @@ enum ComponentName {
    struct EnemySpawn {
       float timeBeforeSpawn;
       int waveSize;
-      int maxSpawnWidth = Lib::getScreenWidth();
+      int maxSpawnWidth = 1920;
       int minSpawnWidth = 0;
-      int maxSpawnHeight = Lib::getScreenHeight();
+      int maxSpawnHeight = 1080;
       int minSpawnHeight = 0;
    };
    ```
@@ -211,7 +215,17 @@ enum ComponentName {
       Music music = Music{};
    };
    ```
-14.   **TextInfos**
+14. **Score**
+- Store the score and the incrementation score value of an entity
+```c++
+   std::size_t scoreIncrementation = 0;
+   int score = 0;
+
+   bool operator==(const Score &other) const {
+       return (score == other.score && scoreIncrementation == other.scoreIncrementation);
+   }
+```
+15.   **TextInfos**
    - Store informations about the text of an entity
    ```c++
         struct TextInfos {
@@ -230,7 +244,7 @@ enum ComponentName {
             }
         };
    ```
-15.   **TextFont**
+16.   **TextFont**
    - Store the text font linked to a text of an entity
    ```c++
       struct TextFont {
