@@ -21,6 +21,7 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <vector>
 
 #define ORANGE_COLOR (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
 #define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color
@@ -71,10 +72,21 @@ namespace ecs {
      * @brief Custom Structure to handle colors.
      */
     struct CustomColor {
-        unsigned char r; ///< red value
-        unsigned char g; ///< green value
-        unsigned char b; ///< blue value
-        unsigned char a; ///< alpha value
+        unsigned char r = 0; ///< red value
+        unsigned char g = 0; ///< green value
+        unsigned char b = 0; ///< blue value
+        unsigned char a = 0; ///< alpha value
+    };
+
+    /**
+     * @struct Rectangle
+     * @brief Custom Structure to handle rectangles.
+     */
+    struct CustomRectangle {
+        float x = 0;      ///< X coordinate
+        float y = 0;      ///< y coordinate
+        float width = 0;  ///< width value
+        float height = 0; ///< height value
     };
 
     namespace component {
@@ -151,11 +163,12 @@ namespace ecs {
             std::size_t firstPattern = 0; ///< First pattern in the sprite
             float scaleFactor = 1.0;      ///< Scale factor for the sprite
             CustomColor color = { 245, 245, 245, 255 };  ///< Color applied to the sprite, white by default
+            float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
                         scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
-                        color.g == other.color.g && color.b == other.color.b);
+                        color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
             }
         };
 
@@ -192,13 +205,17 @@ namespace ecs {
             Rectangle spriteRect = Rectangle{};    ///< Rectangle of the texture to be drawn
         };
 
-        /**
-         * @struct SpriteSize
-         * @brief Component for the size of the sprite.
-         */
-        struct SpriteSize {
-            float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
-        };
+        // /**
+        //  * @struct SpriteSize
+        //  * @brief Component for the size of the sprite.
+        //  */
+        // struct SpriteSize {
+        //     float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
+
+        //     bool operator==(const SpriteSize &other) const {
+        //         return (spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
+        //     }
+        // };
 
         /**
          * @struct EnemySpawn

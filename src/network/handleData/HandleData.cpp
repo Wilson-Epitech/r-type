@@ -19,6 +19,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::vector<EntityData> livesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
     std::vector<EntityData> scoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE);
     std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
+    std::vector<EntityData> spriteInfosData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -27,6 +28,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     network::HandleData::addEntityDataToSend(livesData, data);
     network::HandleData::addEntityDataToSend(scoresData, data);
     network::HandleData::addEntityDataToSend(textInfosData, data);
+    network::HandleData::addEntityDataToSend(spriteInfosData, data);
     for (auto &newEntity : newEntities) {
         fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);

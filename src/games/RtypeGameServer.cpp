@@ -31,7 +31,6 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::SpriteInfos>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::Life>();
-    _reg.registerComponent<ecs::component::SpriteSize>();
     _reg.registerComponent<ecs::component::SoundEffectInfos>();
     _reg.registerComponent<ecs::component::ShootingRate>();
     _reg.registerComponent<ecs::component::BackgroundMusicInfos>();
