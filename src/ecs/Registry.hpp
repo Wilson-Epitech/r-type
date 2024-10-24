@@ -84,6 +84,12 @@ namespace ecs {
                     break;
                 }
             }
+            auto it = std::find_if(_playersColors.begin(), _playersColors.end(),[e](const auto& pair) {
+                return (pair.first == e);
+            });
+            if (it != _playersColors.end()) {
+                _playersColors.erase(it);
+            }
         };
 
         /**
@@ -293,6 +299,24 @@ namespace ecs {
             return _collisionEntity;
         }
 
+
+        /**
+         * @brief Add a player/spaceship color link in the playerColors vector.
+         * @param e the player entity ID
+         * @param color the spaceship color associated with the player entity
+         */
+        void addPlayerColor(const entity_t &e, const ecs::CustomColor &color) {
+            _playersColors.push_back({e, color});
+        };
+
+        /**
+         * @brief Retrieves the map of all players' colors
+         * @return std::vector<std::pair<entity_t, ecs::CustomColor>> A vector containing pairs linking the entity ID of players with their respectives spaceships color.
+         */
+        std::vector<std::pair<entity_t, ecs::CustomColor>> getPlayersColors(void) {
+            return _playersColors;
+        };
+
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
@@ -305,6 +329,7 @@ namespace ecs {
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
             _eraseEntity; ///< Functions to remove components when an entity is deleted.
         std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
+        std::vector<std::pair<entity_t, ecs::CustomColor>> _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
     };
 }
 

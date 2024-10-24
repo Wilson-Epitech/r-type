@@ -12,10 +12,10 @@ void ecs::system::PlayerSpawnSystem::operator()(Registry &reg) {
     std::map<std::size_t, entity_t> players = reg.getPlayers();
 
     for (auto &it : players)
-        createNewPlayer(reg, it.second, it.first);
+        createNewPlayer(reg, it.second);
 }
 
-void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t entity, std::size_t clientIndex) {
+void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity_t &entity) {
     ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
     ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
@@ -42,8 +42,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, entity_t ent
     if (lives[playerTemplateIndex] && !lives[entity])
         lives.insertAt(entity, ecs::component::Life{lives[playerTemplateIndex].value()});
     if (spriteInfos[playerTemplateIndex] && !spriteInfos[entity]) {
-        setPlayerColor(playerTemplateIndex, clientIndex, reg);
-        spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[playerTemplateIndex].value()});
+        setPlayerColor(reg, entity);
     }
     if (soundEffectInfos[playerTemplateIndex] && !soundEffectInfos[entity])
         soundEffectInfos.insertAt(entity, ecs::component::SoundEffectInfos{soundEffectInfos[playerTemplateIndex].value()});
@@ -69,22 +68,19 @@ std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg
     return 0;
 }
 
-void ecs::system::PlayerSpawnSystem::setPlayerColor(entity_t playerEntity, std::size_t clientIndex, Registry &reg) {
+void ecs::system::PlayerSpawnSystem::setPlayerColor(Registry &reg, const entity_t &entity) {
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
-    switch (clientIndex) {
-    case 1:
-        spriteInfos[playerEntity]->color = CYAN_COLOR;
-        break;
-    case 2:
-        spriteInfos[playerEntity]->color = BEIGE_COLOR;
-        break;
-    case 3:
-        spriteInfos[playerEntity]->color = GOLD_COLOR;
-        break;
-    case 4:
-        spriteInfos[playerEntity]->color = PINK_COLOR;
-        break;
-    default:
-        break;
+    std::vector<ecs::CustomColor> availableSpaceshipColors = {CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR};
+    std::vector<std::pair<entity_t, ecs::CustomColor>> playersColors = reg.getPlayersColors();
+
+    for (auto availableSpaceshipColor: availableSpaceshipColors) {
+        auto it = std::find_if(playersColors.begin(), playersColors.end(),[availableSpaceshipColor](const auto& pair) {
+            return ((pair.second == availableSpaceshipColor));
+        });
+        if (it == playersColors.end()) {
+            spriteInfos[entity]->color = availableSpaceshipColor;
+            reg.addPlayerColor(entity, availableSpaceshipColor);
+            return;
+        }
     }
 }
