@@ -8,29 +8,37 @@
 #include "MusicSystem.hpp"
 
 void ecs::system::MusicSystem::operator()(Registry &reg) {
-    SparseArray<component::BackgroundMusic> &music = reg.getComponents<component::BackgroundMusic>();
+    SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos = reg.getComponents<component::BackgroundMusicInfos>();
+    SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects = reg.getComponents<component::BackgroundMusicObject>();
 
-    for (std::size_t i = 0; i < music.size(); ++i) {
-        if (!music[i])
+    loadMusics(backgroundMusicInfos, backgroundMusicObjects);
+    for (std::size_t i = 0; i < backgroundMusicInfos.size(); ++i) {
+        if (!backgroundMusicInfos[i])
             continue;
-        loadMusic(i, music);
-        if (music[i]->hasToBePlayed) {
-            SetMusicVolume(music[i]->music, music[i]->volume);
-            UpdateMusicStream(music[i]->music);
-            if (!music[i]->isCurrentlyPlayed) {
-                PlayMusicStream(music[i]->music);
-                music[i]->isCurrentlyPlayed = true;
+        if (backgroundMusicInfos[i]->hasToBePlayed) {
+            SetMusicVolume(backgroundMusicObjects[i]->music, backgroundMusicInfos[i]->volume);
+            UpdateMusicStream(backgroundMusicObjects[i]->music);
+            if (!backgroundMusicInfos[i]->isCurrentlyPlayed) {
+                PlayMusicStream(backgroundMusicObjects[i]->music);
+                backgroundMusicInfos[i]->isCurrentlyPlayed = true;
             }
         }
     }
 }
 
-void ecs::system::MusicSystem::loadMusic(std::size_t i, SparseArray<component::BackgroundMusic> &music) {
+void ecs::system::MusicSystem::loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos, SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects) {
 
-    if (!music[i]->isLoaded && music[i]->musicPath.length() > 0) {
-        if (!FileExists(music[i]->musicPath.c_str()))
-            throw Error("Invalid music path");
-        music[i]->music = LoadMusicStream(music[i]->musicPath.c_str());
-        music[i]->isLoaded = true;
+    for (std::size_t i = 0; i < backgroundMusicInfos.size(); ++i) {
+        if (!backgroundMusicInfos[i])
+            continue;
+        if (!backgroundMusicObjects[i]) {
+            backgroundMusicObjects.insertAt(i, ecs::component::BackgroundMusicObject{});
+        }
+        if (backgroundMusicObjects[i] && !backgroundMusicInfos[i]->isLoaded && backgroundMusicInfos[i]->musicPath.length() > 0) {
+            if (!FileExists(backgroundMusicInfos[i]->musicPath.c_str()))
+                throw Error("Invalid music path");
+            backgroundMusicObjects[i]->music = LoadMusicStream(backgroundMusicInfos[i]->musicPath.c_str());
+            backgroundMusicInfos[i]->isLoaded = true;
+        }
     }
 }

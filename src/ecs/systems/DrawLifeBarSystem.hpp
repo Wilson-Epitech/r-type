@@ -9,6 +9,7 @@
 #define DRAWLIFEBARSYSTEM_HPP_
 
 #include "Components.hpp"
+#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
 
 #define LIVES_BAR_HEIGHT 5 ///< The height of lives bar displayed

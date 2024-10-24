@@ -22,10 +22,13 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::SpriteInfos>();
-    _reg.registerComponent<ecs::component::SoundEffect>();
-    _reg.registerComponent<ecs::component::BackgroundMusic>();
+    _reg.registerComponent<ecs::component::SoundEffectInfos>();
+    _reg.registerComponent<ecs::component::SoundEffectObject>();
+    _reg.registerComponent<ecs::component::BackgroundMusicInfos>();
+    _reg.registerComponent<ecs::component::BackgroundMusicObject>();
     _reg.registerComponent<ecs::component::Score>();
     _reg.registerComponent<ecs::component::TextInfos>();
+    _reg.registerComponent<ecs::component::TextFont>();
 }
 
 void game::RtypeGameClient::addComponentsToEntities() {}

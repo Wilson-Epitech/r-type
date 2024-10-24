@@ -121,7 +121,6 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
-            std::cerr << "Received heartbeat from client " << clientId << std::endl;
             if (!_corresOwnPlayerId[clientId])
                 _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {

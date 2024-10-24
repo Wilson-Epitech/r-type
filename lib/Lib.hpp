@@ -14,8 +14,7 @@
 #ifndef LIB_HPP_
 #define LIB_HPP_
 
-#include <raylib.h>
-#include <vector>
+#include "CustomTypes.hpp"
 
 #define SCREEN_WIDTH 1920  ///< The default screen width for the game window
 #define SCREEN_HEIGHT 1080 ///< The default screen height for the game window
@@ -31,13 +30,6 @@ class Lib {
   public:
     Lib() = delete;
     ~Lib() = delete;
-
-    /**
-     * @brief Gets the screen ratio for width and height scaling.
-     * This function calculates the ratio between the game screen's default resolution and the current window size.
-     * @return A Vector2 containing the width and height scaling factors.
-     */
-    static Vector2 getScreenRatio();
 
     /**
      * @brief Retrieves the default screen height.
@@ -56,7 +48,7 @@ class Lib {
      * @param pos The position vector to check.
      * @return true if the position is within the screen bounds, false otherwise.
      */
-    static bool isOnScreen(Vector2 pos);
+    static bool isOnScreen(ecs::CustomVector2D pos);
 
     /**
      * @brief Converts time from seconds to milliseconds.
