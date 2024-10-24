@@ -132,7 +132,7 @@ enum ComponentName {
       std::size_t patternNb = 1;
       std::size_t firstPattern = 0;
       float scaleFactor = 1.0;
-      CustomColor color = { 245, 245, 245, 255 };
+      CustomColor color = WHITE_COLOR;
       float spriteWidth = 0, spriteHeight = 0;
 
       bool operator==(const SpriteInfos &other) const {
