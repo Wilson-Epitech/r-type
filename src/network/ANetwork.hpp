@@ -20,18 +20,28 @@ namespace network {
 
     class ANetwork : virtual public network::INetwork {
       public:
-        ANetwork() : _isRunning(true), _magicNumber(0x9B3D), _messageId(0){};
+        ANetwork() : _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {
+          _isSigInt = false;
+          signal(SIGINT, handleCtrlC);
+        };
         ~ANetwork() = default;
 
-        sig_atomic_t handleNetwork(const sig_atomic_t &newStatus) {
-            static volatile sig_atomic_t status = 1;
-
-            if (newStatus != 1)
-                status = newStatus;
-            return status;
+        bool isSigInt() {
+          return _isSigInt;
         }
 
       protected:
+        /**
+         * @brief Catch the ctrl C signal and sets the isSigInt boolean to true.
+         * @param signal Retrieve the signal sent.
+         */
+        static void handleCtrlC(const int signal) {
+          if (signal == SIGINT)
+            _isSigInt = true;
+        }
+
+        inline static bool _isSigInt; ///< Indicates if SIGINT signal has been catch.
+
         bool _isRunning;             ///< Indicates whether the Network instance is still running.
         std::list<DataToSend> _data; ///< A list of Data received such as game state updates.
 

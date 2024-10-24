@@ -62,11 +62,6 @@ namespace network {
          * the messages and handles updates to the client's state.
          */
         void msgFromServer();
-        /**
-         * @brief Catch the ctrl C signal.
-         * @param signal Retrieve the signal sent.
-         */
-        void handleCtrlC(int signal);
 
         asio::io_context _ioContext;
         asio::ip::udp::socket _socket;            ///< The UDP socket used for communication with the server.

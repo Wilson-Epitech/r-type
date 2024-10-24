@@ -23,11 +23,6 @@ network::Client::~Client() {
     _socket.close();
 }
 
-void network::Client::handleCtrlC(int signal) {
-    if (signal == SIGINT)
-        exit(0);
-}
-
 std::list<DataToSend> network::Client::getData() {
     return _data;
 }

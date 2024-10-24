@@ -36,13 +36,6 @@ namespace network {
         ~INetwork() = default;
 
         /**
-         * @brief Used to set a newStatus to the network instance
-         * @param newStatus the new status to set for the network instance
-         * @return the sig_atomic_t network status
-         */
-        virtual sig_atomic_t handleNetwork(const sig_atomic_t &newStatus) = 0;
-
-        /**
          * @brief Sends a message to the network instance.
          * @param message The message to send.
          * @param messageType The type of the message, which is used for server-side processing.
@@ -88,6 +81,13 @@ namespace network {
          * @return false If the network instance isn't.
          */
         virtual bool isConnectedInNetwork() = 0;
+
+        /**
+         * @brief Used to check if SIGINT signal has been catch.
+         * @return true If SIGINT has been catch.
+         * @return false Otherwise.
+         */
+        virtual bool isSigInt() = 0;
     };
 }
 

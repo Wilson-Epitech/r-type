@@ -30,7 +30,7 @@ void RunGame::runServer() {
     std::list<DataToSend> dataReceivedList;
     std::size_t disconnectedPlayerEntity = 0;
 
-    while (_networkInstance->handleNetwork(1)) {
+    while (!_networkInstance->isSigInt()) {
         if (!isUpdateTimeElapsed())
             continue;
         dataReceivedList = _networkInstance->getData();
@@ -50,7 +50,7 @@ void RunGame::runServer() {
 void RunGame::runClient() {
     std::list<DataToSend> dataReceivedList;
 
-    while (_networkInstance->handleNetwork(1) && !WindowShouldClose()) {
+    while (!_networkInstance->isSigInt() && !WindowShouldClose()) {
         if (!_networkInstance->isConnectedInNetwork()) {
             _networkInstance->sendMessage("Client disconnected", 2);
             break;
