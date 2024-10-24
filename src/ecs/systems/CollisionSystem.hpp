@@ -17,7 +17,6 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include <raylib.h>
 
 namespace ecs {
     namespace system {
@@ -40,23 +39,22 @@ namespace ecs {
 
           private:
             /**
-             * @brief Fills the sprite sizes for all entities that have sprite information.
-             * This method ensures that each entity with a `SpriteInfos` component also has a
-             * corresponding `SpriteSize` component filled with the appropriate dimensions.
-             * @param spritesInfos Array of sprite information components.
-             * @param spritesSizes Array of sprite size components.
-             */
-            void fillSpriteSize(SparseArray<component::SpriteInfos> &spritesInfos, SparseArray<component::SpriteSize> &spritesSizes);
-
-            /**
              * @brief Computes the hitbox of a given entity based on its position and sprite size.
              * @param positions Array of position components for entities.
-             * @param spritesSizes Array of sprite size components for entities.
+             * @param spritesInfos Array of sprite informations components for entities.
              * @param index The index of the entity in the sparse arrays.
-             * @return Rectangle The computed hitbox of the entity.
+             * @return CustomRectangle The computed hitbox of the entity.
              */
-            Rectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteSize> &spritesSizes,
-                                   std::size_t index);
+            ecs::CustomRectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spritesInfos, std::size_t index);
+
+            /**
+             * @brief Check if the two given entities in parameter are in collision or not.
+             * @param CustomRectangle hitbox of the first entity.
+             * @param CustomRectangle hitbox of the second entity.
+             * @return true If entities are in collision
+             * @ return false Otherwise.
+             */
+            bool areEntitiesInCollision(ecs::CustomRectangle firstEntity, ecs::CustomRectangle secondEntity);
 
             /**
              * @brief Determines if two entities are enemies.

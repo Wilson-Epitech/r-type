@@ -9,6 +9,7 @@
 #define DRAWTEXTSYSTEM_HPP_
 
 #include "Components.hpp"
+#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
 
 #define LETTER_SPACING 2 ///< The spacing between two characters displayed
@@ -43,8 +44,9 @@ namespace ecs {
             /**
              * @brief Load the font of a text.
              * @param textInfos The text informations of an entity.
+             * @param textFonts The text fonts of an entity.
              */
-            void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos);
+            void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts);
 
             template <typename Component>
             void loadFonts(Registry &reg) {

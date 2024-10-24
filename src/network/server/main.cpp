@@ -7,7 +7,6 @@
 
 #include "RtypeGameServer.hpp"
 #include "RunGame.hpp"
-#include "raylib.h"
 #include <iostream>
 
 int main(int ac, char **av) {

@@ -15,7 +15,7 @@
 #define RUNGAME_HPP_
 
 #include "Client.hpp"
-#include "Components.hpp"
+#include "Lib.hpp"
 #include "IGame.hpp"
 #include "Server.hpp"
 #include <functional>
@@ -39,7 +39,6 @@ class RunGame {
     RunGame(std::unique_ptr<network::Server> &server, ecs::Registry &reg, Function const &gameState)
         : _server(std::move(server)), _client(nullptr), _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()),
           _time1(std::chrono::steady_clock::now()) {
-        SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
     }
     /**
      * @brief Constructs the game clientside.
