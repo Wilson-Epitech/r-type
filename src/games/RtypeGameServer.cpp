@@ -128,9 +128,6 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1], ecs::component::Type{ecs::EntityType::BOSS_SHOT_1_TEMPLATE});
     soundEffect.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1], ecs::component::SoundEffect{SHOOT_SOUND_PATH});
 
-
-
-
     backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusic{BACKGROUND_MUSIC_PATH, 0.5, true});
 
     types.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::Type{ecs::EntityType::TEXT});

@@ -7,10 +7,13 @@
 
 #include "BossFiringSystem.hpp"
 
+
+#include <iostream>
 void ecs::system::BossFiringSystem::operator()(Registry &reg)
 {
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
 
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
@@ -34,7 +37,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg)
             timer.push_back({i, time0});
         }
         timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-        if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate)) {
+        if (timeElapsed.count() >= Lib::toMilliseconds(enemyShootingRate[i]->shootRate) && positions[i]->x == 1200) {
             addShot(i, reg);
             for (std::size_t j = 0; j < timer.size(); j++) {
                 if (timer[j].first == i) {
