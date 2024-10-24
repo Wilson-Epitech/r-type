@@ -60,15 +60,15 @@ void ecs::system::DrawSpriteSystem::drawBackground(const ecs::CustomVector2D &sc
     ecs::CustomVector2D backgroundNewPos = {positions[index]->x, positions[index]->y};
     float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
     float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
-    int posX = 0;
-    int posY = 0;
-    int nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
+    std::size_t posX = 0;
+    std::size_t posY = 0;
+    std::size_t nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
 
     changeBackgroundPos(velocities, drawables, positions, spriteInfos, index);
-    for (int i = 0; i < getNbrRepeatBackground(spriteHeight, Lib::getScreenHeight()); i++) {
-        for (int k = 0; k < nbrRepeatX; k++) {
+    for (std::size_t i = 0; i < getNbrRepeatBackground(spriteHeight, Lib::getScreenHeight()); i++) {
+        for (std::size_t k = 0; k < nbrRepeatX; k++) {
             backgroundNewPos = {positions[index]->x, positions[index]->y};
-            for (int j = 0; j < nbrRepeatX; j++) {
+            for (std::size_t j = 0; j < nbrRepeatX; j++) {
                 Rectangle destRec = {(backgroundNewPos.x + posX) / screenRatio.x, (backgroundNewPos.y + posY) / screenRatio.y,
                                      drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x),
                                      drawables[index]->spriteRect.height * (spriteInfos[index]->scaleFactor / screenRatio.y)};
@@ -82,8 +82,8 @@ void ecs::system::DrawSpriteSystem::drawBackground(const ecs::CustomVector2D &sc
     }
 }
 
-int ecs::system::DrawSpriteSystem::getNbrRepeatBackground(float spriteSize, int screenSize) {
-    int result = 0;
+std::size_t ecs::system::DrawSpriteSystem::getNbrRepeatBackground(const float &spriteSize, const int &screenSize) {
+    std::size_t result = 0;
     float totalSize = 0;
 
     while (totalSize < screenSize) {
@@ -96,7 +96,7 @@ int ecs::system::DrawSpriteSystem::getNbrRepeatBackground(float spriteSize, int 
 ecs::CustomVector2D ecs::system::DrawSpriteSystem::changeNewBackgroundPos(SparseArray<component::Velocity> &velocities,
                                                         SparseArray<component::Drawable> &drawables,
                                                         SparseArray<component::Position> &positions,
-                                                        SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index, int j) {
+                                                        SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index, const std::size_t &j) {
     float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
     float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
     ecs::CustomVector2D backgroundNewPos = {0, 0};
