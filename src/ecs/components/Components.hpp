@@ -301,8 +301,8 @@ namespace ecs {
             int y; ///< Y coordinates of the text
             int size; ///< Size of the text
             std::string fontPath; ///< Path of the font used to draw the text
-            Color color = Color{}; ///< Color of the text
-            Font font = Font{}; ///< Font of the text
+            CustomColor color = { 245, 245, 245, 255 }; ///< Color of the text
+            // Font font = Font{}; ///< Font of the text
             bool fontIsLoaded = false; ///< Indicates if font has been loaded
 
             bool operator==(const PowerupTextInfos &other) const {

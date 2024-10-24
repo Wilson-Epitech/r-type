@@ -148,7 +148,6 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
 {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
-    SparseArray<component::Drawable> &drawables = reg.getComponents<component::Drawable>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -169,7 +168,6 @@ void ecs::system::PowerupSystem::summonPowerUp(Registry &reg, const std::size_t 
     positions.insertAt(entity, ecs::component::Position{positions[index]->x, positions[index]->y});
     velocities.insertAt(entity, ecs::component::Velocity{});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[powerupIndex].value()});
-    drawables.insertAt(entity, ecs::component::Drawable{});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::POWERUP});
     lives.insertAt(entity, ecs::component::Life{});
     powerup.insertAt(entity, ecs::component::Powerup{powerupToSpawn, powerup[powerupIndex]->spawnRate, true, powerup[powerupIndex]->playerIndex});

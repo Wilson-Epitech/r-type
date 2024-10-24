@@ -121,7 +121,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::NOPOWERUP, 1});
     types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP_TEMPLATE});
     spriteInfos.insertAt( _stringToEntity[POWERUP_NAME], ecs::component::SpriteInfos{POWERUP_PATH, 10, 1, 0.5});
-    powerupTextInfos.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::PowerupTextInfos{50, 50, 20, FONT_PATH, ORANGE});
+    powerupTextInfos.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::PowerupTextInfos{50, 50, 20, FONT_PATH, ORANGE_COLOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

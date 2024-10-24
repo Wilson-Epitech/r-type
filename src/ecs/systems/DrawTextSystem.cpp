@@ -18,7 +18,7 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     if (player.size() != 1)
         return;
     entity_t playerEntity = player[0];
-    loadFonts(textInfos, textFonts);
+    loadFontsTextInfos(textInfos, textFonts);
     for (std::size_t i = 0; i < textInfos.size() && i < types.size(); ++i) {
         if (textInfos[i] && textFonts[i] && types[i]) {
             if (types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity)
@@ -35,13 +35,15 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
 void ecs::system::DrawTextSystem::drawPowerupText(Registry &reg, const std::size_t &playerEntity) {
     SparseArray<component::ActivePowerup> &activePowerup = reg.getComponents<component::ActivePowerup>();
     SparseArray<component::PowerupTextInfos> &powerupTextInfos = reg.getComponents<component::PowerupTextInfos>();
-    Vector2 screenRatio = Lib::getScreenRatio();
+    SparseArray<component::TextFont> &textFonts = reg.getComponents<component::TextFont>();
+    ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
+        (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
     std::size_t powerupTextInfosIndex = getPowerupTextInfos(reg);
     if (powerupTextInfosIndex == 0)
         return;
     std::string powerupString = "";
 
-    loadFonts<component::PowerupTextInfos>(reg);
+    loadFonts<component::PowerupTextInfos>(reg, textFonts);
     if (activePowerup.size() < playerEntity)
         return;
     if (!activePowerup[playerEntity])
@@ -56,8 +58,8 @@ void ecs::system::DrawTextSystem::drawPowerupText(Registry &reg, const std::size
         powerupString += MEGASHOOT_POWERUP_TEXT;
     if (activePowerup[playerEntity]->isPowershootActive)
         powerupString += POWERSHOOT_POWERUP_TEXT;
-    DrawTextEx(powerupTextInfos[powerupTextInfosIndex]->font, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - powerupTextInfos[powerupTextInfosIndex]->size - LETTER_SPACING) / screenRatio.y},
-            powerupTextInfos[powerupTextInfosIndex]->size / screenRatio.x, LETTER_SPACING, powerupTextInfos[powerupTextInfosIndex]->color);
+    DrawTextEx(textFonts[powerupTextInfosIndex]->font, powerupString.c_str(), {powerupString.size() / screenRatio.x, (Lib::getScreenHeight() - powerupTextInfos[powerupTextInfosIndex]->size - LETTER_SPACING) / screenRatio.y},
+            powerupTextInfos[powerupTextInfosIndex]->size / screenRatio.x, LETTER_SPACING, {powerupTextInfos[powerupTextInfosIndex]->color.r, powerupTextInfos[powerupTextInfosIndex]->color.g, powerupTextInfos[powerupTextInfosIndex]->color.b, powerupTextInfos[powerupTextInfosIndex]->color.a});
 }
 
 void ecs::system::DrawTextSystem::loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts) {

@@ -15,6 +15,7 @@
 #define LIB_HPP_
 
 #include "CustomTypes.hpp"
+#include <chrono>
 
 #define SCREEN_WIDTH 1920  ///< The default screen width for the game window
 #define SCREEN_HEIGHT 1080 ///< The default screen height for the game window

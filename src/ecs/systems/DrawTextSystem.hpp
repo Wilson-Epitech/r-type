@@ -49,17 +49,19 @@ namespace ecs {
             void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts);
 
             template <typename Component>
-            void loadFonts(Registry &reg) {
+            void loadFonts(Registry &reg, SparseArray<component::TextFont> &textFonts) {
                 ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
                 for (std::size_t i = 0; i < componentInfos.size(); ++i) {
                     if (!componentInfos[i])
                         continue;
-                    if (!componentInfos[i]->fontIsLoaded && componentInfos[i]->fontPath.length() > 0) {
+                    if (!textFonts[i])
+                        textFonts.insertAt(i, ecs::component::TextFont{});
+                    if (textFonts[i] && !componentInfos[i]->fontIsLoaded && componentInfos[i]->fontPath.length() > 0) {
                         if (!FileExists(componentInfos[i]->fontPath.c_str())) {
-                            componentInfos[i]->font = GetFontDefault();
+                            textFonts[i]->font = GetFontDefault();
                             componentInfos[i]->fontIsLoaded = true;
                         }
-                        componentInfos[i]->font = LoadFont(componentInfos[i]->fontPath.c_str());
+                        textFonts[i]->font = LoadFont(componentInfos[i]->fontPath.c_str());
                         componentInfos[i]->fontIsLoaded = true;
                     }
                 }

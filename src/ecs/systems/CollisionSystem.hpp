@@ -137,14 +137,6 @@ namespace ecs {
              * @return false Otherwise.
              */
             void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
-
-            /**
-             * @brief Checks if either of the entities involved in the collision is a background entity.
-             * @param reg The type of the first entity.
-             * @return true If one of the entities is a background.
-             * @return false Otherwise.
-             */
-            std::size_t getPowerupIndex(Registry &reg);
         };
     }
 }
