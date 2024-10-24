@@ -42,6 +42,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity
     if (lives[playerTemplateIndex] && !lives[entity])
         lives.insertAt(entity, ecs::component::Life{lives[playerTemplateIndex].value()});
     if (spriteInfos[playerTemplateIndex] && !spriteInfos[entity]) {
+        spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[playerTemplateIndex].value()});
         setPlayerColor(reg, entity);
     }
     if (soundEffectInfos[playerTemplateIndex] && !soundEffectInfos[entity])
