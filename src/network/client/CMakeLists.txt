@@ -7,11 +7,13 @@ add_executable(rtype_client ${CLIENT_SRC})
 target_link_libraries(rtype_client PRIVATE rtype_lib)
 
 add_library(client SHARED
+    ./Client.cpp
     ../handleData/HandleData.cpp
     ../../ecs/components/Components.cpp
 )
 
 target_include_directories(client PRIVATE
+    ../
     ../handleData
     ../../ecs
     ../../ecs/components

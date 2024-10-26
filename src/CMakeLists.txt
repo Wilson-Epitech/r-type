@@ -17,8 +17,6 @@ set(SRC
     ecs/systems/MusicSystem.cpp
     ecs/systems/ScoreSystem.cpp
     runGame/RunGame.cpp
-    network/client/Client.cpp
-    network/server/Server.cpp
     network/handleData/HandleData.cpp
     ../lib/Lib.cpp
 )

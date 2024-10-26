@@ -7,11 +7,13 @@ add_executable(rtype_server ${SERVER_SRC})
 target_link_libraries(rtype_server PRIVATE rtype_lib)
 
 add_library(server SHARED
+    ./Server.cpp
     ../handleData/HandleData.cpp
     ../../ecs/components/Components.cpp
 )
 
 target_include_directories(server PRIVATE
+    ../
     ../handleData
     ../../ecs
     ../../ecs/components
