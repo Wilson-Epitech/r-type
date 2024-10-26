@@ -80,7 +80,7 @@ namespace network {
  * @return network::Client* Pointer to the newly created client instance
  */
 extern "C" {
-network::Client *entryPoint(const std::string &host, const std::string &port) {
+network::Client *clientEntryPoint(const std::string &host, const std::string &port) {
     return new network::Client(host, port);
 }
 }

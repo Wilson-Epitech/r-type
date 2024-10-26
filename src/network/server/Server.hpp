@@ -175,7 +175,7 @@ namespace network {
  * @return network::Server* Pointer to the newly created server instance
  */
 extern "C" {
-network::Server *entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
+network::Server *serverEntryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
     return new network::Server(host, port, pool);
 }
 }
