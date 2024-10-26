@@ -57,7 +57,7 @@ template <typename T> class DLLoader {
      */
     std::unique_ptr<T> getInstance(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
         T *(*cosine)(const std::string &, const std::size_t &, asio::thread_pool &);
-        cosine = (T * (*)(const std::string &, const std::size_t &, asio::thread_pool &)) dlsym(_handle, "serverEntryPoint");
+        cosine = (T * (*)(const std::string &, const std::size_t &, asio::thread_pool &)) dlsym(_handle, "entryPoint");
         char *errorMessage = dlerror();
         if (errorMessage != NULL)
             throw Error(errorMessage);
@@ -73,7 +73,7 @@ template <typename T> class DLLoader {
      */
     std::unique_ptr<T> getInstance(const std::string &host, const std::string &port) {
         T *(*cosine)(const std::string &, const std::string &);
-        cosine = (T * (*)(const std::string &, const std::string &)) dlsym(_handle, "clientEntryPoint");
+        cosine = (T * (*)(const std::string &, const std::string &)) dlsym(_handle, "entryPoint");
         char *errorMessage = dlerror();
         if (errorMessage != NULL)
             throw Error(errorMessage);
