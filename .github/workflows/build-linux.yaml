@@ -2,9 +2,9 @@ name: build-ubuntu
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "yanis/NetworkInterface" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "main", "dev", "yanis/NetworkInterface" ]
 
 jobs:
   build-ubuntu:
