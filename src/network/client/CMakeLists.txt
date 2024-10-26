@@ -6,6 +6,19 @@ add_executable(rtype_client ${CLIENT_SRC})
 
 target_link_libraries(rtype_client PRIVATE rtype_lib)
 
+add_library(client SHARED
+    ../handleData/HandleData.cpp
+    ../../ecs/components/Components.cpp
+)
+
+target_include_directories(client PRIVATE
+    ../handleData
+    ../../ecs
+    ../../ecs/components
+    ../../../lib
+    ../../../include
+)
+
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_link_libraries(rtype_client
         PRIVATE "-framework OpenGL"
@@ -32,6 +45,11 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 else()
     message(FATAL_ERROR "Unsupported OS")
 endif()
+
+add_custom_command(TARGET client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+    $<TARGET_FILE:client> ${CMAKE_SOURCE_DIR}/sharedLibraries
+)
 
 add_custom_command(TARGET rtype_client POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
