@@ -23,7 +23,7 @@ set(SRC
 
 add_library(rtype_lib ${SRC})
 
-target_link_libraries(rtype_lib PUBLIC raylib asio)
+target_link_libraries(rtype_lib PRIVATE raylib asio glfw)
 
 target_include_directories(rtype_lib PUBLIC
     ../include

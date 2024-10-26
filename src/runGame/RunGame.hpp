@@ -16,8 +16,17 @@
 #include <raylib.h>
 
 #define UPDATE_TIME 0.02                            ///< Set the time to update the game.
-#define SERVER_LIB_PATH "sharedLibraries/server.so" ///< Path to the server shared library
-#define CLIENT_LIB_PATH "sharedLibraries/client.so" ///< Path to the client shared library
+
+#if __linux__
+#define SERVER_LIB_PATH "sharedLibraries/libserver.so" ///< Path to the server shared library for linux
+#define CLIENT_LIB_PATH "sharedLibraries/libclient.so" ///< Path to the client shared library for linux
+#elif __APPLE__
+#define SERVER_LIB_PATH "sharedLibraries/libserver.dylib" ///< Path to the server shared library for macOS
+#define CLIENT_LIB_PATH "sharedLibraries/libclient.dylib" ///< Path to the client shared library for macOS
+#elif _WIN32
+#define SERVER_LIB_PATH "sharedLibraries/libserver.dll" ///< Path to the server shared library for Windows
+#define CLIENT_LIB_PATH "sharedLibraries/libclient.dll" ///< Path to the client shared library for Windows
+#endif
 
 /**
  * @class RunGame
