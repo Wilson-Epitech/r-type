@@ -26,7 +26,8 @@ void ecs::system::MusicSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::MusicSystem::loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos, SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects) {
+void ecs::system::MusicSystem::loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos,
+                                          SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects) {
 
     for (std::size_t i = 0; i < backgroundMusicInfos.size(); ++i) {
         if (!backgroundMusicInfos[i])

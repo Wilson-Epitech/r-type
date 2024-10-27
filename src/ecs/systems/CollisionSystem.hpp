@@ -25,7 +25,7 @@
 #include <arpa/inet.h>
 #endif
 
-#define BYTES_OFFSET 16 ///< offset in bytes for png files to start reading width and height for sprites
+#define BYTES_OFFSET 16   ///< offset in bytes for png files to start reading width and height for sprites
 #define LENGTH_IN_BYTES 4 ///< length in bytes for width and height for png files
 
 namespace ecs {
@@ -48,7 +48,6 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-
             /**
              * @brief Retrive the sprites sizes by reading the width and the height in the .png file.
              * @param spritesInfos Array of sprite informations components for entities.
@@ -62,7 +61,8 @@ namespace ecs {
              * @param index The index of the entity in the sparse arrays.
              * @return CustomRectangle The computed hitbox of the entity.
              */
-            ecs::CustomRectangle spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spritesInfos, std::size_t index);
+            ecs::CustomRectangle spriteHitbox(SparseArray<component::Position> &positions,
+                                              SparseArray<component::SpriteInfos> &spritesInfos, std::size_t index);
 
             /**
              * @brief Check if the two given entities in parameter are in collision or not.

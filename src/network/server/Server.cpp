@@ -78,7 +78,7 @@ void network::Server::startReceiving() {
                                std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
+void network::Server::handleReceive(const std::error_code &error, std::size_t) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
 
