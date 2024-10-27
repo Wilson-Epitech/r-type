@@ -78,7 +78,7 @@ void network::Server::deserializeMessage(const std::string message) {
     _dataHasBeenUsed = false;
 }
 
-void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
+void network::Server::handleReceive(const std::error_code &error, std::size_t) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
 
