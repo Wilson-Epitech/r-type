@@ -17,6 +17,16 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include <fstream>
+
+#if _WIN32
+#include <winsock.h>
+#else
+#include <arpa/inet.h>
+#endif
+
+#define BYTES_OFFSET 16 ///< offset in bytes for png files to start reading width and height for sprites
+#define LENGTH_IN_BYTES 4 ///< length in bytes for width and height for png files
 
 namespace ecs {
     namespace system {
@@ -38,6 +48,13 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
+
+            /**
+             * @brief Retrive the sprites sizes by reading the width and the height in the .png file.
+             * @param spritesInfos Array of sprite informations components for entities.
+             */
+            void retrieveSpritesSizes(SparseArray<component::SpriteInfos> &spritesInfos);
+
             /**
              * @brief Computes the hitbox of a given entity based on its position and sprite size.
              * @param positions Array of position components for entities.

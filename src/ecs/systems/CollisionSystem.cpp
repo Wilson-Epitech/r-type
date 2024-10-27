@@ -15,6 +15,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     ecs::CustomRectangle rec1 = ecs::CustomRectangle{};
     ecs::CustomRectangle rec2 = ecs::CustomRectangle{};
 
+    retrieveSpritesSizes(spritesInfos);
     for (std::size_t i = 0;
          i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size(); ++i) {
         if (!positions[i] || !spritesInfos[i] || !types[i] || !lives[i])
@@ -29,8 +30,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 (types[i]->entityType == ecs::EntityType::ENEMY && positions[i]->x < 0))
                 reg.killEntity(i);
         }
-        for (std::size_t j = i;
-             j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size(); ++j) {
+        for (std::size_t j = i; j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size(); ++j) {
             if (!positions[j] || !spritesInfos[j] || !types[j] || !lives[j])
                 continue;
             if (i == j || types[i]->entityType == types[j]->entityType || lives[j]->nbLives == 0)
@@ -50,8 +50,28 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     }
 }
 
+void ecs::system::CollisionSystem::retrieveSpritesSizes(SparseArray<component::SpriteInfos> &spritesInfos) {
+    unsigned int tmpWidth, tmpHeight = 0;
+
+    for (std::size_t i = 0; i < spritesInfos.size(); ++i) {
+        if (!spritesInfos[i])
+            continue;
+        if (spritesInfos[i]->spritePath.length() > 0 && spritesInfos[i]->spriteWidth == 0 &&
+            spritesInfos[i]->spriteHeight == 0) {
+            std::ifstream spritePath(spritesInfos[i]->spritePath);
+            spritePath.seekg(BYTES_OFFSET);
+            spritePath.read((char *)&tmpWidth, LENGTH_IN_BYTES);
+            spritePath.read((char *)&tmpHeight, LENGTH_IN_BYTES);
+            tmpWidth = ntohl(tmpWidth);
+            tmpHeight = ntohl(tmpHeight);
+            spritesInfos[i]->spriteWidth = (tmpWidth / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor;
+            spritesInfos[i]->spriteHeight = tmpHeight * spritesInfos[i]->scaleFactor;
+        }
+    }
+}
+
 ecs::CustomRectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spritesInfos, std::size_t index) {
-    return ecs::CustomRectangle{positions[index]->x, positions[index]->y, spritesInfos[index]->spriteWidth, spritesInfos[index]->spriteHeight};
+    return ecs::CustomRectangle{positions[index]->x, positions[index]->y, float(spritesInfos[index]->spriteWidth), float(spritesInfos[index]->spriteHeight)};
 }
 
 bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle rec1, ecs::CustomRectangle rec2) {
