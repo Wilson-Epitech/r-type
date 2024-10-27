@@ -49,6 +49,10 @@ namespace ecs {
 
           private:
 
+            /**
+             * @brief Retrive the sprites sizes by reading the width and the height in the .png file.
+             * @param spritesInfos Array of sprite informations components for entities.
+             */
             void retrieveSpritesSizes(SparseArray<component::SpriteInfos> &spritesInfos);
 
             /**
