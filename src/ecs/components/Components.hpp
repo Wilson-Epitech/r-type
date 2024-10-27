@@ -28,6 +28,7 @@
 #define BEIGE_COLOR (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
 #define GOLD_COLOR (ecs::CustomColor) { 255, 203, 0, 255 }   ///< Gold color
 #define PINK_COLOR (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
+#define WHITE_COLOR (ecs::CustomColor) { 245, 245, 245, 255 } ///< White color
 
 namespace ecs {
 
@@ -140,7 +141,7 @@ namespace ecs {
             std::size_t patternNb = 1;    ///< Number of patterns in the sprite
             std::size_t firstPattern = 0; ///< First pattern in the sprite
             float scaleFactor = 1.0;      ///< Scale factor for the sprite
-            CustomColor color = { 245, 245, 245, 255 };  ///< Color applied to the sprite, white by default
+            CustomColor color = WHITE_COLOR;  ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
 
             bool operator==(const SpriteInfos &other) const {

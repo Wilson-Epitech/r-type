@@ -32,6 +32,10 @@ namespace ecs {
         unsigned char g = 0; ///< green value
         unsigned char b = 0; ///< blue value
         unsigned char a = 0; ///< alpha value
+
+        bool operator==(const CustomColor &other) const {
+            return (r == other.r && g == other.g && b == other.b && a == other.a);
+        }
     };
 
     /**
