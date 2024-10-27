@@ -142,7 +142,7 @@ namespace ecs {
             std::size_t firstPattern = 0; ///< First pattern in the sprite
             float scaleFactor = 1.0;      ///< Scale factor for the sprite
             CustomColor color = WHITE_COLOR;  ///< Color applied to the sprite, white by default
-            float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
+            std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
