@@ -36,11 +36,10 @@ namespace network {
       public:
         /**
          * @brief Constructs a Server object, binds the socket, and begins receiving messages.
-         * @param host The IP address of the server.
          * @param port The port on which the server listens.
          * @param pool A thread pool to manage concurrent tasks.
          */
-        Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool);
+        Server(const std::size_t &port, asio::thread_pool &pool);
 
         /**
          * @brief Destructor that stops the server and joins the IO thread.
@@ -128,12 +127,6 @@ namespace network {
         std::unordered_map<std::size_t, bool> getClientStillHere();
 
         /**
-         * @brief Retrieves the map indicating whether each client's world has been set.
-         * @return A map of client IDs and their world initialization status.
-         */
-        std::unordered_map<std::size_t, bool> getAreClientsWorldSet();
-
-        /**
          * @brief get the map _corresOwnPlayerId.
          * @return unordered_map A map containing the list of all client once connected and their ID clients.
          */
@@ -155,7 +148,6 @@ namespace network {
         asio::thread_pool &_threadPool; ///< Thread pool for handling tasks.
 
         std::map<std::size_t, asio::ip::udp::endpoint> _connectedClients; ///< Map of connected clients and their endpoints.
-        std::unordered_map<std::size_t, bool> _areClientsWorldSet;        ///< Map indicating whether each client's world is initialized.
 
         std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> _lastAliveClient; ///< Heartbeat timestamps for clients.
         std::unordered_map<std::size_t, bool>
@@ -169,14 +161,13 @@ namespace network {
 
 /**
  * @brief Used to create a new server instance by loading a shared library from this class.
- * @param host The IP address of the server.
  * @param port The port on which the server listens.
  * @param pool A thread pool to manage concurrent tasks.
  * @return network::Server* Pointer to the newly created server instance
  */
 extern "C" {
-network::Server *entryPoint(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
-    return new network::Server(host, port, pool);
+network::Server *entryPoint(const std::size_t &port, asio::thread_pool &pool) {
+    return new network::Server(port, pool);
 }
 }
 

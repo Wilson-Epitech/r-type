@@ -11,34 +11,36 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
     SparseArray<component::SpriteInfos> &spritesInfos = reg.getComponents<component::SpriteInfos>();
-    Rectangle rec1 = Rectangle{};
-    Rectangle rec2 = Rectangle{};
+    ecs::CustomRectangle rec1 = ecs::CustomRectangle{};
+    ecs::CustomRectangle rec2 = ecs::CustomRectangle{};
 
-    fillSpriteSize(spritesInfos, spritesSizes);
+    retrieveSpritesSizes(spritesInfos);
     for (std::size_t i = 0;
-         i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size() && i < spritesSizes.size(); ++i) {
-        if (!positions[i] || !spritesInfos[i] || !types[i] || !lives[i] || !spritesSizes[i])
+         i < positions.size() && i < spritesInfos.size() && i < types.size() && i < lives.size(); ++i) {
+        if (!positions[i] || !spritesInfos[i] || !types[i] || !lives[i])
             continue;
         if (lives[i]->nbLives == 0)
             continue;
-        rec1 = spriteHitbox(positions, spritesSizes, i);
+        rec1 = spriteHitbox(positions, spritesInfos, i);
+        if (rec1.width == 0 || rec1.height == 0)
+            continue;
         if (types[i] && positions[i]) {
             if ((types[i]->entityType == ecs::EntityType::PLAYERSHOT && !Lib::isOnScreen({positions[i]->x, positions[i]->y})) ||
                 (types[i]->entityType == ecs::EntityType::ENEMY && positions[i]->x < 0))
                 reg.killEntity(i);
         }
-        for (std::size_t j = i;
-             j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size() && j < spritesSizes.size(); ++j) {
-            if (!positions[j] || !spritesInfos[j] || !types[j] || !lives[j] || !spritesSizes[j])
+        for (std::size_t j = i; j < positions.size() && j < spritesInfos.size() && j < types.size() && j < lives.size(); ++j) {
+            if (!positions[j] || !spritesInfos[j] || !types[j] || !lives[j])
                 continue;
             if (i == j || types[i]->entityType == types[j]->entityType || lives[j]->nbLives == 0)
                 continue;
-            rec2 = spriteHitbox(positions, spritesSizes, j);
+            rec2 = spriteHitbox(positions, spritesInfos, j);
+            if (rec2.width == 0 || rec2.height == 0)
+                continue;
             if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
                 positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
-                if (CheckCollisionRecs(rec1, rec2)) {
+                if (areEntitiesInCollision(rec1, rec2)) {
                     lives[i]->nbLives--;
                     lives[j]->nbLives--;
                     reg.addCollision(i, j);
@@ -48,29 +50,33 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::CollisionSystem::fillSpriteSize(SparseArray<component::SpriteInfos> &spritesInfos,
-                                                  SparseArray<component::SpriteSize> &spritesSizes) {
+void ecs::system::CollisionSystem::retrieveSpritesSizes(SparseArray<component::SpriteInfos> &spritesInfos) {
+    unsigned int tmpWidth, tmpHeight = 0;
 
-    Image tmpImage;
-
-    for (std::size_t i = 0; i < spritesInfos.size(); i++) {
+    for (std::size_t i = 0; i < spritesInfos.size(); ++i) {
         if (!spritesInfos[i])
             continue;
-        if (!spritesSizes[i] && spritesInfos[i]->spritePath.length() > 0) {
-            spritesSizes.insertAt(i, ecs::component::SpriteSize{});
-            if (!FileExists(spritesInfos[i]->spritePath.c_str()))
-                throw Error("Invalid sprite path");
-            tmpImage = LoadImage(spritesInfos[i]->spritePath.c_str());
-            spritesSizes[i]->spriteWidth = (float(tmpImage.width) / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor;
-            spritesSizes[i]->spriteHeight = float(tmpImage.height) * spritesInfos[i]->scaleFactor;
-            UnloadImage(tmpImage);
+        if (spritesInfos[i]->spritePath.length() > 0 && spritesInfos[i]->spriteWidth == 0 &&
+            spritesInfos[i]->spriteHeight == 0) {
+            std::ifstream spritePath(spritesInfos[i]->spritePath);
+            spritePath.seekg(BYTES_OFFSET);
+            spritePath.read((char *)&tmpWidth, LENGTH_IN_BYTES);
+            spritePath.read((char *)&tmpHeight, LENGTH_IN_BYTES);
+            tmpWidth = ntohl(tmpWidth);
+            tmpHeight = ntohl(tmpHeight);
+            spritesInfos[i]->spriteWidth = (tmpWidth / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor;
+            spritesInfos[i]->spriteHeight = tmpHeight * spritesInfos[i]->scaleFactor;
         }
     }
 }
 
-Rectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions,
-                                                     SparseArray<component::SpriteSize> &spritesSizes, std::size_t index) {
-    return Rectangle{positions[index]->x, positions[index]->y, spritesSizes[index]->spriteWidth, spritesSizes[index]->spriteHeight};
+ecs::CustomRectangle ecs::system::CollisionSystem::spriteHitbox(SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spritesInfos, std::size_t index) {
+    return ecs::CustomRectangle{positions[index]->x, positions[index]->y, float(spritesInfos[index]->spriteWidth), float(spritesInfos[index]->spriteHeight)};
+}
+
+bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle rec1, ecs::CustomRectangle rec2) {
+    return (rec1.x <= rec2.x + rec2.width && rec1.x + rec1.width >= rec2.x &&
+    rec1.y <= rec2.y + rec2.height && rec1.y + rec1.height >= rec2.y);
 }
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {

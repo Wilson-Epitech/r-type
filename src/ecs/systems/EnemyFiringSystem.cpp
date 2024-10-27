@@ -50,21 +50,18 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
-    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
+    SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t enemyShootIndex = getEnemyShootIndex(reg);
 
-    if (enemyShootIndex == 0 || !spritesSizes[enemyIndex])
+    if (enemyShootIndex == 0 || spriteInfos[enemyIndex]->spriteWidth == 0 || spriteInfos[enemyIndex]->spriteHeight == 0 ||
+        spriteInfos[enemyShootIndex]->spriteWidth == 0 || spriteInfos[enemyShootIndex]->spriteHeight == 0)
         return;
-    Image tmpShotImage = LoadImage(spriteInfos[enemyShootIndex]->spritePath.c_str());
-    float offset = float(tmpShotImage.width) / spriteInfos[enemyShootIndex]->patternNb;
-    Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
+    ecs::CustomRectangle shotSpriteRect = {0, 0, float(spriteInfos[enemyShootIndex]->spriteWidth), float(spriteInfos[enemyShootIndex]->spriteHeight)};
+    float shotX = positions[enemyIndex]->x - (spriteInfos[enemyIndex]->spriteWidth + (shotSpriteRect.width / 2));
+    float shotY = positions[enemyIndex]->y + ((spriteInfos[enemyIndex]->spriteHeight/ 2 - shotSpriteRect.height / 2));
     entity_t entity = reg.spawnEntity();
-    float shotX = positions[enemyIndex]->x - (float((spritesSizes[enemyIndex]->spriteWidth)) + ((shotSpriteRect.width) / 2));
-    float shotY = positions[enemyIndex]->y + (float((spritesSizes[enemyIndex]->spriteHeight) / 2) - ((shotSpriteRect.height) / 2));
-    UnloadImage(tmpShotImage);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
@@ -75,19 +72,19 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
 
-    if (!soundEffect[enemyShootIndex])
+    if (!soundEffectInfos[enemyShootIndex])
         return;
-    if (soundEffect[enemyShootIndex]->soundPath.length() > 0)
-        soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[enemyShootIndex]->soundPath, false, true});
+    if (soundEffectInfos[enemyShootIndex]->soundPath.length() > 0)
+        soundEffectInfos.insertAt(entity, ecs::component::SoundEffectInfos{soundEffectInfos[enemyShootIndex]->soundPath, false, true});
 }
 
 std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
-    for (std::size_t i = 0; i < spriteInfos.size() && i < enemyShootVelocities.size() && i < types.size(); ++i) {
-        if (spriteInfos[i] && enemyShootVelocities[i] && types[i]) {
+    for (std::size_t i = 0; i < spriteInfos.size() && i < velocities.size() && i < types.size(); ++i) {
+        if (spriteInfos[i] && velocities[i] && types[i]) {
             if (spriteInfos[i]->spritePath.length() > 0 && types[i]->entityType == ecs::EntityType::ENEMYSHOT_TEMPLATE) {
                 return i;
             }

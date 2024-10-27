@@ -9,8 +9,8 @@
 #include <functional>
 #include <iostream>
 
-network::Server::Server(const std::string &host, const std::size_t &port, asio::thread_pool &pool)
-    : network::ANetwork(), _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0),
+network::Server::Server(const std::size_t &port, asio::thread_pool &pool)
+    : network::ANetwork(), _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0),
       _threadPool(pool) {
     startReceiving();
     _ioThread = std::thread([this]() { _ioContext.run(); });
@@ -27,10 +27,6 @@ void network::Server::sendMessage(const std::string &message, uint8_t messageTyp
 
 std::size_t network::Server::getLastConnectedClientId() {
     return _idClient;
-}
-
-std::unordered_map<std::size_t, bool> network::Server::getAreClientsWorldSet() {
-    return _areClientsWorldSet;
 }
 
 std::list<DataToSend> network::Server::getData() {
@@ -123,15 +119,11 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         }
 
         std::string newClientConnectedMessage = "New client connected.";
-        std::string worldSetMessage = "World set";
         std::string aliveMessage = "Alive: ";
 
-        if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient] = true;
-        } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
+        if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
-            std::cerr << "Received heartbeat from client " << clientId << std::endl;
             if (!_corresOwnPlayerId[clientId])
                 _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
@@ -234,7 +226,6 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
     _isClientStillHere[_idClient] = true;
-    _areClientsWorldSet[_idClient] = false;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
@@ -256,7 +247,7 @@ std::size_t network::Server::manageConnection() {
             disconnectedPlayerEntity = it->first;
             auto corresponenceFound = coressClient.find(it->first);
             if (corresponenceFound == coressClient.end())
-                throw Error("Correspondance no set yet");
+                throw Error("Correspondence no set yet");
             it = lastSeenClient.erase(it);
             std::size_t _ownId = corresponenceFound->second;
             clientStillHere[_ownId] = false;
@@ -287,7 +278,6 @@ void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> 
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = getLastConnectedClientId();
-    std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
@@ -316,7 +306,7 @@ void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> 
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
+        if (!newEntitiesData.empty()) {
             std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
             sendToAClient(clientId, newEntititiesSerialized, 3);
         }

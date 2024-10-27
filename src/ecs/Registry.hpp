@@ -24,6 +24,7 @@
 #include <map>
 #include <typeindex>
 #include <unordered_map>
+#include <algorithm>
 
 using entity_t = std::size_t;
 
@@ -52,9 +53,9 @@ namespace ecs {
                 entity = _deadEntities.front();
                 _deadEntities.pop_front();
             } else {
-                entity = _indexToEntities.size() + 1;
+                entity = _aliveEntities.size() + 1;
             }
-            _indexToEntities[entity] = entity;
+            _aliveEntities.push_back(entity);
             _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
@@ -69,11 +70,11 @@ namespace ecs {
             for (auto &it : _eraseEntity) {
                 it.second(*this, e);
             }
-            for (auto &it : _indexToEntities) {
-                if (it.second == e) {
-                    _deadEntities.push_back(std::size_t(it.second));
-                    _actualTurnDeadEntities.push_back(std::size_t(it.second));
-                    _indexToEntities.erase(it.first);
+            for (std::size_t i = 0; i < _aliveEntities.size(); i++) {
+                if (_aliveEntities[i] == e) {
+                    _deadEntities.push_back(_aliveEntities[i]);
+                    _actualTurnDeadEntities.push_back(_aliveEntities[i]);
+                    _aliveEntities.erase(_aliveEntities.begin() + i);
                     break;
                 }
             }
@@ -94,9 +95,9 @@ namespace ecs {
 
         /**
          * @brief Returns the list of new entities created in the current turn.
-         * @return std::list<std::size_t> A list of new entity identifiers created in the current turn.
+         * @return std::list<entity_t> A list of new entity identifiers created in the current turn.
          */
-        std::list<std::size_t> getActualTurnNewEntities() {
+        std::list<entity_t> getActualTurnNewEntities() {
             return _actualTurnActualTurnNewEntities;
         }
 
@@ -109,9 +110,9 @@ namespace ecs {
 
         /**
          * @brief Returns the list of entities deleted in the current turn.
-         * @return std::list<std::size_t> A list of dead entity identifiers from the current turn.
+         * @return std::list<entity_t> A list of dead entity identifiers from the current turn.
          */
-        std::list<std::size_t> getActualTurnDeadEntities() {
+        std::list<entity_t> getActualTurnDeadEntities() {
             return _actualTurnDeadEntities;
         }
 
@@ -123,11 +124,11 @@ namespace ecs {
          * @throws Error If no entity is found at the given index.
          */
         entity_t entityFromIndex(std::size_t idx) {
-            auto it = _indexToEntities.find(idx);
+            auto it = std::find(_aliveEntities.begin(), _aliveEntities.end(), idx);
 
-            if (it == _indexToEntities.end())
+            if (it == _aliveEntities.end())
                 throw Error("No entity found at this index");
-            return it->second;
+            return *it;
         };
 
         /**
@@ -137,9 +138,10 @@ namespace ecs {
          * @return false If the entity does not exist.
          */
         bool entityExist(const entity_t &ent) {
-            for (auto &it : _indexToEntities) {
-                if (it.second == ent)
+            for (auto &it : _aliveEntities) {
+                if (it == ent) {
                     return true;
+                }
             }
             return false;
         }
@@ -296,10 +298,10 @@ namespace ecs {
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
         std::vector<std::function<void(Registry &)>> _systems;           ///< A list of systems to run each frame.
-        std::list<std::size_t> _deadEntities;                            ///< A list of dead entities to be recycled.
-        std::list<std::size_t> _actualTurnDeadEntities;                  ///< A list of entities that died this turn.
-        std::list<std::size_t> _actualTurnActualTurnNewEntities;         ///< A list of new entities created this turn.
-        std::map<std::size_t, entity_t> _indexToEntities;                ///< A map of entity indices to entity IDs.
+        std::list<entity_t> _deadEntities;                            ///< A list of dead entities to be recycled.
+        std::list<entity_t> _actualTurnDeadEntities;                  ///< A list of entities that died this turn.
+        std::list<entity_t> _actualTurnActualTurnNewEntities;         ///< A list of new entities created this turn.
+        std::vector<entity_t> _aliveEntities;                         ///< A vector of alive entities.
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
             _eraseEntity;                                        ///< Functions to remove components when an entity is deleted.

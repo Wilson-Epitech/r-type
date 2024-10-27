@@ -44,7 +44,8 @@ enum EntityType {
    ENEMY_TEMPLATE,
    ENEMYSHOT,
    ENEMYSHOT_TEMPLATE,
-   BACKGROUND
+   BACKGROUND,
+   TEXT
 };
 ```
 The seconde one is to store the name of our components
@@ -58,7 +59,9 @@ enum ComponentName {
    SHOOTING,
    SPRITEINFOS,
    SOUNDEFFECT,
-   MUSIC
+   MUSIC,
+   SCORE,
+   TEXTINFOS
 };
 ```
 
@@ -129,26 +132,12 @@ enum ComponentName {
       std::size_t patternNb = 1;
       std::size_t firstPattern = 0;
       float scaleFactor = 1.0;
-      Color color = RAYWHITE;
+      CustomColor color = { 245, 245, 245, 255 };
+      std::size_t spriteWidth = 0, spriteHeight = 0;
 
       bool operator==(const SpriteInfos &other) const {
           return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
-                  color.b == other.color.b);
-      }
-   };
-   ```
-6. **SoundEffect**
-   - Store a sound and and its characteristics
-   ```c++
-   struct SoundEffect {
-      std::string soundPath;
-      bool isLoaded = false;
-      bool hasToBePlayed = false;
-      Sound sound = Sound{};
-
-      bool operator==(const SoundEffect &other) const {
-         return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
+                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
       }
    };
    ```
@@ -161,14 +150,30 @@ enum ComponentName {
       Rectangle spriteRect = Rectangle{};
    };
    ```
-8. **SpriteSize**
-   - Store the sprite's size
+8. **SoundEffectInfos**
+   - Store characteristics about a sound
    ```c++
-   struct SpriteSize {
-      float spriteWidth = 0, spriteHeight = 0;
+   struct SoundEffectInfos {
+      std::string soundPath;
+      bool isLoaded = false;
+      bool hasToBePlayed = false;
+
+      bool operator==(const SoundEffectInfos &other) const {
+         return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
+      }
+   };
+
+   ```
+   ```
+9. **SoundEffectObject**
+   - Store a sound to be played
+   ```c++
+   struct SoundEffectInfos {
+      Sound sound = Sound{};
    };
    ```
-9. **EnemySpawn**
+   ```
+10. **EnemySpawn**
    - Handles the logic for spawning enemies.
    ```c++
    struct EnemySpawn {
@@ -180,30 +185,73 @@ enum ComponentName {
       int minSpawnHeight = 0;
    };
    ```
-10. **ShootingRate**
+11. **ShootingRate**
    - Defines the shooting rate of the entity (work with Shooting)
    ```c++
    struct ShootingRate {
       float shootRate = 0;
    };
    ```
-11. **BackgroundMusic**
-   - Define the background music (or game music), store the volume and if the music has to be played
+12. **BackgroundMusicInfos**
+   - Store informations about the background music of an entity, such as the music path, the volume and if the music has to be played
    ```c++
-   struct BackgroundMusic {
+   struct BackgroundMusicInfos {
       std::string musicPath;
       float volume;
       bool hasToBePlayed = false;
       bool isLoaded = false;
       bool isCurrentlyPlayed = false;
-      Music music = Music{};
 
-      bool operator==(const BackgroundMusic &other) const {
+      bool operator==(const BackgroundMusicInfos &other) const {
          return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                   hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
       }
    };
    ```
+13. **BackgroundMusicObject**
+   - Store the music object that has to be played
+   ```c++
+   struct BackgroundMusicObject {
+      Music music = Music{};
+   };
+   ```
+14. **Score**
+- Store the score and the incrementation score value of an entity
+```c++
+   std::size_t scoreIncrementation = 0;
+   int score = 0;
+
+   bool operator==(const Score &other) const {
+       return (score == other.score && scoreIncrementation == other.scoreIncrementation);
+   }
+```
+15.   **TextInfos**
+   - Store informations about the text of an entity
+   ```c++
+        struct TextInfos {
+            std::string textToDisplay;
+            int x;
+            int y;
+            int size;
+            std::string fontPath;
+            CustomColor color = { 245, 245, 245, 255 };
+            bool fontIsLoaded = false;
+            bool hasChanged = false;
+
+            bool operator==(const TextInfos &other) const {
+                return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
+                        fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b);
+            }
+        };
+   ```
+16.   **TextFont**
+   - Store the text font linked to a text of an entity
+   ```c++
+      struct TextFont {
+            Font font = Font{};
+      };
+   ```
+
 <div id='AddComponents'/>
 
 ## How to add a new component
@@ -225,7 +273,7 @@ bool operator==(const EntityData &other) const {
         return (
          areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
          areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
-         areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
+         areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
     }
     return false;
 }
@@ -233,12 +281,12 @@ bool operator==(const EntityData &other) const {
 You also have to add the prototype of `<<` and `>>` at the end of the file.<br>
 Now you have to go in Components.cpp and add your overload operator, one for the serialization and one for deserialization.
 ```c++
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 ```
 ```c++
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 ```
