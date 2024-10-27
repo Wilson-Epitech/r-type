@@ -51,7 +51,8 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
-    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size(); i++) {
+    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size();
+         i++) {
         fillEntityComponentData<ecs::component::Position>(reg, i, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, i, data, ecs::ComponentName::VELOCITY);
         fillEntityComponentData<ecs::component::Type>(reg, i, data, ecs::ComponentName::TYPE);

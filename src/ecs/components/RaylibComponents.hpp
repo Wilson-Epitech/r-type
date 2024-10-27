@@ -35,8 +35,7 @@ namespace ecs {
          * @brief Component that store the sound effect object to play related to an entity.
          */
         struct SoundEffectObject {
-            Sound sound = Sound{};      ///< Sound object
-
+            Sound sound = Sound{}; ///< Sound object
         };
 
         /**
@@ -44,13 +43,13 @@ namespace ecs {
          * @brief Component that stores the background music object of an entity.
          */
         struct BackgroundMusicObject {
-            Music music = Music{};          ///< Music object
+            Music music = Music{}; ///< Music object
         };
 
         /**
          * @struct TextFont
          * @brief Component for the text font linked to a text of an entity
-        */
+         */
         struct TextFont {
             Font font = Font{}; ///< Font of the text
         };

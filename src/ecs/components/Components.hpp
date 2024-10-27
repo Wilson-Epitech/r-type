@@ -23,12 +23,18 @@
 #include <string>
 #include <vector>
 
-#define ORANGE_COLOR (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
-#define CYAN_COLOR (ecs::CustomColor) { 120, 200, 225, 255 }  ///< Cyan color
-#define BEIGE_COLOR (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
-#define GOLD_COLOR (ecs::CustomColor) { 255, 203, 0, 255 }   ///< Gold color
-#define PINK_COLOR (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
-#define WHITE_COLOR (ecs::CustomColor) { 245, 245, 245, 255 } ///< White color
+#define ORANGE_COLOR                                                                                                                       \
+    (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
+#define CYAN_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 120, 200, 225, 255 } ///< Cyan color
+#define BEIGE_COLOR                                                                                                                        \
+    (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
+#define GOLD_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 255, 203, 0, 255 } ///< Gold color
+#define PINK_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
+#define WHITE_COLOR                                                                                                                        \
+    (ecs::CustomColor) { 245, 245, 245, 255 } ///< White color
 
 namespace ecs {
 
@@ -137,17 +143,18 @@ namespace ecs {
          * @brief Component for sprite information of an entity.
          */
         struct SpriteInfos {
-            std::string spritePath;       ///< Path to the sprite file
-            std::size_t patternNb = 1;    ///< Number of patterns in the sprite
-            std::size_t firstPattern = 0; ///< First pattern in the sprite
-            float scaleFactor = 1.0;      ///< Scale factor for the sprite
-            CustomColor color = WHITE_COLOR;  ///< Color applied to the sprite, white by default
+            std::string spritePath;                        ///< Path to the sprite file
+            std::size_t patternNb = 1;                     ///< Number of patterns in the sprite
+            std::size_t firstPattern = 0;                  ///< First pattern in the sprite
+            float scaleFactor = 1.0;                       ///< Scale factor for the sprite
+            CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
                         scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
-                        color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
+                        color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth &&
+                        spriteHeight == other.spriteHeight);
             }
         };
 
@@ -170,12 +177,12 @@ namespace ecs {
          * @brief Component representing the enemy spawn information.
          */
         struct EnemySpawn {
-            float timeBeforeSpawn;      ///< Time before the next spawn
-            int waveSize;               ///< Size of the enemy wave to spawn
+            float timeBeforeSpawn;                       ///< Time before the next spawn
+            int waveSize;                                ///< Size of the enemy wave to spawn
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
-            int minSpawnWidth = 0;     ///< Minimum spawn width
+            int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
-            int minSpawnHeight = 0;    ///< Minimum spawn height
+            int minSpawnHeight = 0;                      ///< Minimum spawn height
         };
 
         /**
@@ -214,10 +221,10 @@ namespace ecs {
         /**
          * @struct Score
          * @brief Component for the score of an entity
-        */
+         */
         struct Score {
             std::size_t scoreIncrementation = 0; ///< Incrementation value for score
-            int score = 0; /// < Score of the entity
+            int score = 0;                       /// < Score of the entity
 
             bool operator==(const Score &other) const {
                 return (score == other.score && scoreIncrementation == other.scoreIncrementation);
@@ -227,16 +234,16 @@ namespace ecs {
         /**
          * @struct TextInfos
          * @brief Component for text informations of an entity
-        */
+         */
         struct TextInfos {
-            std::string textToDisplay; ///< Text to display
-            int x; ///< X coordinates of the text
-            int y; ///< Y coordinates of the text
-            int size; ///< Size of the text
-            std::string fontPath; ///< Path of the font used to draw the text
-            CustomColor color = { 245, 245, 245, 255 }; ///< Color of the text, white by default
-            bool hasChanged = false; ///< Indicates if the textToDisplay string has changed
-            bool fontIsLoaded = false; ///< Indicates if font has been loaded
+            std::string textToDisplay;                ///< Text to display
+            int x;                                    ///< X coordinates of the text
+            int y;                                    ///< Y coordinates of the text
+            int size;                                 ///< Size of the text
+            std::string fontPath;                     ///< Path of the font used to draw the text
+            CustomColor color = {245, 245, 245, 255}; ///< Color of the text, white by default
+            bool hasChanged = false;                  ///< Indicates if the textToDisplay string has changed
+            bool fontIsLoaded = false;                ///< Indicates if font has been loaded
 
             bool operator==(const TextInfos &other) const {
                 return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
@@ -259,14 +266,15 @@ struct EntityData {
 
     bool operator==(const EntityData &other) const {
         if (entityID == other.entityID && name == other.name) {
-            return (areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
-                    areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
-                    areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
-                    areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
-                    areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
-                    areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
-                    areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                    areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
+            return (
+                areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
+                areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
+                areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
+                areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
+                areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
+                areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
+                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
         }
         return false;
     }

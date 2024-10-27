@@ -19,8 +19,8 @@ namespace ecs {
      * @brief Custom Structure to handle 2D vectors.
      */
     struct CustomVector2D {
-        float x = 0;      ///< x value
-        float y = 0;      ///< y value
+        float x = 0; ///< x value
+        float y = 0; ///< y value
     };
 
     /**

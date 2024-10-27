@@ -13,7 +13,7 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::map<std::size_t, entity_t> player = reg.getPlayers();
     ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
-        (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
+                                       (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
 
     if (player.size() != 1)
         return;
@@ -24,8 +24,10 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
             if (types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity)
                 continue;
             if (textInfos[i]->textToDisplay.length() > 0) {
-                DrawTextEx(textFonts[i]->font, textInfos[i]->textToDisplay.c_str(), {(float)textInfos[i]->x / screenRatio.x, (float)textInfos[i]->y / screenRatio.y},
-                           textInfos[i]->size / screenRatio.x, LETTER_SPACING, {textInfos[i]->color.r, textInfos[i]->color.g, textInfos[i]->color.b, textInfos[i]->color.a});
+                DrawTextEx(textFonts[i]->font, textInfos[i]->textToDisplay.c_str(),
+                           {(float)textInfos[i]->x / screenRatio.x, (float)textInfos[i]->y / screenRatio.y},
+                           textInfos[i]->size / screenRatio.x, LETTER_SPACING,
+                           {textInfos[i]->color.r, textInfos[i]->color.g, textInfos[i]->color.b, textInfos[i]->color.a});
             }
         }
     }

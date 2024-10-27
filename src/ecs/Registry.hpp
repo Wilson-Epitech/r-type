@@ -18,13 +18,13 @@
 
 #include "Container.hpp"
 #include "Error.hpp"
+#include <algorithm>
 #include <any>
 #include <functional>
 #include <list>
 #include <map>
 #include <typeindex>
 #include <unordered_map>
-#include <algorithm>
 
 using entity_t = std::size_t;
 
@@ -84,9 +84,7 @@ namespace ecs {
                     break;
                 }
             }
-            auto it = std::find_if(_playersColors.begin(), _playersColors.end(),[e](const auto& pair) {
-                return (pair.first == e);
-            });
+            auto it = std::find_if(_playersColors.begin(), _playersColors.end(), [e](const auto &pair) { return (pair.first == e); });
             if (it != _playersColors.end()) {
                 _playersColors.erase(it);
             }
@@ -293,12 +291,12 @@ namespace ecs {
 
         /**
          * @brief Retrieves the map of all collisions between entities.
-         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding entities they collided with.
+         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding
+         * entities they collided with.
          */
         std::unordered_map<entity_t, entity_t> getCollisionMap(void) {
             return _collisionEntity;
         }
-
 
         /**
          * @brief Add a player/spaceship color link in the playerColors vector.
@@ -311,7 +309,8 @@ namespace ecs {
 
         /**
          * @brief Retrieves the map of all players' colors
-         * @return std::vector<std::pair<entity_t, ecs::CustomColor>> A vector containing pairs linking the entity ID of players with their respectives spaceships color.
+         * @return std::vector<std::pair<entity_t, ecs::CustomColor>> A vector containing pairs linking the entity ID of players with their
+         * respectives spaceships color.
          */
         std::vector<std::pair<entity_t, ecs::CustomColor>> getPlayersColors(void) {
             return _playersColors;
@@ -321,15 +320,16 @@ namespace ecs {
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
         std::vector<std::function<void(Registry &)>> _systems;           ///< A list of systems to run each frame.
-        std::list<entity_t> _deadEntities;                            ///< A list of dead entities to be recycled.
-        std::list<entity_t> _actualTurnDeadEntities;                  ///< A list of entities that died this turn.
-        std::list<entity_t> _actualTurnActualTurnNewEntities;         ///< A list of new entities created this turn.
-        std::vector<entity_t> _aliveEntities;                         ///< A vector of alive entities.
+        std::list<entity_t> _deadEntities;                               ///< A list of dead entities to be recycled.
+        std::list<entity_t> _actualTurnDeadEntities;                     ///< A list of entities that died this turn.
+        std::list<entity_t> _actualTurnActualTurnNewEntities;            ///< A list of new entities created this turn.
+        std::vector<entity_t> _aliveEntities;                            ///< A vector of alive entities.
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
-            _eraseEntity; ///< Functions to remove components when an entity is deleted.
+            _eraseEntity;                                        ///< Functions to remove components when an entity is deleted.
         std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
-        std::vector<std::pair<entity_t, ecs::CustomColor>> _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
+        std::vector<std::pair<entity_t, ecs::CustomColor>>
+            _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
     };
 }
 

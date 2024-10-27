@@ -74,10 +74,9 @@ void ecs::system::PlayerSpawnSystem::setPlayerColor(Registry &reg, const entity_
     std::vector<ecs::CustomColor> availableSpaceshipColors = {CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR};
     std::vector<std::pair<entity_t, ecs::CustomColor>> playersColors = reg.getPlayersColors();
 
-    for (auto availableSpaceshipColor: availableSpaceshipColors) {
-        auto it = std::find_if(playersColors.begin(), playersColors.end(),[availableSpaceshipColor](const auto& pair) {
-            return ((pair.second == availableSpaceshipColor));
-        });
+    for (auto availableSpaceshipColor : availableSpaceshipColors) {
+        auto it = std::find_if(playersColors.begin(), playersColors.end(),
+                               [availableSpaceshipColor](const auto &pair) { return ((pair.second == availableSpaceshipColor)); });
         if (it == playersColors.end()) {
             spriteInfos[entity]->color = availableSpaceshipColor;
             reg.addPlayerColor(entity, availableSpaceshipColor);
