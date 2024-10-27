@@ -81,7 +81,7 @@ void ecs::system::PlayerSpawnSystem::setPlayerColor(Registry &reg, const entity_
         if (it == playersColors.end()) {
             spriteInfos[entity]->color = availableSpaceshipColor;
             reg.addPlayerColor(entity, availableSpaceshipColor);
-            return;
+            break;
         }
     }
 }
