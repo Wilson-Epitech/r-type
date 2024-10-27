@@ -28,6 +28,9 @@
 
 using entity_t = std::size_t;
 
+#define PLAYER_STARTING_X 100 ///< X Coordinate for players' position
+#define PLAYER_STARTING_Y 200 ///< Y Coordinate for the first player position
+
 namespace ecs {
 
     /**
@@ -40,6 +43,14 @@ namespace ecs {
      */
     class Registry {
       public:
+        /**
+         * @brief Constructs a `Registry` class instance.
+         * It sets the spaceships available colors and the spaceships colors to positions correspondence.
+         */
+        Registry() : _availableSpaceshipColors({CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR}) {
+            initSpaceshipColorPositionCorrespondence();
+        }
+
         /**
          * @brief Creates a new entity and returns its identifier.
          * This method spawns a new entity, either by reusing a previously deleted entity or creating
@@ -294,27 +305,58 @@ namespace ecs {
          * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding
          * entities they collided with.
          */
-        std::unordered_map<entity_t, entity_t> getCollisionMap(void) {
+        std::unordered_map<entity_t, entity_t> getCollisionMap() {
             return _collisionEntity;
         }
 
         /**
          * @brief Add a player/spaceship color link in the playerColors vector.
-         * @param e the player entity ID
-         * @param color the spaceship color associated with the player entity
+         * @param e the player entity ID.
+         * @param color the spaceship color associated with the player entity.
          */
         void addPlayerColor(const entity_t &e, const ecs::CustomColor &color) {
             _playersColors.push_back({e, color});
         };
 
         /**
-         * @brief Retrieves the map of all players' colors
+         * @brief Retrieves the map of all players' colors.
          * @return std::vector<std::pair<entity_t, ecs::CustomColor>> A vector containing pairs linking the entity ID of players with their
          * respectives spaceships color.
          */
-        std::vector<std::pair<entity_t, ecs::CustomColor>> getPlayersColors(void) {
+        std::vector<std::pair<entity_t, ecs::CustomColor>> getPlayersColors() {
             return _playersColors;
         };
+
+        /**
+         * @brief Retrieves the vector containing the available spaceships' colors.
+         * @return std::vector<ecs::CustomColor> A vector containing all 4 available spaceships colors.
+         */
+        std::vector<ecs::CustomColor> getAvailableSpaceshipColors() {
+            return _availableSpaceshipColors;
+        };
+
+        /**
+         * @brief Retrieves the vector containing the correspondence between the spaceship color and the position the associated spaceship
+         * should be at start.
+         * @return std::vector<std::pair<ecs::CustomColor, ecs::component::Position>> A vector associating  spaceships' colors to the
+         * position they should be at level start.
+         */
+        std::vector<std::pair<ecs::CustomColor, ecs::component::Position>> getSpaceshipColorPositionCorrespondence() {
+            return _spaceshipColorPositionCorrespondence;
+        };
+
+        /**
+         * @brief Initializes the spaceships colors to positions correspondence based on the available spaceships colors map.
+         */
+        void initSpaceshipColorPositionCorrespondence() {
+            std::size_t availableColorCount = 0;
+
+            for (auto availableSpaceshipColor : _availableSpaceshipColors) {
+                availableColorCount++;
+                _spaceshipColorPositionCorrespondence.push_back(
+                    {availableSpaceshipColor, ecs::component::Position{PLAYER_STARTING_X, float(PLAYER_STARTING_Y * availableColorCount)}});
+            }
+        }
 
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
@@ -330,6 +372,10 @@ namespace ecs {
         std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
         std::vector<std::pair<entity_t, ecs::CustomColor>>
             _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
+        const std::vector<ecs::CustomColor> _availableSpaceshipColors; ///< A vector containing all 4 available spaceships colors
+        std::vector<std::pair<ecs::CustomColor, ecs::component::Position>>
+            _spaceshipColorPositionCorrespondence; ///< A vector associating the spaceship color to the position the corresponding spaceship
+                                                   ///< should be at level start.
     };
 }
 
