@@ -65,8 +65,8 @@ namespace ecs {
              * @brief Sets the color for a player entity.
              * This method assigns a color to the player based on the spaceships' colors availability,
              * ensuring each player has a distinct color.
-             * @param entity The entity identifier for the player.
              * @param reg The ECS registry containing entities and components.
+             * @param entity The entity identifier for the player.
              */
             void setPlayerColor(Registry &reg, const entity_t &entity);
         };
