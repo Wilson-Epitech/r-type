@@ -32,15 +32,15 @@
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"
 /** @brief Defines the name of the player shot entity */
-#define PLAYER_SHOT "player_shot"
+#define PLAYER_SHOT_NAME "player_shot"
 /** @brief Defines the name of the background entity */
 #define BACKGROUND_NAME "background"
 /** @brief Defines the name of the enemy spawn entity */
 #define SPAWN_ENEMY_NAME "enemy"
 /** @brief Defines the name of the enemy shot entity */
-#define ENEMY_SHOT "enemy_shot"
+#define ENEMY_SHOT_NAME "enemy_shot"
 /** @brief Defines the name of the boss spawn entity */
-#define SPAWN_BOSS_NAME "boss"
+#define SPAWN_STRONGER_ENEMY_NAME "boss"
 /** @brief Defines the name of the background music entity */
 #define MUSIC_NAME "music"
 /** @brief Defines the name of the team score entity */
@@ -57,20 +57,89 @@
 /** @brief Minimum spawn width for enemies */
 #define MIN_SPAWN_WIDTH 1920
 /** @brief Time before enemies start spawning */
-#define TIME_BEFORE_SPAWN_ENEMY 10
-/** @brief The size of each wave of enemies */
-#define ENEMY_WAVE_SIZE 8
+
 /** @brief The horizontal velocity of enemies */
 #define ENEMY_VX -1
 /** @brief The vertical velocity of enemies */
 #define ENEMY_VY 0.0
 
+// documenter les defines
+// get avec un flag
+
+#define DIFFICULTY_LEVEL 1
+
+#if DIFFICULTY_LEVEL == 1
+#define TIME_BEFORE_SPAWN_ENEMY 15
+/** @brief The size of each wave of enemies */
+#define ENEMY_WAVE_SIZE 4
+
+#define ENEMY_SHOOTING_RATE 6
+
+#define ENEMY_NB_LIVES 1
+
 /** @brief The number of bosses spawned in each wave */
-#define BOSS_WAVE_SIZE 1
+#define STRONGER_ENEMY_WAVE_SIZE 1
+
+#define STRONGER_ENEMY_SHOOTING_RATE 10
+
+#define STRONGER_ENEMY_NB_LIVES 5
+
 /** @brief Time before bosses start spawning */
-#define TIME_BEFORE_SPAWN_BOSS 15
+#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 20
+#endif
+
+#if DIFFICULTY_LEVEL == 2
+#define TIME_BEFORE_SPAWN_ENEMY 10
+/** @brief The size of each wave of enemies */
+#define ENEMY_WAVE_SIZE 8
+
+#define ENEMY_SHOOTING_RATE 3
+
+#define ENEMY_NB_LIVES 1
+
+/** @brief The number of bosses spawned in each wave */
+#define STRONGER_ENEMY_WAVE_SIZE 1
+
+#define STRONGER_ENEMY_SHOOTING_RATE 6
+
+#define STRONGER_ENEMY_NB_LIVES 10
+
+/** @brief Time before bosses start spawning */
+#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 15
+#endif
+
+#if DIFFICULTY_LEVEL == 3
+#define TIME_BEFORE_SPAWN_ENEMY 8
+/** @brief The size of each wave of enemies */
+#define ENEMY_WAVE_SIZE 10
+
+#define ENEMY_SHOOTING_RATE 3
+#define ENEMY_NB_LIVES 1
+
+/** @brief The number of bosses spawned in each wave */
+#define STRONGER_ENEMY_WAVE_SIZE 2
+
+#define STRONGER_ENEMY_SHOOTING_RATE 5
+
+#define STRONGER_ENEMY_NB_LIVES 10
+
+/** @brief Time before bosses start spawning */
+#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10
+#endif
+
+#include <iostream>
 
 namespace game {
+
+    /**
+     *
+     */
+    enum DifficultyMode {
+      NO_MODE,
+      EASY,
+      MEDIUM,
+      HARD
+    };
 
     /**
      * @class RtypeGameServer
@@ -83,9 +152,24 @@ namespace game {
         /**
          * @brief Constructs the RtypeGameServer and initializes the game.
          * @param gameName The name of the game, used for server-side management.
+         * ///
+         *
          */
-        RtypeGameServer(const std::string gameName = "R-Type");
+        RtypeGameServer(const std::string gameName = "R-Type", const game::DifficultyMode mode = DifficultyMode::MEDIUM);
         ~RtypeGameServer() = default;
+
+        /**
+         *
+         */
+        void setGameDifficulty(const std::string &difficultyMode) {
+          auto it = _tkt.find(difficultyMode);
+          if (it == _tkt.end()) {
+            std::cout << "enorme" << std::endl;
+              throw Error("Invalid difficulty mode");
+          }
+          _mode = it->second;
+        }
+
 
       private:
         /**
@@ -123,6 +207,18 @@ namespace game {
          * spawning enemies, shooting, and other game mechanics.
          */
         void addSystemsToRegistry() override;
+
+        /**
+         *
+         */
+        void initTkt() {
+          _tkt.insert({"easy", game::DifficultyMode::EASY});
+          _tkt.insert({"medium", game::DifficultyMode::MEDIUM});
+          _tkt.insert({"hard", game::DifficultyMode::HARD});
+        }
+
+        DifficultyMode _mode; ///<
+        std::unordered_map<std::string, DifficultyMode> _tkt; ///<
     };
 }
 
