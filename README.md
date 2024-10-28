@@ -74,6 +74,6 @@ Space       | Shoot
 * **Mathis Brehm** * - [@Mathis Brehm](https://github.com/mathisbdkr)
 * **Wilson Bordichon** * - [@Wilson Bordichon](https://github.com/Wilson-Epitech)
 * **Eva Legrand** * - [@Eva Legrand](https://github.com/Chaegnal)
-* **Edouard Boquet** * - [@Edouard Boquet](https://github.com/edouardclm)
+* **Edouard Bocquet** * - [@Edouard Bocquet](https://github.com/edouardclm)
 
 
