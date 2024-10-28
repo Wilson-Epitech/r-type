@@ -17,8 +17,6 @@ option(BUILD_SHARED_LIBS ON)
 include_directories("${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include")
 include_directories("${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include/GLFW")
 
-# message(STATUS "INCLUDE DIRECTORY: ${VCPKG_ROOT}/installed/${VCPKG_TARGET_TRIPLET}/include/asio")
-
 find_package(raylib CONFIG REQUIRED)
 find_package(asio CONFIG REQUIRED)
 find_package(glfw3 CONFIG REQUIRED)
