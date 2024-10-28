@@ -17,7 +17,6 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include <raylib.h>
 
 namespace ecs {
     namespace system {

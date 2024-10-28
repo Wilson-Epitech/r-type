@@ -1,0 +1,45 @@
+name: build-macos
+
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build-arm64:
+    runs-on: macos-latest
+    timeout-minutes: 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: install dependencies
+      run: |
+        brew update
+        brew install cmake git gcc make
+
+    - name: setting up vcpkg
+      run: |
+        mkdir build
+        cd build
+        git clone https://github.com/microsoft/vcpkg.git
+        cd vcpkg
+        ./bootstrap-vcpkg.sh
+        ./vcpkg install raylib asio glfw3
+        cd ../..
+
+    - name: check compilation
+      run: |
+        echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
+        {
+          set +e
+          cmake -P build.cmake
+          cmake --build build
+          if [ $? -ne 0 ]; then
+            echo "- ### Build macos failed ❌" >> $GITHUB_STEP_SUMMARY
+            echo "Compilation failed."
+            exit 1
+          else
+            echo "- ### Build macos succeed ✅" >> $GITHUB_STEP_SUMMARY
+            exit 0
+          fi
+        }

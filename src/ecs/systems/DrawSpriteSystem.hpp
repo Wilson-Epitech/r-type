@@ -10,6 +10,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 namespace ecs {
     namespace system {
@@ -47,15 +48,16 @@ namespace ecs {
              * @brief Renders the background by drawing it multiple times if necessary.
              * This method handles the drawing of background entities, including adjusting the background
              * position and repeating the background texture to cover the screen if needed.
+             * @param screenRatio The screen ratio of the client.
              * @param velocities Array of velocity components for entities.
              * @param drawables Array of drawable components for entities.
              * @param positions Array of position components for entities.
              * @param spriteInfos Array of sprite information components for entities.
              * @param index The index of the background entity being drawn.
              */
-            void drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                const std::size_t &index);
+            void drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities,
+                                SparseArray<component::Drawable> &drawables, SparseArray<component::Position> &positions,
+                                SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
 
             /**
              * @brief Updates the position of the background as it moves.
@@ -79,21 +81,23 @@ namespace ecs {
              * @param drawables Array of drawable components for entities.
              * @param positions Array of position components for entities.
              * @param spriteInfos Array of sprite information components for entities.
-             * @param index The index of the background entity.
+             * @param index Index of the background entity.
              * @param j Index of the current segment being drawn.
-             * @return Vector2 The new position for the background segment.
+             * @return CustomVector2D The new position for the background segment.
              */
-            Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                           SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                           const std::size_t &index, int j);
+            ecs::CustomVector2D changeNewBackgroundPos(SparseArray<component::Velocity> &velocities,
+                                                       SparseArray<component::Drawable> &drawables,
+                                                       SparseArray<component::Position> &positions,
+                                                       SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index,
+                                                       const std::size_t &j);
 
             /**
              * @brief Calculates the number of times a background texture needs to be repeated to cover the screen.
              * @param spriteSize The size of the sprite being used as the background.
              * @param screenSize The size of the screen dimension (width or height).
-             * @return int The number of repetitions required.
+             * @return std::size_t The number of repetitions required.
              */
-            int getNbrRepeatBackground(float spriteSize, int screenSize);
+            std::size_t getNbrRepeatBackground(const float &spriteSize, const int &screenSize);
         };
     }
 }

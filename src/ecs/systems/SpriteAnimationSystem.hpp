@@ -17,6 +17,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 #define SPRITE_UPDATE_TIME 0.1 ///< Time interval (in seconds) between sprite frame updates.
 

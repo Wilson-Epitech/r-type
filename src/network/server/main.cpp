@@ -7,8 +7,9 @@
 
 #include "RtypeGameServer.hpp"
 #include "RunGame.hpp"
-#include "raylib.h"
 #include <iostream>
+
+#define NB_CLIENTS_AUTHORIZED 4
 
 int main(int ac, char **av) {
     if (ac != 2 || av[1] == NULL) {
@@ -17,11 +18,9 @@ int main(int ac, char **av) {
     }
 
     try {
-        asio::io_context io_context;
         asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
-        std::unique_ptr<network::Server> server = std::make_unique<network::Server>(io_context, std::stoi(av[1]), pool);
         game::RtypeGameServer rtype;
-        RunGame runGame(server, rtype.getRegistry(), rtype);
+        RunGame runGame(rtype.getRegistry(), rtype, std::stoi(av[1]), pool);
         runGame.run();
         pool.join();
     } catch (const std::exception &e) {

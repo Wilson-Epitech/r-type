@@ -10,6 +10,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 #define LIVES_BAR_HEIGHT 5 ///< The height of lives bar displayed
 

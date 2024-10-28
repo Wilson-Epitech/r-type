@@ -22,10 +22,11 @@ void ecs::system::DrawLifeBarSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::DrawLifeBarSystem::drawLife(SparseArray<component::Drawable> &drawables,
-                                       SparseArray<component::SpriteInfos> &spriteInfos, SparseArray<component::Position> &positions,
-                                       SparseArray<component::Life> &lives, const std::size_t &index) {
-    Vector2 screenRatio = Lib::getScreenRatio();
+void ecs::system::DrawLifeBarSystem::drawLife(SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
+                                              SparseArray<component::Position> &positions, SparseArray<component::Life> &lives,
+                                              const std::size_t &index) {
+    ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
+                                       (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
     float lifeBarSize = 0;
     CLITERAL(Color) lifeColor = GREEN;
 
@@ -36,6 +37,8 @@ void ecs::system::DrawLifeBarSystem::drawLife(SparseArray<component::Drawable> &
         lifeColor = RED;
     else if ((float)lives[index]->nbLives / (float)lives[index]->maxLives <= (float)2 / 3)
         lifeColor = ORANGE;
+    if (lives[index]->isInvincible)
+        lifeColor = PINK;
     DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x, positions[index]->y / screenRatio.y,
                   lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, lifeColor);
     if (LIVES_BAR_HEIGHT / screenRatio.y > 3)

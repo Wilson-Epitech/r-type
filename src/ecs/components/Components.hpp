@@ -21,6 +21,20 @@
 #include <memory>
 #include <sstream>
 #include <string>
+#include <vector>
+
+#define ORANGE_COLOR                                                                                                                       \
+    (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
+#define CYAN_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 120, 200, 225, 255 } ///< Cyan color
+#define BEIGE_COLOR                                                                                                                        \
+    (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
+#define GOLD_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 255, 203, 0, 255 } ///< Gold color
+#define PINK_COLOR                                                                                                                         \
+    (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
+#define WHITE_COLOR                                                                                                                        \
+    (ecs::CustomColor) { 245, 245, 245, 255 } ///< White color
 
 namespace ecs {
 
@@ -42,6 +56,8 @@ namespace ecs {
         BOSS_SHOT_1_TEMPLATE,   ///< Level 1 boss's shot template entity
         BACKGROUND,             ///< Background entity
         TEXT,                   ///< Text entity
+        POWERUP,                ///< Powerup entity
+        POWERUP_TEMPLATE,       ///< Powerup template entity
         BOSS_LEVEL1             ///< Level1 Boss' entity
     };
 
@@ -50,17 +66,31 @@ namespace ecs {
      * @brief Enum representing different component types in the ECS.
      */
     enum ComponentName {
-        NONE,        ///< No component
-        POSITION,    ///< Position component
-        VELOCITY,    ///< Velocity component
-        TYPE,        ///< Type component
-        LIFE,        ///< Life component
-        SHOOTING,    ///< Shooting component
-        SPRITEINFOS, ///< Sprite information component
-        SOUNDEFFECT, ///< Sound effect component
-        MUSIC,       ///< Background music component
-        SCORE,       ///< Score component
-        TEXTINFOS    ///< Text component
+        NONE,           ///< No component
+        POSITION,       ///< Position component
+        VELOCITY,       ///< Velocity component
+        TYPE,           ///< Type component
+        LIFE,           ///< Life component
+        SHOOTING,       ///< Shooting component
+        SPRITEINFOS,    ///< Sprite information component
+        SOUNDEFFECT,    ///< Sound effect component
+        MUSIC,          ///< Background music component
+        SCORE,          ///< Score component
+        TEXTINFOS,      ///< Text component
+        ACTIVEPOWERUP   ///< Activated powerup component
+    };
+
+    /**
+     * @enum Poweruptype
+     * @brief Enum representing different powerup types.
+     */
+    enum Poweruptype {
+        NOPOWERUP,          ///< No powerup, must be at the end of the enum
+        LIFE_POWERUP,       ///< Powerup type, give one pv to the player
+        POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
+        INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
+        MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
+        END_POWERUP_TYPE    ///< End of the powerup type enum
     };
 
     namespace component {
@@ -106,12 +136,14 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives;      ///< Number of lives the entity has
+            std::size_t nbLives = 1;      ///< Number of lives the entity has
             bool displayLife = false; ///< Indicates if the life has to be displayed
+            bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
             std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
+            bool isInvincible = false; ///< Indicates if the entity is invincible
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
             }
         };
 
@@ -121,9 +153,11 @@ namespace ecs {
          */
         struct Shooting {
             bool isShooting = false; ///< Boolean indicating if the entity is shooting
+            std::size_t shootPower = 1; ///< How much damage do the shoot
+            float shootSize = 1;    ///< Size of the shoot
 
             bool operator==(const Shooting &other) const {
-                return (isShooting == other.isShooting);
+                return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
             }
         };
 
@@ -132,50 +166,34 @@ namespace ecs {
          * @brief Component for sprite information of an entity.
          */
         struct SpriteInfos {
-            std::string spritePath;       ///< Path to the sprite file
-            std::size_t patternNb = 1;    ///< Number of patterns in the sprite
-            std::size_t firstPattern = 0; ///< First pattern in the sprite
-            float scaleFactor = 1.0;      ///< Scale factor for the sprite
-            Color color = RAYWHITE;       ///< Color applied to the sprite
+            std::string spritePath;                        ///< Path to the sprite file
+            std::size_t patternNb = 1;                     ///< Number of patterns in the sprite
+            std::size_t firstPattern = 0;                  ///< First pattern in the sprite
+            float scaleFactor = 1.0;                       ///< Scale factor for the sprite
+            CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
+            std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
             bool isLoaded = false;        ///< Indicates if the texture is loaded
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
                         scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
-                        color.g == other.color.g && color.b == other.color.b);
+                        color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth &&
+                        spriteHeight == other.spriteHeight);
             }
         };
 
         /**
-         * @struct SoundEffect
-         * @brief Component for sound effects related to an entity.
+         * @struct SoundEffectInfos
+         * @brief Component for sound effects informations related to an entity.
          */
-        struct SoundEffect {
+        struct SoundEffectInfos {
             std::string soundPath;      ///< Path to the sound file
             bool isLoaded = false;      ///< Boolean indicating if the sound is loaded
             bool hasToBePlayed = false; ///< Boolean indicating if the sound should be played
-            Sound sound = Sound{};      ///< Sound object
 
-            bool operator==(const SoundEffect &other) const {
+            bool operator==(const SoundEffectInfos &other) const {
                 return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
             }
-        };
-
-        /**
-         * @struct Drawable
-         * @brief Component representing the drawable texture of an entity.
-         */
-        struct Drawable {
-            Texture2D spriteTexture = Texture2D{}; ///< Texture for the entity
-            Rectangle spriteRect = Rectangle{};    ///< Rectangle of the texture to be drawn
-        };
-
-        /**
-         * @struct SpriteSize
-         * @brief Component for the size of the sprite.
-         */
-        struct SpriteSize {
-            float spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
         };
 
         /**
@@ -221,18 +239,17 @@ namespace ecs {
         };
 
         /**
-         * @struct BackgroundMusic
-         * @brief Component for background music of an entity.
+         * @struct BackgroundMusicInfos
+         * @brief Component for background music informations of an entity.
          */
-        struct BackgroundMusic {
+        struct BackgroundMusicInfos {
             std::string musicPath;          ///< Path to the music file
             float volume;                   ///< Volume level of the music
             bool hasToBePlayed = false;     ///< Indicates if the music should be played
             bool isLoaded = false;          ///< Indicates if the music is loaded
             bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
-            Music music = Music{};          ///< Music object
 
-            bool operator==(const BackgroundMusic &other) const {
+            bool operator==(const BackgroundMusicInfos &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                         hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
             }
@@ -241,10 +258,10 @@ namespace ecs {
         /**
          * @struct Score
          * @brief Component for the score of an entity
-        */
+         */
         struct Score {
             std::size_t scoreIncrementation = 0; ///< Incrementation value for score
-            int score = 0; /// < Score of the entity
+            int score = 0;                       /// < Score of the entity
 
             bool operator==(const Score &other) const {
                 return (score == other.score && scoreIncrementation == other.scoreIncrementation);
@@ -253,23 +270,49 @@ namespace ecs {
 
         /**
          * @struct TextInfos
-         * @brief Component for the text information of an entity
-        */
+         * @brief Component for text informations of an entity
+         */
         struct TextInfos {
-            std::string textToDisplay; ///< Text to display
-            int x; ///< X coordinates of the text
-            int y; ///< Y coordinates of the text
-            int size; ///< Size of the text
-            std::string fontPath; ///< Path of the font used to draw the text
-            Color color = Color{}; ///< Color of the text
-            Font font = Font{}; ///< Font of the text
-            bool fontIsLoaded = false; ///< Indicates if font has been loaded
-            bool hasChanged = false; ///< Indicates if the textToDisplay string has changed
+            std::string textToDisplay;                ///< Text to display
+            int x;                                    ///< X coordinates of the text
+            int y;                                    ///< Y coordinates of the text
+            int size;                                 ///< Size of the text
+            std::string fontPath;                     ///< Path of the font used to draw the text
+            CustomColor color = {245, 245, 245, 255}; ///< Color of the text, white by default
+            bool hasChanged = false;                  ///< Indicates if the textToDisplay string has changed
+            bool fontIsLoaded = false;                ///< Indicates if font has been loaded
 
             bool operator==(const TextInfos &other) const {
                 return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
                         fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
                         color.b == other.color.b);
+            }
+        };
+
+        /**
+         * @struct Powerup
+         * @brief Component for the powerup information a powerup
+        */
+        struct Powerup {
+            Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
+            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
+            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
+        };
+
+        /**
+         * @struct ActivePowerup
+         * @brief Component for the powerup that has been used by a player
+        */
+        struct ActivePowerup {
+            bool isPowershootActive = false;    ///< Indicates if the powerup Powershoot is activated
+            bool isInvincibleActive = false;    ///< Indicates if the powerup Invincible is activated
+            bool isMegaShootActive = false;     ///< Indicates if the powerup MegaShoot is activated
+
+            bool operator==(const ActivePowerup &other) const {
+                return (isPowershootActive == other.isPowershootActive &&
+                        isInvincibleActive == other.isInvincibleActive &&
+                        isMegaShootActive == other.isMegaShootActive);
             }
         };
     }
@@ -287,14 +330,18 @@ struct EntityData {
 
     bool operator==(const EntityData &other) const {
         if (entityID == other.entityID && name == other.name) {
-            return (areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
-                    areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
-                    areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
-                    areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
-                    areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
-                    areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
-                    areComponentsEquals<ecs::component::SoundEffect>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                    areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
+            return (
+                areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
+                areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
+                areComponentsEquals<ecs::component::Type>(name, ecs::ComponentName::TYPE, component, other.component) ||
+                areComponentsEquals<ecs::component::Life>(name, ecs::ComponentName::LIFE, component, other.component) ||
+                areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
+                areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
+                areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
+                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
+                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
         }
         return false;
     }
@@ -335,10 +382,11 @@ void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spri
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting);
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type);
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
-void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect);
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music);
+void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos &soundEffectInfos);
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music);
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
+void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -349,10 +397,11 @@ void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfo
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting);
 void operator>>(std::istringstream &iss, ecs::component::Type &type);
 void operator>>(std::istringstream &iss, ecs::component::Life &life);
-void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect);
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music);
+void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &soundEffectInfos);
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music);
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
+void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

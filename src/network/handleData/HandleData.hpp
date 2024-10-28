@@ -13,7 +13,7 @@
 
 namespace network {
     /**
-     * @class HandleData.hpp
+     * @class HandleData
      * @brief Class providing static functions for managing and retrieving game data.
      * Contains helper methods for data serialization/deserialization, entity data and component manipulation.
      */
@@ -137,8 +137,7 @@ namespace network {
          * @param name The name of the component.
          * @return A vector of EntityData containing updated component data for entities.
          */
-        template <typename Component>
-        static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
+        template <typename Component> static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
             static std::vector<typename ecs::SparseArray<Component>::value_type> lastEntityTypesValues;
             ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
             std::vector<EntityData> entityTypesData;

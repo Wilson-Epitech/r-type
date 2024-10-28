@@ -8,15 +8,16 @@
 #ifndef ASSETS_HPP_
 #define ASSETS_HPP_
 
-#define PLAYER_PATH "assets/r-typesheet5.gif"
-#define PLAYERSHOT_PATH "assets/r-typesheet30a.gif"
+#define PLAYER_PATH "assets/r-typesheet5.png"
+#define PLAYERSHOT_PATH "assets/r-typesheet30a.png"
 #define ENEMYSHOT_PATH "assets/enemy_bullet.png"
-#define ENEMY_PATH "assets/r-typesheet17.gif"
+#define ENEMY_PATH "assets/r-typesheet17.png"
 #define BACKGROUND_PATH "assets/background.png"
 #define SHOOT_SOUND_PATH "assets/shoot.wav"
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"
 #define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"
 #define FONT_PATH "assets/ARCADE_N.TTF"
+#define POWERUP_PATH "assets/powerup.png"
 
 #define PLAYER_SPRITE_NB_PATTERN 16
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3

@@ -36,7 +36,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
+    SparseArray<component::SoundEffectInfos> &soundEffect = reg.getComponents<component::SoundEffectInfos>();
 
     entity_t entity = reg.spawnEntity();
 
@@ -52,7 +52,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     }
     if (soundEffect.size() > i) {
         if (soundEffect[i])
-            soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[i]->soundPath});
+            soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[i]->soundPath});
     }
 }
 

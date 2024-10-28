@@ -18,11 +18,12 @@ void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocit
 
 void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos) {
     oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath
-        << ' ' << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b;
+        << ' ' << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b << ' '
+        << spriteInfos.spriteWidth << ' ' << spriteInfos.spriteHeight;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {
-    oss << shooting.isShooting;
+    oss << shooting.isShooting << ' ' << shooting.shootPower << ' ' << shooting.shootSize;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
@@ -30,14 +31,14 @@ void operator<<(std::ostringstream &oss, const ecs::component::Type &type) {
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Life &life) {
-    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives;
+    oss << life.nbLives << ' ' << life.displayLife << ' ' << life.maxLives << ' ' << life.isInvincible;
 }
 
-void operator<<(std::ostringstream &oss, const ecs::component::SoundEffect &soundEffect) {
-    oss << soundEffect.isLoaded << ' ' << soundEffect.hasToBePlayed << ' ' << soundEffect.soundPath;
+void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos &soundEffectInfos) {
+    oss << soundEffectInfos.isLoaded << ' ' << soundEffectInfos.hasToBePlayed << ' ' << soundEffectInfos.soundPath;
 }
 
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 
@@ -48,6 +49,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::Score &score) {
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo) {
     oss << textInfo.textToDisplay << ' ' << textInfo.x << ' ' << textInfo.y << ' ' << textInfo.size << ' ' << textInfo.fontPath << ' '
         << textInfo.color.a << ' ' << textInfo.color.r << ' ' << textInfo.color.g << ' ' << textInfo.color.b;
+}
+
+void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup) {
+    oss << activePowerup.isPowershootActive << ' ' << activePowerup.isInvincibleActive << ' ' << activePowerup.isMegaShootActive;
 }
 
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
@@ -67,13 +72,15 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
     if (entityData.name == ecs::ComponentName::TYPE)
         network::HandleData::serializeEntityCompotent<ecs::component::Type>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
-        network::HandleData::serializeEntityCompotent<ecs::component::SoundEffect>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::SoundEffectInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusic>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityCompotent<ecs::component::BackgroundMusicInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SCORE)
         network::HandleData::serializeEntityCompotent<ecs::component::Score>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
         network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
+        network::HandleData::serializeEntityCompotent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -101,11 +108,11 @@ void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity) {
 
 void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos) {
     iss >> spriteInfos.patternNb >> spriteInfos.firstPattern >> spriteInfos.scaleFactor >> spriteInfos.spritePath >> spriteInfos.color.a >>
-        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b;
+        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b >> spriteInfos.spriteWidth >> spriteInfos.spriteHeight;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting) {
-    iss >> shooting.isShooting;
+    iss >> shooting.isShooting >> shooting.shootPower >> shooting.shootSize;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Type &type) {
@@ -113,14 +120,14 @@ void operator>>(std::istringstream &iss, ecs::component::Type &type) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Life &life) {
-    iss >> life.nbLives >> life.displayLife >> life.maxLives;
+    iss >> life.nbLives >> life.displayLife >> life.maxLives >> life.isInvincible;
 }
 
-void operator>>(std::istringstream &iss, ecs::component::SoundEffect &soundEffect) {
-    iss >> soundEffect.isLoaded >> soundEffect.hasToBePlayed >> soundEffect.soundPath;
+void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &soundEffectInfos) {
+    iss >> soundEffectInfos.isLoaded >> soundEffectInfos.hasToBePlayed >> soundEffectInfos.soundPath;
 }
 
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 
@@ -131,6 +138,10 @@ void operator>>(std::istringstream &iss, ecs::component::Score &score) {
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo) {
     iss >> textInfo.textToDisplay >> textInfo.x >> textInfo.y >> textInfo.size >> textInfo.fontPath >> textInfo.color.a >>
         textInfo.color.r >> textInfo.color.g >> textInfo.color.b;
+}
+
+void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup) {
+    iss >> activePowerup.isPowershootActive >> activePowerup.isInvincibleActive >> activePowerup.isMegaShootActive;
 }
 
 void operator>>(std::istringstream &iss, EntityData &entityData) {
@@ -150,11 +161,13 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
     if (entityData.name == ecs::ComponentName::TYPE)
         network::HandleData::deserializeEntityCompotent<ecs::component::Type>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SOUNDEFFECT)
-        network::HandleData::deserializeEntityCompotent<ecs::component::SoundEffect>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::SoundEffectInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MUSIC)
-        network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusic>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityCompotent<ecs::component::BackgroundMusicInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SCORE)
         network::HandleData::deserializeEntityCompotent<ecs::component::Score>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::TEXTINFOS)
         network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
+        network::HandleData::deserializeEntityCompotent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
 }

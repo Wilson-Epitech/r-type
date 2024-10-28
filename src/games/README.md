@@ -54,7 +54,7 @@ To add and call our system, we need to add it to the Registry in the function ``
 ```c++
 _reg.addSystem(ecs::system::FiringSystem());
 ```
-> [!CAUTION]  
+> [!CAUTION]
 > **Be careful of the order of your system**<br>
 
 ## Client Side
@@ -62,5 +62,5 @@ _reg.addSystem(ecs::system::FiringSystem());
 **The client side is way easier than the server side**<br><br>
 You only have to register your components in ```registerComponents``` function and add your systems to the registry in the function ```addSystemsToRegistry``` <br><br>
 
-> [!NOTE]  
+> [!NOTE]
 > Both function works the same way as the server side

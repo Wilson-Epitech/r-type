@@ -26,7 +26,7 @@ We also aim for our game to soon be Cross-Plateform. For now, the program lauche
 Run these two commands in order from the project root to compile it:
 
 ```bash
-cmake -B build -S .
+cmake -P build.cmake
 ```
 
 ```bash
@@ -74,6 +74,6 @@ Space       | Shoot
 * **Mathis Brehm** * - [@Mathis Brehm](https://github.com/mathisbdkr)
 * **Wilson Bordichon** * - [@Wilson Bordichon](https://github.com/Wilson-Epitech)
 * **Eva Legrand** * - [@Eva Legrand](https://github.com/Chaegnal)
-* **Edouard Boquet** * - [@Edouard Boquet](https://github.com/edouardclm)
+* **Edouard Bocquet** * - [@Edouard Bocquet](https://github.com/edouardclm)
 
 

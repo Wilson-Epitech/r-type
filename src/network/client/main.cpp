@@ -16,10 +16,8 @@ int main(int ac, char **av) {
     }
 
     try {
-        asio::io_context ioContext;
-        std::unique_ptr<network::Client> client = std::make_unique<network::Client>(ioContext, av[1], av[2]);
         game::RtypeGameClient rtype;
-        RunGame runGame(client, rtype.getRegistry(), rtype.getGameName(), rtype);
+        RunGame runGame(rtype.getRegistry(), rtype.getGameName(), rtype, av[1], av[2]);
         runGame.run();
     } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
