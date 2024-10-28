@@ -7,21 +7,20 @@
 
 #include "RtypeGameServer.hpp"
 #include "RunGame.hpp"
-#include "raylib.h"
 #include <iostream>
 
 #define NB_CLIENTS_AUTHORIZED 4
 
 int main(int ac, char **av) {
-    if (ac != 3 || av[1] == NULL || av[2] == NULL) {
-        std::cerr << "Usage: ./server [ip] [port]" << std::endl;
+    if (ac != 2 || av[1] == NULL) {
+        std::cerr << "Usage: ./server [port]" << std::endl;
         return -1;
     }
 
     try {
         asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
         game::RtypeGameServer rtype;
-        RunGame runGame(rtype.getRegistry(), rtype, av[1], std::stoi(av[2]), pool);
+        RunGame runGame(rtype.getRegistry(), rtype, std::stoi(av[1]), pool);
         runGame.run();
         pool.join();
     } catch (const std::exception &e) {

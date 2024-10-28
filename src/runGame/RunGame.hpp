@@ -44,17 +44,15 @@ class RunGame {
      * @tparam Function The type of the game state function, which defines the current state of the game.
      * @param reg The ECS registry that manages entities and components.
      * @param gameState A function that manages the game's state transitions.
-     * @param host The IP address of the server.
      * @param port The port on which the server listens.
      * @param pool A thread pool to manage concurrent tasks.
      */
 
     template <typename Function>
-    RunGame(ecs::Registry &reg, Function const &gameState, const std::string &host, const std::size_t &port, asio::thread_pool &pool)
+    RunGame(ecs::Registry &reg, Function const &gameState, const std::size_t &port, asio::thread_pool &pool)
         : _reg(reg), _gameState(gameState), _time0(std::chrono::steady_clock::now()), _time1(std::chrono::steady_clock::now()) {
         _networkLoader = std::make_unique<DLLoader<network::INetwork>>(SERVER_LIB_PATH);
-        _networkInstance = _networkLoader->getInstance(host, port, pool);
-        SetTraceLogLevel(TraceLogLevel::LOG_FATAL);
+        _networkInstance = _networkLoader->getInstance(port, pool);
     }
     /**
      * @brief Constructs the game clientside.

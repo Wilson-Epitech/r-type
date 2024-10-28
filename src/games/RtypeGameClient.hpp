@@ -17,7 +17,9 @@
 
 #include "AGame.hpp"
 #include "ControlSystem.hpp"
-#include "DrawSystem.hpp"
+#include "DrawLifeBarSystem.hpp"
+#include "DrawSpriteSystem.hpp"
+#include "DrawTextSystem.hpp"
 #include "FiringSystem.hpp"
 #include "MusicSystem.hpp"
 #include "PositionSystem.hpp"

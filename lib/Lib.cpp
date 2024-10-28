@@ -7,13 +7,6 @@
 
 #include "Lib.hpp"
 
-Vector2 Lib::getScreenRatio() {
-    float widthScaleFactor = (float)SCREEN_WIDTH / (float)GetScreenWidth();
-    float heightScaleFactor = (float)SCREEN_HEIGHT / (float)GetScreenHeight();
-
-    return {widthScaleFactor, heightScaleFactor};
-}
-
 int Lib::getScreenHeight() {
     return SCREEN_HEIGHT;
 }
@@ -22,7 +15,7 @@ int Lib::getScreenWidth() {
     return SCREEN_WIDTH;
 }
 
-bool Lib::isOnScreen(Vector2 pos) {
+bool Lib::isOnScreen(ecs::CustomVector2D pos) {
     if (pos.x > Lib::getScreenWidth() || pos.x < 0)
         return false;
     if (pos.y > Lib::getScreenHeight() || pos.y < 0)

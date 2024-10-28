@@ -19,9 +19,6 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define CYAN                                                                                                                               \
-    CLITERAL(Color) { 120, 200, 225, 255 } ///< Default color for a player
-
 namespace ecs {
     namespace system {
 
@@ -53,9 +50,8 @@ namespace ecs {
              * with a unique color based on the client index.
              * @param reg The ECS registry where the player entity will be created.
              * @param entity The entity identifier for the new player.
-             * @param clientIndex The index of the client, used to assign a unique color to the player.
              */
-            void createNewPlayer(Registry &reg, entity_t entity, std::size_t clientIndex);
+            void createNewPlayer(Registry &reg, const entity_t &entity);
 
             /**
              * @brief Retrieves the index of the player template entity.
@@ -67,13 +63,12 @@ namespace ecs {
 
             /**
              * @brief Sets the color for a player entity.
-             * This method assigns a color to the player based on the client index, ensuring each player
-             * has a distinct color.
-             * @param playerEntity The entity identifier for the player.
-             * @param clientIndex The index of the client, used to assign the player's color.
+             * This method assigns a color to the player based on the spaceships' colors availability,
+             * ensuring each player has a distinct color.
              * @param reg The ECS registry containing entities and components.
+             * @param entity The entity identifier for the player.
              */
-            void setPlayerColor(entity_t playerEntity, std::size_t clientIndex, Registry &reg);
+            void setPlayerColor(Registry &reg, const entity_t &entity);
         };
     }
 }

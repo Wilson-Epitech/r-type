@@ -50,19 +50,18 @@ template <typename T> class DLLoader {
 
     /**
      * @brief return an instance of the server loaded shared library by calling his constructor with his parameters.
-     * @param host The IP address of the server.
      * @param port The port on which the server listens.
      * @param pool A thread pool to manage concurrent tasks.
      * @throws Error if the load of the server's instance fails.
      */
-    std::unique_ptr<T> getInstance(const std::string &host, const std::size_t &port, asio::thread_pool &pool) {
-        T *(*cosine)(const std::string &, const std::size_t &, asio::thread_pool &);
-        cosine = (T * (*)(const std::string &, const std::size_t &, asio::thread_pool &)) dlsym(_handle, "entryPoint");
+    std::unique_ptr<T> getInstance(const std::size_t &port, asio::thread_pool &pool) {
+        T *(*cosine)(const std::size_t &, asio::thread_pool &);
+        cosine = (T * (*)(const std::size_t &, asio::thread_pool &)) dlsym(_handle, "entryPoint");
         char *errorMessage = dlerror();
         if (errorMessage != NULL)
             throw Error(errorMessage);
 
-        return std::unique_ptr<T>((*cosine)(host, port, pool));
+        return std::unique_ptr<T>((*cosine)(port, pool));
     };
 
     /**

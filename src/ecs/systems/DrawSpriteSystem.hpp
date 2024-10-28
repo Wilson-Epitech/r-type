@@ -2,39 +2,29 @@
 ** R_TYPE PROJECT, 2024
 ** r-type
 ** File description:
-** DrawSystem
+** DrawSpriteSystem
 */
 
-/**
- * @file DrawSystem.hpp
- * @brief Declares the draw system responsible for rendering entities in the game engine ECS.
- * This file contains the `DrawSystem` class, which manages the rendering of entities, loading of textures,
- * and background drawing. It ensures that all drawable entities are properly displayed on the screen.
- */
-
-#ifndef DRAWSYSTEM_HPP_
-#define DRAWSYSTEM_HPP_
+#ifndef DRAWSPRITESYSTEM_HPP_
+#define DRAWSPRITESYSTEM_HPP_
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-
-#define LETTER_SPACING 2
-
-#define LIVES_BAR_HEIGHT 5
+#include "RaylibComponents.hpp"
 
 namespace ecs {
     namespace system {
 
         /**
-         * @class DrawSystem
+         * @class DrawSpriteSystem
          * @brief System responsible for rendering entities in the game.
-         * The `DrawSystem` handles the rendering of entities by drawing their textures on the screen.
+         * The `DrawSpriteSystem` handles the rendering of entities by drawing their textures on the screen.
          * It manages texture loading, background rendering, and ensures that entities are displayed correctly.
          */
-        class DrawSystem : virtual public ecs::system::ISystem {
+        class DrawSpriteSystem : virtual public ecs::system::ISystem {
           public:
-            DrawSystem() = default;
-            ~DrawSystem() = default;
+            DrawSpriteSystem() = default;
+            ~DrawSpriteSystem() = default;
 
             /**
              * @brief Executes the draw system to render entities.
@@ -58,15 +48,16 @@ namespace ecs {
              * @brief Renders the background by drawing it multiple times if necessary.
              * This method handles the drawing of background entities, including adjusting the background
              * position and repeating the background texture to cover the screen if needed.
+             * @param screenRatio The screen ratio of the client.
              * @param velocities Array of velocity components for entities.
              * @param drawables Array of drawable components for entities.
              * @param positions Array of position components for entities.
              * @param spriteInfos Array of sprite information components for entities.
              * @param index The index of the background entity being drawn.
              */
-            void drawBackground(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                const std::size_t &index);
+            void drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities,
+                                SparseArray<component::Drawable> &drawables, SparseArray<component::Position> &positions,
+                                SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
 
             /**
              * @brief Updates the position of the background as it moves.
@@ -90,46 +81,25 @@ namespace ecs {
              * @param drawables Array of drawable components for entities.
              * @param positions Array of position components for entities.
              * @param spriteInfos Array of sprite information components for entities.
-             * @param index The index of the background entity.
+             * @param index Index of the background entity.
              * @param j Index of the current segment being drawn.
-             * @return Vector2 The new position for the background segment.
+             * @return CustomVector2D The new position for the background segment.
              */
-            Vector2 changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                           SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                           const std::size_t &index, int j);
+            ecs::CustomVector2D changeNewBackgroundPos(SparseArray<component::Velocity> &velocities,
+                                                       SparseArray<component::Drawable> &drawables,
+                                                       SparseArray<component::Position> &positions,
+                                                       SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index,
+                                                       const std::size_t &j);
 
             /**
              * @brief Calculates the number of times a background texture needs to be repeated to cover the screen.
              * @param spriteSize The size of the sprite being used as the background.
              * @param screenSize The size of the screen dimension (width or height).
-             * @return int The number of repetitions required.
+             * @return std::size_t The number of repetitions required.
              */
-            int getNbrRepeatBackground(float spriteSize, int screenSize);
-
-            /**
-             * @brief Renders the life of an entity.
-             * @param reg The ECS Registry.
-             * @param drawables Array of drawable components for entities.
-             * @param spriteInfos Array of sprite information components for entities.
-             * @param positions Array of position components for entities.
-             * @param index The index of the entity life being drawn.
-             */
-            void drawLife(Registry &reg, SparseArray<component::Drawable> &drawables, SparseArray<component::SpriteInfos> &spriteInfos,
-                          SparseArray<component::Position> &positions, std::size_t index);
-
-            /**
-             * @brief Renders the text of an entity.
-             * @param reg The ECS Registry.
-             */
-            void drawText(Registry &reg);
-
-            /**
-             * @brief Load the font of a text.
-             * @param textInfos The text informations of an entity.
-             */
-            void loadFonts(SparseArray<component::TextInfos> &textInfos);
+            std::size_t getNbrRepeatBackground(const float &spriteSize, const int &screenSize);
         };
     }
 }
 
-#endif /* !DRAWSYSTEM_HPP_ */
+#endif /* !DRAWSPRITESYSTEM_HPP_ */
