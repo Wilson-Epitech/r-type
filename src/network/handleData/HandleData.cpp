@@ -41,7 +41,6 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Score>(reg, newEntity, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, newEntity, data, ecs::ComponentName::TEXTINFOS);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, newEntity, data, ecs::ComponentName::ACTIVEPOWERUP);
-        fillEntityComponentData<ecs::component::PowerupTextInfos>(reg, newEntity, data, ecs::ComponentName::POWERUP_TEXT_TEMPLATE);
     }
     return data;
 }
@@ -68,7 +67,6 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::Score>(reg, i, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, i, data, ecs::ComponentName::TEXTINFOS);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, i, data, ecs::ComponentName::ACTIVEPOWERUP);
-        fillEntityComponentData<ecs::component::PowerupTextInfos>(reg, i, data, ecs::ComponentName::POWERUP_TEXT_TEMPLATE);
     }
     return data;
 }
@@ -87,7 +85,6 @@ std::unordered_map<ecs::ComponentName, std::any> network::HandleData::getCompone
     componentCorrespondence.insert({ecs::ComponentName::SCORE, ecs::component::Score{}});
     componentCorrespondence.insert({ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}});
     componentCorrespondence.insert({ecs::ComponentName::ACTIVEPOWERUP, ecs::component::ActivePowerup{}});
-    componentCorrespondence.insert({ecs::ComponentName::POWERUP_TEXT_TEMPLATE, ecs::component::PowerupTextInfos{}});
     return componentCorrespondence;
 }
 
@@ -147,7 +144,6 @@ void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::Score>(reg, data, ecs::ComponentName::SCORE);
     insertComponent<ecs::component::TextInfos>(reg, data, ecs::ComponentName::TEXTINFOS);
     insertComponent<ecs::component::ActivePowerup>(reg, data, ecs::ComponentName::ACTIVEPOWERUP);
-    insertComponent<ecs::component::PowerupTextInfos>(reg, data, ecs::ComponentName::POWERUP_TEXT_TEMPLATE);
 }
 
 void network::HandleData::updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg) {

@@ -40,7 +40,6 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::TextInfos>();
     _reg.registerComponent<ecs::component::Powerup>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
-    _reg.registerComponent<ecs::component::PowerupTextInfos>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -58,7 +57,6 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
-    ecs::SparseArray<ecs::component::PowerupTextInfos> &powerupTextInfos = _reg.getComponents<ecs::component::PowerupTextInfos>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -121,7 +119,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     powerups.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Powerup{ecs::Poweruptype::NOPOWERUP, 1});
     types.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::Type{ecs::EntityType::POWERUP_TEMPLATE});
     spriteInfos.insertAt( _stringToEntity[POWERUP_NAME], ecs::component::SpriteInfos{POWERUP_PATH, 10, 1, 0.5});
-    powerupTextInfos.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::PowerupTextInfos{50, 50, 20, FONT_PATH, ORANGE_COLOR});
+    textInfos.insertAt(_stringToEntity[POWERUP_NAME], ecs::component::TextInfos{"o", 50, 50, 20, FONT_PATH, ORANGE_COLOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
