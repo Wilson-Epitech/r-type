@@ -1,15 +1,13 @@
 name: build-ubuntu
 
 on:
-  push:
-    branches: [ "main", "dev", "yanis/NetworkInterface" ]
   pull_request:
-    branches: [ "main", "dev", "yanis/NetworkInterface" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
 
     steps:
     - uses: actions/checkout@v4

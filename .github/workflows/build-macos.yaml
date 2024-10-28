@@ -1,15 +1,13 @@
 name: build-macos
 
 on:
-  push:
-    branches: [ "main", "dev", "yanis/NetworkInterface" ]
   pull_request:
-    branches: [ "main", "dev", "yanis/NetworkInterface" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   build-arm64:
     runs-on: macos-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
 
     steps:
     - uses: actions/checkout@v4
