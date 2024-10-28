@@ -9,9 +9,9 @@
 #include "RunGame.hpp"
 #include <iostream>
 
-#define NB_CLIENTS_AUTHORIZED 4
-#define ERROR_VALUE 84
-#define INVALID_ARGUMENTS_MESSAGE  "Usage: ./server [port] | ./server [port] --difficulty difficultyMode\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (set to medium by default)"
+#define NB_CLIENTS_AUTHORIZED 4 ///< Number of maximum clients authorized to connect to the server
+#define ERROR_VALUE 84 ///< Return value for errors
+#define INVALID_ARGUMENTS_MESSAGE  "Usage: ./server [port] | ./server [port] --difficulty difficultyMode\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (set to medium by default)" ///< The message to display when arguments passed in parameter are invalid
 
 int main(int ac, char **av) {
     if (ac < 2 || ac == 3 || ac > 4 || av[1] == NULL) {

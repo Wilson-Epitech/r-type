@@ -9,7 +9,7 @@
 #include "RunGame.hpp"
 #include <iostream>
 
-#define ERROR_VALUE 84
+#define ERROR_VALUE 84 ///< Return value for errors
 
 int main(int ac, char **av) {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
