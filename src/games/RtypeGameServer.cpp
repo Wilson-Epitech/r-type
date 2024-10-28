@@ -40,6 +40,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::TextInfos>();
     _reg.registerComponent<ecs::component::Powerup>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
+    _reg.registerComponent<ecs::component::MovementPatern>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -57,6 +58,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
+    ecs::SparseArray<ecs::component::MovementPatern> &movementPatern = _reg.getComponents<ecs::component::MovementPatern>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -90,6 +92,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1, false, true});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
+    movementPatern.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPatern{ecs::MovementType::SNAKE});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Velocity{-10, 0});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT],

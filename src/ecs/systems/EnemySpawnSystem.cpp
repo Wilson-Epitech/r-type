@@ -56,6 +56,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
+    SparseArray<component::MovementPatern> &movementPatern = reg.getComponents<component::MovementPatern>();
     entity_t entity = reg.spawnEntity();
     float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
     float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
@@ -73,5 +74,9 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     if (soundEffectInfos.size() > i) {
         if (soundEffectInfos[i])
             soundEffectInfos.insertAt(entity, ecs::component::SoundEffectInfos{soundEffectInfos[i]->soundPath});
+    }
+    if (movementPatern.size() > i) {
+        if (movementPatern[i])
+            movementPatern.insertAt(entity, ecs::component::MovementPatern{movementPatern[i]->movementPaternType});
     }
 }

@@ -52,6 +52,12 @@ namespace ecs {
              * @return false If the player's position update was not necessary.
              */
             bool handlePlayerPosition(std::size_t playerIndex, Registry &reg);
+
+            void setStartPosition(Registry &reg, std::size_t index);
+
+            void handleMovementPatern(Registry &reg, std::size_t index);
+            void moveStraight(Registry &reg, std::size_t index);
+            void moveSnake(Registry &reg, std::size_t index);
         };
     }
 }

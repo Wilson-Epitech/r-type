@@ -30,6 +30,7 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::TextInfos>();
     _reg.registerComponent<ecs::component::TextFont>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
+    _reg.registerComponent<ecs::component::MovementPatern>();
 }
 
 void game::RtypeGameClient::addComponentsToEntities() {}
