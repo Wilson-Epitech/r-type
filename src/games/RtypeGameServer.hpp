@@ -30,6 +30,7 @@
 #include "SpriteAnimationSystem.hpp"
 #include "ScoreSystem.hpp"
 #include "BossFiringSystem.hpp"
+#include "ResetForNextLevel.hpp"
 
 /** @brief Defines the name of the player entity */
 #define PLAYER_NAME "player"

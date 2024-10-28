@@ -201,6 +201,7 @@ namespace ecs {
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
             int minSpawnHeight = 0;                      ///< Minimum spawn height
+            bool hasBeenSlayed = false;                  ///< To know if the boss has been defeated
         };
 
         /**

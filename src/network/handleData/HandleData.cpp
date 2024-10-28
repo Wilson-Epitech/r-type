@@ -19,6 +19,8 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     std::vector<EntityData> livesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
     std::vector<EntityData> scoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE);
     std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
+    std::vector<EntityData> positionData = retrieveComponentUpdates<ecs::component::Position>(reg, ecs::ComponentName::POSITION);
+    std::vector<EntityData> spriteInfoData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -27,6 +29,21 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg) {
     network::HandleData::addEntityDataToSend(livesData, data);
     network::HandleData::addEntityDataToSend(scoresData, data);
     network::HandleData::addEntityDataToSend(textInfosData, data);
+
+    try {
+        ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+        ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
+        for (std::size_t i = 0; i < bossSlayed.size(); i++) {
+            if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+                network::HandleData::addEntityDataToSend(positionData, data);
+                network::HandleData::addEntityDataToSend(spriteInfoData, data);
+                bossSlayed[i]->hasBeenSlayed = false;
+            }
+        }
+    } catch (const std::exception &e) {
+        // std::cerr << e.what() << std::endl;
+    }
+
     for (auto &newEntity : newEntities) {
         fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, newEntity, data, ecs::ComponentName::VELOCITY);

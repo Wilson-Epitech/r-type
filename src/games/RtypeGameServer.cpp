@@ -150,6 +150,7 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::BossSpawnSystem());
     _reg.addSystem(ecs::system::BossFiringSystem());
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
+    _reg.addSystem(ecs::system::ResetForNextLevel());
 }
 
 game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {

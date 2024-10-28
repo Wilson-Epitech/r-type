@@ -7,8 +7,6 @@
 
 #include "BossSpawnSystem.hpp"
 
-#include <iostream>
-
 int ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<component::Type> &types)
 {
     for (std::size_t i = 0; i < types.size(); i++) {
