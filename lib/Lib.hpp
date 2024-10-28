@@ -15,6 +15,7 @@
 #define LIB_HPP_
 
 #include "CustomTypes.hpp"
+#include <chrono>
 
 #define SCREEN_WIDTH 1920  ///< The default screen width for the game window
 #define SCREEN_HEIGHT 1080 ///< The default screen height for the game window
@@ -56,6 +57,14 @@ class Lib {
      * @return Time in milliseconds.
      */
     static double toMilliseconds(double time);
+
+    /**
+     * @brief Check if a certain time is past.
+     * @param time Time is the time to compare with actual time.
+     * @param duration Time in seconds.
+     * @return True if the time between the variable time and now is superior or equal to the duration, false otherwise.
+     */
+    static bool isTimeElapsed(const std::chrono::steady_clock::time_point &time, const float &duration);
 };
 
 #endif /* !LIB_HPP_ */

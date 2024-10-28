@@ -26,3 +26,10 @@ bool Lib::isOnScreen(ecs::CustomVector2D pos) {
 double Lib::toMilliseconds(double time) {
     return time * TO_MILLISECONDS;
 }
+
+bool Lib::isTimeElapsed(const std::chrono::steady_clock::time_point &time, const float &duration) {
+    std::chrono::steady_clock::time_point actualTime = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(actualTime - time);
+
+    return timeElapsed.count() >= Lib::toMilliseconds(duration);
+}

@@ -28,25 +28,28 @@
 #include "PositionSystem.hpp"
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "PowerupSystem.hpp"
 
-/** @brief Defines the name of the player entity */
-#define PLAYER_NAME "player"
-/** @brief Defines the name of the player shot entity */
-#define PLAYER_SHOT "player_shot"
+/** @brief Defines the name of the player template entity */
+#define PLAYER_NAME "player_template"
+/** @brief Defines the name of the player shot template entity */
+#define PLAYER_SHOT "player_shot_template"
 /** @brief Defines the name of the background entity */
 #define BACKGROUND_NAME "background"
-/** @brief Defines the name of the enemy spawn entity */
-#define SPAWN_ENEMY_NAME "enemy"
-/** @brief Defines the name of the enemy shot entity */
-#define ENEMY_SHOT "enemy_shot"
-/** @brief Defines the name of the boss spawn entity */
-#define SPAWN_BOSS_NAME "boss"
+/** @brief Defines the name of the enemy spawn template entity */
+#define SPAWN_ENEMY_NAME "enemy_template"
+/** @brief Defines the name of the enemy shot template entity */
+#define ENEMY_SHOT "enemy_shot_template"
+/** @brief Defines the name of the boss spawn template entity */
+#define SPAWN_BOSS_NAME "boss_template"
 /** @brief Defines the name of the background music entity */
 #define MUSIC_NAME "music"
 /** @brief Defines the name of the team score entity */
 #define TEAM_SCORE_NAME "team_score"
 /** @brief Defines the name of the title entity */
 #define TITLE_NAME "title"
+/** @brief Defines the name of the powerup template entity */
+#define POWERUP_NAME "powerup_template"
 
 /** @brief Maximum spawn height for enemies */
 #define MAX_SPAWN_HEIGHT 1040

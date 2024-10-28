@@ -40,8 +40,11 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
                 positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (areEntitiesInCollision(rec1, rec2)) {
-                    lives[i]->nbLives--;
-                    lives[j]->nbLives--;
+                    if (!lives[i]->isInvincible)
+                        lives[i]->nbLives--;
+                    if (!lives[j]->isInvincible)
+                        lives[j]->nbLives--;
+                    powerUpLives(reg, i, j);
                     reg.addCollision(i, j);
                 }
             }
@@ -79,9 +82,25 @@ bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle r
             rec1.y + rec1.height >= rec2.y);
 }
 
+void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j)
+{
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+
+    if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == ecs::EntityType::POWERUP && !lives[i]->isInvincible) {
+        powerup[j]->playerIndex = i;
+        lives[i]->nbLives++;
+    } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
+        powerup[i]->playerIndex = j;
+        lives[j]->nbLives++;
+    }
+}
+
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
-            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType));
+            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
+            !isEnemyShotAndPowerup(firstType, secondType) && ! isPlayerShotAndPowerup(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -101,4 +120,19 @@ bool ecs::system::CollisionSystem::isPlayerShotAndEnemyShot(const ecs::EntityTyp
 
 bool ecs::system::CollisionSystem::isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::BACKGROUND || secondType == ecs::EntityType::BACKGROUND));
+}
+
+bool ecs::system::CollisionSystem::isEnemyAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMY && secondType == ecs::EntityType::POWERUP) ||
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::ENEMY));
+}
+
+bool ecs::system::CollisionSystem::isEnemyShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::POWERUP) ||
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::ENEMYSHOT));
+}
+
+bool ecs::system::CollisionSystem::isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::POWERUP) ||
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::PLAYERSHOT));
 }

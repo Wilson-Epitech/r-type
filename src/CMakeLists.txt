@@ -18,6 +18,7 @@ set(SRC
     ecs/systems/SpriteAnimationSystem.cpp
     ecs/systems/MusicSystem.cpp
     ecs/systems/ScoreSystem.cpp
+    ecs/systems/PowerupSystem.cpp
     runGame/RunGame.cpp
     network/handleData/HandleData.cpp
     ../lib/Lib.cpp
