@@ -9,8 +9,8 @@
 #define DRAWSPRITESYSTEM_HPP_
 
 #include "Components.hpp"
-#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 namespace ecs {
     namespace system {
@@ -55,9 +55,9 @@ namespace ecs {
              * @param spriteInfos Array of sprite information components for entities.
              * @param index The index of the background entity being drawn.
              */
-            void drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                const std::size_t &index);
+            void drawBackground(const ecs::CustomVector2D &screenRatio, SparseArray<component::Velocity> &velocities,
+                                SparseArray<component::Drawable> &drawables, SparseArray<component::Position> &positions,
+                                SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index);
 
             /**
              * @brief Updates the position of the background as it moves.
@@ -85,9 +85,11 @@ namespace ecs {
              * @param j Index of the current segment being drawn.
              * @return CustomVector2D The new position for the background segment.
              */
-            ecs::CustomVector2D changeNewBackgroundPos(SparseArray<component::Velocity> &velocities, SparseArray<component::Drawable> &drawables,
-                                           SparseArray<component::Position> &positions, SparseArray<component::SpriteInfos> &spriteInfos,
-                                           const std::size_t &index, const std::size_t &j);
+            ecs::CustomVector2D changeNewBackgroundPos(SparseArray<component::Velocity> &velocities,
+                                                       SparseArray<component::Drawable> &drawables,
+                                                       SparseArray<component::Position> &positions,
+                                                       SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index,
+                                                       const std::size_t &j);
 
             /**
              * @brief Calculates the number of times a background texture needs to be repeated to cover the screen.

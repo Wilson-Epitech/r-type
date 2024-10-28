@@ -55,10 +55,11 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, 
     SparseArray<component::ShootPlayerIndex> &shootPlayerIndex = reg.getComponents<component::ShootPlayerIndex>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
 
-    if (playerShootIndex == 0 || spriteInfos[playerIndex]->spriteWidth == 0 || spriteInfos[playerIndex]->spriteHeight == 0
-        || spriteInfos[playerShootIndex]->spriteWidth == 0 || spriteInfos[playerShootIndex]->spriteHeight == 0)
+    if (playerShootIndex == 0 || spriteInfos[playerIndex]->spriteWidth == 0 || spriteInfos[playerIndex]->spriteHeight == 0 ||
+        spriteInfos[playerShootIndex]->spriteWidth == 0 || spriteInfos[playerShootIndex]->spriteHeight == 0)
         return;
-    ecs::CustomRectangle shotSpriteRect = {0, 0, spriteInfos[playerShootIndex]->spriteWidth, spriteInfos[playerShootIndex]->spriteHeight};
+    ecs::CustomRectangle shotSpriteRect = {0, 0, float(spriteInfos[playerShootIndex]->spriteWidth),
+                                           float(spriteInfos[playerShootIndex]->spriteHeight)};
     float shotX = positions[playerIndex]->x + (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
     float shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2));
     entity_t entity = reg.spawnEntity();

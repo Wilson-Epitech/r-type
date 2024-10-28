@@ -26,8 +26,8 @@
 #include "LifeSystem.hpp"
 #include "PlayerSpawnSystem.hpp"
 #include "PositionSystem.hpp"
-#include "SpriteAnimationSystem.hpp"
 #include "ScoreSystem.hpp"
+#include "SpriteAnimationSystem.hpp"
 #include "PowerupSystem.hpp"
 
 /** @brief Defines the name of the player template entity */

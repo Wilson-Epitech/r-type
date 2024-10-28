@@ -10,8 +10,8 @@
 #include <iostream>
 
 network::Server::Server(asio::io_context &io_context, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool),
-      _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
+    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool), _dataHasBeenUsed(false),
+      _magicNumber(0x9B3D) {
     startReceiving();
     _ioThread = std::thread([&io_context]() { io_context.run(); });
 }
@@ -78,26 +78,27 @@ void network::Server::deserializeMessage(const std::string message) {
     _dataHasBeenUsed = false;
 }
 
-void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
+void network::Server::handleReceive(const std::error_code &error, std::size_t) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
 
-        if (_receivedMagicNbr != _magicNumber) {
-            std::cerr << "Invalid magic number" << std::endl;
-            startReceiving();
-            return;
-        }
+        // if (_receivedMagicNbr != _magicNumber) {
+        //     std::cerr << "Invalid magic number" << std::endl;
+        //     startReceiving();
+        //     return;
+        // }
 
         std::memcpy(&_messageType, _receiveBuffer.data() + sizeof(_receivedMagicNbr), sizeof(_messageType));
         std::memcpy(&_messageId, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType), sizeof(_messageId));
         std::memcpy(&_messageLen, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId),
                     sizeof(_messageLen));
 
-        if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
-            std::cerr << "Incomplete message received" << std::endl;
-            startReceiving();
-            return;
-        }
+        // if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen)
+        // {
+        //     std::cerr << "Incomplete message received" << std::endl;
+        //     startReceiving();
+        //     return;
+        // }
 
         std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
                                 sizeof(_messageLen),

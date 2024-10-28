@@ -16,8 +16,8 @@
 #define SOUNDSYSTEM_HPP_
 
 #include "Components.hpp"
-#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 namespace ecs {
     namespace system {
@@ -44,12 +44,13 @@ namespace ecs {
           private:
             /**
              * @brief Loads the sound effect for all entities if not already loaded.
-             * This method checks if the sound effect for an entity is loaded, and if not, it loads the sound in the `SoundEffectObject` component
-             * from the specified file path from the `SoundEffectInfos` component.
+             * This method checks if the sound effect for an entity is loaded, and if not, it loads the sound in the `SoundEffectObject`
+             * component from the specified file path from the `SoundEffectInfos` component.
              * @param soundEffectInfos Array of sound effect infos components for entities.
              * @param soundEffectObjects Array of sound effect objects components for entities.
              */
-            void loadSounds(SparseArray<component::SoundEffectInfos> &soundEffectInfos, SparseArray<component::SoundEffectObject> &soundEffectObjects);
+            void loadSounds(SparseArray<component::SoundEffectInfos> &soundEffectInfos,
+                            SparseArray<component::SoundEffectObject> &soundEffectObjects);
         };
     }
 }

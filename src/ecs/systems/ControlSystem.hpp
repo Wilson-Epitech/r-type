@@ -16,8 +16,8 @@
 #define CONTROLSYSTEM_HPP_
 
 #include "Components.hpp"
-#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 #define JOYSTICK_SENSIBILITY 0.6 ///< Sensitivity threshold for joystick movement.
 

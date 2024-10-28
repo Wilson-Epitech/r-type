@@ -23,7 +23,7 @@ void ecs::system::SoundSystem::operator()(Registry &reg) {
 }
 
 void ecs::system::SoundSystem::loadSounds(SparseArray<component::SoundEffectInfos> &soundEffectInfos,
-    SparseArray<component::SoundEffectObject> &soundEffectObjects) {
+                                          SparseArray<component::SoundEffectObject> &soundEffectObjects) {
 
     for (std::size_t i = 0; i < soundEffectInfos.size(); ++i) {
         if (!soundEffectInfos[i])

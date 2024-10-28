@@ -16,8 +16,8 @@
 #define MUSICSYSTEM_HPP_
 
 #include "Components.hpp"
-#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 namespace ecs {
     namespace system {
@@ -44,12 +44,13 @@ namespace ecs {
           private:
             /**
              * @brief Loads the background music for an entity if not already loaded.
-             * This method checks if the music for an entity is loaded, and if not, it loads the music in the `BackgroundMusicObject` component
-             * from the specified file path from the `BackgroundMusicInfos` component.
+             * This method checks if the music for an entity is loaded, and if not, it loads the music in the `BackgroundMusicObject`
+             * component from the specified file path from the `BackgroundMusicInfos` component.
              * @param backgroundMusicInfos Array of background music infos components for entities.
              * @param backgroundMusicObject Array of background music objects components for entities.
              */
-            void loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos, SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects);
+            void loadMusics(SparseArray<component::BackgroundMusicInfos> &backgroundMusicInfos,
+                            SparseArray<component::BackgroundMusicObject> &backgroundMusicObjects);
         };
     }
 }

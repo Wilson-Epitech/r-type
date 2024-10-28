@@ -9,8 +9,8 @@
 #define DRAWTEXTSYSTEM_HPP_
 
 #include "Components.hpp"
-#include "RaylibComponents.hpp"
 #include "ISystem.hpp"
+#include "RaylibComponents.hpp"
 
 #define LETTER_SPACING 2 ///< The spacing between two characters displayed
 #define INVISIBLE_POWERUP_TEXT "Invincible|"
@@ -40,7 +40,6 @@ namespace ecs {
             void operator()(Registry &reg) override;
 
           private:
-
             /**
              * @brief Load the font of a text.
              * @param textInfos The text informations of an entity.
