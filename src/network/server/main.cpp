@@ -9,6 +9,7 @@
 #include "RunGame.hpp"
 #include <iostream>
 
+#define NB_CLIENTS_AUTHORIZED 4
 #define ERROR_VALUE 84
 #define INVALID_ARGUMENTS_MESSAGE  "Usage: ./server [port] | ./server [port] --difficulty difficultyMode\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (set to medium by default)"
 
@@ -29,10 +30,8 @@ int main(int ac, char **av) {
         game::RtypeGameServer rtype;
         if (ac == 4)
             rtype = game::RtypeGameServer(av[3]);
-        asio::io_context io_context;
         asio::thread_pool pool(NB_CLIENTS_AUTHORIZED);
-        std::unique_ptr<network::Server> server = std::make_unique<network::Server>(io_context, std::stoi(av[1]), pool);
-        RunGame runGame(server, rtype.getRegistry(), rtype);
+        RunGame runGame(rtype.getRegistry(), rtype, std::stoi(av[1]), pool);
         runGame.run();
         pool.join();
     } catch (const std::exception &e) {

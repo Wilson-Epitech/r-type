@@ -9,34 +9,30 @@
 #include <asio.hpp>
 #include <iostream>
 
-network::Client::Client(asio::io_context &ioContext, const std::string &host, const std::string &port)
-    : _socket(ioContext), _isRunning(true), _magicNumber(0x9B3D), _messageId(0), _playerId(0) {
+network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(), _socket(_ioContext), _playerId(0) {
     _socket.open(asio::ip::udp::v4());
-    asio::ip::udp::resolver resolver(ioContext);
+    asio::ip::udp::resolver resolver(_ioContext);
     _receiveEndpoint = *resolver.resolve(host, port).begin();
     _receiverThread = std::thread(&network::Client::msgFromServer, this);
-    _heartbeatThread = std::thread(&network::Client::heartbeatToServer, this);
     sendMessage("New client connected.", 1);
 }
 
 network::Client::~Client() {
     _isRunning = false;
     _receiverThread.join();
-    _heartbeatThread.join();
     _socket.close();
 }
 
-void network::Client::handleCtrlC(int signal) {
-    if (signal == SIGINT)
-        exit(0);
+std::list<DataToSend> network::Client::getData() {
+    return _data;
 }
 
-sig_atomic_t network::Client::handleClient(const sig_atomic_t new_status) {
-    static volatile sig_atomic_t status = 1;
+bool network::Client::isConnectedInNetwork() {
+    return _isRunning;
+}
 
-    if (new_status != 1)
-        status = new_status;
-    return status;
+network::Type network::Client::getNetworkType() {
+    return network::Type::CLIENT;
 }
 
 void network::Client::msgFromServer() {
@@ -93,14 +89,14 @@ void network::Client::msgFromServer() {
 }
 
 void network::Client::sendMessage(const std::string &message, uint8_t messageType) {
-    _len = static_cast<uint16_t>(message.size());
-    std::vector<char> buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len) + message.size());
+    _messageLen = static_cast<uint16_t>(message.size());
+    std::vector<char> buffer(sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_messageLen) + message.size());
 
     std::memcpy(buffer.data(), &_magicNumber, sizeof(_magicNumber));
     std::memcpy(buffer.data() + sizeof(_magicNumber), &messageType, sizeof(messageType));
     std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType), &_messageId, sizeof(_messageId));
-    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_len, sizeof(_len));
-    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_len), message.data(),
+    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId), &_messageLen, sizeof(_messageLen));
+    std::memcpy(buffer.data() + sizeof(_magicNumber) + sizeof(messageType) + sizeof(_messageId) + sizeof(_messageLen), message.data(),
                 message.size());
 
     if (_messageId >= MAXMESSAGE) {
@@ -112,28 +108,30 @@ void network::Client::sendMessage(const std::string &message, uint8_t messageTyp
     _socket.send_to(asio::buffer(buffer), _receiveEndpoint);
 }
 
-bool network::Client::getIsRunning() {
-    return _isRunning;
-}
-
-std::list<DataToSend> network::Client::getData() {
-    return _data;
-}
-
-std::size_t network::Client::getPlayerId() {
-    return _playerId;
-}
-
-void network::Client::clearData() {
-    _data.clear();
-}
-
-void network::Client::heartbeatToServer() {
-    while (_isRunning) {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        if (_playerId != 0)
-            sendMessage("Alive: " + std::to_string(_playerId), 4);
+std::size_t network::Client::manageConnection() {
+    static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(time1 - time0);
+    if (!_isRunning)
+        return 0;
+    if (timeElapsed.count() > HEARTBEAT_TIME && _playerId != 0) {
+        sendMessage("Alive: " + std::to_string(_playerId), 4);
+        time0 = std::chrono::steady_clock::now();
     }
+    return 0;
+}
+
+void network::Client::updateData(ecs::Registry &reg) {
+    std::map<std::size_t, entity_t> player = reg.getPlayers();
+    if (_playerId != 0 && player.size() == 0)
+        reg.addPlayer(0, _playerId);
+    for (auto dataReceived : _data) {
+        if (!dataReceived.empty()) {
+            network::HandleData::updateDeadEntities(dataReceived, reg);
+            network::HandleData::updateEntitiesData(dataReceived, reg);
+        }
+    }
+    _data.clear();
 }
 
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {

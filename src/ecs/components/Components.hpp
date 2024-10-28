@@ -53,7 +53,9 @@ namespace ecs {
         ENEMYSHOT,           ///< Enemy's shot entity
         ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
         BACKGROUND,          ///< Background entity
-        TEXT                 ///< Text entity
+        TEXT,                ///< Text entity
+        POWERUP,             ///< Powerup entity
+        POWERUP_TEMPLATE     ///< Powerup template entity
     };
 
     /**
@@ -61,17 +63,31 @@ namespace ecs {
      * @brief Enum representing different component types in the ECS.
      */
     enum ComponentName {
-        NONE,        ///< No component
-        POSITION,    ///< Position component
-        VELOCITY,    ///< Velocity component
-        TYPE,        ///< Type component
-        LIFE,        ///< Life component
-        SHOOTING,    ///< Shooting component
-        SPRITEINFOS, ///< Sprite information component
-        SOUNDEFFECT, ///< Sound effect component
-        MUSIC,       ///< Background music component
-        SCORE,       ///< Score component
-        TEXTINFOS    ///< Text component
+        NONE,           ///< No component
+        POSITION,       ///< Position component
+        VELOCITY,       ///< Velocity component
+        TYPE,           ///< Type component
+        LIFE,           ///< Life component
+        SHOOTING,       ///< Shooting component
+        SPRITEINFOS,    ///< Sprite information component
+        SOUNDEFFECT,    ///< Sound effect component
+        MUSIC,          ///< Background music component
+        SCORE,          ///< Score component
+        TEXTINFOS,      ///< Text component
+        ACTIVEPOWERUP   ///< Activated powerup component
+    };
+
+    /**
+     * @enum Poweruptype
+     * @brief Enum representing different powerup types.
+     */
+    enum Poweruptype {
+        NOPOWERUP,          ///< No powerup, must be at the end of the enum
+        LIFE_POWERUP,       ///< Powerup type, give one pv to the player
+        POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
+        INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
+        MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
+        END_POWERUP_TYPE    ///< End of the powerup type enum
     };
 
     namespace component {
@@ -117,12 +133,14 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives;      ///< Number of lives the entity has
+            std::size_t nbLives = 1;      ///< Number of lives the entity has
             bool displayLife = false; ///< Indicates if the life has to be displayed
+            bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
             std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
+            bool isInvincible = false; ///< Indicates if the entity is invincible
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
             }
         };
 
@@ -132,9 +150,11 @@ namespace ecs {
          */
         struct Shooting {
             bool isShooting = false; ///< Boolean indicating if the entity is shooting
+            std::size_t shootPower = 1; ///< How much damage do the shoot
+            float shootSize = 1;    ///< Size of the shoot
 
             bool operator==(const Shooting &other) const {
-                return (isShooting == other.isShooting);
+                return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
             }
         };
 
@@ -251,6 +271,33 @@ namespace ecs {
                         color.b == other.color.b);
             }
         };
+
+        /**
+         * @struct Powerup
+         * @brief Component for the powerup information a powerup
+        */
+        struct Powerup {
+            Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
+            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
+            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
+        };
+
+        /**
+         * @struct ActivePowerup
+         * @brief Component for the powerup that has been used by a player
+        */
+        struct ActivePowerup {
+            bool isPowershootActive = false;    ///< Indicates if the powerup Powershoot is activated
+            bool isInvincibleActive = false;    ///< Indicates if the powerup Invincible is activated
+            bool isMegaShootActive = false;     ///< Indicates if the powerup MegaShoot is activated
+
+            bool operator==(const ActivePowerup &other) const {
+                return (isPowershootActive == other.isPowershootActive &&
+                        isInvincibleActive == other.isInvincibleActive &&
+                        isMegaShootActive == other.isMegaShootActive);
+            }
+        };
     }
 }
 
@@ -274,7 +321,10 @@ struct EntityData {
                 areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                 areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
+                areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
+                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
+                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
         }
         return false;
     }
@@ -319,6 +369,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos 
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music);
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
+void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -333,6 +384,7 @@ void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &sound
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music);
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
+void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

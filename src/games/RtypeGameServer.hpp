@@ -28,16 +28,18 @@
 #include "PositionSystem.hpp"
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "PowerupSystem.hpp"
 
-#define PLAYER_NAME "player" ///< Defines the name of the player entity.
-#define PLAYER_SHOT_NAME "player_shot" ///< Defines the name of the player shot entity.
 #define BACKGROUND_NAME "background" ///< Defines the name of the background entity.
-#define SPAWN_ENEMY_NAME "enemy" ///< Defines the name of the enemy spawn entity.
-#define ENEMY_SHOT_NAME "enemy_shot" ///< Defines the name of the enemy shot entity.
-#define SPAWN_STRONGER_ENEMY_NAME "stronger_enemy" ///< Defines the name of the boss spawn entity.
+#define PLAYER_NAME "player_template" ///< Defines the name of the player template entity.
+#define PLAYER_SHOT_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
+#define SPAWN_ENEMY_NAME "enemy_template" ///< Defines the name of the enemy spawn template entity.
+#define ENEMY_SHOT_NAME "enemy_shot_template" ///< Defines the name of the enemy shot template entity.
+#define SPAWN_STRONGER_ENEMY_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemy spawn template entity.
 #define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define TEAM_SCORE_NAME "team_score" ///< Defines the name of the team score entity.
 #define TITLE_NAME "title" ///< Defines the name of the title entity.
+#define POWERUP_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30 ///< Minimum spawn height for enemies.
@@ -62,8 +64,6 @@
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 
 #define TIME_BEFORE_SPAWN_STRONGER_ENEMY_DIFFICULTY_FACTOR 5 ///< The factor that will be multiplied by the difficulty mode of the game for TIME_BEFORE_SPAWN_STRONGER_ENEMY define.
-
-// renommer les defines avec "base"
 
 namespace game {
 

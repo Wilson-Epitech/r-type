@@ -16,7 +16,6 @@ void ecs::system::PlayerSpawnSystem::operator()(Registry &reg) {
 }
 
 void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity_t &entity) {
-    ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
     ecs::SparseArray<ecs::component::Velocity> &velocities = reg.getComponents<ecs::component::Velocity>();
     ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
@@ -26,6 +25,7 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity
     ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = reg.getComponents<ecs::component::ShootingRate>();
     ecs::SparseArray<ecs::component::Score> &score = reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
+    ecs::SparseArray<ecs::component::ActivePowerup> &activePowerup = reg.getComponents<ecs::component::ActivePowerup>();
     std::size_t playerTemplateIndex = getPlayerTemplateIndex(reg);
 
     if (playerTemplateIndex == 0)
@@ -33,8 +33,6 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity
 
     if (!types[entity])
         types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYER});
-    if (!positions[entity])
-        positions.insertAt(entity, ecs::component::Position{100, 100});
     if (velocities[playerTemplateIndex] && !velocities[entity])
         velocities.insertAt(entity, ecs::component::Velocity{velocities[playerTemplateIndex].value()});
     if (shootings[playerTemplateIndex] && !shootings[entity])
@@ -53,6 +51,8 @@ void ecs::system::PlayerSpawnSystem::createNewPlayer(Registry &reg, const entity
         score.insertAt(entity, ecs::component::Score{score[playerTemplateIndex].value()});
     if (textInfos[playerTemplateIndex] && !textInfos[entity])
         textInfos.insertAt(entity, ecs::component::TextInfos{textInfos[playerTemplateIndex].value()});
+    if (activePowerup[playerTemplateIndex] && !activePowerup[entity])
+        activePowerup.insertAt(entity, ecs::component::ActivePowerup{activePowerup[playerTemplateIndex].value()});
 }
 
 std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg) {
@@ -71,8 +71,11 @@ std::size_t ecs::system::PlayerSpawnSystem::getPlayerTemplateIndex(Registry &reg
 
 void ecs::system::PlayerSpawnSystem::setPlayerColor(Registry &reg, const entity_t &entity) {
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = reg.getComponents<ecs::component::SpriteInfos>();
-    std::vector<ecs::CustomColor> availableSpaceshipColors = {CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR};
+    ecs::SparseArray<ecs::component::Position> &positions = reg.getComponents<ecs::component::Position>();
+    std::vector<ecs::CustomColor> availableSpaceshipColors = reg.getAvailableSpaceshipColors();
     std::vector<std::pair<entity_t, ecs::CustomColor>> playersColors = reg.getPlayersColors();
+    std::vector<std::pair<ecs::CustomColor, ecs::component::Position>> spaceshipColorPositionCorrespondence =
+        reg.getSpaceshipColorPositionCorrespondence();
 
     for (auto availableSpaceshipColor : availableSpaceshipColors) {
         auto it = std::find_if(playersColors.begin(), playersColors.end(),
@@ -82,5 +85,13 @@ void ecs::system::PlayerSpawnSystem::setPlayerColor(Registry &reg, const entity_
             reg.addPlayerColor(entity, availableSpaceshipColor);
             break;
         }
+    }
+    if (positions[entity])
+        return;
+    ecs::CustomColor spaceshipColor = spriteInfos[entity]->color;
+    auto it = std::find_if(spaceshipColorPositionCorrespondence.begin(), spaceshipColorPositionCorrespondence.end(),
+                           [spaceshipColor](const auto &pair) { return ((pair.first == spaceshipColor)); });
+    if (it != spaceshipColorPositionCorrespondence.end()) {
+        positions.insertAt(entity, it->second);
     }
 }

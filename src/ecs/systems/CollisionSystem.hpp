@@ -118,6 +118,41 @@ namespace ecs {
              * @return false Otherwise.
              */
             bool isBackground(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between an enemy and a Powerup.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy and a Powerup.
+             * @return false Otherwise.
+             */
+            bool isEnemyAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between an enemy shot and a Powerup.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy shot and a Powerup.
+             * @return false Otherwise.
+             */
+            bool isEnemyShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between a player shot and a Powerup.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between a player shot and a Powerup.
+             * @return false Otherwise.
+             */
+            bool isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
+             * @param reg The ECS registry containing entities and components.
+             * @param i The index of the first entity.
+             * @param j The index of the second entity.
+             */
+            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
         };
     }
 }
