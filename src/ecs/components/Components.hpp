@@ -310,7 +310,6 @@ namespace ecs {
             int size; ///< Size of the text
             std::string fontPath; ///< Path of the font used to draw the text
             CustomColor color = { 245, 245, 245, 255 }; ///< Color of the text
-            // Font font = Font{}; ///< Font of the text
             bool fontIsLoaded = false; ///< Indicates if font has been loaded
 
             bool operator==(const PowerupTextInfos &other) const {
@@ -342,8 +341,8 @@ struct EntityData {
                 areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                 areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                    areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
-                    areComponentsEquals<ecs::component::PowerupTextInfos>(name, ecs::ComponentName::POWERUP_TEXT_TEMPLATE, component, other.component) ||
+                areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
+                areComponentsEquals<ecs::component::PowerupTextInfos>(name, ecs::ComponentName::POWERUP_TEXT_TEMPLATE, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
                 areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
