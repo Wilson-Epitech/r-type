@@ -278,7 +278,7 @@ namespace ecs {
         */
         struct Powerup {
             Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
-            int spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
             bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
             std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
         };
