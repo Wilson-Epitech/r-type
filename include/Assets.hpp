@@ -17,6 +17,7 @@
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"
 #define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"
 #define FONT_PATH "assets/ARCADE_N.TTF"
+#define POWERUP_PATH "assets/powerup.png"
 
 #define PLAYER_SPRITE_NB_PATTERN 16
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3

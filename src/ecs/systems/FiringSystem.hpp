@@ -49,8 +49,10 @@ namespace ecs {
              * sprite information, and other components necessary for the shot entity.
              * @param index The index of the player entity firing the shot.
              * @param reg The ECS registry where the shot entity will be created.
+             * @param shootPower The power of the shoot.
+             * @param shootSize The size of the shoot.
              */
-            void addShot(std::size_t index, Registry &reg);
+            void addShot(std::size_t index, Registry &reg, const std::size_t &shootPower, const float &shootSize);
 
             /**
              * @brief Retrieves the index of the player shot component.
