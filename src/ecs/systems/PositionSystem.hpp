@@ -51,13 +51,37 @@ namespace ecs {
              * @return true If the player's position was updated successfully.
              * @return false If the player's position update was not necessary.
              */
-            bool handlePlayerPosition(std::size_t playerIndex, Registry &reg);
+            bool handlePlayerPosition(const std::size_t &playerIndex, Registry &reg);
 
-            void setStartPosition(Registry &reg, std::size_t index);
+            /**
+             * @brief Store the postition of the entity before any movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to store the position.
+             */
+            void setStartPosition(Registry &reg, const std::size_t &index);
 
-            void handleMovementPatern(Registry &reg, std::size_t index);
-            void moveStraight(Registry &reg, std::size_t index);
-            void moveSnake(Registry &reg, std::size_t index);
+            /**
+             * @brief Handle the movement patern of the entity
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The entity that will move.
+             */
+            void handleMovementPatern(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for entitys.
+             * This method move the entity with a straight movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveStraight(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for entitys.
+             * This method move the entity with a snake movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveSnake(Registry &reg, const std::size_t &index);
         };
     }
 }

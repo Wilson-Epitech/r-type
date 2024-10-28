@@ -6,7 +6,6 @@
 */
 
 #include "PositionSystem.hpp"
-#include <iostream>
 
 void ecs::system::PositionSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
@@ -22,7 +21,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
     }
 }
 
-bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, Registry &reg) {
+bool ecs::system::PositionSystem::handlePlayerPosition(const std::size_t &playerIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -44,7 +43,7 @@ bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, 
     return false;
 }
 
-void ecs::system::PositionSystem::handleMovementPatern(Registry &reg, std::size_t index) {
+void ecs::system::PositionSystem::handleMovementPatern(Registry &reg, const std::size_t &index) {
     SparseArray<component::MovementPatern> &movementPatern = reg.getComponents<component::MovementPatern>();
 
     if (movementPatern.size() < index) {
@@ -55,17 +54,18 @@ void ecs::system::PositionSystem::handleMovementPatern(Registry &reg, std::size_
         moveStraight(reg, index);
         return;
     }
-    if (movementPatern[index]->movementPaternType == ecs::MovementType::STRAIGHT) {
-        moveStraight(reg, index);
-        return;
-    }
-    if (movementPatern[index]->movementPaternType == ecs::MovementType::SNAKE) {
-        moveSnake(reg, index);
-        return;
+    switch (movementPatern[index]->movementPaternType) {
+        case ecs::MovementType::STRAIGHT:
+            moveStraight(reg, index);
+            break;
+        case ecs::MovementType::SNAKE:
+            moveSnake(reg, index);
+        default:
+            break;
     }
 }
 
-void ecs::system::PositionSystem::moveStraight(Registry &reg, std::size_t index) {
+void ecs::system::PositionSystem::moveStraight(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
 
@@ -73,7 +73,7 @@ void ecs::system::PositionSystem::moveStraight(Registry &reg, std::size_t index)
     positions[index]->y += velocities[index]->vy;
 }
 
-void ecs::system::PositionSystem::moveSnake(Registry &reg, std::size_t index) {
+void ecs::system::PositionSystem::moveSnake(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
 
@@ -94,7 +94,7 @@ void ecs::system::PositionSystem::moveSnake(Registry &reg, std::size_t index) {
     positions[index]->y += velocities[index]->vy;
 }
 
-void ecs::system::PositionSystem::setStartPosition(Registry &reg, std::size_t index) {
+void ecs::system::PositionSystem::setStartPosition(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
 
     if (positions[index]->startX == 0)
