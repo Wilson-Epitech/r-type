@@ -10,10 +10,11 @@
 #include <csignal>
 
 void RunGame::run() {
-    if (_server)
+    if (_networkInstance->getNetworkType() == network::Type::SERVER) {
         runServer();
-    else
+    } else if (_networkInstance->getNetworkType() == network::Type::CLIENT) {
         runClient();
+    }
 }
 
 bool RunGame::isUpdateTimeElapsed() {
@@ -26,65 +27,45 @@ bool RunGame::isUpdateTimeElapsed() {
 }
 
 void RunGame::runServer() {
-    DataToSend dataReceived;
-    bool dataHasBeenUsed = false;
+    std::list<DataToSend> dataReceivedList;
     std::size_t disconnectedPlayerEntity = 0;
 
-    while (1) {
+    while (!_networkInstance->isSigInt()) {
         if (!isUpdateTimeElapsed())
             continue;
-        dataReceived = _server->getData();
-        dataHasBeenUsed = _server->getDataHasBeenUsed();
-        if (!dataReceived.empty() && !dataHasBeenUsed) {
-            network::HandleData::updateEntitiesData(dataReceived, _reg);
-            _server->setDataHasBeenUsed(true);
-        }
-        if (_server->getStillAliveClientNumber() > 0) {
-            _server->sendUpdatedData(_reg);
+        dataReceivedList = _networkInstance->getData();
+        _networkInstance->updateData(_reg);
+        if (_networkInstance->isConnectedInNetwork()) {
+            _networkInstance->sendUpdatedData(_reg, dataReceivedList);
             _reg.clearActualTurnNewEntities();
             _reg.clearActualTurnDeadEntities();
         }
         _reg.runSystems();
-        disconnectedPlayerEntity = _server->checkConnectedHeartbeat();
+        disconnectedPlayerEntity = _networkInstance->manageConnection();
         if (disconnectedPlayerEntity != 0)
             _reg.killEntity(disconnectedPlayerEntity);
     }
 }
 
 void RunGame::runClient() {
-    static std::list<DataToSend> lastDataReceivedList;
     std::list<DataToSend> dataReceivedList;
-    std::map<std::size_t, entity_t> player;
-    std::size_t playerId = 0;
 
-    while (_client->handleClient(1) && !WindowShouldClose()) {
-        if (!_client->getIsRunning()) {
-            _client->sendMessage("Client disconnected", 2);
+    while (!_networkInstance->isSigInt() && !WindowShouldClose()) {
+        if (!_networkInstance->isConnectedInNetwork()) {
+            _networkInstance->sendMessage("Client disconnected", 2);
             break;
         }
         if (!isUpdateTimeElapsed())
             continue;
         BeginDrawing();
         ClearBackground(RAYWHITE);
-        dataReceivedList = _client->getData();
-        _client->clearData();
-        player = _reg.getPlayers();
-        playerId = _client->getPlayerId();
-
-        if (playerId != 0 && player.size() == 0)
-            _reg.addPlayer(0, playerId);
-        for (auto dataReceived : dataReceivedList) {
-            if (!dataReceived.empty()) {
-                network::HandleData::updateDeadEntities(dataReceived, _reg);
-                network::HandleData::updateEntitiesData(dataReceived, _reg);
-            }
-            lastDataReceivedList = dataReceivedList;
-        }
-
-        _client->sendUpdatedData(_reg, lastDataReceivedList);
+        dataReceivedList = _networkInstance->getData();
+        _networkInstance->updateData(_reg);
+        _networkInstance->sendUpdatedData(_reg, dataReceivedList);
         _reg.clearActualTurnNewEntities();
         _reg.clearActualTurnDeadEntities();
         _reg.runSystems();
+        _networkInstance->manageConnection();
         EndDrawing();
     }
     CloseWindow();

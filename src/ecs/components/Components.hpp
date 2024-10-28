@@ -274,7 +274,9 @@ struct EntityData {
                 areComponentsEquals<ecs::component::Shooting>(name, ecs::ComponentName::SHOOTING, component, other.component) ||
                 areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
-                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
+                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
+                areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
         }
         return false;
     }

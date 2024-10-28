@@ -16,14 +16,12 @@
 #ifndef CLIENT_HPP_
 #define CLIENT_HPP_
 
-#include "HandleData.hpp"
-#include <array>
-#include <asio.hpp>
-#include <list>
+#include "ANetwork.hpp"
 #include <string>
 #include <thread>
 
-#define MAXMESSAGE 255 ///< Maximum number of messages that can be sent before resetting the message ID.
+#define MAXMESSAGE 255   ///< Maximum number of messages that can be sent before resetting the message ID.
+#define HEARTBEAT_TIME 1 ///< Time in second where the client has to send a heartbeat to the server.
 
 namespace network {
 
@@ -33,62 +31,29 @@ namespace network {
      * The `Client` class handles communication with the server through a UDP socket. It sends and receives
      * messages, maintains the connection using heartbeat messages, and stores the player's game data received from the server.
      */
-    class Client {
+    class Client : virtual public network::ANetwork {
       public:
         /**
          * @brief Constructs a `Client` and establishes a connection to the server.
          * Initializes the client, opens a UDP socket, resolves the server address, and starts threads for
          * receiving messages and sending heartbeat messages.
-         * @param ioContext The `asio::io_context` object used to manage asynchronous operations.
          * @param host The server's hostname or IP address.
          * @param port The server's port number.
          */
-        Client(asio::io_context &ioContext, const std::string &host, const std::string &port);
-
+        Client(const std::string &host, const std::string &port);
         /**
          * @brief Destructor for the `Client` class.
          * Stops the client by terminating threads and closing the socket.
          */
         ~Client();
 
-        /**
-         * @brief Sends a message to the server.
-         * Serializes the message and sends it over the UDP socket.
-         * @param message The message to send.
-         * @param messageType The type of the message, which is used for server-side processing.
-         */
-        void sendMessage(const std::string &message, uint8_t messageType);
-
-        /**
-         * @brief Catch the ctrl C signal.
-         * @param signal Retrieve the signal sent.
-         */
-        static void handleCtrlC(int signal);
-        sig_atomic_t handleClient(const sig_atomic_t new_status);
-
-        /**
-         * @brief Checks if the client is still running.
-         * @return true If the client is active and running.
-         * @return false If the client has stopped.
-         */
-        bool getIsRunning();
-
-        /**
-         * @brief Retrieves the data received from the server.
-         * @return std::list<DataToSend> The data received from the server.
-         */
-        std::list<DataToSend> getData();
-
-        /**
-         * @brief Retrieves the player's ID.
-         * @return std::size_t The player's ID.
-         */
-        std::size_t getPlayerId();
-        /**
-         * @brief Clear the list of Data received by the server
-         */
-        void clearData();
-        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList);
+        void sendMessage(const std::string &message, uint8_t messageType) override;
+        void sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) override;
+        std::size_t manageConnection() override;
+        void updateData(ecs::Registry &reg) override;
+        std::list<DataToSend> getData() override;
+        network::Type getNetworkType() override;
+        bool isConnectedInNetwork() override;
 
       private:
         /**
@@ -98,26 +63,26 @@ namespace network {
          */
         void msgFromServer();
 
-        /**
-         * @brief Sends periodic heartbeat messages to the server to maintain the connection.
-         * This function runs in a separate thread and sends heartbeat messages at regular intervals to notify the server
-         * that the client is still connected and active.
-         */
-        void heartbeatToServer();
-
+        asio::io_context _ioContext;
         asio::ip::udp::socket _socket;            ///< The UDP socket used for communication with the server.
         asio::ip::udp::endpoint _receiveEndpoint; ///< The server's endpoint (address and port).
         std::thread _receiverThread;              ///< Thread for receiving messages from the server.
         std::thread _heartbeatThread;             ///< Thread for sending heartbeat messages to the server.
-        bool _isRunning;                          ///< Indicates whether the client is still running.
 
-        const uint16_t _magicNumber; ///< Magic number used for message validation.
-        uint8_t _messageId;          ///< ID of the current message being sent.
-        uint16_t _len;               ///< Length of the current message.
-
-        std::list<DataToSend> _data; ///< A list of Data received from the server, such as game state updates.
-        std::size_t _playerId;       ///< The player's ID assigned by the server.
+        std::size_t _playerId; ///< The player's ID assigned by the server.
     };
 };
+
+/**
+ * @brief Used to create a new client instance by loading a shared library from this class.
+ * @param host The server's hostname or IP address.
+ * @param port The server's port number.
+ * @return network::Client* Pointer to the newly created client instance
+ */
+extern "C" {
+network::Client *entryPoint(const std::string &host, const std::string &port) {
+    return new network::Client(host, port);
+}
+}
 
 #endif /* !CLIENT_HPP_ */
