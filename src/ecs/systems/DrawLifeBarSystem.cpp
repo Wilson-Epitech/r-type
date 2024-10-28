@@ -15,7 +15,7 @@ void ecs::system::DrawLifeBarSystem::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size() && i < lives.size(); ++i) {
         if (drawables[i] && positions[i] && spriteInfos[i] && lives[i]) {
-            if (drawables[i]->isLoaded && lives[i]->displayLife) {
+            if (spriteInfos[i]->isLoaded && lives[i]->displayLife) {
                 drawLife(drawables, spriteInfos, positions, lives, i);
             }
         }

@@ -137,6 +137,7 @@ namespace ecs {
             std::size_t firstPattern = 0; ///< First pattern in the sprite
             float scaleFactor = 1.0;      ///< Scale factor for the sprite
             Color color = RAYWHITE;       ///< Color applied to the sprite
+            bool isLoaded = false;        ///< Indicates if the texture is loaded
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
@@ -165,7 +166,6 @@ namespace ecs {
          * @brief Component representing the drawable texture of an entity.
          */
         struct Drawable {
-            bool isLoaded = false;                 ///< Indicates if the texture is loaded
             Texture2D spriteTexture = Texture2D{}; ///< Texture for the entity
             Rectangle spriteRect = Rectangle{};    ///< Rectangle of the texture to be drawn
         };

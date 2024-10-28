@@ -16,7 +16,6 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg)
     SparseArray<component::Position> &position = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocity = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfo = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::Drawable> &drawableBackground = reg.getComponents<component::Drawable>();
 
     for (std::size_t i = 0; i < bossLevel.size() && i < types.size(); i++) {
         if (bossLevel[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
@@ -38,7 +37,7 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg)
             for (std::size_t y = 0; y < types.size(); y++) {
                 if (types[y]->entityType == ecs::EntityType::BACKGROUND) {
                     spriteInfo[y]->spritePath = "assets/background_level2.png";
-                    drawableBackground[y]->isLoaded = false;
+                    spriteInfo[y]->isLoaded = false;
                 }
             }
         }
