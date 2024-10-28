@@ -13,8 +13,12 @@
 #include "RaylibComponents.hpp"
 
 #define LETTER_SPACING 2 ///< The spacing between two characters displayed
+
+/** @brief Defines the text to display when the player is invinsible */
 #define INVISIBLE_POWERUP_TEXT "Invincible|"
-#define MEGASHOOT_POWERUP_TEXT "MagaShoot|"
+/** @brief Defines the text to display when the player has the powerup megaShoot enable*/
+#define MEGASHOOT_POWERUP_TEXT "MegaShoot|"
+/** @brief Defines the text to display when the player has the powerup powershoot enable */
 #define POWERSHOOT_POWERUP_TEXT "Powershoot|"
 
 namespace ecs {
@@ -46,25 +50,6 @@ namespace ecs {
              * @param textFonts The text fonts of an entity.
              */
             void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts);
-
-            template <typename Component>
-            void loadFonts(Registry &reg, SparseArray<component::TextFont> &textFonts) {
-                ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
-                for (std::size_t i = 0; i < componentInfos.size(); ++i) {
-                    if (!componentInfos[i])
-                        continue;
-                    if (!textFonts[i])
-                        textFonts.insertAt(i, ecs::component::TextFont{});
-                    if (textFonts[i] && !componentInfos[i]->fontIsLoaded && componentInfos[i]->fontPath.length() > 0) {
-                        if (!FileExists(componentInfos[i]->fontPath.c_str())) {
-                            textFonts[i]->font = GetFontDefault();
-                            componentInfos[i]->fontIsLoaded = true;
-                        }
-                        textFonts[i]->font = LoadFont(componentInfos[i]->fontPath.c_str());
-                        componentInfos[i]->fontIsLoaded = true;
-                    }
-                }
-            }
 
             void drawPowerupText(Registry &reg, const std::size_t &playerEntity);
             std::size_t getPowerupTextInfos(Registry &reg);

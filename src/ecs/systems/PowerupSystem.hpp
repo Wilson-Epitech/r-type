@@ -10,9 +10,8 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include <raylib.h>
 
-#define EFFECT_DURATION 5
+#define EFFECT_DURATION 5 ///< the active duration of a powerup
 
 namespace ecs {
     namespace system {
@@ -88,12 +87,6 @@ namespace ecs {
                 * and the moment when it was activated
                 */
                 void clearMegaShootEffect(Registry &reg, std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> &megaShootTimer);
-
-                /**
-                * @brief Select ramdomely a powerup to spawn after the death of an enemy
-                * @return ecs::Poweruptype The powerup type that will be spawn.
-                */
-                ecs::Poweruptype selectPowerup(void);
 
                 /**
                 * @brief Update the activated poweurp of the player

@@ -31,7 +31,7 @@ Our game engine is composed of three main elements in the ECS architecture:
 **Components** are structures used to store the data of an entity. Below is an overview of the available components:
 
 ### Type and Name
-There is two enum in the Components.hpp.
+There is three enum in the Components.hpp.
 The first one is the EntityType
 ```hpp
 enum EntityType {
@@ -62,6 +62,17 @@ enum ComponentName {
    MUSIC,
    SCORE,
    TEXTINFOS
+};
+```
+The third one is the Poweruptype enum, used to store the type of a powerup
+```hpp
+enum Poweruptype {
+   NOPOWERUP,
+   LIFE_POWERUP,
+   POWERSHOOT_POWERUP,
+   INVINCIBLE_POWERUP,
+   MEGASHOOT_POWERUP,
+   END_POWERUP_TYPE
 };
 ```
 

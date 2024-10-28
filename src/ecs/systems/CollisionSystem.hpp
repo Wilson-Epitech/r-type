@@ -147,11 +147,10 @@ namespace ecs {
             bool isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief Checks if either of the entities involved in the collision is a Powerup entity.
-             * @param firstType The type of the first entity.
-             * @param secondType The type of the second entity.
-             * @return true If one of the entities is a Powerup.
-             * @return false Otherwise.
+             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
+             * @param reg The ECS registry containing entities and components.
+             * @param i The index of the first entity.
+             * @param j The index of the second entity.
              */
             void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
         };
