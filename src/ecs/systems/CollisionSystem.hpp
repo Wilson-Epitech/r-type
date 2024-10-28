@@ -132,7 +132,7 @@ namespace ecs {
              * @brief Checks if the collision is between an enemy shot and a Powerup.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
-             * @return true If it's a collision between a enemy shot and a Powerup.
+             * @return true If it's a collision between an enemy shot and a Powerup.
              * @return false Otherwise.
              */
             bool isEnemyShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
