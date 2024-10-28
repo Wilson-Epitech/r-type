@@ -21,7 +21,7 @@ void ecs::system::DrawTextSystem::operator()(Registry &reg) {
     loadFontsTextInfos(textInfos, textFonts);
     for (std::size_t i = 0; i < textInfos.size() && i < types.size(); ++i) {
         if (textInfos[i] && textFonts[i] && types[i]) {
-            if (types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity)
+            if ((types[i]->entityType == ecs::EntityType::PLAYER && i != playerEntity) || types[i]->entityType == ecs::EntityType::POWERUP_TEMPLATE)
                 continue;
             if (textInfos[i]->textToDisplay.length() > 0) {
                 DrawTextEx(textFonts[i]->font, textInfos[i]->textToDisplay.c_str(),
@@ -41,9 +41,9 @@ void ecs::system::DrawTextSystem::drawPowerupText(Registry &reg, const std::size
     ecs::CustomVector2D screenRatio = {(float)Lib::getScreenWidth() / (float)GetScreenWidth(),
         (float)Lib::getScreenHeight() / (float)GetScreenHeight()};
     std::size_t powerupTextInfosIndex = getPowerupTextInfos(reg);
+    std::string powerupString;
     if (powerupTextInfosIndex == 0)
         return;
-    std::string powerupString = "";
 
     loadFontsTextInfos(textInfos, textFonts);
     if (activePowerup.size() < playerEntity || textInfos.size() < powerupTextInfosIndex)

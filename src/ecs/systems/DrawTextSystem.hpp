@@ -51,7 +51,18 @@ namespace ecs {
              */
             void loadFontsTextInfos(SparseArray<component::TextInfos> &textInfos, SparseArray<component::TextFont> &textFonts);
 
+            /**
+             * @brief Draw the text of the player active powerup.
+             * @param reg The ECS registry containing entities and their components.
+             * @param playerEntity The player entity.
+             */
             void drawPowerupText(Registry &reg, const std::size_t &playerEntity);
+
+            /**
+             * @brief Draw the text of the player active powerup.
+             * @param reg The ECS registry containing entities and their components.
+             * @return std::size_t the index of the powerup template
+             */
             std::size_t getPowerupTextInfos(Registry &reg);
         };
     }
