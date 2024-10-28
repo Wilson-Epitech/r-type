@@ -37,7 +37,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
             timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
             spawnInterval = enemySpawn[i]->timeBeforeSpawn;
             if (timeElapsed.count() >= Lib::toMilliseconds(spawnInterval) || isFirstSpawn) {
-                for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
+                for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                 }

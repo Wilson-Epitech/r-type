@@ -178,7 +178,7 @@ enum ComponentName {
    ```c++
    struct EnemySpawn {
       float timeBeforeSpawn;
-      int waveSize;
+      std::size_t waveSize;
       int maxSpawnWidth = Lib::getScreenWidth();
       int minSpawnWidth = 0;
       int maxSpawnHeight = Lib::getScreenHeight();

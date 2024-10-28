@@ -7,9 +7,11 @@
 
 #include "RtypeGameServer.hpp"
 
-game::RtypeGameServer::RtypeGameServer(const std::string gameName, const game::DifficultyMode mode) : AGame(gameName),
-    _mode(mode) {
-    initTkt();
+#include <iostream>
+
+game::RtypeGameServer::RtypeGameServer(const std::string difficultyMode, const std::string gameName) : AGame(gameName) {
+    initStringToDifficultyMode();
+    setGameDifficulty(difficultyMode);
     initializeGame();
 }
 
@@ -55,6 +57,17 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Score> &score = _reg.getComponents<ecs::component::Score>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = _reg.getComponents<ecs::component::TextInfos>();
 
+    const float timeBeforeSpawnEnemy = TIME_BEFORE_SPAWN_ENEMY + (TIME_BEFORE_SPAWN_ENEMY_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
+    const float timeBeforeSpawnStrongerEnemy = TIME_BEFORE_SPAWN_STRONGER_ENEMY + (TIME_BEFORE_SPAWN_STRONGER_ENEMY_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
+    const std::size_t enemyWaveSize = ENEMY_WAVE_SIZE + (ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
+    const std::size_t strongerEnemyWaveSize = STRONGER_ENEMY_WAVE_SIZE + (static_cast<int>(_mode - 1));
+
+    std::cout << "mode:" << _mode << std::endl;
+    std::cout << "timeBeforeSpawnEnemy:" << timeBeforeSpawnEnemy << std::endl;
+    std::cout << "timeBeforeSpawnStrongerEnemy:" << timeBeforeSpawnStrongerEnemy << std::endl;
+    std::cout << "enemyWaveSize:" << enemyWaveSize << std::endl;
+    std::cout << "strongerEnemyWaveSize:" << strongerEnemyWaveSize << std::endl;
+
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
     spriteInfos.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::SpriteInfos{BACKGROUND_PATH, 1, 0, 0.625});
@@ -81,13 +94,13 @@ void game::RtypeGameServer::addComponentsToEntities() {
                          ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(
         _stringToEntity[SPAWN_ENEMY_NAME],
-        ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_ENEMY, ENEMY_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+        ecs::component::EnemySpawn{timeBeforeSpawnEnemy, enemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{ENEMY_NB_LIVES});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
-    velocities.insertAt(_stringToEntity[ENEMY_SHOT_NAME], ecs::component::Velocity{-10, 0});
+    velocities.insertAt(_stringToEntity[ENEMY_SHOT_NAME], ecs::component::Velocity{STRONGER_ENEMY_VX, STRONGER_ENEMY_VY});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT_NAME],
                          ecs::component::SpriteInfos{ENEMYSHOT_PATH, ENEMYSHOT_SPRITE_NB_PATTERN, 0, ENEMYSHOT_SCALE_FACTOR});
     types.insertAt(_stringToEntity[ENEMY_SHOT_NAME], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
@@ -96,7 +109,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     spriteInfos.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_NAME],
                          ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, STRONGER_ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_NAME],
-                         ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_STRONGER_ENEMY, STRONGER_ENEMY_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
+                         ecs::component::EnemySpawn{timeBeforeSpawnStrongerEnemy, strongerEnemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
     velocities.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_NAME], ecs::component::Life{STRONGER_ENEMY_NB_LIVES});

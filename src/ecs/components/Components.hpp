@@ -178,7 +178,7 @@ namespace ecs {
          */
         struct EnemySpawn {
             float timeBeforeSpawn;                       ///< Time before the next spawn
-            int waveSize;                                ///< Size of the enemy wave to spawn
+            std::size_t waveSize;                        ///< Size of the enemy wave to spawn
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height

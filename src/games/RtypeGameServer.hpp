@@ -29,110 +29,47 @@
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 
-/** @brief Defines the name of the player entity */
-#define PLAYER_NAME "player"
-/** @brief Defines the name of the player shot entity */
-#define PLAYER_SHOT_NAME "player_shot"
-/** @brief Defines the name of the background entity */
-#define BACKGROUND_NAME "background"
-/** @brief Defines the name of the enemy spawn entity */
-#define SPAWN_ENEMY_NAME "enemy"
-/** @brief Defines the name of the enemy shot entity */
-#define ENEMY_SHOT_NAME "enemy_shot"
-/** @brief Defines the name of the boss spawn entity */
-#define SPAWN_STRONGER_ENEMY_NAME "boss"
-/** @brief Defines the name of the background music entity */
-#define MUSIC_NAME "music"
-/** @brief Defines the name of the team score entity */
-#define TEAM_SCORE_NAME "team_score"
-/** @brief Defines the name of the title entity */
-#define TITLE_NAME "title"
+#define PLAYER_NAME "player" ///< Defines the name of the player entity.
+#define PLAYER_SHOT_NAME "player_shot" ///< Defines the name of the player shot entity.
+#define BACKGROUND_NAME "background" ///< Defines the name of the background entity.
+#define SPAWN_ENEMY_NAME "enemy" ///< Defines the name of the enemy spawn entity.
+#define ENEMY_SHOT_NAME "enemy_shot" ///< Defines the name of the enemy shot entity.
+#define SPAWN_STRONGER_ENEMY_NAME "stronger_enemy" ///< Defines the name of the boss spawn entity.
+#define MUSIC_NAME "music" ///< Defines the name of the background music entity.
+#define TEAM_SCORE_NAME "team_score" ///< Defines the name of the team score entity.
+#define TITLE_NAME "title" ///< Defines the name of the title entity.
 
-/** @brief Maximum spawn height for enemies */
-#define MAX_SPAWN_HEIGHT 1040
-/** @brief Minimum spawn height for enemies */
-#define MIN_SPAWN_HEIGHT 30
-/** @brief Maximum spawn width for enemies */
-#define MAX_SPAWN_WIDTH 2420
-/** @brief Minimum spawn width for enemies */
-#define MIN_SPAWN_WIDTH 1920
-/** @brief Time before enemies start spawning */
+#define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
+#define MIN_SPAWN_HEIGHT 30 ///< Minimum spawn height for enemies.
+#define MAX_SPAWN_WIDTH 2420 ///< Maximum spawn width for enemies.
+#define MIN_SPAWN_WIDTH 1920 ///< Minimum spawn width for enemies.
 
-/** @brief The horizontal velocity of enemies */
-#define ENEMY_VX -1
-/** @brief The vertical velocity of enemies */
-#define ENEMY_VY 0.0
+#define ENEMY_VX -1 ///< The horizontal velocity of enemies.
+#define ENEMY_VY 0.0 ///< The vertical velocity of enemies.
+#define TIME_BEFORE_SPAWN_ENEMY 8  ///< Time before enemies start spawning.
+#define ENEMY_WAVE_SIZE 4 ///< The size of each wave of enemies.
+#define ENEMY_SHOOTING_RATE 3 ///< The shooting rate for enemies.
+#define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
 
-// documenter les defines
-// get avec un flag
+#define STRONGER_ENEMY_VX -10 ///< The horizontal velocity of stronger enemies.
+#define STRONGER_ENEMY_VY 0.0 ///< The vertical velocity of stronger enemies.
+#define STRONGER_ENEMY_WAVE_SIZE 1 ///< The number of stronger enemies spawned in each wave.
+#define STRONGER_ENEMY_SHOOTING_RATE 6 ///< The shooting rate for stronger enemies.
+#define STRONGER_ENEMY_NB_LIVES 10 ///< The number of lives for stronger enemies.
+#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10 ///< Time before stronger enemies start spawning.
 
-#define DIFFICULTY_LEVEL 1
+#define TIME_BEFORE_SPAWN_ENEMY_DIFFICULTY_FACTOR 4 ///< The factor that will be multiplied by the difficulty mode of the game for TIME_BEFORE_SPAWN_ENEMY define.
+#define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 
-#if DIFFICULTY_LEVEL == 1
-#define TIME_BEFORE_SPAWN_ENEMY 15
-/** @brief The size of each wave of enemies */
-#define ENEMY_WAVE_SIZE 4
+#define TIME_BEFORE_SPAWN_STRONGER_ENEMY_DIFFICULTY_FACTOR 5 ///< The factor that will be multiplied by the difficulty mode of the game for TIME_BEFORE_SPAWN_STRONGER_ENEMY define.
 
-#define ENEMY_SHOOTING_RATE 6
-
-#define ENEMY_NB_LIVES 1
-
-/** @brief The number of bosses spawned in each wave */
-#define STRONGER_ENEMY_WAVE_SIZE 1
-
-#define STRONGER_ENEMY_SHOOTING_RATE 10
-
-#define STRONGER_ENEMY_NB_LIVES 5
-
-/** @brief Time before bosses start spawning */
-#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 20
-#endif
-
-#if DIFFICULTY_LEVEL == 2
-#define TIME_BEFORE_SPAWN_ENEMY 10
-/** @brief The size of each wave of enemies */
-#define ENEMY_WAVE_SIZE 8
-
-#define ENEMY_SHOOTING_RATE 3
-
-#define ENEMY_NB_LIVES 1
-
-/** @brief The number of bosses spawned in each wave */
-#define STRONGER_ENEMY_WAVE_SIZE 1
-
-#define STRONGER_ENEMY_SHOOTING_RATE 6
-
-#define STRONGER_ENEMY_NB_LIVES 10
-
-/** @brief Time before bosses start spawning */
-#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 15
-#endif
-
-#if DIFFICULTY_LEVEL == 3
-#define TIME_BEFORE_SPAWN_ENEMY 8
-/** @brief The size of each wave of enemies */
-#define ENEMY_WAVE_SIZE 10
-
-#define ENEMY_SHOOTING_RATE 3
-#define ENEMY_NB_LIVES 1
-
-/** @brief The number of bosses spawned in each wave */
-#define STRONGER_ENEMY_WAVE_SIZE 2
-
-#define STRONGER_ENEMY_SHOOTING_RATE 5
-
-#define STRONGER_ENEMY_NB_LIVES 10
-
-/** @brief Time before bosses start spawning */
-#define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10
-#endif
-
-#include <iostream>
+// renommer les defines avec "base"
 
 namespace game {
 
     /**
-     *
+     * @enum DifficultyMode
+     * @brief Enum representing the differents difficulty modes of the game.
      */
     enum DifficultyMode {
       NO_MODE,
@@ -151,25 +88,23 @@ namespace game {
       public:
         /**
          * @brief Constructs the RtypeGameServer and initializes the game.
+         * @param difficultyMode The mode of difficulty chosen. 
          * @param gameName The name of the game, used for server-side management.
-         * ///
          *
          */
-        RtypeGameServer(const std::string gameName = "R-Type", const game::DifficultyMode mode = DifficultyMode::MEDIUM);
+        RtypeGameServer(const std::string difficultyMode = "medium", const std::string gameName = "R-Type");
         ~RtypeGameServer() = default;
 
-        /**
-         *
+        /** @brief Updates the difficulty mode of the game.
+         *  @param difficultyMode  The mode of difficulty chosen.
          */
         void setGameDifficulty(const std::string &difficultyMode) {
-          auto it = _tkt.find(difficultyMode);
-          if (it == _tkt.end()) {
-            std::cout << "enorme" << std::endl;
+          auto it = _stringToDifficultyMode.find(difficultyMode);
+          if (it == _stringToDifficultyMode.end()) {
               throw Error("Invalid difficulty mode");
           }
           _mode = it->second;
         }
-
 
       private:
         /**
@@ -209,16 +144,17 @@ namespace game {
         void addSystemsToRegistry() override;
 
         /**
-         *
+         * @brief Initialize the string to difficulty mode map.
+         * It links the easy, medium, and hard difficulty mode enum values to correspondent strings.
          */
-        void initTkt() {
-          _tkt.insert({"easy", game::DifficultyMode::EASY});
-          _tkt.insert({"medium", game::DifficultyMode::MEDIUM});
-          _tkt.insert({"hard", game::DifficultyMode::HARD});
+        void initStringToDifficultyMode() {
+          _stringToDifficultyMode.insert({"easy", game::DifficultyMode::EASY});
+          _stringToDifficultyMode.insert({"medium", game::DifficultyMode::MEDIUM});
+          _stringToDifficultyMode.insert({"hard", game::DifficultyMode::HARD});
         }
 
-        DifficultyMode _mode; ///<
-        std::unordered_map<std::string, DifficultyMode> _tkt; ///<
+        DifficultyMode _mode; ///< The mode of difficulty of the current game instance.
+        std::unordered_map<std::string, DifficultyMode> _stringToDifficultyMode; ///< An unordered map linking a string to a difficulty mode.
     };
 }
 
