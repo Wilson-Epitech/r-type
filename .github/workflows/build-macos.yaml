@@ -3,9 +3,12 @@ name: build-macos
 on:
   pull_request:
     branches: [ "main", "dev" ]
+  issue_comment:
+    types: [created, edited]
 
 jobs:
   build-arm64:
+    if: github.event_name == 'pull_request' || (github.event_name == 'issue_comment' && github.event.comment.body == '/ci')
     runs-on: macos-latest
     timeout-minutes: 5
 
