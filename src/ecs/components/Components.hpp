@@ -344,7 +344,9 @@ struct EntityData {
                 areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
                     areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                     areComponentsEquals<ecs::component::PowerupTextInfos>(name, ecs::ComponentName::POWERUP_TEXT_TEMPLATE, component, other.component) ||
-                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
+                areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
+                areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
         }
         return false;
     }
