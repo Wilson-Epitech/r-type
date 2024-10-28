@@ -26,7 +26,7 @@ We also aim for our game to soon be Cross-Plateform. For now, the program lauche
 Run these two commands in order from the project root to compile it:
 
 ```bash
- cmake -P build.cmake
+cmake -P build.cmake
 ```
 
 ```bash
