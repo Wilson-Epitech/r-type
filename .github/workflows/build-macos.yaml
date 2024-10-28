@@ -32,7 +32,7 @@ jobs:
         echo "## 🚀 Compilation result" >> $GITHUB_STEP_SUMMARY
         {
           set +e
-          cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=build/vcpkg/scripts/buildsystems/vcpkg.cmake
+          cmake -P build.cmake
           cmake --build build
           if [ $? -ne 0 ]; then
             echo "- ### Build macos failed ❌" >> $GITHUB_STEP_SUMMARY
