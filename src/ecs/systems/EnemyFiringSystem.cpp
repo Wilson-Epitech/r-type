@@ -9,14 +9,14 @@
 
 void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
-    SparseArray<component::Type> &type = reg.getComponents<component::Type>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
     bool isTimerSet = false;
 
-    for (std::size_t i = 0; i < type.size() && i < enemyShootingRate.size(); ++i) {
-        if (type[i] && enemyShootingRate[i]) {
-            if (type[i]->entityType != ecs::EntityType::ENEMY)
+    for (std::size_t i = 0; i < types.size() && i < enemyShootingRate.size(); ++i) {
+        if (types[i] && enemyShootingRate[i]) {
+            if (types[i]->entityType != ecs::EntityType::ENEMY)
                 continue;
             if (timer.size() > 0) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
