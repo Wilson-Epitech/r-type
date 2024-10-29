@@ -44,18 +44,17 @@ bool ecs::system::PositionSystem::handlePlayerPosition(const std::size_t &player
 }
 
 void ecs::system::PositionSystem::handleMovementPattern(Registry &reg, const std::size_t &index) {
-    SparseArray<component::MovementPatternType> &movementPatternType = reg.getComponents<component::MovementPatternType>();
     SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
 
-    if (movementPatternType.size() < index || movementPattern.size() < index) {
+    if (movementPattern.size() < index) {
         moveStraight(reg, index);
         return;
     }
-    if (!movementPatternType[index] || !movementPattern[index]) {
+    if (!movementPattern[index]) {
         moveStraight(reg, index);
         return;
     }
-    switch (movementPatternType[index]->movementPatternType) {
+    switch (movementPattern[index]->movementPatternType) {
         case ecs::MovementType::STRAIGHT:
             moveStraight(reg, index);
             break;
