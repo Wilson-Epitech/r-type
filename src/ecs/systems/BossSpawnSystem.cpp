@@ -14,14 +14,24 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
     SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    static bool isTimerSet = false;
     static bool bossSpawned = false;
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < textInfos.size(); ++i) {
         if (!types[i])
             continue;
-        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !bossSpawned) {
-            createNewBoss(reg, types, findLevel1BossEntity(types));
-            bossSpawned = true;
+        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !isTimerSet) {
+            if (!isTimerSet) {
+                time0 = std::chrono::steady_clock::now();
+                isTimerSet = true;
+            }
+        }
+        if (isTimerSet && !bossSpawned) {
+            if (Lib::isTimeElapsed(time0, 10)) {
+                createNewBoss(reg, types, findLevel1BossEntity(types));
+                bossSpawned = true;
+            }
         }
         if(bossSpawned && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && positions[i]->x <= LEVEL1_BOSS_STOP) {
             velocities[i]->vx = 0;

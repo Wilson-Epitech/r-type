@@ -61,6 +61,8 @@ namespace ecs {
             * @return The index of the boss' entity.
             */
             int findLevel1BossEntity(SparseArray<component::Type> &types);
+
+            std::size_t checkCurrentScore(Registry &reg);
         };
     }
 }
