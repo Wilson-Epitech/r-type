@@ -25,9 +25,10 @@ namespace network {
         /**
          * @brief Fills a DataToSend object with data for newly spawned entities in the ECS.
          * @param reg The ECS registry containing the components and entities.
+         * @param isServer A boolean to know if the function is called by the server.
          * @return A DataToSend structure containing data for the newly spawned entities.
          */
-        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg);
+        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg, bool isServer);
 
         /**
          * @brief Fills a DataToSend object with data for all entities in the ECS.
@@ -204,6 +205,14 @@ namespace network {
                 components.insertAt(entityData.entityID, component);
             }
         }
+
+        /**
+         * @brief Send specific entities when a new level is triggered.
+         * @param reg The ECS registry.
+         * @param data The entity data containing the component to insert.
+         * @param isServer Boolean to know if the function is called server side.
+         */
+        static void sendEntityDataForNewLevel(ecs::Registry &reg, DataToSend &data, bool isServer);
     };
 };
 

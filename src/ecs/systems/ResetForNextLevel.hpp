@@ -18,9 +18,9 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png"
-#define RESET_POS_PLAYER_X 100;
-#define RESET_POS_PLAYER_Y 400;
+#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< Path for the second level's background.
+#define RESET_POS_PLAYER_X 100; ///< Reset the x position of the players for new level.
+#define RESET_POS_PLAYER_Y 400; ///< Reset the y position of the players for new level.
 
 namespace ecs {
     namespace system {

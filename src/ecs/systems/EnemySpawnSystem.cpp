@@ -7,15 +7,12 @@
 
 #include "EnemySpawnSystem.hpp"
 
-#include <iostream>
-
 void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
 {
     SparseArray<component::EnemySpawn> &enemySpawn = reg.getComponents<component::EnemySpawn>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-
 
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;

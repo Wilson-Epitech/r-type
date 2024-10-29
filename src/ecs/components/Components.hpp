@@ -214,7 +214,6 @@ namespace ecs {
          * @brief Component representing the enemy spawn information.
          */
         struct BossSpawn {
-            int nbOfLevel = 0;
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height

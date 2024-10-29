@@ -301,7 +301,7 @@ void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> 
     if (connectedClientsSize != previousConnectedClientsSize)
         previousConnectedClientsSize = connectedClientsSize;
 
-    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg);
+    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg, true);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
             continue;

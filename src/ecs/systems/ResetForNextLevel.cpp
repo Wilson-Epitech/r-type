@@ -7,8 +7,6 @@
 
 #include "ResetForNextLevel.hpp"
 
-#include <iostream>
-
 void ecs::system::ResetForNextLevel::operator()(Registry &reg)
 {
     SparseArray<component::BossSpawn> &bossLevel = reg.getComponents<component::BossSpawn>();
@@ -42,7 +40,7 @@ void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, Spar
 {
     for (std::size_t y = 0; y < types.size(); y++) {
         if (types[y]->entityType == ecs::EntityType::ENEMY || types[y]->entityType == ecs::EntityType::ENEMYSHOT ||
-            types[y]->entityType == ecs::EntityType::PLAYERSHOT)
+            types[y]->entityType == ecs::EntityType::PLAYERSHOT || types[y]->entityType == ecs::EntityType::POWERUP)
             reg.killEntity(y);
     }
 }

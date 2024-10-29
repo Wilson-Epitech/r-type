@@ -7,8 +7,6 @@
 
 #include "BossFiringSystem.hpp"
 
-
-#include <iostream>
 void ecs::system::BossFiringSystem::operator()(Registry &reg)
 {
     SparseArray<component::Type> &type = reg.getComponents<component::Type>();
