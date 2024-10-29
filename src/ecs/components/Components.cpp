@@ -56,11 +56,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &ac
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern) {
-    oss << movementPattern.patternAmplitude << ' ' << movementPattern.isReversible;
-}
-
-void operator<<(std::ostringstream &oss, const ecs::component::MovementPatternType &movementPatternType) {
-    oss << movementPatternType.movementPatternType;
+    oss << movementPattern.patternAmplitude << ' ' << movementPattern.isReversible << ' ' << movementPattern.movementPatternType;
 }
 
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
@@ -89,10 +85,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::serializeEntityCompotent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName::MOVEMENTPATERN)
+    if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
         network::HandleData::serializeEntityCompotent<ecs::component::MovementPattern>(oss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName::MOVEMENTPATERNTYPE)
-        network::HandleData::serializeEntityCompotent<ecs::component::MovementPatternType>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -164,11 +158,9 @@ void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePo
 }
 
 void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern) {
-    iss >> movementPattern.patternAmplitude >> movementPattern.isReversible;
-}
-
-void operator>>(std::istringstream &iss, ecs::component::MovementPatternType &movementPatternType) {
-    iss >> movementPatternType.movementPatternType;
+    iss >> movementPattern.patternAmplitude;
+    iss >> movementPattern.isReversible;
+    iss >> movementPattern.movementPatternType;
 }
 
 void operator>>(std::istringstream &iss, EntityData &entityData) {
@@ -197,8 +189,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::deserializeEntityCompotent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName::MOVEMENTPATERN)
+    if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
         network::HandleData::deserializeEntityCompotent<ecs::component::MovementPattern>(iss, entityData.name, entityData.component);
-    if (entityData.name == ecs::ComponentName::MOVEMENTPATERNTYPE)
-        network::HandleData::deserializeEntityCompotent<ecs::component::MovementPatternType>(iss, entityData.name, entityData.component);
 }

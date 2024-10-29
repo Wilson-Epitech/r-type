@@ -75,8 +75,7 @@ namespace ecs {
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
         ACTIVEPOWERUP,  ///< Activated powerup component
-        MOVEMENTPATERN, ///< Movement pattern component
-        MOVEMENTPATERNTYPE ///< Movement pattern type component
+        MOVEMENTPATTERN  ///< Movement pattern component
     };
 
     /**
@@ -312,27 +311,16 @@ namespace ecs {
         };
 
         /**
-         * @struct MovementPatternType
-         * @brief Component for the movement pattern type of an entity
-        */
-        struct MovementPatternType {
-            ecs::MovementType movementPatternType = MovementType::STRAIGHT;
-
-            bool operator==(const MovementPatternType &other) const {
-                return (movementPatternType == other.movementPatternType);
-            }
-        };
-
-        /**
          * @struct MovementPattern
          * @brief Component for the movement pattern of an entity
         */
         struct MovementPattern {
             std::size_t patternAmplitude = 0;
             bool isReversible = false;
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT;
 
             bool operator==(const MovementPattern &other) const {
-                return (patternAmplitude == other.patternAmplitude);
+                return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
             }
         };
     }
@@ -362,8 +350,7 @@ struct EntityData {
                 areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
                 areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component) ||
-                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATERN, component, other.component) ||
-                areComponentsEquals<ecs::component::MovementPatternType>(name, ecs::ComponentName::MOVEMENTPATERNTYPE, component, other.component));
+                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component, other.component));
         }
         return false;
     }
@@ -410,7 +397,6 @@ void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textIn
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern);
-void operator<<(std::ostringstream &oss, const ecs::component::MovementPatternType &movementPatternType);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
@@ -427,7 +413,6 @@ void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern);
-void operator>>(std::istringstream &iss, ecs::component::MovementPatternType &movementPatternType);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

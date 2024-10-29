@@ -299,10 +299,12 @@ enum Poweruptype {
    - Store the movement pattern of an entity
    ```c++
    struct MovementPattern {
+      std::size_t patternAmplitude = 0;
+      bool isReversible = false;
       ecs::MovementType movementPatternType = MovementType::STRAIGHT;
 
       bool operator==(const MovementPattern &other) const {
-         return (movementPatternType == other.movementPatternType);
+         return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
       }
    };
    ```
