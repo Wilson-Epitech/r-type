@@ -30,43 +30,54 @@
 #include "SpriteAnimationSystem.hpp"
 #include "PowerupSystem.hpp"
 
+#define PLAYER_TEMPLATE_NAME "player_template" ///< Defines the name of the player template entity.
+#define PLAYER_SHOT_TEMPLATE_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
+#define SPAWN_ENEMY_TEMPLATE_NAME "enemy_template" ///< Defines the name of the enemies spawn template entity.
+#define SPAWN_STRONGER_ENEMY_TEMPLATE_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemies spawn template entity.
+#define ENEMY_SHOT_TEMPLATE_NAME "enemy_shot_template" ///< Defines the name of the enemies shot template entity.
+#define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 #define BACKGROUND_NAME "background" ///< Defines the name of the background entity.
-#define PLAYER_NAME "player_template" ///< Defines the name of the player template entity.
-#define PLAYER_SHOT_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
-#define SPAWN_ENEMY_NAME "enemy_template" ///< Defines the name of the enemy spawn template entity.
-#define ENEMY_SHOT_NAME "enemy_shot_template" ///< Defines the name of the enemy shot template entity.
-#define SPAWN_STRONGER_ENEMY_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemy spawn template entity.
 #define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define TEAM_SCORE_NAME "team_score" ///< Defines the name of the team score entity.
 #define TITLE_NAME "title" ///< Defines the name of the title entity.
-#define POWERUP_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30 ///< Minimum spawn height for enemies.
 #define MAX_SPAWN_WIDTH 2420 ///< Maximum spawn width for enemies.
 #define MIN_SPAWN_WIDTH 1920 ///< Minimum spawn width for enemies.
 
+#define PLAYER_TEMPLATE_POSSIBLE_VELOCITY 8 ///< Possible velocity for player template.
+#define PLAYER_TEMPLATE_SHOOTING_RATE 0.3 ///< The shooting rate for player template.
+#define PLAYER_TEMPLATE_NB_LIVES 5 ///< The number of lives for player template.
+#define PLAYER_TEMPLATE_SCORE_INCREMENTATION 100 ///< The score incrementation for player template.
+
+#define PLAYER_SHOT_TEMPLATE_VX 10 ///< The horizontal velocity of player shot template.
+#define PLAYER_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity of player shot template.
+
 #define ENEMY_VX -1 ///< The horizontal velocity of enemies.
-#define ENEMY_VY 0.0 ///< The vertical velocity of enemies.
-#define TIME_BEFORE_SPAWN_ENEMY 15  ///< Time before enemies start spawning.
+#define ENEMY_VY_SNAKE 1.5 ///< The vertical velocity of enemies.
+#define ENEMY_PATTERN_AMPLITUDE 60 ///< Time amplitude of enemies pattern.
 #define ENEMY_WAVE_SIZE 5 ///< The size of each wave of enemies.
 #define ENEMY_SHOOTING_RATE 3 ///< The shooting rate for enemies.
 #define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
+#define TIME_BEFORE_SPAWN_ENEMY 15  ///< Time before enemies start spawning.
 
-#define STRONGER_ENEMY_VX -10 ///< The horizontal velocity of stronger enemies.
-#define STRONGER_ENEMY_VY 0.0 ///< The vertical velocity of stronger enemies.
+#define STRONGER_ENEMY_VX -1 ///< The horizontal velocity of stronger enemies.
+#define STRONGER_ENEMY_VY_STRAIGHT 0.0 ///< The vertical velocity of stronger enemies.
 #define STRONGER_ENEMY_WAVE_SIZE 1 ///< The number of stronger enemies spawned in each wave.
 #define STRONGER_ENEMY_SHOOTING_RATE 6 ///< The shooting rate for stronger enemies.
 #define STRONGER_ENEMY_NB_LIVES 10 ///< The number of lives for stronger enemies.
 #define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10 ///< Time before stronger enemies start spawning.
 
+#define ENEMY_SHOT_TEMPLATE_VX -10 ///< The horizontal velocity of enemy shot template.
+#define ENEMY_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity of enemy shot template.
+
+#define BACKGROUND_VX -0.5 ///< The horizontal velocity of background.
+#define BACKGROUND_VY 0.0  ///< The vertical velocity of background.
+
+#define MUSIC_VOLUME 0.5 ///< The volume of the background music.
+
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
-
-/** @brief The vertical velocity of enemies with straight pattern*/
-#define ENEMY_VY_STRAIGHT 0.0
-
-/** @brief Time amplitude of enemy pattern */
-#define ENEMY_PATTERN_AMPLITUDE 60
 
 namespace game {
 
