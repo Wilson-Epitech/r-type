@@ -19,7 +19,7 @@
 #include "Registry.hpp"
 #include <chrono>
 
-#define SCORE_FINAL_BOSS_LEVEL1 100
+#define SCORE_FINAL_BOSS_LEVEL1 3000
 
 namespace ecs {
     namespace system {

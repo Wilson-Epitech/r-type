@@ -41,7 +41,8 @@ void ecs::system::ResetForNextLevel::resetPlayerPosition(Registry &reg, SparseAr
 void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, SparseArray<component::Type> &types)
 {
     for (std::size_t y = 0; y < types.size(); y++) {
-        if (types[y]->entityType == ecs::EntityType::ENEMY || types[y]->entityType == ecs::EntityType::ENEMYSHOT)
+        if (types[y]->entityType == ecs::EntityType::ENEMY || types[y]->entityType == ecs::EntityType::ENEMYSHOT ||
+            types[y]->entityType == ecs::EntityType::PLAYERSHOT)
             reg.killEntity(y);
     }
 }

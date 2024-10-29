@@ -11,6 +11,10 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
+#define SHOT_POS_X 1200
+#define MAX_SHOT_Y 800
+#define MIN_SHOT_Y 200
+
 namespace ecs {
     namespace system {
 

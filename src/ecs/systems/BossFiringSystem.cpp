@@ -61,10 +61,8 @@ void ecs::system::BossFiringSystem::addShot(std::size_t enemyIndex, Registry &re
     if (enemyShootIndex == 0 || spriteInfos[enemyIndex]->spriteWidth == 0 || spriteInfos[enemyIndex]->spriteHeight == 0 ||
         spriteInfos[enemyShootIndex]->spriteWidth == 0 || spriteInfos[enemyShootIndex]->spriteHeight == 0)
         return;
-    ecs::CustomRectangle shotSpriteRect = {0, 0, float(spriteInfos[enemyShootIndex]->spriteWidth),
-                                           float(spriteInfos[enemyShootIndex]->spriteHeight)};
-    float shotX = 1200;
-    float shotY = (rand() % (800 - 200) + 200);
+    float shotX = SHOT_POS_X;
+    float shotY = (rand() % (MAX_SHOT_Y - MIN_SHOT_Y) + MIN_SHOT_Y);
     entity_t entity = reg.spawnEntity();
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
