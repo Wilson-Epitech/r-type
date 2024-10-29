@@ -62,16 +62,10 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
 
-    const float timeBeforeSpawnEnemy = TIME_BEFORE_SPAWN_ENEMY + (TIME_BEFORE_SPAWN_ENEMY_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
-    const float timeBeforeSpawnStrongerEnemy = TIME_BEFORE_SPAWN_STRONGER_ENEMY + (TIME_BEFORE_SPAWN_STRONGER_ENEMY_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
+    const float timeBeforeSpawnEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_mode)) / static_cast<int>(_mode);
+    const float timeBeforeSpawnStrongerEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_mode)) / static_cast<int>(_mode);
     const std::size_t enemyWaveSize = ENEMY_WAVE_SIZE + (ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR * static_cast<int>(_mode - 1));
-    const std::size_t strongerEnemyWaveSize = STRONGER_ENEMY_WAVE_SIZE + (static_cast<int>(_mode - 1));
-
-    std::cout << "mode:" << _mode << std::endl;
-    std::cout << "timeBeforeSpawnEnemy:" << timeBeforeSpawnEnemy << std::endl;
-    std::cout << "timeBeforeSpawnStrongerEnemy:" << timeBeforeSpawnStrongerEnemy << std::endl;
-    std::cout << "enemyWaveSize:" << enemyWaveSize << std::endl;
-    std::cout << "strongerEnemyWaveSize:" << strongerEnemyWaveSize << std::endl;
+    const std::size_t strongerEnemyWaveSize = STRONGER_ENEMY_WAVE_SIZE * (static_cast<int>(_mode - 1));
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});

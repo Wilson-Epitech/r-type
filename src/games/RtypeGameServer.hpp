@@ -48,8 +48,8 @@
 
 #define ENEMY_VX -1 ///< The horizontal velocity of enemies.
 #define ENEMY_VY 0.0 ///< The vertical velocity of enemies.
-#define TIME_BEFORE_SPAWN_ENEMY 8  ///< Time before enemies start spawning.
-#define ENEMY_WAVE_SIZE 4 ///< The size of each wave of enemies.
+#define TIME_BEFORE_SPAWN_ENEMY 15  ///< Time before enemies start spawning.
+#define ENEMY_WAVE_SIZE 5 ///< The size of each wave of enemies.
 #define ENEMY_SHOOTING_RATE 3 ///< The shooting rate for enemies.
 #define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
 
@@ -60,10 +60,7 @@
 #define STRONGER_ENEMY_NB_LIVES 10 ///< The number of lives for stronger enemies.
 #define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10 ///< Time before stronger enemies start spawning.
 
-#define TIME_BEFORE_SPAWN_ENEMY_DIFFICULTY_FACTOR 4 ///< The factor that will be multiplied by the difficulty mode of the game for TIME_BEFORE_SPAWN_ENEMY define.
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
-
-#define TIME_BEFORE_SPAWN_STRONGER_ENEMY_DIFFICULTY_FACTOR 5 ///< The factor that will be multiplied by the difficulty mode of the game for TIME_BEFORE_SPAWN_STRONGER_ENEMY define.
 
 namespace game {
 
@@ -72,10 +69,10 @@ namespace game {
      * @brief Enum representing the differents difficulty modes of the game.
      */
     enum DifficultyMode {
-      NO_MODE,
-      EASY,
-      MEDIUM,
-      HARD
+      NO_MODE, ///< No mode
+      EASY, ///< Easy mode
+      MEDIUM, ///< Medium mode
+      HARD ///< Hard mode
     };
 
     /**
@@ -88,7 +85,7 @@ namespace game {
       public:
         /**
          * @brief Constructs the RtypeGameServer and initializes the game.
-         * @param difficultyMode The mode of difficulty chosen. 
+         * @param difficultyMode The mode of difficulty chosen.
          * @param gameName The name of the game, used for server-side management.
          *
          */
