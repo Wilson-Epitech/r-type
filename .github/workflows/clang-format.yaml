@@ -1,0 +1,29 @@
+name: check-clang-format
+
+on:
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  check-formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install clang-format
+        run: |
+          sudo apt-get install clang-format
+
+      - name: Run clang-format
+        run: |
+          find . -name '*.hpp' -o -name '*.cpp' | xargs clang-format -i
+
+      - name: Push clang-format changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            git add include lib src
+            git commit -m "style: clang-format"
+            git push
+          fi
