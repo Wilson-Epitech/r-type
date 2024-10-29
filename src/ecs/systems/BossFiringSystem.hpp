@@ -28,7 +28,7 @@ namespace ecs {
                 ~BossFiringSystem() = default;
 
                 /**
-                * @brief Executes the boss firing logiv logic.
+                * @brief Executes the boss firing logic.
                 * @param reg The ECS registry containing entities and components.
                 */
                 void operator()(Registry &reg) override;
@@ -36,13 +36,13 @@ namespace ecs {
             protected:
             private:
                 /**
-                * @brief Creates a shot fired by an boss entity.
+                * @brief Creates a shot fired by a boss entity.
                 * This method generates a new shot entity for a boss when the firing conditions are met.
                 * It sets the position, velocity, and other components of the shot.
-                * @param index The index of the enemy entity firing the shot.
+                * @param index The index of the boss entity firing the shot.
                 * @param reg The ECS registry where the shot entity will be created.
                 */
-                void addShot(std::size_t index, Registry &reg);
+                void addShot(const std::size_t &index, Registry &reg);
 
                 /**
                 * @brief Finds the index of an boss shot component.

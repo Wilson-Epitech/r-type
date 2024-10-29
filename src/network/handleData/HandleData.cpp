@@ -12,27 +12,23 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
         data.entitiesData.push_back(dataToSend);
 }
 
-#include <iostream>
-
-void network::HandleData::sendEntityDataForNewLevel(ecs::Registry &reg, DataToSend &data, bool isServer)
+void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data)
 {
     std::vector<EntityData> positionData = retrieveComponentUpdates<ecs::component::Position>(reg, ecs::ComponentName::POSITION);
     std::vector<EntityData> spriteInfoData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
 
-    if (isServer) {
-        ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
-        ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
-        for (std::size_t i = 0; i < bossSlayed.size(); i++) {
-            if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
-                network::HandleData::addEntityDataToSend(positionData, data);
-                network::HandleData::addEntityDataToSend(spriteInfoData, data);
-                bossSlayed[i]->hasBeenSlayed = false;
-            }
+    ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
+    ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
+    for (std::size_t i = 0; i < bossSlayed.size(); i++) {
+        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+            network::HandleData::addEntityDataToSend(positionData, data);
+            network::HandleData::addEntityDataToSend(spriteInfoData, data);
+            bossSlayed[i]->hasBeenSlayed = false;
         }
     }
 }
 
-DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, bool isServer) {
+DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, const bool &isServer) {
     std::list<entity_t> newEntities = reg.getActualTurnNewEntities();
     std::vector<EntityData> velocitiesData = retrieveComponentUpdates<ecs::component::Velocity>(reg, ecs::ComponentName::VELOCITY);
     std::vector<EntityData> shootingsData = retrieveComponentUpdates<ecs::component::Shooting>(reg, ecs::ComponentName::SHOOTING);
@@ -50,7 +46,8 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, bo
     network::HandleData::addEntityDataToSend(textInfosData, data);
     network::HandleData::addEntityDataToSend(activePowerupInfosData, data);
 
-    sendEntityDataForNewLevel(reg, data, isServer);
+    if (isServer)
+        sendEntitiesDataForNewLevel(reg, data);
 
     for (auto &newEntity : newEntities) {
         fillEntityComponentData<ecs::component::Position>(reg, newEntity, data, ecs::ComponentName::POSITION);

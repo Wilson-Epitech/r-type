@@ -28,7 +28,7 @@ namespace network {
          * @param isServer A boolean to know if the function is called by the server.
          * @return A DataToSend structure containing data for the newly spawned entities.
          */
-        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg, bool isServer);
+        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg, const bool &isServer);
 
         /**
          * @brief Fills a DataToSend object with data for all entities in the ECS.
@@ -212,7 +212,7 @@ namespace network {
          * @param data The entity data containing the component to insert.
          * @param isServer Boolean to know if the function is called server side.
          */
-        static void sendEntityDataForNewLevel(ecs::Registry &reg, DataToSend &data, bool isServer);
+        static void sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data);
     };
 };
 

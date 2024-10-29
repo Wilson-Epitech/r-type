@@ -11,14 +11,13 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
 {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
-    SparseArray<component::TextInfos> &textInfos = reg.getComponents<component::TextInfos>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
 
-    for (std::size_t i = 0; i < types.size() && i < scores.size() && i < textInfos.size(); ++i) {
+    for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
         if (!types[i])
             continue;
         if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !isTimerSet) {
@@ -33,8 +32,11 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg)
                 bossSpawned = true;
             }
         }
+        if (!positions[i])
+            continue;
         if(bossSpawned && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && positions[i]->x <= LEVEL1_BOSS_STOP) {
-            velocities[i]->vx = 0;
+            if (velocities[i])
+                velocities[i]->vx = 0;
         }
     }
 }
@@ -55,7 +57,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS_LEVEL1});
-    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerup});
     if (shootingRate.size() > i) {
         if (shootingRate[i])
             shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});

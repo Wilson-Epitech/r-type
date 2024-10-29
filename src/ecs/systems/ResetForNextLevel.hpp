@@ -17,8 +17,8 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "Assets.hpp"
 
-#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< Path for the second level's background.
 #define RESET_POS_PLAYER_X 100; ///< Reset the x position of the players for new level.
 #define RESET_POS_PLAYER_Y 400; ///< Reset the y position of the players for new level.
 

@@ -58,9 +58,9 @@ namespace ecs {
                                 const std::size_t &i);
 
             /**
-             * @brief Loop through the entity and return the current score.
+             * @brief Loop through the entities and return the current score.
              * @param reg The ECS registry containing entities and their components.
-             * @return Returns the currenct score of the game.
+             * @return Returns the current score of the game.
              */
             std::size_t checkCurrentScore(Registry &reg);
         };

@@ -210,8 +210,8 @@ namespace ecs {
         };
 
         /**
-         * @struct EnemySpawn
-         * @brief Component representing the enemy spawn information.
+         * @struct BossSpawn
+         * @brief Component representing the boss spawn information.
          */
         struct BossSpawn {
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
