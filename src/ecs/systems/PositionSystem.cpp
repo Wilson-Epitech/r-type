@@ -167,11 +167,11 @@ std::size_t ecs::system::PositionSystem::findClosestPlayer(Registry &reg, const 
                 lastPlayerDistance = tmpRes;
                 playerIndex = i;
             }
-
         }
     }
     return playerIndex;
 }
+
 void ecs::system::PositionSystem::handleReverseDirection(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
