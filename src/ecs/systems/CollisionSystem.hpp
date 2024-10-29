@@ -182,15 +182,6 @@ namespace ecs {
             bool isBossLevel1AndEnemy(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief Checks if the collision is between the level 1 boss and a powerup.
-             * @param firstType The type of the first entity.
-             * @param secondType The type of the second entity.
-             * @return true If it's a collision between the Level1 boss and a powerup.
-             * @return false Otherwise.
-             */
-            bool isBossLevel1AndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
-
-            /**
              * @brief Checks if the collision is between the level 1 boss' shot and a powerup.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.

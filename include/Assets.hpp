@@ -32,10 +32,10 @@
 #define BOSS_SCALE_FACTOR 1.5
 
 
-#define STAGE1_BOSS_PATH "assets/r-typesheet41.gif"
+#define STAGE1_BOSS_PATH "assets/r-typesheet41.png"
 #define STAGE1_BOSS_PATTERN 5
 
-#define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.gif"
+#define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"
 #define LEVEL1_BOSS_SHOT_PATTERN 4
 #define LEVEL1_BOSS_SCALE_FACTOR 10
 #define LEVEL1_BOSS_LIFE 100

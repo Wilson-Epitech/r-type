@@ -102,7 +102,8 @@ bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &fir
             !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
             !isEnemyShotAndPowerup(firstType, secondType) && ! isPlayerShotAndPowerup(firstType, secondType) &&
             !isBossLevel1AndBossLevel1Shot(firstType, secondType) && !isBossLevel1AndEnemyShot(firstType, secondType) &&
-            !isBossLevel1AndEnemy(firstType, secondType));
+            !isBossLevel1AndEnemy(firstType, secondType) && !isBossLevel1ShotAndPowerUp(firstType, secondType) &&
+            !isBossLevel1ShotAndPlayerShot(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -154,19 +155,13 @@ bool ecs::system::CollisionSystem::isPlayerShotAndPowerup(const ecs::EntityType 
             (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::PLAYERSHOT));
 }
 
-bool isBossLevel1AndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
-    return ((firstType == ecs::EntityType::BOSS_LEVEL1 && secondType == ecs::EntityType::POWERUP) ||
-        (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_LEVEL1));
-}
-
-bool isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
 {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::POWERUP) ||
         (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
 
-bool isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
 {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::PLAYERSHOT) ||
         (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
