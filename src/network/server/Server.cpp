@@ -78,29 +78,26 @@ void network::Server::startReceiving() {
                                std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void network::Server::handleReceive(const std::error_code &error, std::size_t) {
+void network::Server::handleReceive(const std::error_code &error, const std::size_t &byteTransfered) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
 
-        // if (_receivedMagicNbr != _magicNumber) {
-        //     std::cout << std::hex << _receivedMagicNbr << std::endl;
-        //     std::cout << std::hex << _magicNumber << std::endl;
-        //     std::cerr << "Invalid magic number" << std::endl;
-        //     startReceiving();
-        //     return;
-        // }
+        if (_receivedMagicNbr != _magicNumber) {
+            std::cerr << "Invalid magic number" << std::endl;
+            startReceiving();
+            return;
+        }
 
         std::memcpy(&_messageType, _receiveBuffer.data() + sizeof(_receivedMagicNbr), sizeof(_messageType));
         std::memcpy(&_messageId, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType), sizeof(_messageId));
         std::memcpy(&_messageLen, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId),
                     sizeof(_messageLen));
 
-        // if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
-        //     std::cerr << "Incomplete message received" << std::endl;
-        //     std::cerr << "sizes: " << sizeof(_receivedMagicNbr) << " " << sizeof(_messageType) << " " << sizeof(_messageId) << " " << sizeof(_messageLen) << std::endl;
-        //     startReceiving();
-        //     return;
-        // }
+        if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
+            std::cerr << "Incomplete message received" << std::endl;
+            startReceiving();
+            return;
+        }
 
         std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
                                 sizeof(_messageLen),
@@ -136,7 +133,7 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t) {
     }
 }
 
-void network::Server::handleSend(const std::error_code &error, std::size_t) {
+void network::Server::handleSend(const std::error_code &error) {
     if (error)
         std::cerr << "Failed to send message. Error: " << error.message() << std::endl;
 }
@@ -162,7 +159,7 @@ void network::Server::sendToAClient(const std::size_t idClient, const std::strin
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it->second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
     }
@@ -188,7 +185,7 @@ void network::Server::sendToAllClient(const std::string messageToSend, uint8_t m
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), it.second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     }
 }
 
@@ -219,7 +216,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
         return 0;
     }
 
