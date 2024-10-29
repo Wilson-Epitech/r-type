@@ -9,7 +9,7 @@
 
 void ecs::system::BossFiringSystem::operator()(Registry &reg)
 {
-    SparseArray<component::Type> &type = reg.getComponents<component::Type>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
 
@@ -19,8 +19,8 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg)
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
 
-    for (std::size_t i = 0; i < type.size(); ++i) {
-        if (type[i]->entityType != ecs::EntityType::BOSS_LEVEL1)
+    for (std::size_t i = 0; i < types.size(); ++i) {
+        if (types[i]->entityType != ecs::EntityType::BOSS_LEVEL1)
             continue;
         if (timer.size() > 0) {
             for (std::size_t j = 0; j < timer.size(); j++) {
