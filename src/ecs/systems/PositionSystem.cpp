@@ -13,15 +13,15 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
         if (positions[i] && velocities[i]) {
+            setStartPosition(reg, i);
             if (!handlePlayerPosition(i, reg)) {
-                positions[i]->x += velocities[i]->vx;
-                positions[i]->y += velocities[i]->vy;
+                handleMovementPattern(reg, i);
             }
         }
     }
 }
 
-bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, Registry &reg) {
+bool ecs::system::PositionSystem::handlePlayerPosition(const std::size_t &playerIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -41,4 +41,85 @@ bool ecs::system::PositionSystem::handlePlayerPosition(std::size_t playerIndex, 
         }
     }
     return false;
+}
+
+void ecs::system::PositionSystem::handleMovementPattern(Registry &reg, const std::size_t &index) {
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
+
+    if (movementPattern.size() < index) {
+        moveStraight(reg, index);
+        return;
+    }
+    if (!movementPattern[index]) {
+        moveStraight(reg, index);
+        return;
+    }
+    handleReverseDirection(reg, index);
+    switch (movementPattern[index]->movementPatternType) {
+        case ecs::MovementType::STRAIGHT:
+            moveStraight(reg, index);
+            break;
+        case ecs::MovementType::SNAKE:
+            moveSnake(reg, index);
+        default:
+            break;
+    }
+}
+
+void ecs::system::PositionSystem::moveStraight(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+
+    positions[index]->x += velocities[index]->vx;
+    positions[index]->y += velocities[index]->vy;
+}
+
+void ecs::system::PositionSystem::moveSnake(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
+    float vy = velocities[index]->vy;
+    float vx = velocities[index]->vx;
+
+    if (vy < 0)
+        vy *= -1;
+    if (vx > 0)
+        vx *= -1;
+    if (positions[index]->y >= positions[index]->startY + vx * movementPattern[index]->patternAmplitude && velocities[index]->vy < 0) {
+        velocities[index]->vy = -vy;
+    } else if (positions[index]->y <= positions[index]->startY - vx * movementPattern[index]->patternAmplitude && velocities[index]->vy >= 0) {
+        velocities[index]->vy = vy;
+    } else if (velocities[index]->vy >= 0) {
+        velocities[index]->vy = -vy;
+    } else if (velocities[index]->vy <= 0) {
+        velocities[index]->vy = vy;
+    }
+    if (positions[index]->y <= 0)
+        velocities[index]->vy = -vy;
+    if (positions[index]->y >= Lib::getScreenHeight())
+        velocities[index]->vy = vy;
+    positions[index]->x += velocities[index]->vx;
+    positions[index]->y += velocities[index]->vy;
+}
+
+void ecs::system::PositionSystem::setStartPosition(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+
+    if (positions[index]->startX == 0)
+        positions[index]->startX = positions[index]->x;
+    if (positions[index]->startY == 0)
+        positions[index]->startY = positions[index]->y;
+}
+
+void ecs::system::PositionSystem::handleReverseDirection(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
+
+    if (!movementPattern[index]->isReversible)
+        return;
+    if (positions[index]->x <= 0)
+        velocities[index]->vx *= -1;
+    if (positions[index]->x >= Lib::getScreenWidth() && velocities[index]->vx > 0)
+        velocities[index]->vx *= -1;
 }

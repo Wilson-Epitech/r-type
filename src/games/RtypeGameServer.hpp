@@ -62,6 +62,12 @@
 
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 
+/** @brief The vertical velocity of enemies with straight pattern*/
+#define ENEMY_VY_STRAIGHT 0.0
+
+/** @brief Time amplitude of enemy pattern */
+#define ENEMY_PATTERN_AMPLITUDE 60
+
 namespace game {
 
     /**
