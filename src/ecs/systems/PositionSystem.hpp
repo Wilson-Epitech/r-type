@@ -82,6 +82,14 @@ namespace ecs {
              * @param index The index of the entity to move.
              */
             void moveSnake(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the velocity update for an entity.
+             * This method reverse the velocity of an entity if it go out of the screen
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void handleReverseDirection(Registry &reg, const std::size_t &index);
         };
     }
 }
