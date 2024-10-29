@@ -217,7 +217,7 @@ enum Poweruptype {
    struct BackgroundMusicInfos {
       std::string musicPath;
       float volume;
-      bool hasToBePlayed = false;
+      bool hasToBePlayed = true;
       bool isLoaded = false;
       bool isCurrentlyPlayed = false;
 
@@ -275,7 +275,7 @@ enum Poweruptype {
    ```c++
    struct Powerup {
        Poweruptype powerupType = Poweruptype::LIFE_POWERUP;
-       std::size_t spawnRate = 5;
+       std::size_t spawnRate = 3;
        bool hasBeenActivated = false;
        std::size_t playerIndex = 0;
    };

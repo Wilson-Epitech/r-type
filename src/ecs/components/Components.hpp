@@ -239,7 +239,7 @@ namespace ecs {
         struct BackgroundMusicInfos {
             std::string musicPath;          ///< Path to the music file
             float volume;                   ///< Volume level of the music
-            bool hasToBePlayed = false;     ///< Indicates if the music should be played
+            bool hasToBePlayed = true;     ///< Indicates if the music should be played
             bool isLoaded = false;          ///< Indicates if the music is loaded
             bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
 
@@ -289,7 +289,7 @@ namespace ecs {
         */
         struct Powerup {
             Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
-            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            std::size_t spawnRate = 3; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
             bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
             std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
         };

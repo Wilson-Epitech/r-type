@@ -78,13 +78,13 @@ void game::RtypeGameServer::addComponentsToEntities() {
     spriteInfos.insertAt(
         _stringToEntity[PLAYER_TEMPLATE_NAME],
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
-    shootings.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Shooting{false});
+    shootings.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Shooting{});
     types.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
-    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES, true});
+    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES, PLAYER_TEMPLATE_DISPLAY_LIFE});
     soundEffectInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     shootingRate.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::ShootingRate{PLAYER_TEMPLATE_SHOOTING_RATE});
     score.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Score{PLAYER_TEMPLATE_SCORE_INCREMENTATION});
-    textInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::TextInfos{"Score:", 50, 50, 20, FONT_PATH, ORANGE_COLOR});
+    textInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::TextInfos{PLAYER_TEMPLATE_TEXT_CONTENT, PLAYER_TEMPLATE_TEXT_X, PLAYER_TEMPLATE_TEXT_Y, PLAYER_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
     activePowerups.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::ActivePowerup{});
 
     velocities.insertAt(_stringToEntity[PLAYER_SHOT_TEMPLATE_NAME], ecs::component::Velocity{PLAYER_SHOT_TEMPLATE_VX, PLAYER_SHOT_TEMPLATE_VY});
@@ -97,11 +97,11 @@ void game::RtypeGameServer::addComponentsToEntities() {
     enemySpawns.insertAt(
         _stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME],
         ecs::component::EnemySpawn{timeBeforeSpawnEnemy, enemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
-    velocities.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY_SNAKE});
-    lives.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Life{ENEMY_NB_LIVES, false, true});
+    velocities.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Velocity{ENEMY_VX, ENEMY_VY});
+    lives.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Life{ENEMY_NB_LIVES, ENEMY_DISPLAY_LIFE, ENEMY_HAS_TO_SUMMON_POWERUP});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::ShootingRate{ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
-    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, true, ecs::MovementType::SNAKE});
+    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, ENEMY_IS_REVERSIBLE, ecs::MovementType::SNAKE});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::Velocity{ENEMY_SHOT_TEMPLATE_VX, ENEMY_SHOT_TEMPLATE_VY});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME],
@@ -114,24 +114,24 @@ void game::RtypeGameServer::addComponentsToEntities() {
     enemySpawns.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
                          ecs::component::EnemySpawn{timeBeforeSpawnStrongerEnemy, strongerEnemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
-    velocities.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::Velocity{STRONGER_ENEMY_VX, STRONGER_ENEMY_VY_STRAIGHT});
+    velocities.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::Velocity{STRONGER_ENEMY_VX, STRONGER_ENEMY_VY});
     lives.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::Life{STRONGER_ENEMY_NB_LIVES});
     shootingRate.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::ShootingRate{STRONGER_ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH, MUSIC_VOLUME, true});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH, MUSIC_VOLUME});
 
     types.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
-    textInfos.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::TextInfos{"Team_score:", 50, 100, 20, FONT_PATH, ORANGE_COLOR});
+    textInfos.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::TextInfos{TEAM_SCORE_TEXT_CONTENT, TEAM_SCORE_TEXT_X, TEAM_SCORE_TEXT_Y, TEAM_SCORE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
     score.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::Score{});
 
     types.insertAt(_stringToEntity[TITLE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
-    textInfos.insertAt(_stringToEntity[TITLE_NAME], ecs::component::TextInfos{"RType", SCREEN_WIDTH / 2, 50, 20, FONT_PATH, ORANGE_COLOR});
+    textInfos.insertAt(_stringToEntity[TITLE_NAME], ecs::component::TextInfos{TITLE_TEXT_CONTENT, TITLE_TEXT_X, TITLE_TEXT_Y, TITLE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
 
-    powerups.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::Powerup{ecs::Poweruptype::NOPOWERUP, 3});
+    powerups.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::Powerup{ecs::Poweruptype::NOPOWERUP});
     types.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::POWERUP_TEMPLATE});
     spriteInfos.insertAt( _stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::SpriteInfos{POWERUP_PATH, POWERUP_SPRITE_NB_PATTERN, POWERUP_SPRITE_FIRST_PATTERN, POWERUP_SCALE_FACTOR});
-    textInfos.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::TextInfos{"null", 0, 0, 20, FONT_PATH, ORANGE_COLOR});
+    textInfos.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME], ecs::component::TextInfos{POWERUP_TEMPLATE_TEXT_CONTENT, 0, 0, POWERUP_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

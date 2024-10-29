@@ -46,36 +46,57 @@
 #define MAX_SPAWN_WIDTH 2420 ///< Maximum spawn width for enemies.
 #define MIN_SPAWN_WIDTH 1920 ///< Minimum spawn width for enemies.
 
-#define PLAYER_TEMPLATE_POSSIBLE_VELOCITY 8 ///< Possible velocity for player template.
-#define PLAYER_TEMPLATE_SHOOTING_RATE 0.3 ///< The shooting rate for player template.
-#define PLAYER_TEMPLATE_NB_LIVES 5 ///< The number of lives for player template.
-#define PLAYER_TEMPLATE_SCORE_INCREMENTATION 100 ///< The score incrementation for player template.
+#define PLAYER_TEMPLATE_POSSIBLE_VELOCITY 8 ///< Possible velocity for the player template entity.
+#define PLAYER_TEMPLATE_SHOOTING_RATE 0.3 ///< The shooting rate for the player template entity.
+#define PLAYER_TEMPLATE_NB_LIVES 5 ///< The number of lives for the player template entity.
+#define PLAYER_TEMPLATE_DISPLAY_LIFE true /// Indicates if the life of the player template entity has to be displayed.
+#define PLAYER_TEMPLATE_SCORE_INCREMENTATION 100 ///< The score incrementation for the player template entity.
+#define PLAYER_TEMPLATE_TEXT_CONTENT "Score:" ///< The text content for the player template entity.
+#define PLAYER_TEMPLATE_TEXT_X 50 ///< The text x position for the player template entity.
+#define PLAYER_TEMPLATE_TEXT_Y 50 ///< The text y position for the player template entity.
+#define PLAYER_TEMPLATE_TEXT_SIZE 20 ///< The text size for the player template entity.
 
-#define PLAYER_SHOT_TEMPLATE_VX 10 ///< The horizontal velocity of player shot template.
-#define PLAYER_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity of player shot template.
+#define PLAYER_SHOT_TEMPLATE_VX 10 ///< The horizontal velocity for the player shot template entity.
+#define PLAYER_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity for the player shot template entity.
 
 #define ENEMY_VX -1 ///< The horizontal velocity of enemies.
-#define ENEMY_VY_SNAKE 1.5 ///< The vertical velocity of enemies.
+#define ENEMY_VY 1.5 ///< The vertical velocity of enemies.
+#define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
+#define ENEMY_DISPLAY_LIFE false ///< Indicates if the life of enemies has to be displayed.
+#define ENEMY_HAS_TO_SUMMON_POWERUP true ///< Indicates if a powerup has a chance to spawn after death of enemies.
 #define ENEMY_PATTERN_AMPLITUDE 60 ///< Time amplitude of enemies pattern.
+#define ENEMY_IS_REVERSIBLE true ///<
 #define ENEMY_WAVE_SIZE 5 ///< The size of each wave of enemies.
 #define ENEMY_SHOOTING_RATE 3 ///< The shooting rate for enemies.
-#define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
 #define TIME_BEFORE_SPAWN_ENEMY 15  ///< Time before enemies start spawning.
 
 #define STRONGER_ENEMY_VX -1 ///< The horizontal velocity of stronger enemies.
-#define STRONGER_ENEMY_VY_STRAIGHT 0.0 ///< The vertical velocity of stronger enemies.
+#define STRONGER_ENEMY_VY 0.0 ///< The vertical velocity of stronger enemies.
 #define STRONGER_ENEMY_WAVE_SIZE 1 ///< The number of stronger enemies spawned in each wave.
 #define STRONGER_ENEMY_SHOOTING_RATE 6 ///< The shooting rate for stronger enemies.
 #define STRONGER_ENEMY_NB_LIVES 10 ///< The number of lives for stronger enemies.
 #define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10 ///< Time before stronger enemies start spawning.
 
-#define ENEMY_SHOT_TEMPLATE_VX -10 ///< The horizontal velocity of enemy shot template.
-#define ENEMY_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity of enemy shot template.
+#define ENEMY_SHOT_TEMPLATE_VX -10 ///< The horizontal velocity for the enemy shot template entity.
+#define ENEMY_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity for the enemy shot template entity.
 
-#define BACKGROUND_VX -0.5 ///< The horizontal velocity of background.
-#define BACKGROUND_VY 0.0  ///< The vertical velocity of background.
+#define POWERUP_TEMPLATE_TEXT_CONTENT "null" ///< The text content for the powerup template entity.
+#define POWERUP_TEMPLATE_TEXT_SIZE 20 ///< The text size for the powerup template entity.
+
+#define BACKGROUND_VX -0.5 ///< The horizontal velocity for the background entity.
+#define BACKGROUND_VY 0.0  ///< The vertical velocity for the background entity.
 
 #define MUSIC_VOLUME 0.5 ///< The volume of the background music.
+
+#define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
+#define TEAM_SCORE_TEXT_X 50 ///< The text x position for the team score entity.
+#define TEAM_SCORE_TEXT_Y 100 ///< The text y position for the team score entity.
+#define TEAM_SCORE_TEXT_SIZE 20 ///< The text size for the team score entity.
+
+#define TITLE_TEXT_CONTENT "RType:" ///< The text content for the title entity.
+#define TITLE_TEXT_X SCREEN_WIDTH / 2 ///< The text x position for the title entity.
+#define TITLE_TEXT_Y 50 ///< The text y position for the title entity.
+#define TITLE_TEXT_SIZE 20 ///< The text size for the title entity.
 
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 
