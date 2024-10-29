@@ -6,8 +6,6 @@
 */
 
 #include "PositionSystem.hpp"
-#include <iostream>
-#include <math.h>
 
 void ecs::system::PositionSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
