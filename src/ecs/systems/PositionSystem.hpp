@@ -82,6 +82,16 @@ namespace ecs {
              * @param index The index of the entity to move.
              */
             void moveSnake(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for an entity.
+             * This method move the entity in the direction of the player
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveFollow(Registry &reg, const std::size_t &index);
+
+            std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }
 }

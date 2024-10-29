@@ -97,7 +97,8 @@ namespace ecs {
      */
     enum MovementType {
         STRAIGHT,   ///< Straight movement
-        SNAKE       ///< Snake movement
+        SNAKE,      ///< Snake movement
+        FOLLOW      ///< Follow the player
     };
 
     namespace component {
@@ -133,9 +134,10 @@ namespace ecs {
          */
         struct Type {
             ecs::EntityType entityType = ecs::EntityType::NOTYPE; ///< The type of the entity
+            std::size_t test = 0;
 
             bool operator==(const Type &other) const {
-                return (entityType == other.entityType);
+                return (entityType == other.entityType && test == other.test);
             }
         };
 
@@ -400,6 +402,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
+void operator>>(std::istringstream &iss, ecs::MovementType &movementType);
 void operator>>(std::istringstream &iss, ecs::ComponentName &name);
 void operator>>(std::istringstream &iss, ecs::component::Position &position);
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);
