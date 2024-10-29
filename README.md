@@ -33,6 +33,12 @@ cmake -P build.cmake
 cmake --build build
 ```
 
+If you want to clean the directory, run this command:
+
+```bash
+cmake -P build/clean.cmake
+```
+
 ## Usage
 
 **Launch the Server**
