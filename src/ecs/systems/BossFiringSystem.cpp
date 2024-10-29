@@ -56,7 +56,7 @@ void ecs::system::BossFiringSystem::addShot(std::size_t enemyIndex, Registry &re
     SparseArray<component::SoundEffectInfos> &soundEffect = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    std::size_t enemyShootIndex = getEnemyShootIndex(reg);
+    std::size_t enemyShootIndex = getBossShootIndex(reg);
 
     if (enemyShootIndex == 0 || spriteInfos[enemyIndex]->spriteWidth == 0 || spriteInfos[enemyIndex]->spriteHeight == 0 ||
         spriteInfos[enemyShootIndex]->spriteWidth == 0 || spriteInfos[enemyShootIndex]->spriteHeight == 0)
@@ -80,7 +80,7 @@ void ecs::system::BossFiringSystem::addShot(std::size_t enemyIndex, Registry &re
         soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[enemyShootIndex]->soundPath, false, true});
 }
 
-std::size_t ecs::system::BossFiringSystem::getEnemyShootIndex(Registry &reg) {
+std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
