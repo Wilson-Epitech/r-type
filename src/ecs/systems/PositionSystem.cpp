@@ -15,7 +15,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
         if (positions[i] && velocities[i]) {
             setStartPosition(reg, i);
             if (!handlePlayerPosition(i, reg)) {
-                handleMovementPatern(reg, i);
+                handleMovementPattern(reg, i);
             }
         }
     }
@@ -43,18 +43,19 @@ bool ecs::system::PositionSystem::handlePlayerPosition(const std::size_t &player
     return false;
 }
 
-void ecs::system::PositionSystem::handleMovementPatern(Registry &reg, const std::size_t &index) {
-    SparseArray<component::MovementPatern> &movementPatern = reg.getComponents<component::MovementPatern>();
+void ecs::system::PositionSystem::handleMovementPattern(Registry &reg, const std::size_t &index) {
+    SparseArray<component::MovementPatternType> &movementPatternType = reg.getComponents<component::MovementPatternType>();
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
 
-    if (movementPatern.size() < index) {
+    if (movementPatternType.size() < index || movementPattern.size() < index) {
         moveStraight(reg, index);
         return;
     }
-    if (!movementPatern[index]) {
+    if (!movementPatternType[index] || !movementPattern[index]) {
         moveStraight(reg, index);
         return;
     }
-    switch (movementPatern[index]->movementPaternType) {
+    switch (movementPatternType[index]->movementPatternType) {
         case ecs::MovementType::STRAIGHT:
             moveStraight(reg, index);
             break;
@@ -76,20 +77,24 @@ void ecs::system::PositionSystem::moveStraight(Registry &reg, const std::size_t 
 void ecs::system::PositionSystem::moveSnake(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
+    float vy = velocities[index]->vy;
 
-    if (positions[index]->y >= positions[index]->startY + velocities[index]->vx * 40 && velocities[index]->vy < 0) {
-        velocities[index]->vy = -0.5;
-    } else if (positions[index]->y <= positions[index]->startY - velocities[index]->vx * 40 && velocities[index]->vy >= 0) {
-        velocities[index]->vy = 0.5;
+    if (vy < 0)
+        vy *= -1;
+    if (positions[index]->y >= positions[index]->startY + velocities[index]->vx * movementPattern[index]->patternAmplitude && velocities[index]->vy < 0) {
+        velocities[index]->vy = -vy;
+    } else if (positions[index]->y <= positions[index]->startY - velocities[index]->vx * movementPattern[index]->patternAmplitude && velocities[index]->vy >= 0) {
+        velocities[index]->vy = vy;
     } else if (velocities[index]->vy >= 0) {
-        velocities[index]->vy = -0.5;
+        velocities[index]->vy = -vy;
     } else if (velocities[index]->vy <= 0) {
-        velocities[index]->vy = 0.5;
+        velocities[index]->vy = vy;
     }
     if (positions[index]->y <= 0)
-        velocities[index]->vy = -1;
+        velocities[index]->vy = -vy;
     if (positions[index]->y >= Lib::getScreenHeight())
-        velocities[index]->vy = 1;
+        velocities[index]->vy = vy;
     positions[index]->x += velocities[index]->vx;
     positions[index]->y += velocities[index]->vy;
 }

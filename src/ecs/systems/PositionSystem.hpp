@@ -54,21 +54,21 @@ namespace ecs {
             bool handlePlayerPosition(const std::size_t &playerIndex, Registry &reg);
 
             /**
-             * @brief Store the postition of the entity before any movement
+             * @brief Store the position of the entity before any movement
              * @param reg The ECS registry containing entities and their components.
              * @param index The index of the entity to store the position.
              */
             void setStartPosition(Registry &reg, const std::size_t &index);
 
             /**
-             * @brief Handle the movement patern of the entity
+             * @brief Handle the movement pattern of the entity
              * @param reg The ECS registry containing entities and their components.
              * @param index The entity that will move.
              */
-            void handleMovementPatern(Registry &reg, const std::size_t &index);
+            void handleMovementPattern(Registry &reg, const std::size_t &index);
 
             /**
-             * @brief Handles the position update for entitys.
+             * @brief Handles the position update for an entity.
              * This method move the entity with a straight movement
              * @param reg The ECS registry containing entities and their components.
              * @param index The index of the entity to move.
@@ -76,7 +76,7 @@ namespace ecs {
             void moveStraight(Registry &reg, const std::size_t &index);
 
             /**
-             * @brief Handles the position update for entitys.
+             * @brief Handles the position update for an entity.
              * This method move the entity with a snake movement
              * @param reg The ECS registry containing entities and their components.
              * @param index The index of the entity to move.
