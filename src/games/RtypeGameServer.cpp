@@ -41,7 +41,6 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Powerup>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
-    _reg.registerComponent<ecs::component::MovementPatternType>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -60,7 +59,6 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
     ecs::SparseArray<ecs::component::MovementPattern> &movementPattern = _reg.getComponents<ecs::component::MovementPattern>();
-    ecs::SparseArray<ecs::component::MovementPatternType> &movementPatternType = _reg.getComponents<ecs::component::MovementPatternType>();
 
     positions.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Position{0, 0});
     velocities.insertAt(_stringToEntity[BACKGROUND_NAME], ecs::component::Velocity{-0.5, 0.0});
@@ -94,8 +92,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1, false, true});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
-    movementPatternType.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPatternType{ecs::MovementType::SNAKE});
-    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, true});
+    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, true, ecs::MovementType::SNAKE});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Velocity{-10, 0});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT],
