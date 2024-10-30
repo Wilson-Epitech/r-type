@@ -186,12 +186,16 @@ void network::HandleData::updateEntitiesData(DataToSend &dataReceived, ecs::Regi
 
 void network::HandleData::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
     dataToSend.deadEntities.erase(std::remove_if(dataToSend.deadEntities.begin(), dataToSend.deadEntities.end(),
-        [dataReceived](const auto &dataToSendEntity) {
-            return (std::find(dataReceived.deadEntities.begin(), dataReceived.deadEntities.end(), dataToSendEntity) != dataReceived.deadEntities.end());
-        }), dataToSend.deadEntities.end());
+                                                 [dataReceived](const auto &dataToSendEntity) {
+                                                     return (std::find(dataReceived.deadEntities.begin(), dataReceived.deadEntities.end(),
+                                                                       dataToSendEntity) != dataReceived.deadEntities.end());
+                                                 }),
+                                  dataToSend.deadEntities.end());
 
     dataToSend.entitiesData.erase(std::remove_if(dataToSend.entitiesData.begin(), dataToSend.entitiesData.end(),
-        [dataReceived](const auto &dataToSendEntity) {
-            return (std::find(dataReceived.entitiesData.begin(), dataReceived.entitiesData.end(), dataToSendEntity) != dataReceived.entitiesData.end());
-        }), dataToSend.entitiesData.end());
+                                                 [dataReceived](const auto &dataToSendEntity) {
+                                                     return (std::find(dataReceived.entitiesData.begin(), dataReceived.entitiesData.end(),
+                                                                       dataToSendEntity) != dataReceived.entitiesData.end());
+                                                 }),
+                                  dataToSend.entitiesData.end());
 }
