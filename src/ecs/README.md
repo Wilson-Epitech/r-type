@@ -89,7 +89,7 @@ enum Poweruptype {
            return x == other.x && y == other.y && startX == other.startX && startY == other.startY;
        }
    };
-      ```
+   ```
 2. **Velocity**
    - Store the velocity and the possible velocity of the entity<br>
    The velocity is used to define the speed of the entity
@@ -183,14 +183,12 @@ enum Poweruptype {
    };
 
    ```
-   ```
 9. **SoundEffectObject**
    - Store a sound to be played
    ```c++
    struct SoundEffectInfos {
       Sound sound = Sound{};
    };
-   ```
    ```
 10. **EnemySpawn**
    - Handles the logic for spawning enemies.
@@ -306,7 +304,18 @@ enum Poweruptype {
       bool operator==(const MovementPattern &other) const {
          return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
       }
-   };
+      };
+   ```
+17.   **BossSpawn**
+   - Store informations about the spawning of a boss
+   ```c++
+       struct BossSpawn {
+            int maxSpawnWidth = Lib::getScreenWidth();
+            int minSpawnWidth = 0;
+            int maxSpawnHeight = Lib::getScreenHeight();
+            int minSpawnHeight = 0;
+            bool hasBeenSlayed = false;
+     };
    ```
 
 <div id='AddComponents'/>

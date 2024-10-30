@@ -26,6 +26,8 @@ void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[TEAM_SCORE_NAME] = _reg.spawnEntity();
     _stringToEntity[TITLE_NAME] = _reg.spawnEntity();
     _stringToEntity[POWER_UP_TEMPLATE_NAME] = _reg.spawnEntity();
+    _stringToEntity[BOSS_SHOT_LEVEl1] = _reg.spawnEntity();
+    _stringToEntity[SPAWN_BOSS_LEVEL1_NAME] = _reg.spawnEntity();
 }
 
 void game::RtypeGameServer::registerComponents() {
@@ -34,6 +36,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Shooting>();
     _reg.registerComponent<ecs::component::Type>();
     _reg.registerComponent<ecs::component::SpriteInfos>();
+    _reg.registerComponent<ecs::component::BossSpawn>();
     _reg.registerComponent<ecs::component::EnemySpawn>();
     _reg.registerComponent<ecs::component::Life>();
     _reg.registerComponent<ecs::component::SoundEffectInfos>();
@@ -54,6 +57,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Type> &types = _reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = _reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::EnemySpawn> &enemySpawns = _reg.getComponents<ecs::component::EnemySpawn>();
+    ecs::SparseArray<ecs::component::BossSpawn> &bossSpawns = _reg.getComponents<ecs::component::BossSpawn>();
     ecs::SparseArray<ecs::component::SpriteInfos> &spriteInfos = _reg.getComponents<ecs::component::SpriteInfos>();
     ecs::SparseArray<ecs::component::SoundEffectInfos> &soundEffectInfos = _reg.getComponents<ecs::component::SoundEffectInfos>();
     ecs::SparseArray<ecs::component::ShootingRate> &shootingRate = _reg.getComponents<ecs::component::ShootingRate>();
@@ -101,7 +105,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Life{ENEMY_NB_LIVES, ENEMY_DISPLAY_LIFE, ENEMY_HAS_TO_SUMMON_POWERUP});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::ShootingRate{ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
-    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, ENEMY_IS_REVERSIBLE, ecs::MovementType::SNAKE});
+    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, ENEMY_IS_REVERSIBLE, ecs::MovementType::FOLLOW});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::Velocity{ENEMY_SHOT_TEMPLATE_VX, ENEMY_SHOT_TEMPLATE_VY});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME],
@@ -118,6 +122,22 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::Life{STRONGER_ENEMY_NB_LIVES});
     shootingRate.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::ShootingRate{STRONGER_ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
+
+    spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME],
+                         ecs::component::SpriteInfos{STAGE1_BOSS_PATH, STAGE1_BOSS_PATTERN, 0, LEVEL1_BOSS_SCALE_FACTOR});
+    bossSpawns.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::BossSpawn{MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+    velocities.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::Velocity{0, 0});
+    lives.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::Life{LEVEL1_BOSS_LIFE});
+    shootingRate.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::ShootingRate{LEVEL1_BOSS_SHOOT_RATE});
+    soundEffectInfos.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
+    types.insertAt(_stringToEntity[SPAWN_BOSS_LEVEL1_NAME], ecs::component::Type{ecs::EntityType::BOSS_LEVEL1});
+
+
+    velocities.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1], ecs::component::Velocity{LEVEL1_BOSS_SHOT_VELOCITY, 0});
+    spriteInfos.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1],
+                         ecs::component::SpriteInfos{LEVEL1_BOSS_SHOT_PATH, LEVEL1_BOSS_SHOT_PATTERN, 0, 1});
+    types.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1], ecs::component::Type{ecs::EntityType::BOSS_SHOT_1_TEMPLATE});
+    soundEffectInfos.insertAt(_stringToEntity[BOSS_SHOT_LEVEl1], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
 
     backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH, MUSIC_VOLUME});
 
@@ -144,7 +164,10 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::ScoreSystem());
     _reg.addSystem(ecs::system::PowerupSystem());
     _reg.addSystem(ecs::system::LifeSystem());
+    _reg.addSystem(ecs::system::BossSpawnSystem());
+    _reg.addSystem(ecs::system::BossFiringSystem());
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
+    _reg.addSystem(ecs::system::ResetForNextLevel());
 }
 
 game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {

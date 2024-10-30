@@ -43,19 +43,22 @@ namespace ecs {
      * @brief Enum representing different types of entities in the game.
      */
     enum EntityType {
-        NOTYPE,              ///< No type entity
-        PLAYER,              ///< Player entity
-        PLAYER_TEMPLATE,     ///< Player template entity
-        PLAYERSHOT,          ///< Player's shot entity
-        PLAYERSHOT_TEMPLATE, ///< Player's shot template entity
-        ENEMY,               ///< Enemy entity
-        ENEMY_TEMPLATE,      ///< Enemy template entity
-        ENEMYSHOT,           ///< Enemy's shot entity
-        ENEMYSHOT_TEMPLATE,  ///< Enemy's shot template entity
-        BACKGROUND,          ///< Background entity
-        TEXT,                ///< Text entity
-        POWERUP,             ///< Powerup entity
-        POWERUP_TEMPLATE     ///< Powerup template entity
+        NOTYPE,                 ///< No type entity
+        PLAYER,                 ///< Player entity
+        PLAYER_TEMPLATE,        ///< Player template entity
+        PLAYERSHOT,             ///< Player's shot entity
+        PLAYERSHOT_TEMPLATE,    ///< Player's shot template entity
+        ENEMY,                  ///< Enemy entity
+        ENEMY_TEMPLATE,         ///< Enemy template entity
+        ENEMYSHOT,              ///< Enemy's shot entity
+        ENEMYSHOT_TEMPLATE,     ///< Enemy's shot template entity
+        BOSS_SHOT_1,            ///< Level 1 boss's shot entity
+        BOSS_SHOT_1_TEMPLATE,   ///< Level 1 boss's shot template entity
+        BACKGROUND,             ///< Background entity
+        TEXT,                   ///< Text entity
+        POWERUP,                ///< Powerup entity
+        POWERUP_TEMPLATE,       ///< Powerup template entity
+        BOSS_LEVEL1             ///< Level1 Boss' entity
     };
 
     /**
@@ -97,7 +100,8 @@ namespace ecs {
      */
     enum MovementType {
         STRAIGHT,   ///< Straight movement
-        SNAKE       ///< Snake movement
+        SNAKE,      ///< Snake movement
+        FOLLOW      ///< Follow the player
     };
 
     namespace component {
@@ -180,12 +184,14 @@ namespace ecs {
             float scaleFactor = 1.0;                       ///< Scale factor for the sprite
             CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
+            float rotationAngle = 0;                       ///< Rotation angle of the sprite
+            bool isLoaded = false;        ///< Indicates if the texture is loaded
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
                         scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
                         color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth &&
-                        spriteHeight == other.spriteHeight);
+                        spriteHeight == other.spriteHeight && rotationAngle == other.rotationAngle);
             }
         };
 
@@ -214,6 +220,18 @@ namespace ecs {
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
             int minSpawnHeight = 0;                      ///< Minimum spawn height
+        };
+
+        /**
+         * @struct BossSpawn
+         * @brief Component representing the boss spawn information.
+         */
+        struct BossSpawn {
+            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
+            int minSpawnWidth = 0;                       ///< Minimum spawn width
+            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
+            int minSpawnHeight = 0;                      ///< Minimum spawn height
+            bool hasBeenSlayed = false;                  ///< To know if the boss has been defeated
         };
 
         /**
@@ -315,9 +333,9 @@ namespace ecs {
          * @brief Component for the movement pattern of an entity
         */
         struct MovementPattern {
-            std::size_t patternAmplitude = 0;
-            bool isReversible = false;
-            ecs::MovementType movementPatternType = MovementType::STRAIGHT;
+            std::size_t patternAmplitude = 0;   ///< The amplitude of the pattern (usfull for snake pattern)
+            bool isReversible = false;          ///< Indicates if the entity has to go backward when it goes out of the screen
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT;     ///< The type of pattern to use
 
             bool operator==(const MovementPattern &other) const {
                 return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
@@ -400,6 +418,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
+void operator>>(std::istringstream &iss, ecs::MovementType &movementType);
 void operator>>(std::istringstream &iss, ecs::ComponentName &name);
 void operator>>(std::istringstream &iss, ecs::component::Position &position);
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);

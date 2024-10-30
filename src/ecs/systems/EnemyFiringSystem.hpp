@@ -18,6 +18,7 @@
 #include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include <math.h>
 
 namespace ecs {
     namespace system {
@@ -49,7 +50,7 @@ namespace ecs {
              * @param index The index of the enemy entity firing the shot.
              * @param reg The ECS registry where the shot entity will be created.
              */
-            void addShot(std::size_t index, Registry &reg);
+            void addShot(const std::size_t &index, Registry &reg);
 
             /**
              * @brief Finds the index of an enemy shot component.
@@ -58,6 +59,25 @@ namespace ecs {
              * @return std::size_t The index of the enemy entity with a shooting component.
              */
             std::size_t getEnemyShootIndex(Registry &reg);
+
+            /**
+             * @brief Change the velocity of the enemy shoot.
+             * This method change the velocity of the enemy shoot if the enemy pattern is 'FOLLOW'
+             * The shoot will go in the direction of the player
+             * @param reg The ECS registry containing entities and components.
+             * @param enemyIndex The index of the enemy entity firing the shot.
+             * @param shootIndex The index of the enemy shoot entity.
+             * @return float the angle of the shoot.
+             */
+            float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
+
+            /**
+             * @brief Finds enemy's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the enemy entity.
+             * @return std::size_t The index of the enemy's nearest player.
+             */
+            std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }
 }

@@ -19,13 +19,13 @@ void ecs::system::DrawSpriteSystem::operator()(Registry &reg) {
     loadTextures(drawables, spriteInfos);
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size() && i < types.size(); ++i) {
         if (drawables[i] && positions[i] && spriteInfos[i] && velocities[i] && types[i]) {
-            if (drawables[i]->isLoaded && types[i]->entityType != ecs::EntityType::BACKGROUND) {
+            if (spriteInfos[i]->isLoaded && types[i]->entityType != ecs::EntityType::BACKGROUND) {
                 Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
-                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0,
+                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, spriteInfos[i]->rotationAngle,
                                {spriteInfos[i]->color.r, spriteInfos[i]->color.g, spriteInfos[i]->color.b, spriteInfos[i]->color.a});
-            } else if (drawables[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
+            } else if (spriteInfos[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(screenRatio, velocities, drawables, positions, spriteInfos, i);
             }
         }
@@ -42,14 +42,14 @@ void ecs::system::DrawSpriteSystem::loadTextures(SparseArray<component::Drawable
             continue;
         if (!drawables[i])
             drawables.insertAt(i, ecs::component::Drawable({}));
-        if (drawables[i]->isLoaded == false && spriteInfos[i]->spritePath.length() > 0) {
+        if (spriteInfos[i]->isLoaded == false && spriteInfos[i]->spritePath.length() > 0) {
             if (!FileExists(spriteInfos[i]->spritePath.c_str()))
                 throw Error("Invalid sprite path");
             drawables[i]->spriteTexture = LoadTexture(spriteInfos[i]->spritePath.c_str());
             offset = float(drawables[i]->spriteTexture.width) / spriteInfos[i]->patternNb;
             firstPatternLocation = spriteInfos[i]->firstPattern * offset;
             drawables[i]->spriteRect = {firstPatternLocation, 0, offset, float(drawables[i]->spriteTexture.height)};
-            drawables[i]->isLoaded = true;
+            spriteInfos[i]->isLoaded = true;
         }
     }
 }

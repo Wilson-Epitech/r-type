@@ -153,6 +153,51 @@ namespace ecs {
              * @param j The index of the second entity.
              */
             void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and a level1 boss' shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and a Level1 boss shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndBossLevel1Shot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and an enemy shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and an enemy.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemy(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss' shot and a powerup.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss' shot and a powerup.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss' shot and a player's shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss' shot and a player's shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
         };
     }
 }

@@ -21,6 +21,7 @@
 #include "ControlSystem.hpp"
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
+#include "BossSpawnSystem.hpp"
 #include "FiringSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
@@ -29,6 +30,8 @@
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 #include "PowerupSystem.hpp"
+#include "BossFiringSystem.hpp"
+#include "ResetForNextLevel.hpp"
 
 #define PLAYER_TEMPLATE_NAME "player_template" ///< Defines the name of the player template entity.
 #define PLAYER_SHOT_TEMPLATE_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
@@ -99,6 +102,11 @@
 #define TITLE_TEXT_SIZE 20 ///< The text size for the title entity.
 
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
+
+/** @brief Defines the name of the level 1 boss shot entity */
+#define BOSS_SHOT_LEVEl1 "boss_shot_level1"
+/** @brief Defines the name of the boss of level 1 spawn entity */
+#define SPAWN_BOSS_LEVEL1_NAME "boss_level1"
 
 namespace game {
 
