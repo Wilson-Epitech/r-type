@@ -32,4 +32,19 @@
 #define ENEMYSHOT_SCALE_FACTOR 2
 #define BOSS_SCALE_FACTOR 1.5
 
+
+#define STAGE1_BOSS_PATH "assets/r-typesheet41.png"
+#define STAGE1_BOSS_PATTERN 5
+
+#define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"
+#define LEVEL1_BOSS_SHOT_PATTERN 4
+#define LEVEL1_BOSS_SCALE_FACTOR 10
+#define LEVEL1_BOSS_LIFE 100
+#define LEVEL1_BOSS_SHOOT_RATE 0.5
+
+#define LEVEL1_BOSS_SHOT_VELOCITY -10
+
+#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png"
+
+
 #endif /* !ASSETS_HPP_ */

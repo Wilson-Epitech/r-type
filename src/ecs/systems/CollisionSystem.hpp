@@ -174,12 +174,85 @@ namespace ecs {
             bool isPlayerShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
+             * @brief Checks if the collision is between a powerup shot and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between a powerup shot and a weapon.
+             * @return false Otherwise.
+             */
+            bool isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and a level1 boss' shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and a Level1 boss shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndBossLevel1Shot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and an enemy shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemyShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss and an enemy.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss and an enemy.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1AndEnemy(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss' shot and a powerup.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss' shot and a powerup.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between the level 1 boss' shot and a player's shot.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between the Level1 boss' shot and a player's shot.
+             * @return false Otherwise.
+             */
+            bool isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief give one pv to the player when he hit a powerup or a weapon and store the index of the player that hit a powerup/weapon.
              * @param reg The ECS registry containing entities and components.
              * @param i The index of the first entity.
              * @param j The index of the second entity.
              */
-            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
+            template <typename Component>
+            void weaponAndPowerupLives(Registry &reg, const std::size_t &i, const std::size_t &j, const ecs::EntityType &type) {
+                ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
+                SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+                SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+
+                if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == type && !lives[i]->isInvincible) {
+                    if (componentInfos.size() > j) {
+                        if (componentInfos[j])
+                            componentInfos[j]->playerIndex = i;
+                    }
+                    lives[i]->nbLives++;
+                } else if (types[i]->entityType == type && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
+                    if (componentInfos.size() > i) {
+                        if (componentInfos[i])
+                            componentInfos[i]->playerIndex = j;
+                    }
+                    lives[j]->nbLives++;
+                }
+            }
         };
     }
 }

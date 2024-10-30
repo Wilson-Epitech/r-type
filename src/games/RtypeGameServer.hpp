@@ -21,6 +21,7 @@
 #include "ControlSystem.hpp"
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
+#include "BossSpawnSystem.hpp"
 #include "FiringSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
@@ -29,6 +30,8 @@
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 #include "PowerupSystem.hpp"
+#include "BossFiringSystem.hpp"
+#include "ResetForNextLevel.hpp"
 #include "WeaponSystem.hpp"
 
 /** @brief Defines the name of the player template entity */
@@ -43,6 +46,10 @@
 #define ENEMY_SHOT "enemy_shot_template"
 /** @brief Defines the name of the boss spawn template entity */
 #define SPAWN_BOSS_NAME "boss_template"
+/** @brief Defines the name of the level 1 boss shot entity */
+#define BOSS_SHOT_LEVEl1 "boss_shot_level1"
+/** @brief Defines the name of the boss of level 1 spawn entity */
+#define SPAWN_BOSS_LEVEL1_NAME "boss_level1"
 /** @brief Defines the name of the background music entity */
 #define MUSIC_NAME "music"
 /** @brief Defines the name of the team score entity */
