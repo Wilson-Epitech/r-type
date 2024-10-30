@@ -11,7 +11,7 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::BossSpawn> &bossLevel = reg.getComponents<component::BossSpawn>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
 
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (!lives[i] || !types[i])
@@ -25,7 +25,7 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
         if (lives[i]->nbLives == 0)
             reg.killEntity(i);
         if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && lives[i]->nbLives == 0) {
-            bossLevel[i]->hasBeenSlayed = true;
+            bossSpawns[i]->hasBeenSlayed = true;
         }
     }
 }
