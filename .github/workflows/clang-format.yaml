@@ -27,4 +27,3 @@ jobs:
             git commit -m "style: clang-format"
             git push -f origin "HEAD:${{ github.head_ref }}"
           fi
-
