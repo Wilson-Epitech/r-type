@@ -239,18 +239,20 @@ namespace ecs {
                 SparseArray<component::Type> &types = reg.getComponents<component::Type>();
                 SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
 
-                if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == type && !lives[i]->isInvincible) {
+                if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == type) {
                     if (componentInfos.size() > j) {
                         if (componentInfos[j])
                             componentInfos[j]->playerIndex = i;
                     }
-                    lives[i]->nbLives++;
-                } else if (types[i]->entityType == type && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
+                    if (!lives[i]->isInvincible)
+                      lives[i]->nbLives++;
+                } else if (types[i]->entityType == type && types[j]->entityType == ecs::EntityType::PLAYER) {
                     if (componentInfos.size() > i) {
                         if (componentInfos[i])
                             componentInfos[i]->playerIndex = j;
                     }
-                    lives[j]->nbLives++;
+                    if (!lives[j]->isInvincible)
+                      lives[j]->nbLives++;
                 }
             }
         };

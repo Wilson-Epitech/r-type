@@ -10,8 +10,7 @@
 #include <iostream>
 
 network::Server::Server(const std::size_t &port, asio::thread_pool &pool)
-    : network::ANetwork(), _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0),
-      _threadPool(pool) {
+    : network::ANetwork(), _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
     _ioThread = std::thread([this]() { _ioContext.run(); });
 }
@@ -158,8 +157,7 @@ void network::Server::sendToAClient(const std::size_t idClient, const std::strin
     if (it != _connectedClients.end()) {
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
-        _socket.async_send_to(asio::buffer(*message), it->second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
+        _socket.async_send_to(asio::buffer(*message), it->second, std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
     }
@@ -184,8 +182,7 @@ void network::Server::sendToAllClient(const std::string messageToSend, uint8_t m
     for (auto &it : _connectedClients) {
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
-        _socket.async_send_to(asio::buffer(*message), it.second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
+        _socket.async_send_to(asio::buffer(*message), it.second, std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     }
 }
 

@@ -16,9 +16,9 @@ In the ```_stringToEntity``` function, you must place the name of your entity (w
 ```c++
 void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[BACKGROUND_NAME] = _reg.spawnEntity();
-    _stringToEntity[PLAYER_NAME] = _reg.spawnEntity();
+    _stringToEntity[PLAYER_TEMPLATE_NAME] = _reg.spawnEntity();
     _stringToEntity[PLAYER_SHOT] = _reg.spawnEntity();
-    _stringToEntity[SPAWN_ENEMY_NAME] = _reg.spawnEntity();
+    _stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME] = _reg.spawnEntity();
     _stringToEntity[ENEMY_SHOT] = _reg.spawnEntity();
     _stringToEntity[SPAWN_BOSS_NAME] = _reg.spawnEntity();
     _stringToEntity[MUSIC_NAME] = _reg.spawnEntity();

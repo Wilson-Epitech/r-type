@@ -83,6 +83,8 @@ bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle r
             rec1.y + rec1.height >= rec2.y);
 }
 
+
+
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
             !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
@@ -157,16 +159,14 @@ bool ecs::system::CollisionSystem::isPlayerShotAndWeapon(const ecs::EntityType &
             (firstType == ecs::EntityType::WEAPON && secondType == ecs::EntityType::PLAYERSHOT));
 }
 
-bool ecs::system::CollisionSystem::isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::POWERUP) ||
-        (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_SHOT_1));
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
 
-bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::PLAYERSHOT) ||
-        (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
+            (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
 
 bool ecs::system::CollisionSystem::isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType)

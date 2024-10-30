@@ -18,10 +18,10 @@
 #include "Components.hpp"
 #include "ISystem.hpp"
 
-#define LEVEL1_BOSS_STOP 1200     ///< Set the stop position for the boss' entering.
-#define LEVEL1_BOSS_SPAWN_X 1940  ///< Sets the position in width for the appearance of the boss.
-#define LEVEL1_BOSS_SPAWN_Y 150   ///< Sets the position in height for the appearance of the boss.
-#define LEVEL1_BOSS_VELOCITY -1   ///< Sets the velocity for the appearance of the boss.
+#define LEVEL1_BOSS_STOP 1200    ///< Set the stop position for the boss' entering.
+#define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.
+#define LEVEL1_BOSS_SPAWN_Y 150  ///< Sets the position in height for the appearance of the boss.
+#define LEVEL1_BOSS_VELOCITY -1  ///< Sets the velocity for the appearance of the boss.
 
 namespace ecs {
     namespace system {
@@ -48,18 +48,18 @@ namespace ecs {
 
           private:
             /**
-            * @brief Creates the boss according to desired characteristic.
-            * @param reg The ECS registry containing entities and their components.
-            * @param types Array of types components for entities.
-            * @param i Index of the boss entity.
-            */
+             * @brief Creates the boss according to desired characteristic.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             * @param i Index of the boss entity.
+             */
             void createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i);
 
             /**
-            * @brief Find the index of the Level1 Boss entity.
-            * @param types Array of types components for entities.
-            * @return The index of the boss' entity.
-            */
+             * @brief Find the index of the Level1 Boss entity.
+             * @param types Array of types components for entities.
+             * @return The index of the boss' entity.
+             */
             int findLevel1BossEntity(SparseArray<component::Type> &types);
 
             std::size_t checkCurrentScore(Registry &reg);

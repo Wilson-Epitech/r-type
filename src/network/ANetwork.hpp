@@ -21,13 +21,13 @@ namespace network {
     class ANetwork : virtual public network::INetwork {
       public:
         ANetwork() : _isRunning(true), _magicNumber(0x9B3D), _messageId(0) {
-          _isSigInt = false;
-          signal(SIGINT, handleCtrlC);
+            _isSigInt = false;
+            signal(SIGINT, handleCtrlC);
         };
         ~ANetwork() = default;
 
         bool isSigInt() {
-          return _isSigInt;
+            return _isSigInt;
         }
 
       protected:
@@ -36,8 +36,8 @@ namespace network {
          * @param signal Retrieve the signal sent.
          */
         static void handleCtrlC(const int signal) {
-          if (signal == SIGINT)
-            _isSigInt = true;
+            if (signal == SIGINT)
+                _isSigInt = true;
         }
 
         inline static bool _isSigInt; ///< Indicates if SIGINT signal has been catch.
