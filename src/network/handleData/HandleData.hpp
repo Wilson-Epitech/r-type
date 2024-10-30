@@ -86,7 +86,7 @@ namespace network {
          * @param component The component data to serialize.
          */
         template <typename Component>
-        static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
+        static void serializeEntityComponent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
                                              const std::any &component) {
             std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
             auto it = componentCorrespondence.find(entityComponentName);
@@ -105,7 +105,7 @@ namespace network {
          * @param component The component to store the deserialized data.
          */
         template <typename Component>
-        static void deserializeEntityCompotent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
+        static void deserializeEntityComponent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
                                                std::any &component) {
             std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
             auto it = componentCorrespondence.find(entityComponentName);
