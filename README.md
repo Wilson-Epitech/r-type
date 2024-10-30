@@ -12,7 +12,7 @@ R-type is an advanced C++ project. The goal of the project is to recreate the in
 
 ## Project Description
 
-If we go deeper, the aim of the project is to create a server and a client, that communicates to create a fluid game. Our R-type is based on our own Gam Engine, uses Asio for the netwroking and the Raylib for the graphical aspect. Clients as well as the server is multi-threaded create a smooth experience as different handling are doen asynchronously.
+If we go deeper, the aim of the project is to create a server and a client, that communicates to create a fluid game. Our R-type is based on our own Game Engine, uses Asio for the netwroking and the Raylib for the graphical aspect. Clients as well as the server are multi-threaded, which create a smooth experience as different handling are done asynchronously.
 
 For now, our server can only handle one lobby at a time, we long to implement a server that can handle multiple session at the same time. Moreover, we want to diversify our bestiary and create more accessibility features to allow our game to be playable by everyone.
 
@@ -26,11 +26,17 @@ We also aim for our game to soon be Cross-Plateform. For now, the program lauche
 Run these two commands in order from the project root to compile it:
 
 ```bash
-cmake -B build -S .
+cmake -P build.cmake
 ```
 
 ```bash
 cmake --build build
+```
+
+If you want to clean the directory, run this command:
+
+```bash
+cmake -P build/clean.cmake
 ```
 
 ## Usage
@@ -38,8 +44,10 @@ cmake --build build
 **Launch the Server**
 
 ```sh
-./rtype_server [host ip] [port]
+./rtype_server [port] --difficulty [difficultyMode]
 ```
+> [!NOTE]
+> difficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by default)
 
 **Launch Clients**
 
@@ -62,12 +70,18 @@ Left Arrow  | Go Left
 Right Arrow | Go Right
 Space       | Shoot
 
+# Documentation
+
+[Server Documentation](src/network/README.md)<br>
+[Game Documentation](src/games/README.md)<br>
+[Game Engine Documentation](src/ecs/README.md)
+
 ## Authors
 
 * **Yanis Harkouk** * - [@Yanis Harkouk](https://github.com/yanishk)
 * **Mathis Brehm** * - [@Mathis Brehm](https://github.com/mathisbdkr)
 * **Wilson Bordichon** * - [@Wilson Bordichon](https://github.com/Wilson-Epitech)
 * **Eva Legrand** * - [@Eva Legrand](https://github.com/Chaegnal)
-* **Edouard Boquet** * - [@Edouard Boquet](https://github.com/edouardclm)
+* **Edouard Bocquet** * - [@Edouard Bocquet](https://github.com/edouardclm)
 
 

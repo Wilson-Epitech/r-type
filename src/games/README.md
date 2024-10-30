@@ -16,9 +16,9 @@ In the ```_stringToEntity``` function, you must place the name of your entity (w
 ```c++
 void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[BACKGROUND_NAME] = _reg.spawnEntity();
-    _stringToEntity[PLAYER_NAME] = _reg.spawnEntity();
+    _stringToEntity[PLAYER_TEMPLATE_NAME] = _reg.spawnEntity();
     _stringToEntity[PLAYER_SHOT] = _reg.spawnEntity();
-    _stringToEntity[SPAWN_ENEMY_NAME] = _reg.spawnEntity();
+    _stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME] = _reg.spawnEntity();
     _stringToEntity[ENEMY_SHOT] = _reg.spawnEntity();
     _stringToEntity[SPAWN_BOSS_NAME] = _reg.spawnEntity();
     _stringToEntity[MUSIC_NAME] = _reg.spawnEntity();
@@ -54,7 +54,7 @@ To add and call our system, we need to add it to the Registry in the function ``
 ```c++
 _reg.addSystem(ecs::system::FiringSystem());
 ```
-> [!CAUTION]  
+> [!CAUTION]
 > **Be careful of the order of your system**<br>
 
 ## Client Side
@@ -62,5 +62,5 @@ _reg.addSystem(ecs::system::FiringSystem());
 **The client side is way easier than the server side**<br><br>
 You only have to register your components in ```registerComponents``` function and add your systems to the registry in the function ```addSystemsToRegistry``` <br><br>
 
-> [!NOTE]  
+> [!NOTE]
 > Both function works the same way as the server side

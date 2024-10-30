@@ -56,6 +56,13 @@ namespace ecs {
             void createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> &enemySpawn, SparseArray<component::Velocity> &velocities,
                                 SparseArray<component::Life> &lives, SparseArray<component::SpriteInfos> &spriteInfos,
                                 const std::size_t &i);
+
+            /**
+             * @brief Loop through the entities and return the current score.
+             * @param reg The ECS registry containing entities and their components.
+             * @return Returns the current score of the game.
+             */
+            std::size_t checkCurrentScore(Registry &reg);
         };
     }
 }

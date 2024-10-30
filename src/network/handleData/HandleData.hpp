@@ -13,7 +13,7 @@
 
 namespace network {
     /**
-     * @class HandleData.hpp
+     * @class HandleData
      * @brief Class providing static functions for managing and retrieving game data.
      * Contains helper methods for data serialization/deserialization, entity data and component manipulation.
      */
@@ -25,9 +25,10 @@ namespace network {
         /**
          * @brief Fills a DataToSend object with data for newly spawned entities in the ECS.
          * @param reg The ECS registry containing the components and entities.
+         * @param isServer A boolean to know if the function is called by the server.
          * @return A DataToSend structure containing data for the newly spawned entities.
          */
-        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg);
+        static DataToSend fillNewEntitiesDataToSend(ecs::Registry &reg, const bool &isServer);
 
         /**
          * @brief Fills a DataToSend object with data for all entities in the ECS.
@@ -87,13 +88,12 @@ namespace network {
         template <typename Component>
         static void serializeEntityCompotent(std::ostringstream &oss, const ecs::ComponentName &entityComponentName,
                                              const std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance = getComponentCorrespondance();
-            for (auto &it : componentCorrespondance) {
-                if (entityComponentName == it.first) {
-                    auto tmpComponent = std::any_cast<Component>(component);
-                    oss << tmpComponent;
-                    return;
-                }
+            std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
+            auto it = componentCorrespondence.find(entityComponentName);
+
+            if (it != componentCorrespondence.end()) {
+                auto tmpComponent = std::any_cast<Component>(component);
+                oss << tmpComponent;
             }
         }
 
@@ -107,68 +107,65 @@ namespace network {
         template <typename Component>
         static void deserializeEntityCompotent(std::istringstream &iss, const ecs::ComponentName &entityComponentName,
                                                std::any &component) {
-            std::vector<std::pair<ecs::ComponentName, std::any>> componentCorrespondance = getComponentCorrespondance();
-            for (auto &it : componentCorrespondance) {
-                if (entityComponentName == it.first) {
-                    auto tmpComponent = std::any_cast<Component>(it.second);
-                    iss >> tmpComponent;
-                    component = tmpComponent;
-                    return;
-                }
+            std::unordered_map<ecs::ComponentName, std::any> componentCorrespondence = getComponentCorrespondence();
+            auto it = componentCorrespondence.find(entityComponentName);
+
+            if (it != componentCorrespondence.end()) {
+                auto tmpComponent = std::any_cast<Component>(it->second);
+                iss >> tmpComponent;
+                component = tmpComponent;
             }
         }
 
       private:
         /**
          * @brief Retrieves the list of component types and their corresponding default values.
-         * @return A vector of pairs containing the component names and their default values.
+         * @return An unordered map containing the component names and their default values.
          */
-        static std::vector<std::pair<ecs::ComponentName, std::any>> getComponentCorrespondance();
-        /**
-         * @brief Retrieves the indices of player entities in the ECS registry.
-         * @param reg The ECS registry.
-         * @return A vector of player entity indices.
-         */
-        static std::vector<std::size_t> retrievePlayersIndex(ecs::Registry &reg);
+        static std::unordered_map<ecs::ComponentName, std::any> getComponentCorrespondence();
 
         /**
-         * @brief Retrieves updates for a specific component type for all players in the ECS registry.
+         * @brief Add a vector of EntityData element to the entitiesData vector from DataToSend.
+         * @param reg The vector of EntityData.
+         * @param reg The DataToSend struct.
+         */
+        static void addEntityDataToSend(std::vector<EntityData> entityData, DataToSend &data);
+
+        /**
+         * @brief Retrieves updates for a specific component type for all entities in the ECS registry.
          * @tparam Component The component type to retrieve updates for.
          * @param reg The ECS registry.
          * @param name The name of the component.
-         * @return A vector of EntityData containing updated component data for the players.
+         * @return A vector of EntityData containing updated component data for entities.
          */
-        template <typename Component>
-        static std::vector<EntityData> retrievePlayersComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
-            static std::vector<typename ecs::SparseArray<Component>::value_type> lastPlayersValues;
-            ecs::SparseArray<Component> &shootings = reg.getComponents<Component>();
-            std::vector<std::size_t> playersIndex = retrievePlayersIndex(reg);
-            std::vector<EntityData> playersData;
-            EntityData playerData = EntityData{};
+        template <typename Component> static std::vector<EntityData> retrieveComponentUpdates(ecs::Registry &reg, ecs::ComponentName name) {
+            static std::vector<typename ecs::SparseArray<Component>::value_type> lastEntityTypesValues;
+            ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
+            std::vector<EntityData> entityTypesData;
+            EntityData entityTypeData = EntityData{};
             std::size_t turn = 0;
 
-            for (auto &playerIndex : playersIndex) {
-                if (playerIndex == 0 || !shootings[playerIndex]) {
+            for (std::size_t i = 0; i < componentInfos.size(); ++i) {
+                if (!componentInfos[i])
                     continue;
-                }
-                if (lastPlayersValues.size() >= turn + 1) {
-                    if (!(lastPlayersValues[turn] == shootings[playerIndex].value())) {
-                        playerData.entityID = playerIndex;
-                        playerData.component = shootings[playerIndex].value();
-                        playerData.name = name;
-                        playersData.push_back(playerData);
-                        lastPlayersValues[turn] = shootings[playerIndex].value();
+                if (lastEntityTypesValues.size() >= turn + 1) {
+                    if (!(lastEntityTypesValues[turn] == componentInfos[i].value())) {
+                        entityTypeData.entityID = i;
+                        entityTypeData.component = componentInfos[i].value();
+                        entityTypeData.name = name;
+                        entityTypesData.push_back(entityTypeData);
+                        lastEntityTypesValues[turn] = componentInfos[i].value();
                     }
                 } else {
-                    playerData.entityID = playerIndex;
-                    playerData.component = shootings[playerIndex].value();
-                    playerData.name = name;
-                    playersData.push_back(playerData);
-                    lastPlayersValues.push_back(shootings[playerIndex].value());
+                    entityTypeData.entityID = i;
+                    entityTypeData.component = componentInfos[i].value();
+                    entityTypeData.name = name;
+                    entityTypesData.push_back(entityTypeData);
+                    lastEntityTypesValues.push_back(componentInfos[i].value());
                 }
                 turn++;
             }
-            return playersData;
+            return entityTypesData;
         }
 
         /**
@@ -208,6 +205,14 @@ namespace network {
                 components.insertAt(entityData.entityID, component);
             }
         }
+
+        /**
+         * @brief Send specific entities when a new level is triggered.
+         * @param reg The ECS registry.
+         * @param data The entity data containing the component to insert.
+         * @param isServer Boolean to know if the function is called server side.
+         */
+        static void sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data);
     };
 };
 
