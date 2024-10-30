@@ -35,7 +35,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
             }
             if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn)
                 && checkCurrentScore(reg) < SCORE_FINAL_BOSS_LEVEL1)) || isFirstSpawn) {
-                for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
+                for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                 }

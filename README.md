@@ -44,8 +44,10 @@ cmake -P build/clean.cmake
 **Launch the Server**
 
 ```sh
-./rtype_server [port]
+./rtype_server [port] --difficulty [difficultyMode]
 ```
+> [!NOTE]
+> difficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by default)
 
 **Launch Clients**
 
