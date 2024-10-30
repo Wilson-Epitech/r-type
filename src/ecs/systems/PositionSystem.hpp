@@ -17,6 +17,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include <math.h>
 
 namespace ecs {
     namespace system {
@@ -84,12 +85,28 @@ namespace ecs {
             void moveSnake(Registry &reg, const std::size_t &index);
 
             /**
+             * @brief Handles the position update for an entity.
+             * This method move the entity in the direction of the player
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveFollow(Registry &reg, const std::size_t &index);
+
+            /**
              * @brief Handles the velocity update for an entity.
              * This method reverse the velocity of an entity if it go out of the screen
              * @param reg The ECS registry containing entities and their components.
              * @param index The index of the entity to move.
              */
             void handleReverseDirection(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Finds enemy's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the enemy entity.
+             * @return std::size_t The index of the enemy's nearest player.
+             */
+            std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }
 }
