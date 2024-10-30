@@ -73,12 +73,16 @@
 /** @brief The horizontal velocity of enemies */
 #define ENEMY_VX -1
 /** @brief The vertical velocity of enemies */
-#define ENEMY_VY 0.0
-
+#define ENEMY_VY 1.5
+/** @brief The vertical velocity of enemies with straight pattern*/
+#define ENEMY_VY_STRAIGHT 0.0
 /** @brief The number of bosses spawned in each wave */
 #define BOSS_WAVE_SIZE 1
 /** @brief Time before bosses start spawning */
 #define TIME_BEFORE_SPAWN_BOSS 15
+/** @brief Time amplitude of enemy pattern */
+#define ENEMY_PATTERN_AMPLITUDE 60
+
 
 namespace game {
 

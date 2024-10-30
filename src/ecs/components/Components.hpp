@@ -77,7 +77,8 @@ namespace ecs {
         MUSIC,          ///< Background music component
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
-        ACTIVEPOWERUP   ///< Activated powerup component
+        ACTIVEPOWERUP,  ///< Activated powerup component
+        MOVEMENTPATTERN  ///< Movement pattern component
     };
 
     /**
@@ -85,12 +86,22 @@ namespace ecs {
      * @brief Enum representing different powerup types.
      */
     enum Poweruptype {
-        NOPOWERUP,          ///< No powerup, must be at the end of the enum
+        NOPOWERUP,          ///< No powerup
         LIFE_POWERUP,       ///< Powerup type, give one pv to the player
         POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
         INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
         MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
         END_POWERUP_TYPE    ///< End of the powerup type enum
+    };
+
+    /**
+     * @enum MovementType
+     * @brief Enum representing different movement pattern types.
+     */
+    enum MovementType {
+        STRAIGHT,   ///< Straight movement
+        SNAKE,      ///< Snake movement
+        FOLLOW      ///< Follow the player
     };
 
     namespace component {
@@ -101,9 +112,10 @@ namespace ecs {
          */
         struct Position {
             float x = 0, y = 0; ///< X and Y coordinates of the entity
+            float startX = 0, startY = 0; ///< X and Y coordinates of the entity before every movement
 
             bool operator==(const Position &other) const {
-                return x == other.x && y == other.y;
+                return x == other.x && y == other.y && startX == other.startX && startY == other.startY;
             }
         };
 
@@ -172,13 +184,14 @@ namespace ecs {
             float scaleFactor = 1.0;                       ///< Scale factor for the sprite
             CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
+            float rotationAngle = 0;                       ///< Rotation angle of the sprite
             bool isLoaded = false;        ///< Indicates if the texture is loaded
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
                         scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r &&
                         color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth &&
-                        spriteHeight == other.spriteHeight);
+                        spriteHeight == other.spriteHeight && rotationAngle == other.rotationAngle);
             }
         };
 
@@ -314,6 +327,20 @@ namespace ecs {
                         isMegaShootActive == other.isMegaShootActive);
             }
         };
+
+        /**
+         * @struct MovementPattern
+         * @brief Component for the movement pattern of an entity
+        */
+        struct MovementPattern {
+            std::size_t patternAmplitude = 0;   ///< The amplitude of the pattern (usfull for snake pattern)
+            bool isReversible = false;          ///< Indicates if the entity has to go backward when it goes out of the screen
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT;     ///< The type of pattern to use
+
+            bool operator==(const MovementPattern &other) const {
+                return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
+            }
+        };
     }
 }
 
@@ -340,7 +367,8 @@ struct EntityData {
                 areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
-                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component));
+                areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component) ||
+                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component, other.component));
         }
         return false;
     }
@@ -386,9 +414,11 @@ void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicIn
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
+void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
+void operator>>(std::istringstream &iss, ecs::MovementType &movementType);
 void operator>>(std::istringstream &iss, ecs::ComponentName &name);
 void operator>>(std::istringstream &iss, ecs::component::Position &position);
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);
@@ -401,6 +431,7 @@ void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &m
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
+void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

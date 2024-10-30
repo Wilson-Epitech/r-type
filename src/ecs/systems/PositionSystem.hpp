@@ -17,6 +17,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include <math.h>
 
 namespace ecs {
     namespace system {
@@ -51,7 +52,61 @@ namespace ecs {
              * @return true If the player's position was updated successfully.
              * @return false If the player's position update was not necessary.
              */
-            bool handlePlayerPosition(std::size_t playerIndex, Registry &reg);
+            bool handlePlayerPosition(const std::size_t &playerIndex, Registry &reg);
+
+            /**
+             * @brief Store the position of the entity before any movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to store the position.
+             */
+            void setStartPosition(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handle the movement pattern of the entity
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The entity that will move.
+             */
+            void handleMovementPattern(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for an entity.
+             * This method move the entity with a straight movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveStraight(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for an entity.
+             * This method move the entity with a snake movement
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveSnake(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the position update for an entity.
+             * This method move the entity in the direction of the player
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void moveFollow(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Handles the velocity update for an entity.
+             * This method reverse the velocity of an entity if it go out of the screen
+             * @param reg The ECS registry containing entities and their components.
+             * @param index The index of the entity to move.
+             */
+            void handleReverseDirection(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Finds enemy's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the enemy entity.
+             * @return std::size_t The index of the enemy's nearest player.
+             */
+            std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }
 }

@@ -9,7 +9,7 @@
 #include "HandleData.hpp"
 
 void operator<<(std::ostringstream &oss, const ecs::component::Position &position) {
-    oss << position.x << ' ' << position.y;
+    oss << position.x << ' ' << position.y << ' ' << position.startX << ' ' << position.startY;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocity) {
@@ -19,7 +19,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Velocity &velocit
 void operator<<(std::ostringstream &oss, const ecs::component::SpriteInfos &spriteInfos) {
     oss << spriteInfos.patternNb << ' ' << spriteInfos.firstPattern << ' ' << spriteInfos.scaleFactor << ' ' << spriteInfos.spritePath
         << ' ' << spriteInfos.color.a << ' ' << spriteInfos.color.r << ' ' << spriteInfos.color.g << ' ' << spriteInfos.color.b << ' '
-        << spriteInfos.spriteWidth << ' ' << spriteInfos.spriteHeight;
+        << spriteInfos.spriteWidth << ' ' << spriteInfos.spriteHeight << ' ' << spriteInfos.rotationAngle;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::Shooting &shooting) {
@@ -55,6 +55,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &ac
     oss << activePowerup.isPowershootActive << ' ' << activePowerup.isInvincibleActive << ' ' << activePowerup.isMegaShootActive;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern) {
+    oss << movementPattern.patternAmplitude << ' ' << movementPattern.isReversible << ' ' << movementPattern.movementPatternType;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -81,6 +85,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityCompotent<ecs::component::TextInfos>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::serializeEntityCompotent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
+        network::HandleData::serializeEntityCompotent<ecs::component::MovementPattern>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -91,6 +97,13 @@ void operator>>(std::istringstream &iss, ecs::EntityType &type) {
     type = static_cast<ecs::EntityType>(tmpType);
 }
 
+void operator>>(std::istringstream &iss, ecs::MovementType &movementType) {
+    int tmpType = 0;
+
+    iss >> tmpType;
+    movementType = static_cast<ecs::MovementType>(tmpType);
+}
+
 void operator>>(std::istringstream &iss, ecs::ComponentName &name) {
     int tmpName = 0;
 
@@ -99,7 +112,7 @@ void operator>>(std::istringstream &iss, ecs::ComponentName &name) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Position &position) {
-    iss >> position.x >> position.y;
+    iss >> position.x >> position.y >> position.startX >> position.startY;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity) {
@@ -108,7 +121,7 @@ void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity) {
 
 void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos) {
     iss >> spriteInfos.patternNb >> spriteInfos.firstPattern >> spriteInfos.scaleFactor >> spriteInfos.spritePath >> spriteInfos.color.a >>
-        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b >> spriteInfos.spriteWidth >> spriteInfos.spriteHeight;
+        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b >> spriteInfos.spriteWidth >> spriteInfos.spriteHeight >> spriteInfos.rotationAngle;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting) {
@@ -144,6 +157,12 @@ void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePo
     iss >> activePowerup.isPowershootActive >> activePowerup.isInvincibleActive >> activePowerup.isMegaShootActive;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern) {
+    iss >> movementPattern.patternAmplitude;
+    iss >> movementPattern.isReversible;
+    iss >> movementPattern.movementPatternType;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -170,4 +189,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityCompotent<ecs::component::TextInfos>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::ACTIVEPOWERUP)
         network::HandleData::deserializeEntityCompotent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
+        network::HandleData::deserializeEntityCompotent<ecs::component::MovementPattern>(iss, entityData.name, entityData.component);
 }

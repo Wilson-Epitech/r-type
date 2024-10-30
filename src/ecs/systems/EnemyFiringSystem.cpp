@@ -43,7 +43,7 @@ void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &reg) {
+void ecs::system::EnemyFiringSystem::addShot(const std::size_t &enemyIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -59,8 +59,17 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
                                            float(spriteInfos[enemyShootIndex]->spriteHeight)};
     float shotX = positions[enemyIndex]->x - (spriteInfos[enemyIndex]->spriteWidth + (shotSpriteRect.width / 2));
     float shotY = positions[enemyIndex]->y + ((spriteInfos[enemyIndex]->spriteHeight / 2 - shotSpriteRect.height / 2));
+    float shootAngle = 0;
     entity_t entity = reg.spawnEntity();
 
+    if (velocities[enemyIndex]->vx < 0) {
+        if (velocities[enemyShootIndex]->vx > 0)
+            velocities[enemyShootIndex]->vx *= -1;
+    } else if (velocities[enemyIndex]->vx > 0) {
+        shotX = positions[enemyIndex]->x + (spriteInfos[enemyIndex]->spriteWidth + (shotSpriteRect.width / 2));
+        if (velocities[enemyShootIndex]->vx < 0)
+            velocities[enemyShootIndex]->vx *= -1;
+    }
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[enemyShootIndex]->vx, velocities[enemyShootIndex]->vy,
                                                          velocities[enemyShootIndex]->possibleVelocity});
@@ -69,6 +78,8 @@ void ecs::system::EnemyFiringSystem::addShot(std::size_t enemyIndex, Registry &r
                                             spriteInfos[enemyShootIndex]->firstPattern, spriteInfos[enemyShootIndex]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
+    shootAngle = changeShootVelocity(reg, enemyIndex, entity);
+    spriteInfos[entity]->rotationAngle = shootAngle;
 
     if (!soundEffectInfos[enemyShootIndex])
         return;
@@ -89,4 +100,58 @@ std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
         }
     }
     return 0;
+}
+
+float ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
+    std::size_t playerEntity = findClosestPlayer(reg, enemyIndex);
+    float speed = 0;
+    float angle = 0;
+
+    if (movementPattern.size() < enemyIndex || playerEntity == 0)
+        return 0;
+    if (!movementPattern[enemyIndex])
+        return 0;
+    if (movementPattern[enemyIndex]->movementPatternType != ecs::MovementType::FOLLOW)
+        return 0;
+
+    if (velocities[shootIndex]->vy < 0)
+        speed += velocities[shootIndex]->vy * -1;
+    else
+        speed += velocities[shootIndex]->vy;
+    if (velocities[shootIndex]->vx < 0)
+        speed += velocities[shootIndex]->vx * -1;
+    else
+        speed += velocities[shootIndex]->vx;
+
+    angle = atan2f(positions[playerEntity]->y - positions[enemyIndex]->y, positions[playerEntity]->x - positions[enemyIndex]->x);
+    velocities[shootIndex]->vx = speed * cosf(angle);
+    velocities[shootIndex]->vy = speed * sinf(angle);
+    return (angle * 180 / M_PI) + 180;
+}
+
+std::size_t ecs::system::EnemyFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    float tmpRes = 0;
+    float lastPlayerDistance = 0;
+    std::size_t playerIndex = 0;
+
+    for (std::size_t i = 0; i < types.size() && i < positions.size(); ++i) {
+        if (!types[i] || !positions[i])
+            continue;
+        if (types[i]->entityType == ecs::EntityType::PLAYER) {
+            tmpRes = (positions[index]->x + positions[index]->y) - (positions[i]->x + positions[i]->y);
+            if (tmpRes < 0) {
+                tmpRes *= -1;
+            }
+            if (tmpRes < lastPlayerDistance || lastPlayerDistance == 0) {
+                lastPlayerDistance = tmpRes;
+                playerIndex = i;
+            }
+        }
+    }
+    return playerIndex;
 }

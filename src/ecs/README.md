@@ -82,11 +82,12 @@ enum Poweruptype {
    - Store the position (x, y) of the entity
    ```c++
    struct Position {
-      float x = 0, y = 0;
+   float x = 0, y = 0;
+   float startX = 0, startY = 0;
 
-      bool operator==(const Position &other) const {
-         return x == other.x && y == other.y;
-      }
+       bool operator==(const Position &other) const {
+           return x == other.x && y == other.y && startX == other.startX && startY == other.startY;
+       }
    };
    ```
 2. **Velocity**
@@ -113,30 +114,37 @@ enum Poweruptype {
    };
    ```
 4. **Life**
-   - Store the life of the entity
+   - Store the life of the entity<br>
+   indicate if a powerup has to spawn after the death and if the entity can take damage
    ```c++
    struct Life {
-      std::size_t nbLives;
+      std::size_t nbLives = 1;
+      bool displayLife = false;
+      bool hasToSummonPowerup = false;
+      std::size_t maxLives = 0;
+      bool isInvincible = false;
 
       bool operator==(const Life &other) const {
-         return (nbLives == other.nbLives);
+          return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
       }
    };
    ```
 5. **Shooting**
-   - Defines if the entity is curently shooting
+   - Defines if the entity is curently shooting and the parameter of the shoot
    ```c++
    struct Shooting {
       bool isShooting = false;
+      std::size_t shootPower = 1;
+      float shootSize = 1;
 
       bool operator==(const Shooting &other) const {
-         return (isShooting == other.isShooting);
+          return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
       }
    };
    ```
 6. **SpriteInfos**
    - Store all main property of the sprite of the entity<br>
-   Like the sprite path, the patern for animation or the scale of the sprite
+   Like the sprite path, the pattern for animation or the scale of the sprite
    ```c++
    struct SpriteInfos {
       std::string spritePath;
@@ -260,6 +268,44 @@ enum Poweruptype {
             Font font = Font{};
       };
    ```
+17.   **Powerup**
+   - Store the information of a powerup
+   ```c++
+   struct Powerup {
+       Poweruptype powerupType = Poweruptype::LIFE_POWERUP;
+       std::size_t spawnRate = 5;
+       bool hasBeenActivated = false;
+       std::size_t playerIndex = 0;
+   };
+   ```
+18.   **ActivePowerup**
+   - Store the activated powerup of an entity
+   ```c++
+   struct ActivePowerup {
+      bool isPowershootActive = false;
+      bool isInvincibleActive = false;
+      bool isMegaShootActive = false;
+
+      bool operator==(const ActivePowerup &other) const {
+         return (isPowershootActive == other.isPowershootActive &&
+                 isInvincibleActive == other.isInvincibleActive &&
+                 isMegaShootActive == other.isMegaShootActive);
+      }
+   };
+   ```
+19.   **MovementPattern**
+   - Store the movement pattern of an entity
+   ```c++
+   struct MovementPattern {
+      std::size_t patternAmplitude = 0;
+      bool isReversible = false;
+      ecs::MovementType movementPatternType = MovementType::STRAIGHT;
+
+      bool operator==(const MovementPattern &other) const {
+         return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
+      }
+      };
+   ```
 17.   **BossSpawn**
    - Store informations about the spawning of a boss
    ```c++
@@ -269,7 +315,7 @@ enum Poweruptype {
             int maxSpawnHeight = Lib::getScreenHeight();
             int minSpawnHeight = 0;
             bool hasBeenSlayed = false;
-        };
+     };
    ```
 
 <div id='AddComponents'/>

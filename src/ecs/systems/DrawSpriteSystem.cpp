@@ -23,7 +23,7 @@ void ecs::system::DrawSpriteSystem::operator()(Registry &reg) {
                 Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
                                      drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
                                      drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
-                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, 0,
+                DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, spriteInfos[i]->rotationAngle,
                                {spriteInfos[i]->color.r, spriteInfos[i]->color.g, spriteInfos[i]->color.b, spriteInfos[i]->color.a});
             } else if (spriteInfos[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
                 drawBackground(screenRatio, velocities, drawables, positions, spriteInfos, i);
