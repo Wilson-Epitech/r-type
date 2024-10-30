@@ -7,8 +7,6 @@
 
 #include "RtypeGameServer.hpp"
 
-#include <iostream>
-
 game::RtypeGameServer::RtypeGameServer(const std::string difficultyMode, const std::string gameName) : AGame(gameName) {
     initStringToDifficultyMode();
     setGameDifficulty(difficultyMode);
