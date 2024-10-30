@@ -8,7 +8,9 @@ set(SRC
     ecs/systems/DrawLifeBarSystem.cpp
     ecs/systems/DrawTextSystem.cpp
     ecs/systems/EnemyFiringSystem.cpp
+    ecs/systems/BossFiringSystem.cpp
     ecs/systems/EnemySpawnSystem.cpp
+    ecs/systems/BossSpawnSystem.cpp
     ecs/systems/FiringSystem.cpp
     ecs/systems/KillOffscreenEntitiesSystem.cpp
     ecs/systems/LifeSystem.cpp
@@ -19,6 +21,7 @@ set(SRC
     ecs/systems/MusicSystem.cpp
     ecs/systems/ScoreSystem.cpp
     ecs/systems/PowerupSystem.cpp
+    ecs/systems/ResetForNextLevel.cpp
     runGame/RunGame.cpp
     network/handleData/HandleData.cpp
     ../lib/Lib.cpp
