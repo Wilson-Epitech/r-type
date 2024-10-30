@@ -56,17 +56,17 @@ void ecs::system::PositionSystem::handleMovementPattern(Registry &reg, const std
     }
     handleReverseDirection(reg, index);
     switch (movementPattern[index]->movementPatternType) {
-        case ecs::MovementType::STRAIGHT:
-            moveStraight(reg, index);
-            break;
-        case ecs::MovementType::SNAKE:
-            moveSnake(reg, index);
-            break;
-        case ecs::MovementType::FOLLOW:
-            moveFollow(reg, index);
-            break;
-        default:
-            break;
+    case ecs::MovementType::STRAIGHT:
+        moveStraight(reg, index);
+        break;
+    case ecs::MovementType::SNAKE:
+        moveSnake(reg, index);
+        break;
+    case ecs::MovementType::FOLLOW:
+        moveFollow(reg, index);
+        break;
+    default:
+        break;
     }
 }
 
@@ -91,7 +91,8 @@ void ecs::system::PositionSystem::moveSnake(Registry &reg, const std::size_t &in
         vx *= -1;
     if (positions[index]->y >= positions[index]->startY + vx * movementPattern[index]->patternAmplitude && velocities[index]->vy < 0) {
         velocities[index]->vy = -vy;
-    } else if (positions[index]->y <= positions[index]->startY - vx * movementPattern[index]->patternAmplitude && velocities[index]->vy >= 0) {
+    } else if (positions[index]->y <= positions[index]->startY - vx * movementPattern[index]->patternAmplitude &&
+               velocities[index]->vy >= 0) {
         velocities[index]->vy = vy;
     } else if (velocities[index]->vy >= 0) {
         velocities[index]->vy = -vy;

@@ -121,7 +121,8 @@ void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity) {
 
 void operator>>(std::istringstream &iss, ecs::component::SpriteInfos &spriteInfos) {
     iss >> spriteInfos.patternNb >> spriteInfos.firstPattern >> spriteInfos.scaleFactor >> spriteInfos.spritePath >> spriteInfos.color.a >>
-        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b >> spriteInfos.spriteWidth >> spriteInfos.spriteHeight >> spriteInfos.rotationAngle;
+        spriteInfos.color.r >> spriteInfos.color.g >> spriteInfos.color.b >> spriteInfos.spriteWidth >> spriteInfos.spriteHeight >>
+        spriteInfos.rotationAngle;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::Shooting &shooting) {
