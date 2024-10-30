@@ -24,7 +24,7 @@ namespace network {
             _isSigInt = false;
             signal(SIGINT, handleCtrlC);
         };
-        virtual ~ANetwork() = default;
+        ~ANetwork() = default;
 
         bool isSigInt() {
             return _isSigInt;

@@ -33,7 +33,7 @@ namespace network {
     class INetwork {
       public:
         INetwork() = default;
-        virtual ~INetwork() = default;
+        ~INetwork() = default;
 
         /**
          * @brief Sends a message to the network instance.
