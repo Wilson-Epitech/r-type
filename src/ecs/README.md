@@ -31,7 +31,7 @@ Our game engine is composed of three main elements in the ECS architecture:
 **Components** are structures used to store the data of an entity. Below is an overview of the available components:
 
 ### Type and Name
-There is two enum in the Components.hpp.
+There is three enum in the Components.hpp.
 The first one is the EntityType
 ```hpp
 enum EntityType {
@@ -44,7 +44,8 @@ enum EntityType {
    ENEMY_TEMPLATE,
    ENEMYSHOT,
    ENEMYSHOT_TEMPLATE,
-   BACKGROUND
+   BACKGROUND,
+   TEXT
 };
 ```
 The seconde one is to store the name of our components
@@ -58,7 +59,20 @@ enum ComponentName {
    SHOOTING,
    SPRITEINFOS,
    SOUNDEFFECT,
-   MUSIC
+   MUSIC,
+   SCORE,
+   TEXTINFOS
+};
+```
+The third one is the Poweruptype enum, used to store the type of a powerup
+```hpp
+enum Poweruptype {
+   NOPOWERUP,
+   LIFE_POWERUP,
+   POWERSHOOT_POWERUP,
+   INVINCIBLE_POWERUP,
+   MEGASHOOT_POWERUP,
+   END_POWERUP_TYPE
 };
 ```
 
@@ -68,13 +82,14 @@ enum ComponentName {
    - Store the position (x, y) of the entity
    ```c++
    struct Position {
-      float x = 0, y = 0;
+   float x = 0, y = 0;
+   float startX = 0, startY = 0;
 
-      bool operator==(const Position &other) const {
-         return x == other.x && y == other.y;
-      }
+       bool operator==(const Position &other) const {
+           return x == other.x && y == other.y && startX == other.startX && startY == other.startY;
+       }
    };
-      ```
+   ```
 2. **Velocity**
    - Store the velocity and the possible velocity of the entity<br>
    The velocity is used to define the speed of the entity
@@ -99,56 +114,49 @@ enum ComponentName {
    };
    ```
 4. **Life**
-   - Store the life of the entity
+   - Store the life of the entity<br>
+   indicate if a powerup has to spawn after the death and if the entity can take damage
    ```c++
    struct Life {
-      std::size_t nbLives;
+      std::size_t nbLives = 1;
+      bool displayLife = false;
+      bool hasToSummonPowerup = false;
+      std::size_t maxLives = 0;
+      bool isInvincible = false;
 
       bool operator==(const Life &other) const {
-         return (nbLives == other.nbLives);
+          return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
       }
    };
    ```
 5. **Shooting**
-   - Defines if the entity is curently shooting
+   - Defines if the entity is curently shooting and the parameter of the shoot
    ```c++
    struct Shooting {
       bool isShooting = false;
+      std::size_t shootPower = 1;
+      float shootSize = 1;
 
       bool operator==(const Shooting &other) const {
-         return (isShooting == other.isShooting);
+          return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
       }
    };
    ```
 6. **SpriteInfos**
    - Store all main property of the sprite of the entity<br>
-   Like the sprite path, the patern for animation or the scale of the sprite
+   Like the sprite path, the pattern for animation or the scale of the sprite
    ```c++
    struct SpriteInfos {
       std::string spritePath;
       std::size_t patternNb = 1;
       std::size_t firstPattern = 0;
       float scaleFactor = 1.0;
-      Color color = RAYWHITE;
+      CustomColor color = WHITE_COLOR;
+      std::size_t spriteWidth = 0, spriteHeight = 0;
 
       bool operator==(const SpriteInfos &other) const {
           return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
-                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g &&
-                  color.b == other.color.b);
-      }
-   };
-   ```
-6. **SoundEffect**
-   - Store a sound and and its characteristics
-   ```c++
-   struct SoundEffect {
-      std::string soundPath;
-      bool isLoaded = false;
-      bool hasToBePlayed = false;
-      Sound sound = Sound{};
-
-      bool operator==(const SoundEffect &other) const {
-         return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
+                  scaleFactor == other.scaleFactor && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b && spriteWidth == other.spriteWidth && spriteHeight == other.spriteHeight);
       }
    };
    ```
@@ -161,49 +169,155 @@ enum ComponentName {
       Rectangle spriteRect = Rectangle{};
    };
    ```
-8. **SpriteSize**
-   - Store the sprite's size
+8. **SoundEffectInfos**
+   - Store characteristics about a sound
    ```c++
-   struct SpriteSize {
-      float spriteWidth = 0, spriteHeight = 0;
+   struct SoundEffectInfos {
+      std::string soundPath;
+      bool isLoaded = false;
+      bool hasToBePlayed = false;
+
+      bool operator==(const SoundEffectInfos &other) const {
+         return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
+      }
+   };
+
+   ```
+9. **SoundEffectObject**
+   - Store a sound to be played
+   ```c++
+   struct SoundEffectInfos {
+      Sound sound = Sound{};
    };
    ```
-9. **EnemySpawn**
+10. **EnemySpawn**
    - Handles the logic for spawning enemies.
    ```c++
    struct EnemySpawn {
       float timeBeforeSpawn;
-      int waveSize;
+      std::size_t waveSize;
       int maxSpawnWidth = Lib::getScreenWidth();
       int minSpawnWidth = 0;
       int maxSpawnHeight = Lib::getScreenHeight();
       int minSpawnHeight = 0;
    };
    ```
-10. **ShootingRate**
+11. **ShootingRate**
    - Defines the shooting rate of the entity (work with Shooting)
    ```c++
    struct ShootingRate {
       float shootRate = 0;
    };
    ```
-11. **BackgroundMusic**
-   - Define the background music (or game music), store the volume and if the music has to be played
+12. **BackgroundMusicInfos**
+   - Store informations about the background music of an entity, such as the music path, the volume and if the music has to be played
    ```c++
-   struct BackgroundMusic {
+   struct BackgroundMusicInfos {
       std::string musicPath;
       float volume;
-      bool hasToBePlayed = false;
+      bool hasToBePlayed = true;
       bool isLoaded = false;
       bool isCurrentlyPlayed = false;
-      Music music = Music{};
 
-      bool operator==(const BackgroundMusic &other) const {
+      bool operator==(const BackgroundMusicInfos &other) const {
          return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
                   hasToBePlayed == other.hasToBePlayed && isCurrentlyPlayed == other.isCurrentlyPlayed);
       }
    };
    ```
+13. **BackgroundMusicObject**
+   - Store the music object that has to be played
+   ```c++
+   struct BackgroundMusicObject {
+      Music music = Music{};
+   };
+   ```
+14. **Score**
+- Store the score and the incrementation score value of an entity
+```c++
+   std::size_t scoreIncrementation = 0;
+   int score = 0;
+
+   bool operator==(const Score &other) const {
+       return (score == other.score && scoreIncrementation == other.scoreIncrementation);
+   }
+```
+15.   **TextInfos**
+   - Store informations about the text of an entity
+   ```c++
+        struct TextInfos {
+            std::string textToDisplay;
+            int x;
+            int y;
+            int size;
+            std::string fontPath;
+            CustomColor color = { 245, 245, 245, 255 };
+            bool fontIsLoaded = false;
+            bool hasChanged = false;
+
+            bool operator==(const TextInfos &other) const {
+                return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
+                        fontPath == other.fontPath && color.a == other.color.a && color.r == other.color.r && color.g == other.color.g && color.b == other.color.b);
+            }
+        };
+   ```
+16.   **TextFont**
+   - Store the text font linked to a text of an entity
+   ```c++
+      struct TextFont {
+            Font font = Font{};
+      };
+   ```
+17.   **Powerup**
+   - Store the information of a powerup
+   ```c++
+   struct Powerup {
+       Poweruptype powerupType = Poweruptype::LIFE_POWERUP;
+       std::size_t spawnRate = 3;
+       bool hasBeenActivated = false;
+       std::size_t playerIndex = 0;
+   };
+   ```
+18.   **ActivePowerup**
+   - Store the activated powerup of an entity
+   ```c++
+   struct ActivePowerup {
+      bool isPowershootActive = false;
+      bool isInvincibleActive = false;
+      bool isMegaShootActive = false;
+
+      bool operator==(const ActivePowerup &other) const {
+         return (isPowershootActive == other.isPowershootActive &&
+                 isInvincibleActive == other.isInvincibleActive &&
+                 isMegaShootActive == other.isMegaShootActive);
+      }
+   };
+   ```
+19.   **MovementPattern**
+   - Store the movement pattern of an entity
+   ```c++
+   struct MovementPattern {
+      std::size_t patternAmplitude = 0;
+      bool isReversible = false;
+      ecs::MovementType movementPatternType = MovementType::STRAIGHT;
+
+      bool operator==(const MovementPattern &other) const {
+         return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
+      }
+      };
+   ```
+17.   **BossSpawn**
+   - Store informations about the spawning of a boss
+   ```c++
+       struct BossSpawn {
+            int maxSpawnWidth = Lib::getScreenWidth();
+            int minSpawnWidth = 0;
+            int maxSpawnHeight = Lib::getScreenHeight();
+            int minSpawnHeight = 0;
+            bool hasBeenSlayed = false;
+     };
+   ```
+
 <div id='AddComponents'/>
 
 ## How to add a new component
@@ -225,7 +339,7 @@ bool operator==(const EntityData &other) const {
         return (
          areComponentsEquals<ecs::component::Position>(name, ecs::ComponentName::POSITION, component, other.component) ||
          areComponentsEquals<ecs::component::Velocity>(name, ecs::ComponentName::VELOCITY, component, other.component) ||
-         areComponentsEquals<ecs::component::BackgroundMusic>(name, ecs::ComponentName::MUSIC, component, other.component));
+         areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component));
     }
     return false;
 }
@@ -233,12 +347,12 @@ bool operator==(const EntityData &other) const {
 You also have to add the prototype of `<<` and `>>` at the end of the file.<br>
 Now you have to go in Components.cpp and add your overload operator, one for the serialization and one for deserialization.
 ```c++
-void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusic &music) {
+void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music) {
     oss << music.musicPath << ' ' << music.volume << ' ' << music.hasToBePlayed << ' ' << music.isLoaded << ' ' << music.isCurrentlyPlayed;
 }
 ```
 ```c++
-void operator>>(std::istringstream &iss, ecs::component::BackgroundMusic &music) {
+void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music) {
     iss >> music.musicPath >> music.volume >> music.hasToBePlayed >> music.isLoaded >> music.isCurrentlyPlayed;
 }
 ```

@@ -18,6 +18,7 @@
 
 #include "Container.hpp"
 #include "Error.hpp"
+#include <algorithm>
 #include <any>
 #include <functional>
 #include <list>
@@ -26,6 +27,9 @@
 #include <unordered_map>
 
 using entity_t = std::size_t;
+
+#define PLAYER_STARTING_X 100 ///< X Coordinate for players' position
+#define PLAYER_STARTING_Y 200 ///< Y Coordinate for the first player position
 
 namespace ecs {
 
@@ -40,6 +44,14 @@ namespace ecs {
     class Registry {
       public:
         /**
+         * @brief Constructs a `Registry` class instance.
+         * It sets the spaceships available colors and the spaceships colors to positions correspondence.
+         */
+        Registry() : _availableSpaceshipColors({CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR}) {
+            initSpaceshipColorPositionCorrespondence();
+        }
+
+        /**
          * @brief Creates a new entity and returns its identifier.
          * This method spawns a new entity, either by reusing a previously deleted entity or creating
          * a new one. The entity is added to the registry and assigned an identifier.
@@ -52,9 +64,9 @@ namespace ecs {
                 entity = _deadEntities.front();
                 _deadEntities.pop_front();
             } else {
-                entity = _indexToEntities.size() + 1;
+                entity = _aliveEntities.size() + 1;
             }
-            _indexToEntities[entity] = entity;
+            _aliveEntities.push_back(entity);
             _actualTurnActualTurnNewEntities.push_back(entity);
             return entity;
         };
@@ -69,11 +81,11 @@ namespace ecs {
             for (auto &it : _eraseEntity) {
                 it.second(*this, e);
             }
-            for (auto &it : _indexToEntities) {
-                if (it.second == e) {
-                    _deadEntities.push_back(std::size_t(it.second));
-                    _actualTurnDeadEntities.push_back(std::size_t(it.second));
-                    _indexToEntities.erase(it.first);
+            for (std::size_t i = 0; i < _aliveEntities.size(); i++) {
+                if (_aliveEntities[i] == e) {
+                    _deadEntities.push_back(_aliveEntities[i]);
+                    _actualTurnDeadEntities.push_back(_aliveEntities[i]);
+                    _aliveEntities.erase(_aliveEntities.begin() + i);
                     break;
                 }
             }
@@ -82,6 +94,10 @@ namespace ecs {
                     _players.erase(player.first);
                     break;
                 }
+            }
+            auto it = std::find_if(_playersColors.begin(), _playersColors.end(), [e](const auto &pair) { return (pair.first == e); });
+            if (it != _playersColors.end()) {
+                _playersColors.erase(it);
             }
         };
 
@@ -94,9 +110,9 @@ namespace ecs {
 
         /**
          * @brief Returns the list of new entities created in the current turn.
-         * @return std::list<std::size_t> A list of new entity identifiers created in the current turn.
+         * @return std::list<entity_t> A list of new entity identifiers created in the current turn.
          */
-        std::list<std::size_t> getActualTurnNewEntities() {
+        std::list<entity_t> getActualTurnNewEntities() {
             return _actualTurnActualTurnNewEntities;
         }
 
@@ -109,9 +125,9 @@ namespace ecs {
 
         /**
          * @brief Returns the list of entities deleted in the current turn.
-         * @return std::list<std::size_t> A list of dead entity identifiers from the current turn.
+         * @return std::list<entity_t> A list of dead entity identifiers from the current turn.
          */
-        std::list<std::size_t> getActualTurnDeadEntities() {
+        std::list<entity_t> getActualTurnDeadEntities() {
             return _actualTurnDeadEntities;
         }
 
@@ -123,11 +139,11 @@ namespace ecs {
          * @throws Error If no entity is found at the given index.
          */
         entity_t entityFromIndex(std::size_t idx) {
-            auto it = _indexToEntities.find(idx);
+            auto it = std::find(_aliveEntities.begin(), _aliveEntities.end(), idx);
 
-            if (it == _indexToEntities.end())
+            if (it == _aliveEntities.end())
                 throw Error("No entity found at this index");
-            return it->second;
+            return *it;
         };
 
         /**
@@ -137,9 +153,10 @@ namespace ecs {
          * @return false If the entity does not exist.
          */
         bool entityExist(const entity_t &ent) {
-            for (auto &it : _indexToEntities) {
-                if (it.second == ent)
+            for (auto &it : _aliveEntities) {
+                if (it == ent) {
                     return true;
+                }
             }
             return false;
         }
@@ -266,17 +283,99 @@ namespace ecs {
             _initPlayerSystem(*this);
         };
 
+        /**
+         * @brief Adds a collision between two entities.
+         * @param firstEntity The identifier of the first entity involved in the collision.
+         * @param secondEntity The identifier of the second entity involved in the collision.
+         */
+        void addCollision(const std::size_t firstEntity, const std::size_t secondEntity) {
+            _collisionEntity[firstEntity] = secondEntity;
+        }
+
+        /**
+         * @brief Removes a collision entry for a specific entity.
+         * @param index The identifier of the entity whose collision entry will be removed.
+         */
+        void eraseCollision(const std::size_t index) {
+            _collisionEntity.erase(index);
+        }
+
+        /**
+         * @brief Retrieves the map of all collisions between entities.
+         * @return std::unordered_map<entity_t, entity_t> A map where the keys are entity identifiers and the values are the corresponding
+         * entities they collided with.
+         */
+        std::unordered_map<entity_t, entity_t> getCollisionMap() {
+            return _collisionEntity;
+        }
+
+        /**
+         * @brief Add a player/spaceship color link in the playerColors vector.
+         * @param e the player entity ID.
+         * @param color the spaceship color associated with the player entity.
+         */
+        void addPlayerColor(const entity_t &e, const ecs::CustomColor &color) {
+            _playersColors.push_back({e, color});
+        };
+
+        /**
+         * @brief Retrieves the map of all players' colors.
+         * @return std::vector<std::pair<entity_t, ecs::CustomColor>> A vector containing pairs linking the entity ID of players with their
+         * respectives spaceships color.
+         */
+        std::vector<std::pair<entity_t, ecs::CustomColor>> getPlayersColors() {
+            return _playersColors;
+        };
+
+        /**
+         * @brief Retrieves the vector containing the available spaceships' colors.
+         * @return std::vector<ecs::CustomColor> A vector containing all 4 available spaceships colors.
+         */
+        std::vector<ecs::CustomColor> getAvailableSpaceshipColors() {
+            return _availableSpaceshipColors;
+        };
+
+        /**
+         * @brief Retrieves the vector containing the correspondence between the spaceship color and the position the associated spaceship
+         * should be at start.
+         * @return std::vector<std::pair<ecs::CustomColor, ecs::component::Position>> A vector associating  spaceships' colors to the
+         * position they should be at level start.
+         */
+        std::vector<std::pair<ecs::CustomColor, ecs::component::Position>> getSpaceshipColorPositionCorrespondence() {
+            return _spaceshipColorPositionCorrespondence;
+        };
+
+        /**
+         * @brief Initializes the spaceships colors to positions correspondence based on the available spaceships colors map.
+         */
+        void initSpaceshipColorPositionCorrespondence() {
+            std::size_t availableColorCount = 0;
+
+            for (auto availableSpaceshipColor : _availableSpaceshipColors) {
+                availableColorCount++;
+                _spaceshipColorPositionCorrespondence.push_back(
+                    {availableSpaceshipColor, ecs::component::Position{PLAYER_STARTING_X, float(PLAYER_STARTING_Y * availableColorCount)}});
+            }
+        }
+
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
         std::vector<std::function<void(Registry &)>> _systems;           ///< A list of systems to run each frame.
-        std::list<std::size_t> _deadEntities;                            ///< A list of dead entities to be recycled.
-        std::list<std::size_t> _actualTurnDeadEntities;                  ///< A list of entities that died this turn.
-        std::list<std::size_t> _actualTurnActualTurnNewEntities;         ///< A list of new entities created this turn.
-        std::map<std::size_t, entity_t> _indexToEntities;                ///< A map of entity indices to entity IDs.
+        std::list<entity_t> _deadEntities;                               ///< A list of dead entities to be recycled.
+        std::list<entity_t> _actualTurnDeadEntities;                     ///< A list of entities that died this turn.
+        std::list<entity_t> _actualTurnActualTurnNewEntities;            ///< A list of new entities created this turn.
+        std::vector<entity_t> _aliveEntities;                            ///< A vector of alive entities.
         std::unordered_map<std::type_index, std::any> _componentsArrays; ///< A map of component arrays by type.
         std::unordered_map<std::type_index, std::function<void(Registry &, entity_t const &)>>
-            _eraseEntity; ///< Functions to remove components when an entity is deleted.
+            _eraseEntity;                                        ///< Functions to remove components when an entity is deleted.
+        std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
+        std::vector<std::pair<entity_t, ecs::CustomColor>>
+            _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
+        std::vector<ecs::CustomColor> _availableSpaceshipColors; ///< A vector containing all 4 available spaceships colors
+        std::vector<std::pair<ecs::CustomColor, ecs::component::Position>>
+            _spaceshipColorPositionCorrespondence; ///< A vector associating the spaceship color to the position the corresponding spaceship
+                                                   ///< should be at level start.
     };
 }
 

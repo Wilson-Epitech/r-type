@@ -9,35 +9,37 @@
 #include <functional>
 #include <iostream>
 
-network::Server::Server(asio::io_context &io_context, std::string host, std::size_t port, asio::thread_pool &pool)
-    : _socket(io_context, asio::ip::udp::endpoint(asio::ip::make_address(host), port)), _idClient(0), _threadPool(pool),
-      _dataHasBeenUsed(false), _magicNumber(0x9B3D) {
+network::Server::Server(const std::size_t &port, asio::thread_pool &pool)
+    : network::ANetwork(), _socket(_ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), _idClient(0), _threadPool(pool) {
     startReceiving();
-    _ioThread = std::thread([&io_context]() { io_context.run(); });
+    _ioThread = std::thread([this]() { _ioContext.run(); });
 }
 
 network::Server::~Server() {
     _ioThread.join();
+    _isRunning = false;
+}
+
+void network::Server::sendMessage(const std::string &message, uint8_t messageType) {
+    return sendToAllClient(message, messageType);
 }
 
 std::size_t network::Server::getLastConnectedClientId() {
     return _idClient;
 }
 
-std::unordered_map<std::size_t, bool> network::Server::getAreClientsWorldSet() {
-    return _areClientsWorldSet;
-}
-
-DataToSend network::Server::getData() {
+std::list<DataToSend> network::Server::getData() {
     return _data;
 }
 
-bool network::Server::getDataHasBeenUsed() {
-    return _dataHasBeenUsed;
+bool network::Server::isConnectedInNetwork() {
+    if (getStillAliveClientNumber() > 0)
+        return true;
+    return false;
 }
 
-void network::Server::setDataHasBeenUsed(bool value) {
-    _dataHasBeenUsed = value;
+network::Type network::Server::getNetworkType() {
+    return network::Type::SERVER;
 }
 
 std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> network::Server::getHeartbeatClient() {
@@ -75,14 +77,7 @@ void network::Server::startReceiving() {
                                std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void network::Server::deserializeMessage(const std::string message) {
-    _data.deadEntities.clear();
-    _data.entitiesData.clear();
-    _data = network::HandleData::deserializeEntityDataVector(message);
-    _dataHasBeenUsed = false;
-}
-
-void network::Server::handleReceive(const std::error_code &error, std::size_t byteTransfered) {
+void network::Server::handleReceive(const std::error_code &error, const std::size_t &byteTransfered) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
 
@@ -120,19 +115,15 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
         }
 
         std::string newClientConnectedMessage = "New client connected.";
-        std::string worldSetMessage = "World set";
         std::string aliveMessage = "Alive: ";
 
-        if (message.compare(0, worldSetMessage.length(), worldSetMessage) == 0) {
-            _areClientsWorldSet[talkingClient] = true;
-        } else if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
+        if (message.compare(0, aliveMessage.length(), aliveMessage) == 0) {
             std::size_t clientId = std::stoi(message.substr(aliveMessage.length()));
             _lastAliveClient[clientId] = std::chrono::steady_clock::now();
-            std::cerr << "Received heartbeat from client " << clientId << std::endl;
             if (!_corresOwnPlayerId[clientId])
                 _corresOwnPlayerId[clientId] = _idClient;
         } else if (message.compare(0, newClientConnectedMessage.length(), newClientConnectedMessage) != 0 && message.length() > 0) {
-            deserializeMessage(message);
+            _data.push_back(network::HandleData::deserializeEntityDataVector(message));
         }
         startReceiving();
         _receiveBuffer.fill(0);
@@ -141,7 +132,7 @@ void network::Server::handleReceive(const std::error_code &error, std::size_t by
     }
 }
 
-void network::Server::handleSend(const std::error_code &error, std::size_t) {
+void network::Server::handleSend(const std::error_code &error) {
     if (error)
         std::cerr << "Failed to send message. Error: " << error.message() << std::endl;
 }
@@ -166,8 +157,7 @@ void network::Server::sendToAClient(const std::size_t idClient, const std::strin
     if (it != _connectedClients.end()) {
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
-        _socket.async_send_to(asio::buffer(*message), it->second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+        _socket.async_send_to(asio::buffer(*message), it->second, std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     } else {
         std::cerr << "Client " << idClient << "not found" << std::endl;
     }
@@ -192,8 +182,7 @@ void network::Server::sendToAllClient(const std::string messageToSend, uint8_t m
     for (auto &it : _connectedClients) {
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
-        _socket.async_send_to(asio::buffer(*message), it.second,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+        _socket.async_send_to(asio::buffer(*message), it.second, std::bind(&network::Server::handleSend, this, std::placeholders::_1));
     }
 }
 
@@ -224,14 +213,13 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
         std::shared_ptr<std::string> message(std::make_shared<std::string>(buffer));
 
         _socket.async_send_to(asio::buffer(*message), _remoteEndpoint,
-                              std::bind(&network::Server::handleSend, this, std::placeholders::_1, std::placeholders::_2));
+                              std::bind(&network::Server::handleSend, this, std::placeholders::_1));
         return 0;
     }
 
     _idClient++;
     _connectedClients[_idClient] = endpoint;
     _isClientStillHere[_idClient] = true;
-    _areClientsWorldSet[_idClient] = false;
     sendToAllClient("New connection: " + std::to_string(_idClient), 1);
 
     asio::post(_threadPool, std::bind(&network::Server::startReceiving, this));
@@ -239,7 +227,7 @@ std::size_t network::Server::logNewConnection(asio::ip::udp::endpoint endpoint) 
     return _idClient;
 }
 
-std::size_t network::Server::checkConnectedHeartbeat() {
+std::size_t network::Server::manageConnection() {
     std::unordered_map<std::size_t, std::chrono::steady_clock::time_point> lastSeenClient = getHeartbeatClient();
     std::unordered_map<std::size_t, std::size_t> coressClient = getCorrespondence();
     std::unordered_map<std::size_t, bool> clientStillHere = getClientStillHere();
@@ -248,12 +236,12 @@ std::size_t network::Server::checkConnectedHeartbeat() {
     std::size_t disconnectedPlayerEntity = 0;
 
     while (it != lastSeenClient.end()) {
-        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > 5) {
+        if (std::chrono::duration_cast<std::chrono::seconds>(now - it->second).count() > CHECK_HEARTBEAT_TIME) {
             sendToAllClient("Disconnected: " + std::to_string(it->first), 4);
             disconnectedPlayerEntity = it->first;
             auto corresponenceFound = coressClient.find(it->first);
             if (corresponenceFound == coressClient.end())
-                throw Error("Correspondance no set yet");
+                throw Error("Correspondence no set yet");
             it = lastSeenClient.erase(it);
             std::size_t _ownId = corresponenceFound->second;
             clientStillHere[_ownId] = false;
@@ -266,7 +254,16 @@ std::size_t network::Server::checkConnectedHeartbeat() {
     return disconnectedPlayerEntity;
 }
 
-void network::Server::sendUpdatedData(ecs::Registry &reg) {
+void network::Server::updateData(ecs::Registry &reg) {
+    for (auto dataReceived : _data) {
+        if (!dataReceived.empty()) {
+            network::HandleData::updateEntitiesData(dataReceived, reg);
+        }
+    }
+    _data.clear();
+}
+
+void network::Server::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &) {
 
     std::unordered_map<std::size_t, bool> connectedClients = getClientStillHere();
 
@@ -275,7 +272,6 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
 
     static std::size_t previousLastConnectedClientId;
     std::size_t lastConnectedClientId = getLastConnectedClientId();
-    std::unordered_map<std::size_t, bool> areClientsWorldSet = getAreClientsWorldSet();
 
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
@@ -299,12 +295,12 @@ void network::Server::sendUpdatedData(ecs::Registry &reg) {
     if (connectedClientsSize != previousConnectedClientsSize)
         previousConnectedClientsSize = connectedClientsSize;
 
-    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg);
+    DataToSend newEntitiesData = network::HandleData::fillNewEntitiesDataToSend(reg, true);
     for (auto it = connectedClients.begin(); it != connectedClients.end(); it++) {
         if (it->second == false)
             continue;
         std::size_t clientId = it->first;
-        if (areClientsWorldSet[clientId] && !newEntitiesData.empty()) {
+        if (!newEntitiesData.empty()) {
             std::string newEntititiesSerialized = network::HandleData::serializeEntityDataVector(newEntitiesData);
             sendToAClient(clientId, newEntititiesSerialized, 3);
         }

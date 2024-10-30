@@ -13,8 +13,6 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
-    std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
-    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
 
     for (std::size_t i = 0; i < shootings.size() && i < positions.size() && i < shootingRate.size(); ++i) {
@@ -31,10 +29,9 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
                 time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
-            if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate)) {
+            if (Lib::isTimeElapsed(time0, shootingRate[i]->shootRate)) {
                 if (shootings[i]->isShooting) {
-                    addShot(i, reg);
+                    addShot(i, reg, shootings[i]->shootPower, shootings[i]->shootSize);
                     shootings[i]->isShooting = false;
                 }
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -48,38 +45,39 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg) {
+void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, const std::size_t &shootPower, const float &shootSize) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::SoundEffect> &soundEffect = reg.getComponents<component::SoundEffect>();
-    SparseArray<component::SpriteSize> &spritesSizes = reg.getComponents<component::SpriteSize>();
+    SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::ShootPlayerIndex> &shootPlayerIndex = reg.getComponents<component::ShootPlayerIndex>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
-    if (playerShootIndex == 0 || !spritesSizes[playerShootIndex])
+
+    if (playerShootIndex == 0 || spriteInfos[playerIndex]->spriteWidth == 0 || spriteInfos[playerIndex]->spriteHeight == 0 ||
+        spriteInfos[playerShootIndex]->spriteWidth == 0 || spriteInfos[playerShootIndex]->spriteHeight == 0)
         return;
-    Image tmpShotImage = LoadImage(spriteInfos[playerShootIndex]->spritePath.c_str());
-    float offset = float(tmpShotImage.width) / spriteInfos[playerShootIndex]->patternNb;
-    Rectangle shotSpriteRect = {0, 0, offset, float(tmpShotImage.height)};
+    ecs::CustomRectangle shotSpriteRect = {0, 0, float(spriteInfos[playerShootIndex]->spriteWidth),
+                                           float(spriteInfos[playerShootIndex]->spriteHeight)};
+    float shotX = positions[playerIndex]->x + (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
+    float shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2));
     entity_t entity = reg.spawnEntity();
-    float shotX = positions[playerIndex]->x + (float((spritesSizes[playerIndex]->spriteWidth)) + ((shotSpriteRect.width) / 2));
-    float shotY = positions[playerIndex]->y + (float((spritesSizes[playerIndex]->spriteHeight) / 2) - ((shotSpriteRect.height) / 2));
-    UnloadImage(tmpShotImage);
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
                                                          velocities[playerShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(
-        entity, ecs::component::SpriteInfos{spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
-                                            spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor});
+    spriteInfos.insertAt(entity, ecs::component::SpriteInfos{
+                                     spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
+                                     spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor * shootSize});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::PLAYERSHOT});
-    lives.insertAt(entity, ecs::component::Life{1});
+    lives.insertAt(entity, ecs::component::Life{shootPower});
+    shootPlayerIndex.insertAt(entity, ecs::component::ShootPlayerIndex{playerIndex});
 
-    if (!soundEffect[playerShootIndex])
+    if (!soundEffectInfos[playerShootIndex])
         return;
-    if (soundEffect[playerShootIndex]->soundPath.length() > 0)
-        soundEffect.insertAt(entity, ecs::component::SoundEffect{soundEffect[playerShootIndex]->soundPath, false, true});
+    if (soundEffectInfos[playerShootIndex]->soundPath.length() > 0)
+        soundEffectInfos.insertAt(entity, ecs::component::SoundEffectInfos{soundEffectInfos[playerShootIndex]->soundPath, false, true});
 }
 
 std::size_t ecs::system::FiringSystem::getPlayerShootIndex(Registry &reg) {

@@ -19,6 +19,8 @@
 #include "Registry.hpp"
 #include <chrono>
 
+#define SCORE_FINAL_BOSS_LEVEL1 3000 ///< score to reach before the spawning of the boss
+
 namespace ecs {
     namespace system {
 
