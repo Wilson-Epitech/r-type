@@ -59,6 +59,7 @@ void ecs::system::EnemyFiringSystem::addShot(const std::size_t &enemyIndex, Regi
                                            float(spriteInfos[enemyShootIndex]->spriteHeight)};
     float shotX = positions[enemyIndex]->x - (spriteInfos[enemyIndex]->spriteWidth + (shotSpriteRect.width / 2));
     float shotY = positions[enemyIndex]->y + ((spriteInfos[enemyIndex]->spriteHeight / 2 - shotSpriteRect.height / 2));
+    float shootAngle = 0;
     entity_t entity = reg.spawnEntity();
 
     if (velocities[enemyIndex]->vx < 0) {
@@ -77,7 +78,8 @@ void ecs::system::EnemyFiringSystem::addShot(const std::size_t &enemyIndex, Regi
                                             spriteInfos[enemyShootIndex]->firstPattern, spriteInfos[enemyShootIndex]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMYSHOT});
     lives.insertAt(entity, ecs::component::Life{1});
-    changeShootVelocity(reg, enemyIndex, entity);
+    shootAngle = changeShootVelocity(reg, enemyIndex, entity);
+    spriteInfos[entity]->rotationAngle = shootAngle;
 
     if (!soundEffectInfos[enemyShootIndex])
         return;
@@ -100,21 +102,20 @@ std::size_t ecs::system::EnemyFiringSystem::getEnemyShootIndex(Registry &reg) {
     return 0;
 }
 
-void ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex) {
+float ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
-    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     std::size_t playerEntity = findClosestPlayer(reg, enemyIndex);
     float speed = 0;
     float angle = 0;
 
     if (movementPattern.size() < enemyIndex || playerEntity == 0)
-        return;
+        return 0;
     if (!movementPattern[enemyIndex])
-        return;
+        return 0;
     if (movementPattern[enemyIndex]->movementPatternType != ecs::MovementType::FOLLOW)
-        return;
+        return 0;
 
     if (velocities[shootIndex]->vy < 0)
         speed += velocities[shootIndex]->vy * -1;
@@ -128,7 +129,7 @@ void ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const st
     angle = atan2f(positions[playerEntity]->y - positions[enemyIndex]->y, positions[playerEntity]->x - positions[enemyIndex]->x);
     velocities[shootIndex]->vx = speed * cosf(angle);
     velocities[shootIndex]->vy = speed * sinf(angle);
-    spriteInfos[shootIndex]->rotationAngle = (angle * 180 / M_PI) + 180;
+    return (angle * 180 / M_PI) + 180;
 }
 
 std::size_t ecs::system::EnemyFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {

@@ -60,7 +60,23 @@ namespace ecs {
              */
             std::size_t getEnemyShootIndex(Registry &reg);
 
-            void changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
+            /**
+             * @brief Change the velocity of the enemy shoot.
+             * This method change the velocity of the enemy shoot if the enemy pattern is 'FOLLOW'
+             * The shoot will go in the direction of the player
+             * @param reg The ECS registry containing entities and components.
+             * @param enemyIndex The index of the enemy entity firing the shot.
+             * @param shootIndex The index of the enemy shoot entity.
+             * @return float the angle of the shoot.
+             */
+            float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
+
+            /**
+             * @brief Finds enemy's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the enemy entity.
+             * @return std::size_t The index of the enemy's nearest player.
+             */
             std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }

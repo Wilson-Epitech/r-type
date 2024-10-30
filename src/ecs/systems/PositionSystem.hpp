@@ -100,6 +100,12 @@ namespace ecs {
              */
             void handleReverseDirection(Registry &reg, const std::size_t &index);
 
+            /**
+             * @brief Finds enemy's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the enemy entity.
+             * @return std::size_t The index of the enemy's nearest player.
+             */
             std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }

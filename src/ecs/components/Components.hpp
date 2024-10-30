@@ -134,10 +134,9 @@ namespace ecs {
          */
         struct Type {
             ecs::EntityType entityType = ecs::EntityType::NOTYPE; ///< The type of the entity
-            std::size_t test = 0;
 
             bool operator==(const Type &other) const {
-                return (entityType == other.entityType && test == other.test);
+                return (entityType == other.entityType);
             }
         };
 
@@ -318,9 +317,9 @@ namespace ecs {
          * @brief Component for the movement pattern of an entity
         */
         struct MovementPattern {
-            std::size_t patternAmplitude = 0;
-            bool isReversible = false;
-            ecs::MovementType movementPatternType = MovementType::STRAIGHT;
+            std::size_t patternAmplitude = 0;   ///< The amplitude of the pattern (usfull for snake pattern)
+            bool isReversible = false;          ///< Indicates if the entity has to go backward when it goes out of the screen
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT;     ///< The type of pattern to use
 
             bool operator==(const MovementPattern &other) const {
                 return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
