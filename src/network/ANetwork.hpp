@@ -24,7 +24,7 @@ namespace network {
             _isSigInt = false;
             signal(SIGINT, handleCtrlC);
         };
-        ~ANetwork() = default;
+        virtual ~ANetwork() = default;
 
         bool isSigInt() {
             return _isSigInt;
@@ -36,8 +36,10 @@ namespace network {
          * @param signal Retrieve the signal sent.
          */
         static void handleCtrlC(const int signal) {
-            if (signal == SIGINT)
+            if (signal == SIGINT) {
                 _isSigInt = true;
+                exit(0);
+            }
         }
 
         inline static bool _isSigInt; ///< Indicates if SIGINT signal has been catch.
