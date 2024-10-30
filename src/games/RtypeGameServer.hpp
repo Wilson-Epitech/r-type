@@ -33,22 +33,12 @@
 #include "BossFiringSystem.hpp"
 #include "ResetForNextLevel.hpp"
 
-#define PLAYER_TEMPLATE_NAME "player_template" ///< Defines the name of the player template entity.
-#define PLAYER_SHOT_TEMPLATE_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
-#define SPAWN_ENEMY_TEMPLATE_NAME "enemy_template" ///< Defines the name of the enemies spawn template entity.
-#define SPAWN_STRONGER_ENEMY_TEMPLATE_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemies spawn template entity.
-#define ENEMY_SHOT_TEMPLATE_NAME "enemy_shot_template" ///< Defines the name of the enemies shot template entity.
-#define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
-#define BACKGROUND_NAME "background" ///< Defines the name of the background entity.
-#define MUSIC_NAME "music" ///< Defines the name of the background music entity.
-#define TEAM_SCORE_NAME "team_score" ///< Defines the name of the team score entity.
-#define TITLE_NAME "title" ///< Defines the name of the title entity.
-
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30 ///< Minimum spawn height for enemies.
 #define MAX_SPAWN_WIDTH 2420 ///< Maximum spawn width for enemies.
 #define MIN_SPAWN_WIDTH 1920 ///< Minimum spawn width for enemies.
 
+#define PLAYER_TEMPLATE_NAME "player_template" ///< Defines the name of the player template entity.
 #define PLAYER_TEMPLATE_POSSIBLE_VELOCITY 8 ///< Possible velocity for the player template entity.
 #define PLAYER_TEMPLATE_SHOOTING_RATE 0.3 ///< The shooting rate for the player template entity.
 #define PLAYER_TEMPLATE_NB_LIVES 5 ///< The number of lives for the player template entity.
@@ -59,9 +49,11 @@
 #define PLAYER_TEMPLATE_TEXT_Y 50 ///< The text y position for the player template entity.
 #define PLAYER_TEMPLATE_TEXT_SIZE 20 ///< The text size for the player template entity.
 
+#define PLAYER_SHOT_TEMPLATE_NAME "player_shot_template" ///< Defines the name of the player shot template entity.
 #define PLAYER_SHOT_TEMPLATE_VX 10 ///< The horizontal velocity for the player shot template entity.
 #define PLAYER_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity for the player shot template entity.
 
+#define SPAWN_ENEMY_TEMPLATE_NAME "enemy_template" ///< Defines the name of the enemies spawn template entity.
 #define ENEMY_VX -1 ///< The horizontal velocity of enemies.
 #define ENEMY_VY 1.5 ///< The vertical velocity of enemies.
 #define ENEMY_NB_LIVES 1 ///<  The number of lives for enemies.
@@ -70,9 +62,11 @@
 #define ENEMY_PATTERN_AMPLITUDE 60 ///< Time amplitude of enemies pattern.
 #define ENEMY_IS_REVERSIBLE true ///<
 #define ENEMY_WAVE_SIZE 5 ///< The size of each wave of enemies.
+#define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 #define ENEMY_SHOOTING_RATE 3 ///< The shooting rate for enemies.
 #define TIME_BEFORE_SPAWN_ENEMY 15  ///< Time before enemies start spawning.
 
+#define SPAWN_STRONGER_ENEMY_TEMPLATE_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemies spawn template entity.
 #define STRONGER_ENEMY_VX -1 ///< The horizontal velocity of stronger enemies.
 #define STRONGER_ENEMY_VY 0.0 ///< The vertical velocity of stronger enemies.
 #define STRONGER_ENEMY_WAVE_SIZE 1 ///< The number of stronger enemies spawned in each wave.
@@ -80,33 +74,40 @@
 #define STRONGER_ENEMY_NB_LIVES 10 ///< The number of lives for stronger enemies.
 #define TIME_BEFORE_SPAWN_STRONGER_ENEMY 10 ///< Time before stronger enemies start spawning.
 
+#define ENEMY_SHOT_TEMPLATE_NAME "enemy_shot_template" ///< Defines the name of the enemies shot template entity.
 #define ENEMY_SHOT_TEMPLATE_VX -10 ///< The horizontal velocity for the enemy shot template entity.
 #define ENEMY_SHOT_TEMPLATE_VY 0.0  ///< The vertical velocity for the enemy shot template entity.
 
+#define SPAWN_LEVEL1_BOSS_NAME "level1_boss" ///< Defines the name of the boss of level 1 spawn entity.
+#define LEVEL1_BOSS_NB_LIVES 100 ///< The number of lives for the level 1 boss.
+#define LEVEL1_BOSS_SHOOTING_RATE 0.5 ///< The shooting rate for the level 1 boss.
+
+#define LEVEL1_BOSS_SHOT_NAME "level1_boss_shot" ///< Defines the name of the level 1 boss shot entity.
+#define LEVEL1_BOSS_SHOT_VX -10 ///< The horizontal velocity for the boss shot.
+#define LEVEL1_BOSS_SHOT_VY 0.0 ///< The vertical velocity for the boss shot.
+
+#define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_CONTENT "null" ///< The text content for the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_SIZE 20 ///< The text size for the powerup template entity.
 
+#define BACKGROUND_NAME "background" ///< Defines the name of the background entity.
 #define BACKGROUND_VX -0.5 ///< The horizontal velocity for the background entity.
 #define BACKGROUND_VY 0.0  ///< The vertical velocity for the background entity.
 
+#define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define MUSIC_VOLUME 0.5 ///< The volume of the background music.
 
+#define TEAM_SCORE_NAME "team_score" ///< Defines the name of the team score entity.
 #define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
 #define TEAM_SCORE_TEXT_X 50 ///< The text x position for the team score entity.
 #define TEAM_SCORE_TEXT_Y 100 ///< The text y position for the team score entity.
 #define TEAM_SCORE_TEXT_SIZE 20 ///< The text size for the team score entity.
 
+#define TITLE_NAME "title" ///< Defines the name of the title entity.
 #define TITLE_TEXT_CONTENT "RType:" ///< The text content for the title entity.
 #define TITLE_TEXT_X SCREEN_WIDTH / 2 ///< The text x position for the title entity.
 #define TITLE_TEXT_Y 50 ///< The text y position for the title entity.
 #define TITLE_TEXT_SIZE 20 ///< The text size for the title entity.
-
-#define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR 2 ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
-
-/** @brief Defines the name of the level 1 boss shot entity */
-#define BOSS_SHOT_LEVEl1 "boss_shot_level1"
-/** @brief Defines the name of the boss of level 1 spawn entity */
-#define SPAWN_BOSS_LEVEL1_NAME "boss_level1"
 
 namespace game {
 
