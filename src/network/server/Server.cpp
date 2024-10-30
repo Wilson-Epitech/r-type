@@ -93,7 +93,7 @@ void network::Server::handleReceive(const std::error_code &error, const std::siz
                     sizeof(_messageLen));
 
         if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
-            std::cerr << "Incomplete message received" << std::endl;
+            std::cerr << "Incomplete message received ici" << std::endl;
             startReceiving();
             return;
         }

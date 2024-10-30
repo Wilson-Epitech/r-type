@@ -137,8 +137,8 @@ void network::Client::updateData(ecs::Registry &reg) {
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
     DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg, false);
 
-    for (auto lastDataReceived : lastDataReceivedList)
-        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
+    // for (auto lastDataReceived : lastDataReceivedList)
+    //     network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
     if (!data.empty()) {
         std::string serialized = network::HandleData::serializeEntityDataVector(data);
         sendMessage(serialized, 3);
