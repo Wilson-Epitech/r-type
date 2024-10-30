@@ -185,20 +185,17 @@ void network::HandleData::updateEntitiesData(DataToSend &dataReceived, ecs::Regi
 }
 
 void network::HandleData::deleteSimilarDataLines(DataToSend &dataToSend, const DataToSend &dataReceived) {
-    for (auto dataToSendIt = dataToSend.deadEntities.begin(); dataToSendIt != dataToSend.deadEntities.end(); dataToSendIt++) {
-        for (auto dataReceivedIt = dataReceived.deadEntities.begin(); dataReceivedIt != dataReceived.deadEntities.end(); dataReceivedIt++) {
-            if (*dataToSendIt == *dataReceivedIt) {
-                dataToSendIt = dataToSend.deadEntities.erase(dataToSendIt);
-                dataToSendIt--;
-            }
-        }
-    }
-    for (auto dataToSendIt = dataToSend.entitiesData.begin(); dataToSendIt != dataToSend.entitiesData.end(); dataToSendIt++) {
-        for (auto dataReceivedIt = dataReceived.entitiesData.begin(); dataReceivedIt != dataReceived.entitiesData.end(); dataReceivedIt++) {
-            if (*dataToSendIt == *dataReceivedIt) {
-                dataToSendIt = dataToSend.entitiesData.erase(dataToSendIt);
-                dataToSendIt--;
-            }
-        }
-    }
+    dataToSend.deadEntities.erase(std::remove_if(dataToSend.deadEntities.begin(), dataToSend.deadEntities.end(),
+                                                 [dataReceived](const auto &dataToSendEntity) {
+                                                     return (std::find(dataReceived.deadEntities.begin(), dataReceived.deadEntities.end(),
+                                                                       dataToSendEntity) != dataReceived.deadEntities.end());
+                                                 }),
+                                  dataToSend.deadEntities.end());
+
+    dataToSend.entitiesData.erase(std::remove_if(dataToSend.entitiesData.begin(), dataToSend.entitiesData.end(),
+                                                 [dataReceived](const auto &dataToSendEntity) {
+                                                     return (std::find(dataReceived.entitiesData.begin(), dataReceived.entitiesData.end(),
+                                                                       dataToSendEntity) != dataReceived.entitiesData.end());
+                                                 }),
+                                  dataToSend.entitiesData.end());
 }
