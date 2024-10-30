@@ -12,8 +12,7 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
         data.entitiesData.push_back(dataToSend);
 }
 
-void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data)
-{
+void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data) {
     std::vector<EntityData> positionData = retrieveComponentUpdates<ecs::component::Position>(reg, ecs::ComponentName::POSITION);
     std::vector<EntityData> spriteInfoData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
 
@@ -35,7 +34,8 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     std::vector<EntityData> livesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
     std::vector<EntityData> scoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE);
     std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
-    std::vector<EntityData> activePowerupInfosData = retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
+    std::vector<EntityData> activePowerupInfosData =
+        retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();

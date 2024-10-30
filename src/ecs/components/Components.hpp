@@ -24,17 +24,29 @@
 #include <vector>
 
 #define ORANGE_COLOR                                                                                                                       \
-    (ecs::CustomColor) { 255, 161, 0, 255 } ///< Orange color
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 161, 0, 255                                                                                                                   \
+    } ///< Orange color
 #define CYAN_COLOR                                                                                                                         \
-    (ecs::CustomColor) { 120, 200, 225, 255 } ///< Cyan color
+    (ecs::CustomColor) {                                                                                                                   \
+        120, 200, 225, 255                                                                                                                 \
+    } ///< Cyan color
 #define BEIGE_COLOR                                                                                                                        \
-    (ecs::CustomColor) { 211, 176, 131, 255 } ///< Beige color
+    (ecs::CustomColor) {                                                                                                                   \
+        211, 176, 131, 255                                                                                                                 \
+    } ///< Beige color
 #define GOLD_COLOR                                                                                                                         \
-    (ecs::CustomColor) { 255, 203, 0, 255 } ///< Gold color
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 203, 0, 255                                                                                                                   \
+    } ///< Gold color
 #define PINK_COLOR                                                                                                                         \
-    (ecs::CustomColor) { 255, 109, 194, 255 } ///< Pink color
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 109, 194, 255                                                                                                                 \
+    } ///< Pink color
 #define WHITE_COLOR                                                                                                                        \
-    (ecs::CustomColor) { 245, 245, 245, 255 } ///< White color
+    (ecs::CustomColor) {                                                                                                                   \
+        245, 245, 245, 255                                                                                                                 \
+    } ///< White color
 
 namespace ecs {
 
@@ -43,22 +55,22 @@ namespace ecs {
      * @brief Enum representing different types of entities in the game.
      */
     enum EntityType {
-        NOTYPE,                 ///< No type entity
-        PLAYER,                 ///< Player entity
-        PLAYER_TEMPLATE,        ///< Player template entity
-        PLAYERSHOT,             ///< Player's shot entity
-        PLAYERSHOT_TEMPLATE,    ///< Player's shot template entity
-        ENEMY,                  ///< Enemy entity
-        ENEMY_TEMPLATE,         ///< Enemy template entity
-        ENEMYSHOT,              ///< Enemy's shot entity
-        ENEMYSHOT_TEMPLATE,     ///< Enemy's shot template entity
-        BOSS_SHOT_1,            ///< Level 1 boss's shot entity
-        BOSS_SHOT_1_TEMPLATE,   ///< Level 1 boss's shot template entity
-        BACKGROUND,             ///< Background entity
-        TEXT,                   ///< Text entity
-        POWERUP,                ///< Powerup entity
-        POWERUP_TEMPLATE,       ///< Powerup template entity
-        BOSS_LEVEL1             ///< Level1 Boss' entity
+        NOTYPE,               ///< No type entity
+        PLAYER,               ///< Player entity
+        PLAYER_TEMPLATE,      ///< Player template entity
+        PLAYERSHOT,           ///< Player's shot entity
+        PLAYERSHOT_TEMPLATE,  ///< Player's shot template entity
+        ENEMY,                ///< Enemy entity
+        ENEMY_TEMPLATE,       ///< Enemy template entity
+        ENEMYSHOT,            ///< Enemy's shot entity
+        ENEMYSHOT_TEMPLATE,   ///< Enemy's shot template entity
+        BOSS_SHOT_1,          ///< Level 1 boss's shot entity
+        BOSS_SHOT_1_TEMPLATE, ///< Level 1 boss's shot template entity
+        BACKGROUND,           ///< Background entity
+        TEXT,                 ///< Text entity
+        POWERUP,              ///< Powerup entity
+        POWERUP_TEMPLATE,     ///< Powerup template entity
+        BOSS_LEVEL1           ///< Level1 Boss' entity
     };
 
     /**
@@ -78,7 +90,7 @@ namespace ecs {
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
         ACTIVEPOWERUP,  ///< Activated powerup component
-        MOVEMENTPATTERN  ///< Movement pattern component
+        MOVEMENTPATTERN ///< Movement pattern component
     };
 
     /**
@@ -99,9 +111,9 @@ namespace ecs {
      * @brief Enum representing different movement pattern types.
      */
     enum MovementType {
-        STRAIGHT,   ///< Straight movement
-        SNAKE,      ///< Snake movement
-        FOLLOW      ///< Follow the player
+        STRAIGHT, ///< Straight movement
+        SNAKE,    ///< Snake movement
+        FOLLOW    ///< Follow the player
     };
 
     namespace component {
@@ -111,7 +123,7 @@ namespace ecs {
          * @brief Component for the position of an entity in 2D space.
          */
         struct Position {
-            float x = 0, y = 0; ///< X and Y coordinates of the entity
+            float x = 0, y = 0;           ///< X and Y coordinates of the entity
             float startX = 0, startY = 0; ///< X and Y coordinates of the entity before every movement
 
             bool operator==(const Position &other) const {
@@ -148,14 +160,15 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives = 1;      ///< Number of lives the entity has
-            bool displayLife = false; ///< Indicates if the life has to be displayed
+            std::size_t nbLives = 1;         ///< Number of lives the entity has
+            bool displayLife = false;        ///< Indicates if the life has to be displayed
             bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
-            std::size_t maxLives = 0; ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
-            bool isInvincible = false; ///< Indicates if the entity is invincible
+            std::size_t maxLives = 0;        ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
+            bool isInvincible = false;       ///< Indicates if the entity is invincible
 
             bool operator==(const Life &other) const {
-                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives && isInvincible == other.isInvincible);
+                return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives &&
+                        isInvincible == other.isInvincible);
             }
         };
 
@@ -164,9 +177,9 @@ namespace ecs {
          * @brief Component that determines whether the entity is currently shooting.
          */
         struct Shooting {
-            bool isShooting = false; ///< Boolean indicating if the entity is shooting
+            bool isShooting = false;    ///< Boolean indicating if the entity is shooting
             std::size_t shootPower = 1; ///< How much damage do the shoot
-            float shootSize = 1;    ///< Size of the shoot
+            float shootSize = 1;        ///< Size of the shoot
 
             bool operator==(const Shooting &other) const {
                 return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
@@ -185,7 +198,7 @@ namespace ecs {
             CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
             float rotationAngle = 0;                       ///< Rotation angle of the sprite
-            bool isLoaded = false;        ///< Indicates if the texture is loaded
+            bool isLoaded = false;                         ///< Indicates if the texture is loaded
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
@@ -257,7 +270,7 @@ namespace ecs {
         struct BackgroundMusicInfos {
             std::string musicPath;          ///< Path to the music file
             float volume;                   ///< Volume level of the music
-            bool hasToBePlayed = true;     ///< Indicates if the music should be played
+            bool hasToBePlayed = true;      ///< Indicates if the music should be played
             bool isLoaded = false;          ///< Indicates if the music is loaded
             bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
 
@@ -304,26 +317,25 @@ namespace ecs {
         /**
          * @struct Powerup
          * @brief Component for the powerup information a powerup
-        */
+         */
         struct Powerup {
             Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
-            std::size_t spawnRate = 3; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
-            bool hasBeenActivated = false;  ///< Indicates if the powerup is activated
-            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the powerup
+            std::size_t spawnRate = 3;                           ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            bool hasBeenActivated = false;                       ///< Indicates if the powerup is activated
+            std::size_t playerIndex = 0;                         ///< Entity of the player that have activated the powerup
         };
 
         /**
          * @struct ActivePowerup
          * @brief Component for the powerup that has been used by a player
-        */
+         */
         struct ActivePowerup {
-            bool isPowershootActive = false;    ///< Indicates if the powerup Powershoot is activated
-            bool isInvincibleActive = false;    ///< Indicates if the powerup Invincible is activated
-            bool isMegaShootActive = false;     ///< Indicates if the powerup MegaShoot is activated
+            bool isPowershootActive = false; ///< Indicates if the powerup Powershoot is activated
+            bool isInvincibleActive = false; ///< Indicates if the powerup Invincible is activated
+            bool isMegaShootActive = false;  ///< Indicates if the powerup MegaShoot is activated
 
             bool operator==(const ActivePowerup &other) const {
-                return (isPowershootActive == other.isPowershootActive &&
-                        isInvincibleActive == other.isInvincibleActive &&
+                return (isPowershootActive == other.isPowershootActive && isInvincibleActive == other.isInvincibleActive &&
                         isMegaShootActive == other.isMegaShootActive);
             }
         };
@@ -331,14 +343,15 @@ namespace ecs {
         /**
          * @struct MovementPattern
          * @brief Component for the movement pattern of an entity
-        */
+         */
         struct MovementPattern {
-            std::size_t patternAmplitude = 0;   ///< The amplitude of the pattern (usfull for snake pattern)
-            bool isReversible = false;          ///< Indicates if the entity has to go backward when it goes out of the screen
-            ecs::MovementType movementPatternType = MovementType::STRAIGHT;     ///< The type of pattern to use
+            std::size_t patternAmplitude = 0; ///< The amplitude of the pattern (usfull for snake pattern)
+            bool isReversible = false;        ///< Indicates if the entity has to go backward when it goes out of the screen
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT; ///< The type of pattern to use
 
             bool operator==(const MovementPattern &other) const {
-                return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
+                return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible &&
+                        movementPatternType == other.movementPatternType);
             }
         };
     }
@@ -368,7 +381,8 @@ struct EntityData {
                 areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
                 areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component) ||
-                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component, other.component));
+                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component,
+                                                                     other.component));
         }
         return false;
     }

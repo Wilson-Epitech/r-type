@@ -15,7 +15,7 @@
 #include <functional>
 #include <raylib.h>
 
-#define UPDATE_TIME 0.02                            ///< Set the time to update the game.
+#define UPDATE_TIME 0.02 ///< Set the time to update the game.
 
 #if __linux__
 #define SERVER_LIB_PATH "sharedLibraries/libserver.so" ///< Path to the server shared library for linux

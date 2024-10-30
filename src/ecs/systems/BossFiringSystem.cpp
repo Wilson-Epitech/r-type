@@ -7,8 +7,7 @@
 
 #include "BossFiringSystem.hpp"
 
-void ecs::system::BossFiringSystem::operator()(Registry &reg)
-{
+void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
@@ -22,7 +21,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg)
     for (std::size_t i = 0; i < types.size() && i < shootingRate.size() && positions.size(); ++i) {
         if (!types[i] || !shootingRate[i] || !positions[i])
             continue;
-        if (types[i]->entityType != ecs::EntityType::BOSS_LEVEL1 )
+        if (types[i]->entityType != ecs::EntityType::BOSS_LEVEL1)
             continue;
         if (timer.size() > 0) {
             for (std::size_t j = 0; j < timer.size(); j++) {
@@ -68,9 +67,9 @@ void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Regist
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[bossShootIndex]->vx, velocities[bossShootIndex]->vy,
                                                          velocities[bossShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(
-        entity, ecs::component::SpriteInfos{spriteInfos[bossShootIndex]->spritePath, spriteInfos[bossShootIndex]->patternNb,
-                                            spriteInfos[bossShootIndex]->firstPattern, spriteInfos[bossShootIndex]->scaleFactor});
+    spriteInfos.insertAt(entity,
+                         ecs::component::SpriteInfos{spriteInfos[bossShootIndex]->spritePath, spriteInfos[bossShootIndex]->patternNb,
+                                                     spriteInfos[bossShootIndex]->firstPattern, spriteInfos[bossShootIndex]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS_SHOT_1});
     lives.insertAt(entity, ecs::component::Life{1});
 
@@ -94,4 +93,3 @@ std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg) {
     }
     return 0;
 }
-

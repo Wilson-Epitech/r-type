@@ -9,8 +9,8 @@
 #define DLLOADER_HPP_
 
 #include "Error.hpp"
-#include <dlfcn.h>
 #include <asio.hpp>
+#include <dlfcn.h>
 
 /**
  * @class DLLoader

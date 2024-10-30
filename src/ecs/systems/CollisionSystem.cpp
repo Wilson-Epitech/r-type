@@ -82,8 +82,7 @@ bool ecs::system::CollisionSystem::areEntitiesInCollision(ecs::CustomRectangle r
             rec1.y + rec1.height >= rec2.y);
 }
 
-void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j)
-{
+void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Powerup> &powerup = reg.getComponents<component::Powerup>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
@@ -91,7 +90,8 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
     if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == ecs::EntityType::POWERUP && !lives[i]->isInvincible) {
         powerup[j]->playerIndex = i;
         lives[i]->nbLives++;
-    } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER && !lives[j]->isInvincible) {
+    } else if (types[i]->entityType == ecs::EntityType::POWERUP && types[j]->entityType == ecs::EntityType::PLAYER &&
+               !lives[j]->isInvincible) {
         powerup[i]->playerIndex = j;
         lives[j]->nbLives++;
     }
@@ -99,11 +99,11 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
-            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
-            !isEnemyShotAndPowerup(firstType, secondType) && ! isPlayerShotAndPowerup(firstType, secondType) &&
-            !isBossLevel1AndBossLevel1Shot(firstType, secondType) && !isBossLevel1AndEnemyShot(firstType, secondType) &&
-            !isBossLevel1AndEnemy(firstType, secondType) && !isBossLevel1ShotAndPowerUp(firstType, secondType) &&
-            !isBossLevel1ShotAndPlayerShot(firstType, secondType));
+            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) &&
+            !isEnemyAndPowerup(firstType, secondType) && !isEnemyShotAndPowerup(firstType, secondType) &&
+            !isPlayerShotAndPowerup(firstType, secondType) && !isBossLevel1AndBossLevel1Shot(firstType, secondType) &&
+            !isBossLevel1AndEnemyShot(firstType, secondType) && !isBossLevel1AndEnemy(firstType, secondType) &&
+            !isBossLevel1ShotAndPowerUp(firstType, secondType) && !isBossLevel1ShotAndPlayerShot(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -155,14 +155,12 @@ bool ecs::system::CollisionSystem::isPlayerShotAndPowerup(const ecs::EntityType 
             (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::PLAYERSHOT));
 }
 
-bool ecs::system::CollisionSystem::isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPowerUp(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::POWERUP) ||
-        (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_SHOT_1));
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
 
-bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::BOSS_SHOT_1 && secondType == ecs::EntityType::PLAYERSHOT) ||
-        (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
+            (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
