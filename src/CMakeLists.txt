@@ -19,6 +19,7 @@ set(SRC
     ecs/systems/MusicSystem.cpp
     ecs/systems/ScoreSystem.cpp
     ecs/systems/PowerupSystem.cpp
+    ecs/systems/WeaponSystem.cpp
     runGame/RunGame.cpp
     network/handleData/HandleData.cpp
     ../lib/Lib.cpp

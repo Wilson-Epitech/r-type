@@ -147,6 +147,33 @@ namespace ecs {
             bool isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
+             * @brief Checks if the collision is between an enemy and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy and a weapon.
+             * @return false Otherwise.
+             */
+            bool isEnemyAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between an enemy shot and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy shot and a weapon.
+             * @return false Otherwise.
+             */
+            bool isEnemyShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between a player shot and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between a player shot and a weapon.
+             * @return false Otherwise.
+             */
+            bool isPlayerShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
              * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
              * @param reg The ECS registry containing entities and components.
              * @param i The index of the first entity.

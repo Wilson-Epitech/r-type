@@ -100,7 +100,8 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
             !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
-            !isEnemyShotAndPowerup(firstType, secondType) && ! isPlayerShotAndPowerup(firstType, secondType));
+            !isEnemyShotAndPowerup(firstType, secondType) && !isPlayerShotAndPowerup(firstType, secondType) && !isEnemyAndWeapon(firstType, secondType) &&
+            !isEnemyShotAndWeapon(firstType, secondType) && !isPlayerShotAndWeapon(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -135,4 +136,19 @@ bool ecs::system::CollisionSystem::isEnemyShotAndPowerup(const ecs::EntityType &
 bool ecs::system::CollisionSystem::isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::POWERUP) ||
             (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::PLAYERSHOT));
+}
+
+bool ecs::system::CollisionSystem::isEnemyAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMY && secondType == ecs::EntityType::WEAPON) ||
+            (firstType == ecs::EntityType::WEAPON && secondType == ecs::EntityType::ENEMY));
+}
+
+bool ecs::system::CollisionSystem::isEnemyShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::ENEMYSHOT && secondType == ecs::EntityType::WEAPON) ||
+            (firstType == ecs::EntityType::WEAPON && secondType == ecs::EntityType::ENEMYSHOT));
+}
+
+bool ecs::system::CollisionSystem::isPlayerShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return ((firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::WEAPON) ||
+            (firstType == ecs::EntityType::WEAPON && secondType == ecs::EntityType::PLAYERSHOT));
 }

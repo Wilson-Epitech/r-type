@@ -29,6 +29,7 @@
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
 #include "PowerupSystem.hpp"
+#include "WeaponSystem.hpp"
 
 /** @brief Defines the name of the player template entity */
 #define PLAYER_NAME "player_template"
@@ -50,6 +51,10 @@
 #define TITLE_NAME "title"
 /** @brief Defines the name of the powerup template entity */
 #define POWERUP_NAME "powerup_template"
+/** @brief Defines the name of the weapon template entity */
+#define WEAPON_NAME "weapon_template"
+#define FRONT_WEAPON_NAME "front_weapon_sprite"
+#define BACK_WEAPON_NAME "back_weapon_sprite"
 
 /** @brief Maximum spawn height for enemies */
 #define MAX_SPAWN_HEIGHT 1040

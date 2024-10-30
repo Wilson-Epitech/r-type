@@ -55,7 +55,10 @@ namespace ecs {
         BACKGROUND,          ///< Background entity
         TEXT,                ///< Text entity
         POWERUP,             ///< Powerup entity
-        POWERUP_TEMPLATE     ///< Powerup template entity
+        POWERUP_TEMPLATE,    ///< Powerup template entity
+        WEAPON,              ///< Weapon entity
+        WEAPON_TEMPLATE,     ///< Weapon template entity
+        WEAPON_SPRITES       ///< Weapon sprites entity
     };
 
     /**
@@ -75,7 +78,8 @@ namespace ecs {
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
         ACTIVEPOWERUP,  ///< Activated powerup component
-        MOVEMENTPATTERN  ///< Movement pattern component
+        MOVEMENTPATTERN, ///< Movement pattern component
+        PLAYERWEAPON    ///< Player weapon component
     };
 
     /**
@@ -98,6 +102,17 @@ namespace ecs {
     enum MovementType {
         STRAIGHT,   ///< Straight movement
         SNAKE       ///< Snake movement
+    };
+
+    /**
+     * @enum WeaponType
+     * @brief Enum representing different player weapon types.
+     */
+    enum WeaponType {
+        NO_WEAPON,      ///< No weapon
+        FRONT_WEAPON,   ///< Weapon at the front of the player
+        BACK_WEAPON,    ///< Weapon at the back of the player
+        END_WEAPON      ///< End of the weapon type enum
     };
 
     namespace component {
@@ -322,6 +337,17 @@ namespace ecs {
             bool operator==(const MovementPattern &other) const {
                 return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible && movementPatternType == other.movementPatternType);
             }
+        };
+
+        /**
+         * @struct Weapon
+         * @brief Component for the player weapon information
+        */
+        struct Weapon {
+            WeaponType weaponType = WeaponType::NO_WEAPON; ///< Type of the powerup
+            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            bool hasBeenActivated = false;  ///< Indicates if the weapon is activated
+            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the weapon
         };
     }
 }
