@@ -76,7 +76,7 @@ enum Poweruptype {
 };
 ```
 
-The fourth one is the Poweruptype enum, used to store which key part of the game we are on
+The fourth one is the CurrentLevel enum, used to store which key part of the game we are on
 ```hpp
 enum CurrentLevel {
    LEVEL1,

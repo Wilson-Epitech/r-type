@@ -116,11 +116,15 @@ namespace ecs {
         FOLLOW    ///< Follow the player
     };
 
+    /**
+     * @enum CurrentLevel
+     * @brief Enum representing different key part of the game.
+     */
     enum CurrentLevel {
-        LEVEL1,
-        LEVEL1_BOSS,
-        LEVEL2,
-        LEVEL2_BOSS
+        LEVEL1,      ///< First level
+        LEVEL1_BOSS, ///< First level after the boss was triggered
+        LEVEL2,      ///< Second level
+        LEVEL2_BOSS  ///< Second level after the boss was triggered
     };
 
     namespace component {
