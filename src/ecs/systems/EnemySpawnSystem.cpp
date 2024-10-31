@@ -35,17 +35,20 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
                 time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn) &&
-                (bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL1_BOSS &&
+            std::size_t bossIndex = findLevel1BossEntity(reg);
+            if (bossIndex != 0) {
+                if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn) &&
+                    (bossSpawns[bossIndex]->ongoingLevel != CurrentLevel::LEVEL1_BOSS &&
                 bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL2_BOSS))) ||
-                isFirstSpawn) {
-                for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
-                    std::srand(rand() % time(NULL));
-                    std::cout << bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel << std::endl;
+                    isFirstSpawn) {
+                    for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
+                        std::srand(rand() % time(NULL));
+                        std::cout << bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel << std::endl;
                     std::cout << "New Enemy" << std::endl;
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
+                    }
+                    isFirstSpawn = false;
                 }
-                isFirstSpawn = false;
             }
             if (Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn)) {
                 for (std::size_t j = 0; j < timer.size(); j++) {

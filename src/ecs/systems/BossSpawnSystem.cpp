@@ -38,9 +38,16 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
         }
         if (isTimerSet && !bossSpawned) {
             if (Lib::isTimeElapsed(time0, TIME_WAIT_LEVEL1_BOSS)) {
-                createNewBoss(reg, types, bossEntity);
-                bossSpawned = true;
-                isTimerSet = false;
+                std::size_t bossEntity = findLevel1BossEntity(types);
+                if (bossEntity != 0) {
+                    createNewBoss(reg, types, bossEntity);
+                    bossSpawned = true;
+                    isTimerSet = false;
+                    if (bossEntity < bossSpawns.size()) {
+                        if (bossSpawns[bossEntity])
+                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+                    }
+                }
             }
         }
         if (!positions[i])
