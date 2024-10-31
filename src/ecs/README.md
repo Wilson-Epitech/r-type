@@ -31,7 +31,7 @@ Our game engine is composed of three main elements in the ECS architecture:
 **Components** are structures used to store the data of an entity. Below is an overview of the available components:
 
 ### Type and Name
-There is three enum in the Components.hpp.
+There are four enum in the Components.hpp.
 The first one is the EntityType
 ```hpp
 enum EntityType {
@@ -73,6 +73,16 @@ enum Poweruptype {
    INVINCIBLE_POWERUP,
    MEGASHOOT_POWERUP,
    END_POWERUP_TYPE
+};
+```
+
+The fourth one is the Poweruptype enum, used to store which key part of the game we are on
+```hpp
+enum CurrentLevel {
+   LEVEL1,
+   LEVEL1_BOSS,
+   LEVEL2,
+   LEVEL2_BOSS
 };
 ```
 
@@ -306,7 +316,7 @@ enum Poweruptype {
       }
       };
    ```
-17.   **BossSpawn**
+20.   **BossSpawn**
    - Store informations about the spawning of a boss
    ```c++
        struct BossSpawn {
@@ -315,6 +325,7 @@ enum Poweruptype {
             int maxSpawnHeight = Lib::getScreenHeight();
             int minSpawnHeight = 0;
             bool hasBeenSlayed = false;
+            CurrentLevel ongoingLevel = CurrentLevel::LEVEL1;
      };
    ```
 
