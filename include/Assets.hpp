@@ -24,6 +24,7 @@
 #define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"        ///< The level 1 boss shot path.
 #define LEVEL1_BACKGROUND_PATH "assets/background.png"        ///< The level 1 background sprite path.
 #define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< The level 2 background sprite path.
+#define LEVEL2_BOSS_PATH "assets/level2_final_boss.png"       ///< The level 2 boss sprite path.
 #define POWERUP_PATH "assets/powerup.png"                     ///< The powerup sprite path.
 #define SHOOT_SOUND_PATH "assets/shoot.wav"                   ///< The shoot sound path.
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
