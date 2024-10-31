@@ -205,7 +205,7 @@ enum CurrentLevel {
    ```c++
    struct EnemySpawn {
       float timeBeforeSpawn;
-      int waveSize;
+      std::size_t waveSize;
       int maxSpawnWidth = Lib::getScreenWidth();
       int minSpawnWidth = 0;
       int maxSpawnHeight = Lib::getScreenHeight();
@@ -225,7 +225,7 @@ enum CurrentLevel {
    struct BackgroundMusicInfos {
       std::string musicPath;
       float volume;
-      bool hasToBePlayed = false;
+      bool hasToBePlayed = true;
       bool isLoaded = false;
       bool isCurrentlyPlayed = false;
 
@@ -283,7 +283,7 @@ enum CurrentLevel {
    ```c++
    struct Powerup {
        Poweruptype powerupType = Poweruptype::LIFE_POWERUP;
-       std::size_t spawnRate = 5;
+       std::size_t spawnRate = 3;
        bool hasBeenActivated = false;
        std::size_t playerIndex = 0;
    };
@@ -376,11 +376,11 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
     iss >> entityData.entityID;
     iss >> entityData.name;
     if (entityData.name == ecs::ComponentName::POSITION)
-        network::HandleData::deserializeEntityCompotent<ecs::component::Position>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityComponent<ecs::component::Position>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        network::HandleData::deserializeEntityCompotent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityComponent<ecs::component::Velocity>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        network::HandleData::deserializeEntityCompotent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
+        network::HandleData::deserializeEntityComponent<ecs::component::SpriteInfos>(iss, entityData.name, entityData.component);
 }
 ```
 And
@@ -390,11 +390,11 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
     oss << entityData.entityID << ' ';
     oss << entityData.name << ' ';
     if (entityData.name == ecs::ComponentName::POSITION)
-        network::HandleData::serializeEntityCompotent<ecs::component::Position>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityComponent<ecs::component::Position>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::VELOCITY)
-        network::HandleData::serializeEntityCompotent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityComponent<ecs::component::Velocity>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::SPRITEINFOS)
-        network::HandleData::serializeEntityCompotent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
+        network::HandleData::serializeEntityComponent<ecs::component::SpriteInfos>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 ```

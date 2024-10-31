@@ -9,10 +9,12 @@
 #include "RunGame.hpp"
 #include <iostream>
 
+#define ERROR_VALUE 84 ///< Return value for errors
+
 int main(int ac, char **av) {
     if (ac != 3 || av[1] == NULL || av[2] == NULL) {
         std::cerr << "Usage: ./client [ip] [port]" << std::endl;
-        return -1;
+        return ERROR_VALUE;
     }
 
     try {
@@ -21,6 +23,6 @@ int main(int ac, char **av) {
         runGame.run();
     } catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        return -1;
+        return ERROR_VALUE;
     }
 }

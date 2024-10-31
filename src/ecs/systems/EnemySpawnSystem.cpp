@@ -7,8 +7,7 @@
 
 #include "EnemySpawnSystem.hpp"
 
-void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
-{
+void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::EnemySpawn> &enemySpawn = reg.getComponents<component::EnemySpawn>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
@@ -36,7 +35,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
             }
             if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn)
                 && bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL1_BOSS)) || isFirstSpawn) {
-                for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
+                for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                 }
@@ -55,8 +54,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
 
 void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<component::EnemySpawn> &enemySpawn,
                                                    SparseArray<component::Velocity> &velocities, SparseArray<component::Life> &lives,
-                                                   SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i)
-{
+                                                   SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &i) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
@@ -86,8 +84,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     }
 }
 
-std::size_t ecs::system::EnemySpawnSystem::checkCurrentScore(Registry &reg)
-{
+std::size_t ecs::system::EnemySpawnSystem::checkCurrentScore(Registry &reg) {
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 

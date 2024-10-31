@@ -7,8 +7,7 @@
 
 #include "ResetForNextLevel.hpp"
 
-void ecs::system::ResetForNextLevel::operator()(Registry &reg)
-{
+void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
@@ -22,8 +21,7 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg)
     }
 }
 
-void ecs::system::ResetForNextLevel::resetPlayerPosition(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::ResetForNextLevel::resetPlayerPosition(Registry &reg, SparseArray<component::Type> &types) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     std::vector<std::pair<entity_t, ecs::CustomColor>> playersColors = reg.getPlayersColors();
@@ -32,12 +30,12 @@ void ecs::system::ResetForNextLevel::resetPlayerPosition(Registry &reg, SparseAr
 
     for (std::size_t y = 0; y < positions.size(); y++) {
         if (types[y]->entityType == ecs::EntityType::PLAYER) {
-            auto itPlayerColors = std::find_if(playersColors.begin(), playersColors.end(),
-                        [y](const auto &pair) { return ((pair.first == y)); });
+            auto itPlayerColors =
+                std::find_if(playersColors.begin(), playersColors.end(), [y](const auto &pair) { return ((pair.first == y)); });
 
             if (itPlayerColors != playersColors.end()) {
                 auto itShipColors = std::find_if(spaceshipColorPositionCorrespondence.begin(), spaceshipColorPositionCorrespondence.end(),
-                        [itPlayerColors](const auto &pair) { return ((pair.first == itPlayerColors->second)); });
+                                                 [itPlayerColors](const auto &pair) { return ((pair.first == itPlayerColors->second)); });
                 if (itShipColors != spaceshipColorPositionCorrespondence.end()) {
                     positions.insertAt(y, itShipColors->second);
                     velocities[y]->vx = 0;
@@ -48,8 +46,7 @@ void ecs::system::ResetForNextLevel::resetPlayerPosition(Registry &reg, SparseAr
     }
 }
 
-void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, SparseArray<component::Type> &types) {
     for (std::size_t y = 0; y < types.size(); y++) {
         if (types[y]->entityType == ecs::EntityType::ENEMY || types[y]->entityType == ecs::EntityType::ENEMYSHOT ||
             types[y]->entityType == ecs::EntityType::PLAYERSHOT || types[y]->entityType == ecs::EntityType::POWERUP)
@@ -57,8 +54,7 @@ void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, Spar
     }
 }
 
-void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
 
     for (std::size_t i = 0; i < types.size(); i++) {

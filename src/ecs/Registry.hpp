@@ -372,7 +372,7 @@ namespace ecs {
         std::unordered_map<entity_t, entity_t> _collisionEntity; ///< A map of entities indices who were in collision
         std::vector<std::pair<entity_t, ecs::CustomColor>>
             _playersColors; ///< A vector containing a pair linking the entity ID of the player with his spaceship color.
-        const std::vector<ecs::CustomColor> _availableSpaceshipColors; ///< A vector containing all 4 available spaceships colors
+        std::vector<ecs::CustomColor> _availableSpaceshipColors; ///< A vector containing all 4 available spaceships colors
         std::vector<std::pair<ecs::CustomColor, ecs::component::Position>>
             _spaceshipColorPositionCorrespondence; ///< A vector associating the spaceship color to the position the corresponding spaceship
                                                    ///< should be at level start.

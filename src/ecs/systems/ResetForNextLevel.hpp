@@ -15,9 +15,9 @@
 #ifndef RESETFORNEXTLEVEL_HPP_
 #define RESETFORNEXTLEVEL_HPP_
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 
 namespace ecs {
     namespace system {
@@ -30,48 +30,48 @@ namespace ecs {
          * after the death of the boss, the new background sprite.
          */
         class ResetForNextLevel : virtual public ecs::system::ISystem {
-            public:
-                ResetForNextLevel() = default;
-                ~ResetForNextLevel() = default;
+          public:
+            ResetForNextLevel() = default;
+            ~ResetForNextLevel() = default;
 
-                /**
-                 * @brief Executes the reseting of the current level, creating the new level.
-                * This function processes the reseting of the current level and the creation
-                * of the new level if the boss of preceding level was beaten.
-                * It erase all remaining enemies, reset the players' positions and set the new background.
-                * @param reg The ECS registry containing entities and their components.
-                */
-                void operator()(Registry &reg) override;
+            /**
+             * @brief Executes the reseting of the current level, creating the new level.
+             * This function processes the reseting of the current level and the creation
+             * of the new level if the boss of preceding level was beaten.
+             * It erase all remaining enemies, reset the players' positions and set the new background.
+             * @param reg The ECS registry containing entities and their components.
+             */
+            void operator()(Registry &reg) override;
 
-            protected:
-            private:
-                /**
-                * @brief Loop through the players to reset their positions and velocity.
-                * @param reg The ECS registry containing entities and their components.
-                * @param types Array of types components for entities.
-                */
-                void resetPlayerPosition(Registry &reg, SparseArray<component::Type> &types);
+          protected:
+          private:
+            /**
+             * @brief Loop through the players to reset their positions and velocity.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void resetPlayerPosition(Registry &reg, SparseArray<component::Type> &types);
 
-                /**
-                * @brief Loop through the remaining enemies to kill them.
-                * @param reg The ECS registry containing entities and their components.
-                * @param types Array of types components for entities.
-                */
-                void killAllRemainingEnemies(Registry &reg, SparseArray<component::Type> &types);
+            /**
+             * @brief Loop through the remaining enemies to kill them.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void killAllRemainingEnemies(Registry &reg, SparseArray<component::Type> &types);
 
-                /**
-                * @brief Changes the path of the background sprite used.
-                * @param reg The ECS registry containing entities and their components.
-                * @param types Array of types components for entities.
-                */
-                void setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types);
+            /**
+             * @brief Changes the path of the background sprite used.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types);
 
-                /**
-                * @brief Changes the path of the ennemy sprite used.
-                * @param reg The ECS registry containing entities and their components.
-                * @param types Array of types components for entities.
-                */
-                void changeSpriteForEnemies(Registry &reg, SparseArray<component::Type> &types);
+            /**
+            * @brief Changes the path of the ennemy sprite used.
+            * @param reg The ECS registry containing entities and their components.
+            * @param types Array of types components for entities.
+            */
+            void changeSpriteForEnemies(Registry &reg, SparseArray<component::Type> &types);
         };
     }
 }
