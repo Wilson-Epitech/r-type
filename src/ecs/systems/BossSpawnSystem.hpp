@@ -23,6 +23,7 @@
 #define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.
 #define LEVEL1_BOSS_SPAWN_Y 150  ///< Sets the position in height for the appearance of the boss.
 #define LEVEL1_BOSS_VELOCITY -1  ///< Sets the velocity for the appearance of the boss.
+#define TIME_WAIT_LEVEL1_BOSS 10 ///< Sets the time to wait before making the level1 boss appear.
 
 namespace ecs {
     namespace system {
@@ -61,7 +62,7 @@ namespace ecs {
              * @param types Array of types components for entities.
              * @return The index of the boss' entity.
              */
-            int findLevel1BossEntity(SparseArray<component::Type> &types);
+            std::size_t findLevel1BossEntity(SparseArray<component::Type> &types);
         };
     }
 }
