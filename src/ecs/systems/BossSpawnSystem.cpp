@@ -12,6 +12,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
@@ -27,8 +28,13 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
         }
         if (isTimerSet && !bossSpawned) {
             if (Lib::isTimeElapsed(time0, 10)) {
-                createNewBoss(reg, types, findLevel1BossEntity(types));
+                std::size_t bossEntity = findLevel1BossEntity(types);
+                createNewBoss(reg, types, bossEntity);
                 bossSpawned = true;
+                if (bossEntity < bossSpawns.size()) {
+                    if (bossSpawns[bossEntity])
+                        bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+                }
             }
         }
         if (!positions[i])
