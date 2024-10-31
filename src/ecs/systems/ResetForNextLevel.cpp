@@ -13,6 +13,7 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
 
     for (std::size_t i = 0; i < bossSpawns.size() && i < types.size(); i++) {
         if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+            bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel = CurrentLevel::LEVEL2;
             resetPlayerPosition(reg, types);
             killAllRemainingEnemies(reg, types);
             setNewLevelBackground(reg, types);
@@ -89,4 +90,14 @@ void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, Spars
             }
         }
     }
+}
+
+std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) {
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+            return i;
+    }
+    return 0;
 }

@@ -27,7 +27,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
             }
         }
         if (isTimerSet && !bossSpawned) {
-            if (Lib::isTimeElapsed(time0, 10)) {
+            if (Lib::isTimeElapsed(time0, TIME_WAIT_LEVEL1_BOSS)) {
                 std::size_t bossEntity = findLevel1BossEntity(types);
                 createNewBoss(reg, types, bossEntity);
                 bossSpawned = true;
@@ -72,7 +72,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     }
 }
 
-int ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<component::Type> &types) {
+std::size_t ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<component::Type> &types) {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
             return i;
