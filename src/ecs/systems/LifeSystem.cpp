@@ -26,6 +26,18 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
             reg.killEntity(i);
         if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && lives[i]->nbLives == 0) {
             bossSpawns[i]->hasBeenSlayed = true;
+            bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel = CurrentLevel::LEVEL2;
         }
     }
+}
+
+std::size_t ecs::system::LifeSystem::findLevel1BossEntity(Registry &reg)
+{
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+            return i;
+    }
+    return 0;
 }

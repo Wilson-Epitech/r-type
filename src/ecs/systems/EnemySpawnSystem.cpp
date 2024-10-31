@@ -13,6 +13,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
 
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
@@ -34,7 +35,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg)
                 timer.push_back({i, time0});
             }
             if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn)
-                && checkCurrentScore(reg) < SCORE_FINAL_BOSS_LEVEL1)) || isFirstSpawn) {
+                && bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL1_BOSS)) || isFirstSpawn) {
                 for (int j = 0; j < enemySpawn[i]->waveSize; j++) {
                     std::srand(rand() % time(NULL));
                     createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
@@ -93,6 +94,17 @@ std::size_t ecs::system::EnemySpawnSystem::checkCurrentScore(Registry &reg)
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score != 0)
             return scores[i]->score;
+    }
+    return 0;
+}
+
+std::size_t ecs::system::EnemySpawnSystem::findLevel1BossEntity(Registry &reg)
+{
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+            return i;
     }
     return 0;
 }
