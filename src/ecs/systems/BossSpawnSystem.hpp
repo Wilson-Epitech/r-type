@@ -17,6 +17,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "Assets.hpp"
 
 #define LEVEL1_BOSS_STOP 1200    ///< Set the stop position for the boss' entering.
 #define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.
@@ -61,8 +62,6 @@ namespace ecs {
              * @return The index of the boss' entity.
              */
             int findLevel1BossEntity(SparseArray<component::Type> &types);
-
-            std::size_t checkCurrentScore(Registry &reg);
         };
     }
 }

@@ -16,25 +16,31 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
+    std::size_t bossEntity = findLevel1BossEntity(types);
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
         if (!types[i])
             continue;
-        if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 && !isTimerSet) {
+        if (types[i]->entityType == ecs::EntityType::TEXT && (scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 || scores[i]->score == SCORE_FINAL_BOSS_LEVEL2) && !isTimerSet) {
             if (!isTimerSet) {
+                bossSpawned = false;
                 time0 = std::chrono::steady_clock::now();
                 isTimerSet = true;
+                if (bossEntity < bossSpawns.size()) {
+                    if (bossSpawns[bossEntity]) {
+                        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1)
+                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+                        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2)
+                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL2_BOSS;
+                    }
+                }
             }
         }
         if (isTimerSet && !bossSpawned) {
             if (Lib::isTimeElapsed(time0, 10)) {
-                std::size_t bossEntity = findLevel1BossEntity(types);
                 createNewBoss(reg, types, bossEntity);
                 bossSpawned = true;
-                if (bossEntity < bossSpawns.size()) {
-                    if (bossSpawns[bossEntity])
-                        bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
-                }
+                isTimerSet = false;
             }
         }
         if (!positions[i])
