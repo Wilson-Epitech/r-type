@@ -44,6 +44,7 @@
 #define LEVEL1_BOSS_SHOT_VELOCITY -10
 
 #define LEVEL2_BACKGROUND_PATH "assets/background_level2.png"
+#define LEVEL2_ENEMY_PATH "assets/level2_ennemies.png"
 
 
 #endif /* !ASSETS_HPP_ */

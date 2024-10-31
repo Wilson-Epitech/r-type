@@ -96,7 +96,8 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Life{1, false, true});
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::ShootingRate{3});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
-    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, true, ecs::MovementType::FOLLOW});
+    movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, true, ecs::MovementType::SNAKE});
+    types.insertAt(_stringToEntity[SPAWN_ENEMY_NAME], ecs::component::Type{ecs::EntityType::ENEMY_TEMPLATE});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::Velocity{-10, 0});
     spriteInfos.insertAt(_stringToEntity[ENEMY_SHOT],
@@ -105,7 +106,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     soundEffectInfos.insertAt(_stringToEntity[ENEMY_SHOT], ecs::component::SoundEffectInfos{SHOOT_SOUND_PATH});
 
     spriteInfos.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
-                         ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
+                         ecs::component::SpriteInfos{SMALL_BOSS_PATH, SMALL_BOSS_SPRITE_NB_PATTERN, 0, BOSS_SCALE_FACTOR});
     enemySpawns.insertAt(_stringToEntity[SPAWN_BOSS_NAME],
                          ecs::component::EnemySpawn{TIME_BEFORE_SPAWN_BOSS, BOSS_WAVE_SIZE, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});

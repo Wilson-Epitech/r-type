@@ -104,6 +104,13 @@ namespace ecs {
         FOLLOW      ///< Follow the player
     };
 
+    enum CurrentLevel {
+        LEVEL1,
+        LEVEL1_BOSS,
+        LEVEL2,
+        LEVEL2_BOSS
+    };
+
     namespace component {
 
         /**
@@ -227,6 +234,7 @@ namespace ecs {
          * @brief Component representing the boss spawn information.
          */
         struct BossSpawn {
+            CurrentLevel ongoingLevel = CurrentLevel::LEVEL1;
             int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
             int minSpawnWidth = 0;                       ///< Minimum spawn width
             int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height

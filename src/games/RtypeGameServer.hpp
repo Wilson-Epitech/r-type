@@ -71,7 +71,7 @@
 /** @brief The size of each wave of enemies */
 #define ENEMY_WAVE_SIZE 8
 /** @brief The horizontal velocity of enemies */
-#define ENEMY_VX -1
+#define ENEMY_VX -2
 /** @brief The vertical velocity of enemies */
 #define ENEMY_VY 1.5
 /** @brief The vertical velocity of enemies with straight pattern*/
