@@ -65,10 +65,10 @@ namespace ecs {
             std::size_t checkCurrentScore(Registry &reg);
 
             /**
-            * @brief Find the index of the Level1 Boss entity.
-            * @param types Array of types components for entities.
-            * @return The index of the boss' entity.
-            */
+             * @brief Find the index of the Level1 Boss entity.
+             * @param types Array of types components for entities.
+             * @return The index of the boss' entity.
+             */
             std::size_t findLevel1BossEntity(Registry &reg);
         };
     }

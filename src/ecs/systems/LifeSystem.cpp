@@ -31,8 +31,7 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
     }
 }
 
-std::size_t ecs::system::LifeSystem::findLevel1BossEntity(Registry &reg)
-{
+std::size_t ecs::system::LifeSystem::findLevel1BossEntity(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
     for (std::size_t i = 0; i < types.size(); i++) {

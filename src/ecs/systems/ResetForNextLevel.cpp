@@ -67,8 +67,7 @@ void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, Sparse
     }
 }
 
-void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, SparseArray<component::Type> &types) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::MovementPattern> &movementPatterns = reg.getComponents<component::MovementPattern>();
 

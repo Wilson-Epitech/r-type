@@ -120,8 +120,9 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
     soundEffectInfos.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::SoundEffectInfos{SHOOT_SOUND_PATH});
 
-    spriteInfos.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
-                         ecs::component::SpriteInfos{STRONGER_ENEMY_PATH, STRONGER_ENEMY_SPRITE_NB_PATTERN, 0, STRONGER_ENEMY_SCALE_FACTOR});
+    spriteInfos.insertAt(
+        _stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
+        ecs::component::SpriteInfos{STRONGER_ENEMY_PATH, STRONGER_ENEMY_SPRITE_NB_PATTERN, 0, STRONGER_ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
                          ecs::component::EnemySpawn{timeBeforeSpawnStrongerEnemy, strongerEnemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
