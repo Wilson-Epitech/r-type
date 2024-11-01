@@ -38,8 +38,10 @@
 #define STRONGER_ENEMY_SPRITE_NB_PATTERN 4 ///< The stronger enemy sprites pattern number.
 #define LEVEL1_BOSS_NB_PATTERN 5           ///< The level 1 boss sprite pattern number.
 #define LEVEL1_BOSS_SHOT_PATTERN 4         ///< The level 1 boss shot sprite pattern number.
+#define LEVEL2_BOSS_NB_PATTERN 4           ///< The level 2 boss sprite pattern number.
 #define BACKGROUND_SPRITE_NB_PATTERN 1     ///< The background sprite pattern number.
 #define POWERUP_SPRITE_NB_PATTERN 10       ///< The powerup sprite pattern number.
+
 
 #define PLAYER_SPRITE_FIRST_PATTERN 8  ///< The first pattern to display for the player sprite.
 #define POWERUP_SPRITE_FIRST_PATTERN 1 ///< The first pattern to display for the powerup sprite.
@@ -49,6 +51,7 @@
 #define ENEMYSHOT_SCALE_FACTOR 2       ///< The scale factor for the enemyshot sprite.
 #define STRONGER_ENEMY_SCALE_FACTOR 5  ///< The scale factor for the stronger enemy sprite.
 #define LEVEL1_BOSS_SCALE_FACTOR 10    ///< The scale factor for the level 1 boss sprite.
+#define LEVEL2_BOSS_SCALE_FACTOR 4     ///< The scale factor for the level 2 boss sprite.
 #define BACKGROUND_SCALE_FACTOR 0.625  ///< The scale factor for the background sprite.
 #define POWERUP_SCALE_FACTOR 0.5       ///< The scale factor for the powerup sprite.
 

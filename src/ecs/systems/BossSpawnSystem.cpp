@@ -7,6 +7,8 @@
 
 #include "BossSpawnSystem.hpp"
 
+#include <iostream>
+
 void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
@@ -16,7 +18,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
-    std::size_t bossEntity = findLevel1BossEntity(types);
+    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS_LEVEL1);
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
         if (!types[i])
@@ -38,21 +40,24 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
         }
         if (isTimerSet && !bossSpawned) {
             if (Lib::isTimeElapsed(time0, TIME_WAIT_LEVEL1_BOSS)) {
-                std::size_t bossEntity = findLevel1BossEntity(types);
+                std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS_LEVEL1);
                 if (bossEntity != 0) {
-                    createNewBoss(reg, types, bossEntity);
-                    bossSpawned = true;
-                    isTimerSet = false;
-                    if (bossEntity < bossSpawns.size()) {
-                        if (bossSpawns[bossEntity])
-                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+                    if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1_BOSS) {
+                        createNewBoss(reg, types, bossEntity);
+                        bossSpawned = true;
+                        isTimerSet = false;
+                    }
+                    if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2_BOSS) {
+                        createNewBossLevel2(reg, types, bossEntity);
+                        bossSpawned = true;
+                        isTimerSet = false;
                     }
                 }
             }
         }
         if (!positions[i])
             continue;
-        if (bossSpawned && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && positions[i]->x <= LEVEL1_BOSS_STOP) {
+        if (bossSpawned && (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 || types[i]->entityType == ecs::EntityType::BOSS_LEVEL2) && positions[i]->x <= LEVEL1_BOSS_STOP) {
             if (velocities[i])
                 velocities[i]->vx = 0;
         }
@@ -85,9 +90,40 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     }
 }
 
-std::size_t ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<component::Type> &types) {
+void ecs::system::BossSpawnSystem::createNewBossLevel2(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i) {
+    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
+    SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
+    SparseArray<component::SoundEffectInfos> &soundEffect = reg.getComponents<component::SoundEffectInfos>();
+
+    entity_t entity = reg.spawnEntity();
+
     for (std::size_t i = 0; i < types.size(); i++) {
-        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL2) {
+            positions.insertAt(entity, ecs::component::Position{LEVEL1_BOSS_SPAWN_X, LEVEL1_BOSS_SPAWN_Y});
+            velocities.insertAt(entity, ecs::component::Velocity{LEVEL1_BOSS_VELOCITY, 0, 0});
+            spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
+                                                                    spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
+            types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS_LEVEL2});
+            lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerup});
+            if (shootingRate.size() > i) {
+                if (shootingRate[i])
+                    shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
+            }
+            if (soundEffect.size() > i) {
+                if (soundEffect[i])
+                    soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[i]->soundPath});
+            }
+        }
+    }
+}
+
+std::size_t ecs::system::BossSpawnSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
+{
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == entityToFind)
             return i;
     }
     return 0;

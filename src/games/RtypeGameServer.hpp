@@ -87,6 +87,8 @@
 #define LEVEL1_BOSS_SHOT_VX -10                  ///< The horizontal velocity for the boss shot.
 #define LEVEL1_BOSS_SHOT_VY 0.0                  ///< The vertical velocity for the boss shot.
 
+#define SPAWN_LEVEL2_BOSS_NAME "level2_boss" ///< Defines the name of the boss of level 1 spawn entity.
+
 #define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_CONTENT "null"      ///< The text content for the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_SIZE 20             ///< The text size for the powerup template entity.

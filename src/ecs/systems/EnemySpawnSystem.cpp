@@ -43,9 +43,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
                     isFirstSpawn) {
                     for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
                         std::srand(rand() % time(NULL));
-                        std::cout << bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel << std::endl;
-                    std::cout << "New Enemy" << std::endl;
-                    createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
+                        createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
                     }
                     isFirstSpawn = false;
                 }

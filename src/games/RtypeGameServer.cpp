@@ -142,6 +142,16 @@ void game::RtypeGameServer::addComponentsToEntities() {
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     types.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::Type{ecs::EntityType::BOSS_LEVEL1});
 
+    spriteInfos.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME],
+                         ecs::component::SpriteInfos{LEVEL2_BOSS_PATH, LEVEL2_BOSS_NB_PATTERN, 0, LEVEL2_BOSS_SCALE_FACTOR});
+    bossSpawns.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME],
+                        ecs::component::BossSpawn{MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH, MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
+    velocities.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME], ecs::component::Velocity{0, 0});
+    lives.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME], ecs::component::Life{LEVEL1_BOSS_NB_LIVES});
+    shootingRate.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME], ecs::component::ShootingRate{LEVEL1_BOSS_SHOOTING_RATE});
+    soundEffectInfos.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
+    types.insertAt(_stringToEntity[SPAWN_LEVEL2_BOSS_NAME], ecs::component::Type{ecs::EntityType::BOSS_LEVEL2});
+
     velocities.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME], ecs::component::Velocity{LEVEL1_BOSS_SHOT_VX, LEVEL1_BOSS_SHOT_VY});
     spriteInfos.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME],
                          ecs::component::SpriteInfos{LEVEL1_BOSS_SHOT_PATH, LEVEL1_BOSS_SHOT_PATTERN});

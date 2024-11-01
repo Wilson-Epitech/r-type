@@ -70,7 +70,8 @@ namespace ecs {
         TEXT,                 ///< Text entity
         POWERUP,              ///< Powerup entity
         POWERUP_TEMPLATE,     ///< Powerup template entity
-        BOSS_LEVEL1           ///< Level1 Boss' entity
+        BOSS_LEVEL1,          ///< Level1 Boss' entity
+        BOSS_LEVEL2           ///< Level1 Boss' entity
     };
 
     /**
