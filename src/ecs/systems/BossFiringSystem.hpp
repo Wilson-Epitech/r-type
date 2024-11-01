@@ -36,7 +36,7 @@ namespace ecs {
           protected:
           private:
             /**
-             * @brief Creates a shot fired by a boss entity.
+             * @brief Creates a shot fired by the level 1 boss entity.
              * This method generates a new shot entity for a boss when the firing conditions are met.
              * It sets the position, velocity, and other components of the shot.
              * @param index The index of the boss entity firing the shot.
@@ -51,6 +51,10 @@ namespace ecs {
              * @return std::size_t The index of the boss entity with a shooting component.
              */
             std::size_t getBossShootIndex(Registry &reg);
+
+            std::size_t findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
+            float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
+            std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
         };
     }
 }

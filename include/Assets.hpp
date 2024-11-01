@@ -38,7 +38,7 @@
 #define STRONGER_ENEMY_SPRITE_NB_PATTERN 4 ///< The stronger enemy sprites pattern number.
 #define LEVEL1_BOSS_NB_PATTERN 5           ///< The level 1 boss sprite pattern number.
 #define LEVEL1_BOSS_SHOT_PATTERN 4         ///< The level 1 boss shot sprite pattern number.
-#define LEVEL2_BOSS_NB_PATTERN 4           ///< The level 2 boss sprite pattern number.
+#define LEVEL2_BOSS_NB_PATTERN 3           ///< The level 2 boss sprite pattern number.
 #define BACKGROUND_SPRITE_NB_PATTERN 1     ///< The background sprite pattern number.
 #define POWERUP_SPRITE_NB_PATTERN 10       ///< The powerup sprite pattern number.
 
