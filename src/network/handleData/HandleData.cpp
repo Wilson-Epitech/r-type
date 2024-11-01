@@ -19,7 +19,7 @@ void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataTo
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
     for (std::size_t i = 0; i < bossSlayed.size(); i++) {
-        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
             network::HandleData::addEntityDataToSend(positionData, data);
             network::HandleData::addEntityDataToSend(spriteInfoData, data);
             bossSlayed[i]->hasBeenSlayed = false;

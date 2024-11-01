@@ -42,7 +42,6 @@
 #define BACKGROUND_SPRITE_NB_PATTERN 1     ///< The background sprite pattern number.
 #define POWERUP_SPRITE_NB_PATTERN 10       ///< The powerup sprite pattern number.
 
-
 #define PLAYER_SPRITE_FIRST_PATTERN 8  ///< The first pattern to display for the player sprite.
 #define POWERUP_SPRITE_FIRST_PATTERN 1 ///< The first pattern to display for the powerup sprite.
 

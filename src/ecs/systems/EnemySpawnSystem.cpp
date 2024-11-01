@@ -106,7 +106,7 @@ std::size_t ecs::system::EnemySpawnSystem::findLevel1BossEntity(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
     for (std::size_t i = 0; i < types.size(); i++) {
-        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+        if (types[i]->entityType == ecs::EntityType::BOSS)
             return i;
     }
     return 0;

@@ -21,7 +21,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < types.size() && i < shootingRate.size() && positions.size(); ++i) {
         if (!types[i] || !shootingRate[i] || !positions[i])
             continue;
-        if (types[i]->entityType != ecs::EntityType::BOSS_LEVEL1)
+        if (types[i]->entityType != ecs::EntityType::BOSS)
             continue;
         if (timer.size() > 0) {
             for (std::size_t j = 0; j < timer.size(); j++) {

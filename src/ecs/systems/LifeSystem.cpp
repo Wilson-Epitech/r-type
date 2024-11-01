@@ -24,7 +24,7 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
         }
         if (lives[i]->nbLives == 0)
             reg.killEntity(i);
-        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1 && lives[i]->nbLives == 0) {
+        if (types[i]->entityType == ecs::EntityType::BOSS && lives[i]->nbLives == 0) {
             bossSpawns[i]->hasBeenSlayed = true;
         }
     }
