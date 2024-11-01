@@ -68,7 +68,7 @@
 #define TIME_BEFORE_SPAWN_ENEMY 15 ///< Time before enemies start spawning.
 
 #define SPAWN_STRONGER_ENEMY_TEMPLATE_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemies spawn template entity.
-#define STRONGER_ENEMY_VX -1                                         ///< The horizontal velocity of stronger enemies.
+#define STRONGER_ENEMY_VX -2                                         ///< The horizontal velocity of stronger enemies.
 #define STRONGER_ENEMY_VY 0.0                                        ///< The vertical velocity of stronger enemies.
 #define STRONGER_ENEMY_WAVE_SIZE 1                                   ///< The number of stronger enemies spawned in each wave.
 #define STRONGER_ENEMY_SHOOTING_RATE 6                               ///< The shooting rate for stronger enemies.
