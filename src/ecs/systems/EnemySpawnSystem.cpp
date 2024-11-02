@@ -39,7 +39,8 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
             if (bossIndex != 0) {
                 if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn) &&
                     (bossSpawns[bossIndex]->ongoingLevel != CurrentLevel::LEVEL1_BOSS &&
-                bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL2_BOSS))) ||
+                    bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL2_BOSS &&
+                    bossSpawns[findLevel1BossEntity(reg)]->ongoingLevel != CurrentLevel::LEVEL3))) ||
                     isFirstSpawn) {
                     for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
                         std::srand(rand() % time(NULL));
