@@ -62,14 +62,14 @@
 #define ENEMY_HAS_TO_SUMMON_POWERUP true           ///< Indicates if a powerup has a chance to spawn after death of enemies.
 #define ENEMY_PATTERN_AMPLITUDE 60                 ///< Time amplitude of enemies pattern.
 #define ENEMY_IS_REVERSIBLE true                   ///<
-#define ENEMY_WAVE_SIZE 1                          ///< The size of each wave of enemies.
+#define ENEMY_WAVE_SIZE 5                          ///< The size of each wave of enemies.
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR                                                                                                  \
     2                              ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 #define ENEMY_SHOOTING_RATE 3      ///< The shooting rate for enemies.
 #define TIME_BEFORE_SPAWN_ENEMY 15 ///< Time before enemies start spawning.
 
 #define SPAWN_STRONGER_ENEMY_TEMPLATE_NAME "stronger_enemy_template" ///< Defines the name of the stronger enemies spawn template entity.
-#define STRONGER_ENEMY_VX -1                                         ///< The horizontal velocity of stronger enemies.
+#define STRONGER_ENEMY_VX -2                                         ///< The horizontal velocity of stronger enemies.
 #define STRONGER_ENEMY_VY 0.0                                        ///< The vertical velocity of stronger enemies.
 #define STRONGER_ENEMY_WAVE_SIZE 1                                   ///< The number of stronger enemies spawned in each wave.
 #define STRONGER_ENEMY_SHOOTING_RATE 6                               ///< The shooting rate for stronger enemies.

@@ -10,12 +10,17 @@
 void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    std::size_t bossIndex = findLevel1BossEntity(reg);
 
-    for (std::size_t i = 0; i < bossSpawns.size() && i < types.size(); i++) {
-        if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
-            resetPlayerPosition(reg, types);
-            killAllRemainingEnemies(reg, types);
-            setNewLevelBackground(reg, types);
+    if (bossIndex != 0) {
+        for (std::size_t i = 0; i < bossSpawns.size() && i < types.size(); i++) {
+            if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+                bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL2;
+                resetPlayerPosition(reg, types);
+                killAllRemainingEnemies(reg, types);
+                setNewLevelBackground(reg, types);
+                changeSpriteForEnemies(reg, types);
+            }
         }
     }
 }
@@ -64,4 +69,38 @@ void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, Sparse
             spriteInfos[i]->isLoaded = false;
         }
     }
+}
+
+void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, SparseArray<component::Type> &types) {
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::MovementPattern> &movementPatterns = reg.getComponents<component::MovementPattern>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (!types[i])
+            continue;
+        if (types[i]->entityType == ecs::EntityType::ENEMY_TEMPLATE) {
+            if (i < spriteInfos.size()) {
+                if (spriteInfos[i]) {
+                    spriteInfos[i]->spritePath = LEVEL2_ENEMY_PATH;
+                    spriteInfos[i]->isLoaded = false;
+                    spriteInfos[i]->scaleFactor = 3;
+                    spriteInfos[i]->patternNb = 4;
+                }
+            }
+            if (i < movementPatterns.size()) {
+                if (movementPatterns[i])
+                    movementPatterns[i]->movementPatternType = ecs::MovementType::FOLLOW;
+            }
+        }
+    }
+}
+
+std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) {
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+            return i;
+    }
+    return 0;
 }

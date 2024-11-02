@@ -32,7 +32,6 @@ void ecs::system::WeaponSystem::operator()(Registry &reg) {
 
 void ecs::system::WeaponSystem::activateWeapon(Registry &reg, const std::size_t &index) {
     SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
-    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
 
     if (weapons[index]->isActivated)
         return;

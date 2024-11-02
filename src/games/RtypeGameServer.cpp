@@ -115,7 +115,8 @@ void game::RtypeGameServer::addComponentsToEntities() {
     shootingRate.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::ShootingRate{ENEMY_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     movementPattern.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME],
-                             ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, ENEMY_IS_REVERSIBLE, ecs::MovementType::FOLLOW});
+                             ecs::component::MovementPattern{ENEMY_PATTERN_AMPLITUDE, ENEMY_IS_REVERSIBLE, ecs::MovementType::SNAKE});
+    types.insertAt(_stringToEntity[SPAWN_ENEMY_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::ENEMY_TEMPLATE});
 
     velocities.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME],
                         ecs::component::Velocity{ENEMY_SHOT_TEMPLATE_VX, ENEMY_SHOT_TEMPLATE_VY});
@@ -124,8 +125,9 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::ENEMYSHOT_TEMPLATE});
     soundEffectInfos.insertAt(_stringToEntity[ENEMY_SHOT_TEMPLATE_NAME], ecs::component::SoundEffectInfos{SHOOT_SOUND_PATH});
 
-    spriteInfos.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
-                         ecs::component::SpriteInfos{ENEMY_PATH, ENEMY_SPRITE_NB_PATTERN, 0, STRONGER_ENEMY_SCALE_FACTOR});
+    spriteInfos.insertAt(
+        _stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
+        ecs::component::SpriteInfos{STRONGER_ENEMY_PATH, STRONGER_ENEMY_SPRITE_NB_PATTERN, 0, STRONGER_ENEMY_SCALE_FACTOR});
     enemySpawns.insertAt(_stringToEntity[SPAWN_STRONGER_ENEMY_TEMPLATE_NAME],
                          ecs::component::EnemySpawn{timeBeforeSpawnStrongerEnemy, strongerEnemyWaveSize, MAX_SPAWN_WIDTH, MIN_SPAWN_WIDTH,
                                                     MAX_SPAWN_HEIGHT, MIN_SPAWN_HEIGHT});
