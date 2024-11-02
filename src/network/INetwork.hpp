@@ -11,8 +11,10 @@
 #include "HandleData.hpp"
 #include <array>
 
-#define WIN32_LEAN_AND_MEAN // Exclut certaines parties de windows.h
-#define NOGDI               // Exclut les définitions GDI (Graphics Device Interface)
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOGDI
+#endif
 #include <asio.hpp>
 
 namespace network {

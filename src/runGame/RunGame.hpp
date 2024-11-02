@@ -14,6 +14,7 @@
 #include "INetwork.hpp"
 #include <functional>
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 
@@ -26,6 +27,7 @@
 #undef LoadImage
 #undef DrawText
 #undef DrawTextEx
+#endif
 
 #include <raylib.h>
 #define UPDATE_TIME 0.02 ///< Set the time to update the game.

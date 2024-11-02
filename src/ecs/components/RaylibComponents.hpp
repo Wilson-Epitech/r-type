@@ -16,6 +16,7 @@
 #ifndef RAYLIBCOMPONENTS_HPP_
 #define RAYLIBCOMPONENTS_HPP_
 
+#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 
@@ -41,6 +42,9 @@
 
 #undef WIN32_LEAN_AND_MEAN
 #undef NOGDI
+#endif
+
+#include <raylib.h>
 
 namespace ecs {
     namespace component {
