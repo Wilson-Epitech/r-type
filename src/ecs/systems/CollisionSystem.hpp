@@ -174,10 +174,10 @@ namespace ecs {
             bool isPlayerShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief Checks if the collision is between a powerup shot and a weapon.
+             * @brief Checks if the collision is between a powerup and a weapon.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
-             * @return true If it's a collision between a powerup shot and a weapon.
+             * @return true If it's a collision between a powerup and a weapon.
              * @return false Otherwise.
              */
             bool isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
@@ -228,33 +228,23 @@ namespace ecs {
             bool isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief give one pv to the player when he hit a powerup or a weapon and store the index of the player that hit a powerup/weapon.
+             * @brief Checks if the collision is between a player and a weapon.
+             * the hasBeenActivated weapon component variable will be set as true
+             * @param reg The ECS registry containing entities and components.
+             * @param i The index of the first entity.
+             * @param j The index of the second entity.
+             * @return true If the collision is between a player and a weapon.
+             * @return false Otherwise.
+             */
+            bool enablePlayerWeapon(Registry &reg, const std::size_t &i, const std::size_t &j);
+
+            /**
+             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
              * @param reg The ECS registry containing entities and components.
              * @param i The index of the first entity.
              * @param j The index of the second entity.
              */
-            template <typename Component>
-            void weaponAndPowerupLives(Registry &reg, const std::size_t &i, const std::size_t &j, const ecs::EntityType &type) {
-                ecs::SparseArray<Component> &componentInfos = reg.getComponents<Component>();
-                SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-                SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-
-                if (types[i]->entityType == ecs::EntityType::PLAYER && types[j]->entityType == type) {
-                    if (componentInfos.size() > j) {
-                        if (componentInfos[j])
-                            componentInfos[j]->playerIndex = i;
-                    }
-                    if (!lives[i]->isInvincible)
-                      lives[i]->nbLives++;
-                } else if (types[i]->entityType == type && types[j]->entityType == ecs::EntityType::PLAYER) {
-                    if (componentInfos.size() > i) {
-                        if (componentInfos[i])
-                            componentInfos[i]->playerIndex = j;
-                    }
-                    if (!lives[j]->isInvincible)
-                      lives[j]->nbLives++;
-                }
-            }
+            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
         };
     }
 }

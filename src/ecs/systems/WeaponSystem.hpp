@@ -53,6 +53,7 @@ namespace ecs {
                 std::size_t getWeaponIndex(Registry &reg);
 
                 std::size_t getWeaponSpriteIndex(Registry &reg, ecs::WeaponType weaponType);
+                void activateWeapon(Registry &reg, const std::size_t &index);
         };
     }
 }

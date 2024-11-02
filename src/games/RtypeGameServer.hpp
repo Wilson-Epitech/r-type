@@ -62,7 +62,7 @@
 #define ENEMY_HAS_TO_SUMMON_POWERUP true           ///< Indicates if a powerup has a chance to spawn after death of enemies.
 #define ENEMY_PATTERN_AMPLITUDE 60                 ///< Time amplitude of enemies pattern.
 #define ENEMY_IS_REVERSIBLE true                   ///<
-#define ENEMY_WAVE_SIZE 5                          ///< The size of each wave of enemies.
+#define ENEMY_WAVE_SIZE 1                          ///< The size of each wave of enemies.
 #define ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR                                                                                                  \
     2                              ///< The factor that will be multiplied by the difficulty mode of the game for ENEMY_WAVE_SIZE define.
 #define ENEMY_SHOOTING_RATE 3      ///< The shooting rate for enemies.

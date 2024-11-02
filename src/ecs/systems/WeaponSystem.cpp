@@ -11,6 +11,7 @@
 void ecs::system::WeaponSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+    SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
 
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (lives[i] && types[i]) {
@@ -18,6 +19,34 @@ void ecs::system::WeaponSystem::operator()(Registry &reg) {
                 if (lives[i]->hasToSummonPowerup)
                     summonWeapon(reg, i);
             }
+        }
+    }
+    for (std::size_t i = 0; i < weapons.size(); ++i) {
+        if (!weapons[i])
+            continue;
+        if (!weapons[i]->hasBeenTaken)
+            continue;
+        activateWeapon(reg, i);
+    }
+}
+
+void ecs::system::WeaponSystem::activateWeapon(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
+    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
+
+    if (weapons[index]->isActivated)
+        return;
+    weapons[index]->isActivated = true;
+    weapons[index]->spawnTime = std::chrono::steady_clock::now();
+
+    for (std::size_t i = 0; i < weapons.size(); ++i) {
+        if (!weapons[i])
+            continue;
+        if (i == index)
+            continue;
+        if (weapons[i]->playerIndex == weapons[index]->playerIndex && weapons[i]->weaponType == weapons[index]->weaponType && weapons[i]->isActivated) {
+            weapons[i]->spawnTime = std::chrono::steady_clock::now();
+            reg.killEntity(index);
         }
     }
 }
@@ -30,9 +59,9 @@ void ecs::system::WeaponSystem::summonWeapon(Registry &reg, const std::size_t &i
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
-    ecs::WeaponType powerupToSpawn = (ecs::WeaponType)(std::rand() % (ecs::WeaponType::END_WEAPON - 1) + 1);
+    ecs::WeaponType weaponToSpawn = (ecs::WeaponType)(std::rand() % (ecs::WeaponType::END_WEAPON - 1) + 1);
     std::size_t weaponIndex = getWeaponIndex(reg);
-    std::size_t weaponSpriteIndex = getWeaponSpriteIndex(reg, powerupToSpawn);
+    std::size_t weaponSpriteIndex = getWeaponSpriteIndex(reg, weaponToSpawn);
     entity_t entity = 0;
 
     if (types.size() < index || positions.size() < index || spriteInfos.size() < weaponSpriteIndex || weaponSpriteIndex == 0)
@@ -48,7 +77,7 @@ void ecs::system::WeaponSystem::summonWeapon(Registry &reg, const std::size_t &i
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[weaponSpriteIndex].value()});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::WEAPON});
     lives.insertAt(entity, ecs::component::Life{});
-    weapons.insertAt(entity, ecs::component::Weapon{powerupToSpawn, weapons[weaponIndex]->spawnRate, true, weapons[weaponIndex]->playerIndex});
+    weapons.insertAt(entity, ecs::component::Weapon{weaponToSpawn, weapons[weaponIndex]->spawnRate});
 }
 
 std::size_t ecs::system::WeaponSystem::getWeaponIndex(Registry &reg) {

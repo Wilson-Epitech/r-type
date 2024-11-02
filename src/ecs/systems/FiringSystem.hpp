@@ -52,7 +52,7 @@ namespace ecs {
              * @param shootPower The power of the shoot.
              * @param shootSize The size of the shoot.
              */
-            void addShot(std::size_t index, Registry &reg, const std::size_t &shootPower, const float &shootSize);
+            void addShot(const std::size_t &index, Registry &reg, const std::size_t &shootPower, const float &shootSize, const ecs::WeaponType &weaponType);
 
             /**
              * @brief Retrieves the index of the player shot component.
@@ -62,6 +62,8 @@ namespace ecs {
              * @return std::size_t The index of the player entity with a shooting component.
              */
             std::size_t getPlayerShootIndex(Registry &reg);
+
+            void addEveryShoot(Registry &reg, const std::size_t &playerIndex, const std::size_t &shootPower, const float &shootSize);
         };
     }
 }

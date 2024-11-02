@@ -53,6 +53,7 @@ namespace ecs {
              * @return false If the player's position update was not necessary.
              */
             bool handlePlayerPosition(const std::size_t &playerIndex, Registry &reg);
+            bool handleWeaponPostion(const std::size_t &weaponIndex, Registry &reg);
 
             /**
              * @brief Store the position of the entity before any movement

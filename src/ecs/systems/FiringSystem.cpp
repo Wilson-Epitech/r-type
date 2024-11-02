@@ -31,7 +31,7 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
             }
             if (Lib::isTimeElapsed(time0, shootingRate[i]->shootRate)) {
                 if (shootings[i]->isShooting) {
-                    addShot(i, reg, shootings[i]->shootPower, shootings[i]->shootSize);
+                    addEveryShoot(reg, i, shootings[i]->shootPower, shootings[i]->shootSize);
                     shootings[i]->isShooting = false;
                 }
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -45,7 +45,27 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, const std::size_t &shootPower, const float &shootSize) {
+void ecs::system::FiringSystem::addEveryShoot(Registry &reg, const std::size_t &playerIndex, const std::size_t &shootPower, const float &shootSize) {
+    SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
+    std::size_t playerShootIndex = getPlayerShootIndex(reg);
+    ecs::WeaponType weaponType = ecs::WeaponType::NO_WEAPON;
+
+    if (playerShootIndex == 0)
+        return;
+
+    for (std::size_t i = 0; i < weapons.size(); ++i) {
+        if (!weapons[i])
+            continue;
+        if (weapons[i]->playerIndex != playerIndex)
+            continue;
+        weaponType = weapons[i]->weaponType;
+        addShot(playerIndex, reg, shootPower, shootSize, weaponType);
+        weaponType = ecs::WeaponType::NO_WEAPON;
+    }
+    addShot(playerIndex, reg, shootPower, shootSize, weaponType);
+}
+
+void ecs::system::FiringSystem::addShot(const std::size_t &playerIndex, Registry &reg, const std::size_t &shootPower, const float &shootSize, const ecs::WeaponType &weaponType) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -63,10 +83,18 @@ void ecs::system::FiringSystem::addShot(std::size_t playerIndex, Registry &reg, 
     float shotX = positions[playerIndex]->x + (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
     float shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2));
     entity_t entity = reg.spawnEntity();
+    std::pair<float, float> shotVelocity = {velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy};
+
+    if (weaponType == ecs::WeaponType::BACK_WEAPON) {
+        shotVelocity.first *= -1;
+        shotX = positions[playerIndex]->x - (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
+    }
+    if (weaponType == ecs::WeaponType::FRONT_WEAPON) {
+        shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2)) + (((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2)) / 2);
+    }
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity{velocities[playerShootIndex]->vx, velocities[playerShootIndex]->vy,
-                                                         velocities[playerShootIndex]->possibleVelocity});
+    velocities.insertAt(entity, ecs::component::Velocity{shotVelocity.first, shotVelocity.second, velocities[playerShootIndex]->possibleVelocity});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{
                                      spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
                                      spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor * shootSize});
