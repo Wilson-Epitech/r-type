@@ -27,7 +27,19 @@ void ecs::system::WeaponSystem::operator()(Registry &reg) {
         if (!weapons[i]->hasBeenTaken)
             continue;
         activateWeapon(reg, i);
+        desactivateWeapon(reg, i);
     }
+}
+
+void ecs::system::WeaponSystem::desactivateWeapon(Registry &reg, const std::size_t &index) {
+    SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
+    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+
+    if (!weapons[index]->isActivated)
+        return;
+
+    if (Lib::isTimeElapsed(weapons[index]->spawnTime, weapons[index]->activeTime))
+        reg.killEntity(index);
 }
 
 void ecs::system::WeaponSystem::activateWeapon(Registry &reg, const std::size_t &index) {
@@ -76,7 +88,7 @@ void ecs::system::WeaponSystem::summonWeapon(Registry &reg, const std::size_t &i
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[weaponSpriteIndex].value()});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::WEAPON});
     lives.insertAt(entity, ecs::component::Life{});
-    weapons.insertAt(entity, ecs::component::Weapon{weaponToSpawn, weapons[weaponIndex]->spawnRate});
+    weapons.insertAt(entity, ecs::component::Weapon{weaponToSpawn, weapons[weaponIndex]->spawnRate, weapons[weaponIndex]->activeTime});
 }
 
 std::size_t ecs::system::WeaponSystem::getWeaponIndex(Registry &reg) {

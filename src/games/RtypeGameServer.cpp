@@ -176,7 +176,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     weapons.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, 1});
     types.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_TEMPLATE});
 
-    weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON, 1});
+    weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON, 1, 5});
     types.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
     spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{WEAPON_PATH, 1, 0, 0.25});
 

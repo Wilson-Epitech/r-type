@@ -389,6 +389,7 @@ namespace ecs {
         struct Weapon {
             WeaponType weaponType = WeaponType::NO_WEAPON; ///< Type of the powerup
             std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            float activeTime = 5;       ///< How much time a plyer can have a weapon since he get it
             bool hasBeenTaken = false;  ///< Indicates if the weapon has been taken by the player
             std::size_t playerIndex = 0;    ///< Entity of the player that have activated the weapon
             bool isActivated = false;   ///< Indicates if the weapon is activated
