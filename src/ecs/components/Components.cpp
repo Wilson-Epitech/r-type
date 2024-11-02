@@ -47,7 +47,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Score &score) {
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::GameOver &gameover) {
-    oss << gameover.isGameOver << ' ' << gameover.finalScore << ' ' << gameover.reason;
+    oss << gameover.isGameOver;
 }
 
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo) {
@@ -156,7 +156,7 @@ void operator>>(std::istringstream &iss, ecs::component::Score &score) {
 }
 
 void operator>>(std::istringstream &iss, ecs::component::GameOver &gameover) {
-    iss >> gameover.isGameOver >> gameover.finalScore >> gameover.reason;
+    iss >> gameover.isGameOver;
 }
 
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo) {

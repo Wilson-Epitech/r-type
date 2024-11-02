@@ -172,7 +172,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
                        ecs::component::TextInfos{POWERUP_TEMPLATE_TEXT_CONTENT, 0, 0, POWERUP_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
 
     types.insertAt(_stringToEntity[GAME_OVER_NAME], ecs::component::Type{ecs::EntityType::GAME_OVER});
-    gameover.insertAt(_stringToEntity[GAME_OVER_NAME], ecs::component::GameOver{false, 0, GAME_OVER_CONTENT});
+    gameover.insertAt(_stringToEntity[GAME_OVER_NAME], ecs::component::GameOver{false});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
@@ -201,8 +201,6 @@ game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &reg) {
     if (allPLayersDead(reg)) {
         if (gameover[entity]) {
             gameover[entity]->isGameOver = true;
-            gameover[entity]->finalScore = reg.getComponents<ecs::component::Score>()[_stringToEntity[TEAM_SCORE_NAME]]->score;
-            gameover[entity]->reason = GAME_OVER_TEXT_REASON;
         }
         return game::GameStatus::LOOSE;
     }

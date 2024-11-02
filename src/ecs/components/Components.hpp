@@ -313,13 +313,10 @@ namespace ecs {
          */
         struct GameOver {
             bool isGameOver = false;         ///< Flag indicating whether the game is over.
-            int finalScore = 0;              ///< The final score achieved at game end.
-            std::string reason = "";         ///< Optional message or reason for game-over.
-            bool displayInitialized = false; ///< Indicateur pour vérifier si l'affichage est initialisé
+            bool displayInitialized = false; ///< Flag to check if the display is initialized
 
             bool operator==(const GameOver &other) const {
-                return (isGameOver == other.isGameOver && finalScore == other.finalScore && reason == other.reason &&
-                        displayInitialized == other.displayInitialized);
+                return (isGameOver == other.isGameOver && displayInitialized == other.displayInitialized);
             }
         };
 

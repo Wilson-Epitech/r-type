@@ -45,7 +45,7 @@ void RunGame::runServer() {
                 break;
             }
         }
-        if (_gameState(_reg) == game::GameStatus::LOOSE)
+        if (!_networkInstance->isConnectedInNetwork())
             continue;
         _reg.runSystems();
         disconnectedPlayerEntity = _networkInstance->manageConnection();

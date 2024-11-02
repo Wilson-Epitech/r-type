@@ -61,7 +61,7 @@ namespace ecs {
              * if the game-over condition is met.
              * @param gameOverComp The `GameOverComponent` containing game-over state, reason and score.
              */
-            void displayGameOverScreen(const component::GameOver &gameOverComp, Registry &reg);
+            void displayGameOverScreen(Registry &reg);
         };
     }
 }

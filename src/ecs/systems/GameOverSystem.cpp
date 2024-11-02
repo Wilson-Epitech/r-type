@@ -14,21 +14,24 @@ void ecs::system::GameOverSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < gameOverComponents.size(); ++i) {
         if (gameOverComponents[i] && gameOverComponents[i]->isGameOver) {
             if (!gameOverComponents[i]->displayInitialized) {
-                displayGameOverScreen(*gameOverComponents[i], reg);
+                displayGameOverScreen(reg);
                 gameOverComponents[i]->displayInitialized = true;
             }
         }
     }
 }
 
-void ecs::system::GameOverSystem::displayGameOverScreen(const component::GameOver &gameOverComp, Registry &reg) {
+void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::TextInfos> &textInfo = reg.getComponents<component::TextInfos>();
+    SparseArray<component::Score> &scoreinfo = reg.getComponents<ecs::component::Score>();
+    int score = 0;
 
     for (std::size_t i = 0; i < types.size(); ++i) {
-        if (types[i] && textInfo[i]) {
+        if (scoreinfo[i] && types[i]->entityType != ecs::EntityType::PLAYER)
+            score = scoreinfo[i]->score;
+        if (types[i] && textInfo[i])
             reg.killEntity(i);
-        }
     }
     int screenWidth = Lib::getScreenWidth();
     int screenHeight = Lib::getScreenHeight();
@@ -39,7 +42,7 @@ void ecs::system::GameOverSystem::displayGameOverScreen(const component::GameOve
     types.insertAt(gameOverTextEntity, component::Type{ecs::EntityType::TEXT});
 
     entity_t scoreTextEntity = reg.spawnEntity();
-    std::string finalScoreText = FINAL_SCORE_TEXT + std::to_string(gameOverComp.finalScore);
+    std::string finalScoreText = FINAL_SCORE_TEXT + std::to_string(score);
     textInfo.insertAt(scoreTextEntity, component::TextInfos{finalScoreText, screenWidth / 12, screenHeight / 2, SCORE_TEXT_SIZE, FONT_PATH,
                                                             ORANGE_GAMEOVER});
     types.insertAt(scoreTextEntity, component::Type{ecs::EntityType::TEXT});
