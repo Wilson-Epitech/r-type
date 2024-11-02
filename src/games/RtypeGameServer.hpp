@@ -208,7 +208,7 @@ namespace game {
          * @return true if all player entities are dead, meaning no active players remain.
          * @return false if there is at least one active player, meaning the game is still ongoing.
          */
-        bool allPLayersDead(ecs::Registry &reg);
+        bool allPlayersDead(ecs::Registry &reg);
 
         DifficultyMode _mode; ///< The mode of difficulty of the current game instance.
         std::unordered_map<std::string, DifficultyMode>

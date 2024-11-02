@@ -198,7 +198,7 @@ game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &reg) {
     if (gameover[entity])
         gameover[entity]->isGameOver = false;
 
-    if (allPLayersDead(reg)) {
+    if (allPlayersDead(reg)) {
         if (gameover[entity]) {
             gameover[entity]->isGameOver = true;
         }
@@ -207,7 +207,7 @@ game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &reg) {
     return game::GameStatus::PLAYING;
 }
 
-bool game::RtypeGameServer::allPLayersDead(ecs::Registry &reg) {
+bool game::RtypeGameServer::allPlayersDead(ecs::Registry &reg) {
     auto &lives = reg.getComponents<ecs::component::Life>();
     auto &types = reg.getComponents<ecs::component::Type>();
 

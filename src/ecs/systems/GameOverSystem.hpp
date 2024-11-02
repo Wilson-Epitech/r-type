@@ -19,6 +19,11 @@
 #define EXIT_PROMPT "Press_[ESC]_to_Exit"
 #define FONT_PATH "assets/ARCADE_N.TTF"
 #define GAME_OVER_TEXT_SIZE 80
+#define WIDTH_GAME_OVER 12
+#define HEIGHT_GAME_OVER 3
+#define HEIGHT_SCORE 2
+#define WIDTH_EXIT_TEXT 0.6
+#define HEIGHT_EXIT_TEXT 0.85
 #define SCORE_TEXT_SIZE 40
 #define EXIT_TEXT_SIZE 30
 #define RED_GAMEOVER                                                                                                                       \
