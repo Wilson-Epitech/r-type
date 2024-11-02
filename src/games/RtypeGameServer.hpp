@@ -105,8 +105,8 @@
 #define TEAM_SCORE_TEXT_Y 100                 ///< The text y position for the team score entity.
 #define TEAM_SCORE_TEXT_SIZE 20               ///< The text size for the team score entity.
 
-#define GAME_OVER_NAME "gameover"                   ///< Defines the name of the gameover entity.
-#define GAME_OVER_CONTENT "Game Over:"              ///< The text content for the gameover entity.
+#define GAME_OVER_NAME "gameover"      ///< Defines the name of the gameover entity.
+#define GAME_OVER_CONTENT "Game Over:" ///< The text content for the gameover entity.
 
 #define TITLE_NAME "title"            ///< Defines the name of the title entity.
 #define TITLE_TEXT_CONTENT "RType:"   ///< The text content for the title entity.
