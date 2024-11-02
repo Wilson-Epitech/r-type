@@ -76,6 +76,7 @@ namespace ecs {
             /**
              * @brief Determines if two entities are enemies.
              * This method checks if two entities, based on their types, should be considered enemies.
+             * @param reg The ECS registry containing entities and components.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
              * @return true If the entities are enemies.
