@@ -32,6 +32,7 @@
 #include "ResetForNextLevel.hpp"
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "WeaponSystem.hpp"
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30   ///< Minimum spawn height for enemies.
@@ -109,6 +110,14 @@
 #define TITLE_TEXT_X SCREEN_WIDTH / 2 ///< The text x position for the title entity.
 #define TITLE_TEXT_Y 50               ///< The text y position for the title entity.
 #define TITLE_TEXT_SIZE 20            ///< The text size for the title entity.
+
+#define WEAPON_NAME "weapon_template"       ///< Defines the name of the weapon entity.
+#define WEAPON_SPAWN_RATE 5                 ///< The spawn rate of weapon
+#define WEAPON_ACTIVE_TIME 10               ///< How long a weapon will last
+
+#define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
+
+#define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
 
 namespace game {
 

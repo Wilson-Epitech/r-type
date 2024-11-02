@@ -26,6 +26,9 @@ void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[POWER_UP_TEMPLATE_NAME] = _reg.spawnEntity();
     _stringToEntity[LEVEL1_BOSS_SHOT_NAME] = _reg.spawnEntity();
     _stringToEntity[SPAWN_LEVEL1_BOSS_NAME] = _reg.spawnEntity();
+    _stringToEntity[WEAPON_NAME] = _reg.spawnEntity();
+    _stringToEntity[FRONT_WEAPON_NAME] = _reg.spawnEntity();
+    _stringToEntity[BACK_WEAPON_NAME] = _reg.spawnEntity();
 }
 
 void game::RtypeGameServer::registerComponents() {
@@ -46,6 +49,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Powerup>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
+    _reg.registerComponent<ecs::component::Weapon>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -65,6 +69,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Powerup> &powerups = _reg.getComponents<ecs::component::Powerup>();
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
     ecs::SparseArray<ecs::component::MovementPattern> &movementPattern = _reg.getComponents<ecs::component::MovementPattern>();
+    ecs::SparseArray<ecs::component::Weapon> &weapons = _reg.getComponents<ecs::component::Weapon>();
 
     const float timeBeforeSpawnEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_mode)) / static_cast<int>(_mode);
     const float timeBeforeSpawnStrongerEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_mode)) / static_cast<int>(_mode);
@@ -167,6 +172,18 @@ void game::RtypeGameServer::addComponentsToEntities() {
         ecs::component::SpriteInfos{POWERUP_PATH, POWERUP_SPRITE_NB_PATTERN, POWERUP_SPRITE_FIRST_PATTERN, POWERUP_SCALE_FACTOR});
     textInfos.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME],
                        ecs::component::TextInfos{POWERUP_TEMPLATE_TEXT_CONTENT, 0, 0, POWERUP_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
+
+    weapons.insertAt(_stringToEntity[WEAPON_NAME],
+                     ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, WEAPON_SPAWN_RATE, WEAPON_ACTIVE_TIME});
+    types.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_TEMPLATE});
+
+    weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON});
+    types.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
+    spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{BACK_WEAPON_PATH, BACK_WEAPON_SPRITE_NB_PATTERN, 0, BACK_WEAPON_SCALE_FACTOR});
+
+    weapons.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::FRONT_WEAPON});
+    types.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
+    spriteInfos.insertAt( _stringToEntity[FRONT_WEAPON_NAME], ecs::component::SpriteInfos{FRONT_WEAPON_PATH, FRONT_WEAPON_SPRITE_NB_PATTERN, 0, FRONT_WEAPON_SCALE_FACTOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
@@ -178,6 +195,7 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::CollisionSystem());
     _reg.addSystem(ecs::system::ScoreSystem());
     _reg.addSystem(ecs::system::PowerupSystem());
+    _reg.addSystem(ecs::system::WeaponSystem());
     _reg.addSystem(ecs::system::LifeSystem());
     _reg.addSystem(ecs::system::BossSpawnSystem());
     _reg.addSystem(ecs::system::BossFiringSystem());
