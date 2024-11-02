@@ -55,8 +55,6 @@ namespace ecs {
             std::size_t findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
             float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
             std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
-            void addExplodingShot(const std::size_t &bossIndex, Registry &reg);
-            void makeShootExplode(Registry &reg);
         };
     }
 }

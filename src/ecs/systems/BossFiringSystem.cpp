@@ -24,7 +24,6 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
     static bool Level2BossShotLoaded = false;
-    static bool Level3BossShotLoaded = false;
 
     for (std::size_t i = 0; i < types.size() && i < shootingRate.size() && positions.size(); ++i) {
         if (!types[i] || !shootingRate[i] || !positions[i])
@@ -52,18 +51,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
                 movements[findChosenBossEntity(types, ecs::EntityType::BOSS)]->movementPatternType = ecs::MovementType::FOLLOW;
                 Level2BossShotLoaded = true;
             }
-            if (bossSpawn[findChosenBossEntity(types, ecs::EntityType::BOSS)]->ongoingLevel != CurrentLevel::LEVEL3) {
-                addShot(i, reg);
-            } else {
-                if (!Level3BossShotLoaded) {
-                    spriteInfos[getBossShootIndex(reg)]->spritePath = "assets/bomb_to_explode.png";
-                    spriteInfos[getBossShootIndex(reg)]->isLoaded = false;
-                    spriteInfos[getBossShootIndex(reg)]->patternNb = 5;
-                    Level3BossShotLoaded = true;
-                }
-                addExplodingShot(i, reg);
-                makeShootExplode(reg);
-            }
+            addShot(i, reg);
             for (std::size_t j = 0; j < timer.size(); j++) {
                 if (timer[j].first == i) {
                     timer[j].second = std::chrono::steady_clock::now();
@@ -108,38 +96,6 @@ void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Regist
         soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[bossShootIndex]->soundPath, false, true});
 }
 
-void ecs::system::BossFiringSystem::addExplodingShot(const std::size_t &bossIndex, Registry &reg)
-{
-    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
-    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::SoundEffectInfos> &soundEffect = reg.getComponents<component::SoundEffectInfos>();
-    SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
-    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::ShootExplosion> &shootExplosions = reg.getComponents<component::ShootExplosion>();
-
-    std::size_t bossShootIndex = getBossShootIndex(reg);
-    float shotX = SHOT_POS_X;
-    float shotY = positions[bossIndex]->y - 50;
-    entity_t entity = reg.spawnEntity();
-
-    positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity{velocities[bossShootIndex]->vx, velocities[bossShootIndex]->vy,
-                                                         velocities[bossShootIndex]->possibleVelocity});
-    spriteInfos.insertAt(entity,
-                         ecs::component::SpriteInfos{spriteInfos[bossShootIndex]->spritePath, spriteInfos[bossShootIndex]->patternNb,
-                                                     spriteInfos[bossShootIndex]->firstPattern, spriteInfos[bossShootIndex]->scaleFactor});
-    types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS_SHOT_1});
-    lives.insertAt(entity, ecs::component::Life{1});
-    int randExplo = (rand() % (1200 - 80) + 80);
-    shootExplosions.insertAt(entity, ecs::component::ShootExplosion{randExplo});
-
-    if (!soundEffect[bossShootIndex])
-        return;
-    if (soundEffect[bossShootIndex]->soundPath.length() > 0)
-        soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[bossShootIndex]->soundPath, false, true});
-}
-
 std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg)
 {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -154,25 +110,6 @@ std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg)
         }
     }
     return 0;
-}
-
-void ecs::system::BossFiringSystem::makeShootExplode(Registry &reg)
-{
-    SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
-    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
-    SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::ShootExplosion> &shootExplosions = reg.getComponents<component::ShootExplosion>();
-
-    for (std::size_t i = 0; i < enemyShootVelocities.size() && i < types.size() && i < shootExplosions.size() && i < positions.size(); ++i) {
-        if (enemyShootVelocities[i] && types[i] && shootExplosions[i] && positions[i]) {
-            if (types[i]->entityType == ecs::EntityType::BOSS_SHOT_1) {
-                std::cout << "Pos to explode -> " << shootExplosions[i]->positionToExplode << "\nActual pos ->" << positions[i]->x << std::endl;
-                if (shootExplosions[i]->positionToExplode >= positions[i]->x) {
-                    enemyShootVelocities[i]->vx = 0;
-                }
-            }
-        }
-    }
 }
 
 std::size_t ecs::system::BossFiringSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
