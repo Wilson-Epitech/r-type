@@ -64,7 +64,7 @@ class Lib {
      * @param duration Time in seconds.
      * @return True if the time between the variable time and now is superior or equal to the duration, false otherwise.
      */
-    static bool isTimeElapsed(const std::chrono::steady_clock::time_point &time, const double &duration);
+    static bool isTimeElapsed(const std::chrono::steady_clock::time_point &time, const float &duration);
 };
 
 #endif /* !LIB_HPP_ */

@@ -23,31 +23,6 @@
 #include <string>
 #include <vector>
 
-// #define ORANGE_COLOR                                                                                                                       \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         255, 161, 0, 255                                                                                                                   \
-//     } ///< Orange color
-// #define CYAN_COLOR                                                                                                                         \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         120, 200, 225, 255                                                                                                                 \
-//     } ///< Cyan color
-// #define BEIGE_COLOR                                                                                                                        \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         211, 176, 131, 255                                                                                                                 \
-//     } ///< Beige color
-// #define GOLD_COLOR                                                                                                                         \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         255, 203, 0, 255                                                                                                                   \
-//     } ///< Gold color
-// #define PINK_COLOR                                                                                                                         \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         255, 109, 194, 255                                                                                                                 \
-//     } ///< Pink color
-// #define WHITE_COLOR                                                                                                                        \
-//     (ecs::CustomColor) {                                                                                                                   \
-//         245, 245, 245, 255                                                                                                                 \
-//     } ///< White color
-
 #define ORANGE_COLOR ecs::CustomColor{255, 161, 0, 255}
 #define CYAN_COLOR ecs::CustomColor{120, 200, 225, 255}
 #define BEIGE_COLOR ecs::CustomColor{211, 176, 131, 255}
@@ -212,8 +187,8 @@ namespace ecs {
             std::string spritePath;                        ///< Path to the sprite file
             std::size_t patternNb = 1;                     ///< Number of patterns in the sprite
             std::size_t firstPattern = 0;                  ///< First pattern in the sprite
-            double scaleFactor = 1.0;                       ///< Scale factor for the sprite
-            CustomColor color;               ///< Color applied to the sprite, white by default
+            float scaleFactor = 1.0;                       ///< Scale factor for the sprite
+            CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
             std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
             float rotationAngle = 0;                       ///< Rotation angle of the sprite
             bool isLoaded = false;                         ///< Indicates if the texture is loaded
@@ -271,7 +246,7 @@ namespace ecs {
          * @brief Component representing the shooting rate of an entity.
          */
         struct ShootingRate {
-            double shootRate = 0; ///< Rate of shooting
+            float shootRate = 0; ///< Rate of shooting
         };
 
         /**
@@ -305,7 +280,7 @@ namespace ecs {
          */
         struct Score {
             std::size_t scoreIncrementation = 0; ///< Incrementation value for score
-            std::size_t score = 0;                       /// < Score of the entity
+            int score = 0;                       /// < Score of the entity
 
             bool operator==(const Score &other) const {
                 return (score == other.score && scoreIncrementation == other.scoreIncrementation);

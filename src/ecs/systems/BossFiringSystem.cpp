@@ -60,8 +60,8 @@ void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Regist
     if (bossShootIndex == 0 || spriteInfos[bossIndex]->spriteWidth == 0 || spriteInfos[bossIndex]->spriteHeight == 0 ||
         spriteInfos[bossShootIndex]->spriteWidth == 0 || spriteInfos[bossShootIndex]->spriteHeight == 0)
         return;
-    float shotX = static_cast<float>(SHOT_POS_X);
-    float shotY = static_cast<float>(rand() % (MAX_SHOT_Y - MIN_SHOT_Y) + MIN_SHOT_Y);
+    float shotX = SHOT_POS_X;
+    float shotY = (rand() % (MAX_SHOT_Y - MIN_SHOT_Y) + MIN_SHOT_Y);
     entity_t entity = reg.spawnEntity();
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});

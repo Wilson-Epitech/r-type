@@ -130,7 +130,7 @@ float ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const s
     velocities[shootIndex]->vx = speed * cosf(angle);
     velocities[shootIndex]->vy = speed * sinf(angle);
     // return (angle * 180 / M_PI) + 180;
-    return static_cast<float>((angle * 180 / 3.14) + 180);
+    return (angle * 180 / 3.14) + 180;
 
 }
 
