@@ -39,7 +39,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
                 continue;
             if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
                 positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
-                if (areEntitiesInCollision(rec1, rec2)) {
+                if (areEntitiesInCollision(rec1, rec2) && lives[i]->nbLives > 0 && lives[j]->nbLives > 0) {
                     if (enablePlayerWeapon(reg, i, j))
                         continue;
                     if (!lives[i]->isInvincible)
