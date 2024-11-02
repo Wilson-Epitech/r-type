@@ -7,6 +7,8 @@
 
 #include "BossSpawnSystem.hpp"
 
+#include <iostream>
+
 void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
@@ -50,7 +52,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                             spriteInfos[bossEntity]->patternNb = LEVEL2_BOSS_NB_PATTERN;
                             spriteInfos[bossEntity]->scaleFactor = LEVEL2_BOSS_SCALE_FACTOR;
                         }
-                        createNewBoss(reg, types, bossEntity, LEVEL1_BOSS_SPAWN_X, LEVEL1_BOSS_SPAWN_Y);
+                        createNewBoss(reg, types, bossEntity, LEVEL1_BOSS_SPAWN_X, LEVEL1_BOSS_SPAWN_Y, finalLevelBoss);
                         bossSpawned = true;
                         isTimerSet = false;
                     }
@@ -68,7 +70,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
             spriteInfos[bossEntity]->isLoaded = false;
             spriteInfos[bossEntity]->patternNb = 1;
             spriteInfos[bossEntity]->scaleFactor = 1.2;
-            createNewBoss(reg, types, bossEntity, positions[bossEntity]->x, positions[bossEntity]->y);
+            createNewBoss(reg, types, bossEntity, positions[bossEntity]->x, positions[bossEntity]->y, finalLevelBoss);
             finalLevelBoss += 1;
         }
         if (!positions[i])
@@ -80,13 +82,15 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i, const float &x, const float &y) {
+void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i, const float &x, const float &y, const std::size_t &level3BossIndex) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::SoundEffectInfos> &soundEffect = reg.getComponents<component::SoundEffectInfos>();
+    SparseArray<component::MovementPattern> &movementPatterns = reg.getComponents<component::MovementPattern>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
 
     entity_t entity = reg.spawnEntity();
 
@@ -104,6 +108,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
         if (soundEffect[i])
             soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[i]->soundPath});
     }
+    movementPatterns[i]->movementPatternType = ecs::MovementType::STRAIGHT;
 }
 
 std::size_t ecs::system::BossSpawnSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)

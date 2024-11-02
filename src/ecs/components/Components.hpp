@@ -367,6 +367,10 @@ namespace ecs {
                         movementPatternType == other.movementPatternType);
             }
         };
+
+        struct ShootExplosion {
+            int positionToExplode;
+        };
     }
 }
 
