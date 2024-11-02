@@ -14,7 +14,6 @@
 #include "INetwork.hpp"
 #include <functional>
 
-#ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 
@@ -27,7 +26,6 @@
 #undef LoadImage
 #undef DrawText
 #undef DrawTextEx
-#endif
 
 #include <raylib.h>
 #define UPDATE_TIME 0.02 ///< Set the time to update the game.
@@ -39,8 +37,8 @@
 #define SERVER_LIB_PATH "sharedLibraries/libserver.dylib" ///< Path to the server shared library for macOS
 #define CLIENT_LIB_PATH "sharedLibraries/libclient.dylib" ///< Path to the client shared library for macOS
 #elif _WIN32
-#define SERVER_LIB_PATH "sharedLibraries/server.dll" ///< Path to the server shared library for Windows
-#define CLIENT_LIB_PATH "sharedLibraries/client.dll" ///< Path to the client shared library for Windows
+#define SERVER_LIB_PATH "sharedLibraries/libserver.dll" ///< Path to the server shared library for Windows
+#define CLIENT_LIB_PATH "sharedLibraries/libclient.dll" ///< Path to the client shared library for Windows
 #endif
 
 /**

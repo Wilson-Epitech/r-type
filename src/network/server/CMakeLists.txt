@@ -4,11 +4,7 @@ set(SERVER_SRC
 
 add_executable(rtype_server ${SERVER_SRC})
 
-if(WIN32)
 target_link_libraries(rtype_server PRIVATE rtype_lib ws2_32)
-elseif(UNIX)
-target_link_libraries(rtype_server PRIVATE rtype_lib)
-endif()
 
 add_library(server SHARED
     ./Server.cpp
@@ -25,9 +21,7 @@ target_include_directories(server PRIVATE
     ../../../include
 )
 
-if(WIN32)
 target_link_libraries(server PRIVATE ws2_32)
-endif()
 
 add_custom_command(TARGET server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy

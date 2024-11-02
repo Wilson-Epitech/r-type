@@ -23,12 +23,30 @@
 #include <string>
 #include <vector>
 
-#define ORANGE_COLOR ecs::CustomColor{255, 161, 0, 255}
-#define CYAN_COLOR ecs::CustomColor{120, 200, 225, 255}
-#define BEIGE_COLOR ecs::CustomColor{211, 176, 131, 255}
-#define GOLD_COLOR ecs::CustomColor{255, 203, 0, 255}
-#define PINK_COLOR ecs::CustomColor{255, 109, 194, 255}
-#define WHITE_COLOR ecs::CustomColor{245, 245, 245, 255}
+#define ORANGE_COLOR                                                                                                                       \
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 161, 0, 255                                                                                                                   \
+    } ///< Orange color
+#define CYAN_COLOR                                                                                                                         \
+    (ecs::CustomColor) {                                                                                                                   \
+        120, 200, 225, 255                                                                                                                 \
+    } ///< Cyan color
+#define BEIGE_COLOR                                                                                                                        \
+    (ecs::CustomColor) {                                                                                                                   \
+        211, 176, 131, 255                                                                                                                 \
+    } ///< Beige color
+#define GOLD_COLOR                                                                                                                         \
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 203, 0, 255                                                                                                                   \
+    } ///< Gold color
+#define PINK_COLOR                                                                                                                         \
+    (ecs::CustomColor) {                                                                                                                   \
+        255, 109, 194, 255                                                                                                                 \
+    } ///< Pink color
+#define WHITE_COLOR                                                                                                                        \
+    (ecs::CustomColor) {                                                                                                                   \
+        245, 245, 245, 255                                                                                                                 \
+    } ///< White color
 
 namespace ecs {
 
