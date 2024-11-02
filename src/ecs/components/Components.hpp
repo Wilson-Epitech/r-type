@@ -393,7 +393,7 @@ namespace ecs {
             bool hasBeenTaken = false;  ///< Indicates if the weapon has been taken by the player
             std::size_t playerIndex = 0;    ///< Entity of the player that have activated the weapon
             bool isActivated = false;   ///< Indicates if the weapon is activated
-            std::chrono::steady_clock::time_point spawnTime = std::chrono::steady_clock::now();
+            std::chrono::steady_clock::time_point spawnTime = std::chrono::steady_clock::now(); ///< The time when the weapon as been activated by the player
 
             bool operator==(const Weapon &other) const {
                 return (weaponType == other.weaponType && playerIndex == other.playerIndex);

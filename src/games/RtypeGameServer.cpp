@@ -173,16 +173,16 @@ void game::RtypeGameServer::addComponentsToEntities() {
     textInfos.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME],
                        ecs::component::TextInfos{POWERUP_TEMPLATE_TEXT_CONTENT, 0, 0, POWERUP_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
 
-    weapons.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, 1, 8});
+    weapons.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, WEAPON_SPAWN_RATE, WEAPON_ACTIVE_TIME});
     types.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_TEMPLATE});
 
-    weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON, 1, 5});
+    weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON});
     types.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
-    spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{BACK_WEAPON_PATH, 1, 0, 0.5});
+    spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{BACK_WEAPON_PATH, 1, 0, BACK_WEAPON_SCALE_FACTOR});
 
-    weapons.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::FRONT_WEAPON, 1});
+    weapons.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::FRONT_WEAPON});
     types.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
-    spriteInfos.insertAt( _stringToEntity[FRONT_WEAPON_NAME], ecs::component::SpriteInfos{FRONT_WEAPON_PATH, 1, 0, 0.5});
+    spriteInfos.insertAt( _stringToEntity[FRONT_WEAPON_NAME], ecs::component::SpriteInfos{FRONT_WEAPON_PATH, 1, 0, FRONT_WEAPON_SCALE_FACTOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

@@ -63,6 +63,17 @@ namespace ecs {
              */
             std::size_t getPlayerShootIndex(Registry &reg);
 
+            /**
+             * @brief Creates multiple shots for a player entity based on available weapons.
+             * This method iterates through the player's weapons in the ECS registry and creates a shot
+             * entity for each weapon the player possesses. Each shot's position, velocity, sprite information,
+             * and other properties are set according to the weapon's type and the specified power and size.
+             * If the player has no weapons, a default shot is created.
+             * @param reg The ECS registry containing entities and components.
+             * @param playerIndex The index of the player entity that is firing shots.
+             * @param shootPower The power of each shot.
+             * @param shootSize The size of each shot.
+             */
             void addEveryShoot(Registry &reg, const std::size_t &playerIndex, const std::size_t &shootPower, const float &shootSize);
         };
     }

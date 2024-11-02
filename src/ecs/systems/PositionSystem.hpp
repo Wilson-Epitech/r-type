@@ -53,6 +53,15 @@ namespace ecs {
              * @return false If the player's position update was not necessary.
              */
             bool handlePlayerPosition(const std::size_t &playerIndex, Registry &reg);
+
+            /**
+             * @brief Handles the position update for weapons entities.
+             * This method ensures that the weapons entities' positions are updated correctly based on their players position
+             * @param weaponIndex The index of the weapon entity.
+             * @param reg The ECS registry containing entities and their components.
+             * @return true If the weapon's position was updated successfully.
+             * @return false If the weapon's position update was not necessary.
+             */
             bool handleWeaponPostion(const std::size_t &weaponIndex, Registry &reg);
 
             /**

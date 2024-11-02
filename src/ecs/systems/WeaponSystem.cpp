@@ -6,7 +6,6 @@
 */
 
 #include "WeaponSystem.hpp"
-#include <iostream>
 
 void ecs::system::WeaponSystem::operator()(Registry &reg) {
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
@@ -33,7 +32,6 @@ void ecs::system::WeaponSystem::operator()(Registry &reg) {
 
 void ecs::system::WeaponSystem::desactivateWeapon(Registry &reg, const std::size_t &index) {
     SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
-    std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
 
     if (!weapons[index]->isActivated)
         return;
