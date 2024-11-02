@@ -392,7 +392,7 @@ namespace ecs {
         std::vector<std::pair<ecs::CustomColor, ecs::component::Position>>
             _spaceshipColorPositionCorrespondence; ///< A vector associating the spaceship color to the position the corresponding spaceship
                                                    ///< should be at level start.
-        bool _isFriendlyFireActivated; /// A boolean containing the friendly fire state.
+        bool _isFriendlyFireActivated;             /// A boolean containing the friendly fire state.
     };
 }
 

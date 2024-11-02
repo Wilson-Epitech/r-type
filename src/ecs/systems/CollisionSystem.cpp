@@ -110,7 +110,8 @@ bool ecs::system::CollisionSystem::areEntitiesEnemies(Registry &reg, const ecs::
             !isPlayerShotAndWeapon(firstType, secondType) && !isPowerupAndWeapon(firstType, secondType));
 }
 
-bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(Registry &reg, const ecs::EntityType &firstType,
+                                                         const ecs::EntityType &secondType) {
     if (reg.getIsFriendlyFireActivated())
         return false;
     return ((firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT) ||

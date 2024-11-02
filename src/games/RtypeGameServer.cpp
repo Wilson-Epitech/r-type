@@ -7,8 +7,8 @@
 
 #include "RtypeGameServer.hpp"
 
-game::RtypeGameServer::RtypeGameServer(std::vector<std::string> arguments, const std::string gameName) : AGame(gameName),
-    _difficultyMode(DEFAULT_DIFFICULTY), _friendlyFireState(DEFAULT_FRIENDLY_FIRE) {
+game::RtypeGameServer::RtypeGameServer(std::vector<std::string> arguments, const std::string gameName)
+    : AGame(gameName), _difficultyMode(DEFAULT_DIFFICULTY), _friendlyFireState(DEFAULT_FRIENDLY_FIRE) {
     initArgsToDifficultyMode();
     initArgsToFriendlyFireState();
     handleArguments(arguments);
@@ -28,8 +28,10 @@ void game::RtypeGameServer::initArgsToFriendlyFireState() {
 
 void game::RtypeGameServer::handleArguments(std::vector<std::string> &arguments) {
     while (!arguments.empty()) {
-        auto difficultyModeIt = _argsToDifficultyMode.find(std::make_pair(arguments[arguments.size() - 2], arguments[arguments.size() - 1]));
-        auto friendlyFireIt = _argsToFriendlyFireState.find(std::make_pair(arguments[arguments.size() - 2], arguments[arguments.size() - 1]));
+        auto difficultyModeIt =
+            _argsToDifficultyMode.find(std::make_pair(arguments[arguments.size() - 2], arguments[arguments.size() - 1]));
+        auto friendlyFireIt =
+            _argsToFriendlyFireState.find(std::make_pair(arguments[arguments.size() - 2], arguments[arguments.size() - 1]));
         if (difficultyModeIt != _argsToDifficultyMode.end() && _difficultyMode == DEFAULT_DIFFICULTY) {
             _difficultyMode = difficultyModeIt->second;
         } else if (friendlyFireIt != _argsToFriendlyFireState.end() && _friendlyFireState == DEFAULT_FRIENDLY_FIRE) {
@@ -107,7 +109,8 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::Weapon> &weapons = _reg.getComponents<ecs::component::Weapon>();
 
     const float timeBeforeSpawnEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_difficultyMode)) / static_cast<int>(_difficultyMode);
-    const float timeBeforeSpawnStrongerEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_difficultyMode)) / static_cast<int>(_difficultyMode);
+    const float timeBeforeSpawnStrongerEnemy =
+        (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_difficultyMode)) / static_cast<int>(_difficultyMode);
     const std::size_t enemyWaveSize = ENEMY_WAVE_SIZE + (ENEMY_WAVE_SIZE_DIFFICULTY_FACTOR * static_cast<int>(_difficultyMode - 1));
     const std::size_t strongerEnemyWaveSize = STRONGER_ENEMY_WAVE_SIZE * (static_cast<int>(_difficultyMode - 1));
 

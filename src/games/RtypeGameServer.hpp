@@ -35,8 +35,10 @@
 #include "WeaponSystem.hpp"
 
 #define INVALID_ARGUMENTS_MESSAGE                                                                                                          \
-    "Usage: ./server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by "   \
-    "default)\n\tfriendlyFireState can be 'true' or 'false' (it is set to false by default)" ///< The message to display when arguments passed in parameter are invalid
+    "Usage: ./server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]\n\tdifficultyMode can be 'easy', 'medium', "  \
+    "or 'hard' (it is set to medium by "                                                                                                   \
+    "default)\n\tfriendlyFireState can be 'true' or 'false' (it is set to false by default)" ///< The message to display when arguments
+                                                                                             ///< passed in parameter are invalid
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30   ///< Minimum spawn height for enemies.
@@ -131,9 +133,9 @@ namespace game {
      */
     enum DifficultyMode {
         DEFAULT_DIFFICULTY, ///< Default initialization value
-        EASY,    ///< Easy mode
-        MEDIUM,  ///< Medium mode
-        HARD     ///< Hard mode
+        EASY,               ///< Easy mode
+        MEDIUM,             ///< Medium mode
+        HARD                ///< Hard mode
     };
 
     /**
@@ -141,7 +143,7 @@ namespace game {
      * @brief Enum representing the two possibles states for friendlyfire in the game.
      */
     enum FriendlyFireState {
-        DEFAULT_FRIENDLY_FIRE,  ///< Default initialization value
+        DEFAULT_FRIENDLY_FIRE, ///< Default initialization value
         WITHOUT_FRIENDLY_FIRE, ///< Without friendly fire
         WITH_FRIENDLY_FIRE,    ///< With friendly fire
     };
@@ -164,7 +166,6 @@ namespace game {
         ~RtypeGameServer() = default;
 
       private:
-
         /**
          * @brief Initialize the arguments to difficulty mode map.
          * It links the easy, medium, and hard difficulty mode enum values to correspondent arguments.
@@ -219,10 +220,12 @@ namespace game {
          */
         GameStatus gameState(ecs::Registry &reg) override;
 
-        DifficultyMode _difficultyMode; ///< The mode of difficulty of the current game instance.
+        DifficultyMode _difficultyMode;       ///< The mode of difficulty of the current game instance.
         FriendlyFireState _friendlyFireState; ///< The friendly fire state of the current game instance.
-        std::map<std::pair<std::string, std::string>, DifficultyMode> _argsToDifficultyMode; ///< A map linking two arguments to a difficulty mode.
-        std::map<std::pair<std::string, std::string>, FriendlyFireState> _argsToFriendlyFireState; ///< A  map linking two arguments to a friendly fire state.
+        std::map<std::pair<std::string, std::string>, DifficultyMode>
+            _argsToDifficultyMode; ///< A map linking two arguments to a difficulty mode.
+        std::map<std::pair<std::string, std::string>, FriendlyFireState>
+            _argsToFriendlyFireState; ///< A  map linking two arguments to a friendly fire state.
     };
 }
 
