@@ -178,11 +178,11 @@ void game::RtypeGameServer::addComponentsToEntities() {
 
     weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON});
     types.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
-    spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{BACK_WEAPON_PATH, 1, 0, BACK_WEAPON_SCALE_FACTOR});
+    spriteInfos.insertAt( _stringToEntity[BACK_WEAPON_NAME], ecs::component::SpriteInfos{BACK_WEAPON_PATH, BACK_WEAPON_SPRITE_NB_PATTERN, 0, BACK_WEAPON_SCALE_FACTOR});
 
     weapons.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::FRONT_WEAPON});
     types.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
-    spriteInfos.insertAt( _stringToEntity[FRONT_WEAPON_NAME], ecs::component::SpriteInfos{FRONT_WEAPON_PATH, 1, 0, FRONT_WEAPON_SCALE_FACTOR});
+    spriteInfos.insertAt( _stringToEntity[FRONT_WEAPON_NAME], ecs::component::SpriteInfos{FRONT_WEAPON_PATH, FRONT_WEAPON_SPRITE_NB_PATTERN, 0, FRONT_WEAPON_SCALE_FACTOR});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {

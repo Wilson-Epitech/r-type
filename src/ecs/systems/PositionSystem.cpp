@@ -14,7 +14,7 @@ void ecs::system::PositionSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < positions.size() && i < velocities.size(); ++i) {
         if (positions[i] && velocities[i]) {
             setStartPosition(reg, i);
-            if (!handlePlayerPosition(i, reg) && !handleWeaponPostion(i, reg)) {
+            if (!handlePlayerPosition(i, reg) && !handleWeaponPosition(i, reg)) {
                 handleMovementPattern(reg, i);
             }
         }
@@ -43,7 +43,7 @@ bool ecs::system::PositionSystem::handlePlayerPosition(const std::size_t &player
     return false;
 }
 
-bool ecs::system::PositionSystem::handleWeaponPostion(const std::size_t &weaponIndex, Registry &reg) {
+bool ecs::system::PositionSystem::handleWeaponPosition(const std::size_t &weaponIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();

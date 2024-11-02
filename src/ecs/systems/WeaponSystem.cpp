@@ -15,7 +15,7 @@ void ecs::system::WeaponSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (lives[i] && types[i]) {
             if (lives[i]->nbLives == 0) {
-                if (lives[i]->hasToSummonPowerup)
+                if (lives[i]->hasToSummonPowerupAndWeapon)
                     summonWeapon(reg, i);
             }
         }

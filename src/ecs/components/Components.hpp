@@ -186,11 +186,11 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives = 1;         ///< Number of lives the entity has
-            bool displayLife = false;        ///< Indicates if the life has to be displayed
-            bool hasToSummonPowerup = false; ///< Indicates if a powerup has a chance to spawn after death
-            std::size_t maxLives = 0;        ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
-            bool isInvincible = false;       ///< Indicates if the entity is invincible
+            std::size_t nbLives = 1;                  ///< Number of lives the entity has
+            bool displayLife = false;                 ///< Indicates if the life has to be displayed
+            bool hasToSummonPowerupAndWeapon = false; ///< Indicates if a powerup has a chance to spawn after death
+            std::size_t maxLives = 0;                 ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
+            bool isInvincible = false;                ///< Indicates if the entity is invincible
 
             bool operator==(const Life &other) const {
                 return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives &&

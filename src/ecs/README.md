@@ -130,7 +130,7 @@ enum CurrentLevel {
    struct Life {
       std::size_t nbLives = 1;
       bool displayLife = false;
-      bool hasToSummonPowerup = false;
+      bool hasToSummonPowerupAndWeapon = false;
       std::size_t maxLives = 0;
       bool isInvincible = false;
 

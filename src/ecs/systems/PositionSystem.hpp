@@ -62,7 +62,7 @@ namespace ecs {
              * @return true If the weapon's position was updated successfully.
              * @return false If the weapon's position update was not necessary.
              */
-            bool handleWeaponPostion(const std::size_t &weaponIndex, Registry &reg);
+            bool handleWeaponPosition(const std::size_t &weaponIndex, Registry &reg);
 
             /**
              * @brief Store the position of the entity before any movement
