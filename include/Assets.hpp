@@ -29,7 +29,8 @@
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
 #define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"    ///< The background music path.
 #define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
-#define WEAPON_PATH "assets/additionalWeapon.png"
+#define BACK_WEAPON_PATH "assets/back_weapon.png"
+#define FRONT_WEAPON_PATH "assets/front_weapon.png"
 
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.

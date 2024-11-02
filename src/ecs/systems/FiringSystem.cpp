@@ -90,7 +90,7 @@ void ecs::system::FiringSystem::addShot(const std::size_t &playerIndex, Registry
         shotX = positions[playerIndex]->x - (spriteInfos[playerIndex]->spriteWidth + (shotSpriteRect.width / 2));
     }
     if (weaponType == ecs::WeaponType::FRONT_WEAPON) {
-        shotY = positions[playerIndex]->y + ((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2)) + (((spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2)) / 2);
+        shotY += (spriteInfos[playerIndex]->spriteHeight / 2) - (shotSpriteRect.height / 2);
     }
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
