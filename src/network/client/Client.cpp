@@ -6,7 +6,11 @@
 */
 
 #include "Client.hpp"
+
+#define WIN32_LEAN_AND_MEAN // Exclut certaines parties de windows.h
+#define NOGDI               // Exclut les définitions GDI (Graphics Device Interface)
 #include <asio.hpp>
+
 #include <iostream>
 
 network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(), _socket(_ioContext), _playerId(0) {
@@ -137,8 +141,8 @@ void network::Client::updateData(ecs::Registry &reg) {
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
     DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg, false);
 
-    // for (auto lastDataReceived : lastDataReceivedList)
-    //     network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
+    for (auto lastDataReceived : lastDataReceivedList)
+        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
     if (!data.empty()) {
         std::string serialized = network::HandleData::serializeEntityDataVector(data);
         sendMessage(serialized, 3);

@@ -10,6 +10,9 @@
 
 #include "HandleData.hpp"
 #include <array>
+
+#define WIN32_LEAN_AND_MEAN // Exclut certaines parties de windows.h
+#define NOGDI               // Exclut les définitions GDI (Graphics Device Interface)
 #include <asio.hpp>
 
 namespace network {
@@ -33,7 +36,7 @@ namespace network {
     class INetwork {
       public:
         INetwork() = default;
-        virtual ~INetwork() = default;
+        ~INetwork() = default;
 
         /**
          * @brief Sends a message to the network instance.

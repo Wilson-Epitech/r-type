@@ -20,9 +20,9 @@ void ecs::system::DrawSpriteSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < drawables.size() && i < positions.size() && i < spriteInfos.size() && i < types.size(); ++i) {
         if (drawables[i] && positions[i] && spriteInfos[i] && velocities[i] && types[i]) {
             if (spriteInfos[i]->isLoaded && types[i]->entityType != ecs::EntityType::BACKGROUND) {
-                Rectangle destRec = {positions[i]->x / screenRatio.x, positions[i]->y / screenRatio.y,
-                                     drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x),
-                                     drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y)};
+                Rectangle destRec = {static_cast<float>(positions[i]->x / screenRatio.x), static_cast<float>(positions[i]->y / screenRatio.y),
+                                     static_cast<float>(drawables[i]->spriteRect.width * (spriteInfos[i]->scaleFactor / screenRatio.x)),
+                                     static_cast<float>(drawables[i]->spriteRect.height * (spriteInfos[i]->scaleFactor / screenRatio.y))};
                 DrawTexturePro(drawables[i]->spriteTexture, drawables[i]->spriteRect, destRec, {0, 0}, spriteInfos[i]->rotationAngle,
                                {spriteInfos[i]->color.r, spriteInfos[i]->color.g, spriteInfos[i]->color.b, spriteInfos[i]->color.a});
             } else if (spriteInfos[i]->isLoaded && types[i]->entityType == ecs::EntityType::BACKGROUND) {
@@ -58,10 +58,10 @@ void ecs::system::DrawSpriteSystem::drawBackground(const ecs::CustomVector2D &sc
                                                    SparseArray<component::Drawable> &drawables, SparseArray<component::Position> &positions,
                                                    SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index) {
     ecs::CustomVector2D backgroundNewPos = {positions[index]->x, positions[index]->y};
-    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
-    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
-    std::size_t posX = 0;
-    std::size_t posY = 0;
+    float spriteWidth = static_cast<float>(drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor);
+    float spriteHeight = static_cast<float>(drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor);
+    float posX = 0;
+    float posY = 0;
     std::size_t nbrRepeatX = getNbrRepeatBackground(spriteWidth, Lib::getScreenWidth());
 
     changeBackgroundPos(velocities, drawables, positions, spriteInfos, index);
@@ -70,8 +70,8 @@ void ecs::system::DrawSpriteSystem::drawBackground(const ecs::CustomVector2D &sc
             backgroundNewPos = {positions[index]->x, positions[index]->y};
             for (std::size_t j = 0; j < nbrRepeatX; j++) {
                 Rectangle destRec = {(backgroundNewPos.x + posX) / screenRatio.x, (backgroundNewPos.y + posY) / screenRatio.y,
-                                     drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x),
-                                     drawables[index]->spriteRect.height * (spriteInfos[index]->scaleFactor / screenRatio.y)};
+                                     static_cast<float>(drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x)),
+                                     static_cast<float>(drawables[index]->spriteRect.height * (spriteInfos[index]->scaleFactor / screenRatio.y))};
                 DrawTexturePro(drawables[index]->spriteTexture, drawables[index]->spriteRect, destRec, {0, 0}, 0, RAYWHITE);
                 backgroundNewPos = changeNewBackgroundPos(velocities, drawables, positions, spriteInfos, index, j);
             }
@@ -98,8 +98,8 @@ ecs::CustomVector2D ecs::system::DrawSpriteSystem::changeNewBackgroundPos(Sparse
                                                                           SparseArray<component::Position> &positions,
                                                                           SparseArray<component::SpriteInfos> &spriteInfos,
                                                                           const std::size_t &index, const std::size_t &j) {
-    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
-    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
+    float spriteWidth = static_cast<float>(drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor);
+    float spriteHeight = static_cast<float>(drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor);
     ecs::CustomVector2D backgroundNewPos = {0, 0};
 
     if (velocities[index]->vx > 0.000) {
@@ -120,8 +120,8 @@ void ecs::system::DrawSpriteSystem::changeBackgroundPos(SparseArray<component::V
                                                         SparseArray<component::Drawable> &drawables,
                                                         SparseArray<component::Position> &positions,
                                                         SparseArray<component::SpriteInfos> &spriteInfos, const std::size_t &index) {
-    float spriteWidth = drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor;
-    float spriteHeight = drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor;
+    float spriteWidth = static_cast<float>(drawables[index]->spriteTexture.width * spriteInfos[index]->scaleFactor);
+    float spriteHeight = static_cast<float>(drawables[index]->spriteTexture.height * spriteInfos[index]->scaleFactor);
 
     if (velocities[index]->vx < 0.000 && positions[index]->x + spriteWidth <= 1) {
         positions[index]->x = positions[index]->x + spriteWidth;

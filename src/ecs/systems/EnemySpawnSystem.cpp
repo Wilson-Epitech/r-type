@@ -65,8 +65,8 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     SparseArray<component::SoundEffectInfos> &soundEffectInfos = reg.getComponents<component::SoundEffectInfos>();
     SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
     entity_t entity = reg.spawnEntity();
-    float x = (rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth;
-    float y = (rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight;
+    float x = static_cast<float>((rand() % (enemySpawn[i]->maxSpawnWidth - enemySpawn[i]->minSpawnWidth)) + enemySpawn[i]->minSpawnWidth);
+    float y = static_cast<float>((rand() % (enemySpawn[i]->maxSpawnHeight - enemySpawn[i]->minSpawnHeight)) + enemySpawn[i]->minSpawnHeight);
 
     positions.insertAt(entity, ecs::component::Position{x, y});
     velocities.insertAt(entity, ecs::component::Velocity{velocities[i]->vx, velocities[i]->vy, velocities[i]->possibleVelocity});

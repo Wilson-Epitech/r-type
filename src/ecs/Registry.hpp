@@ -17,6 +17,7 @@
 #define REGISTRY_HPP_
 
 #include "Container.hpp"
+// #include "Components.hpp"
 #include "Error.hpp"
 #include <algorithm>
 #include <any>
@@ -47,7 +48,12 @@ namespace ecs {
          * @brief Constructs a `Registry` class instance.
          * It sets the spaceships available colors and the spaceships colors to positions correspondence.
          */
-        Registry() : _availableSpaceshipColors({CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR}) {
+        // Registry() : _availableSpaceshipColors{CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR} {
+        //     initSpaceshipColorPositionCorrespondence();
+        // }
+
+        Registry() {
+            _availableSpaceshipColors = {CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR};
             initSpaceshipColorPositionCorrespondence();
         }
 

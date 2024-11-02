@@ -27,7 +27,7 @@ double Lib::toMilliseconds(double time) {
     return time * TO_MILLISECONDS;
 }
 
-bool Lib::isTimeElapsed(const std::chrono::steady_clock::time_point &time, const float &duration) {
+bool Lib::isTimeElapsed(const std::chrono::steady_clock::time_point &time, const double &duration) {
     std::chrono::steady_clock::time_point actualTime = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(actualTime - time);
 

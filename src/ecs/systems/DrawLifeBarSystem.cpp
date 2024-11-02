@@ -30,20 +30,19 @@ void ecs::system::DrawLifeBarSystem::drawLife(SparseArray<component::Drawable> &
     float lifeBarSize = 0;
     CLITERAL(Color) lifeColor = GREEN;
 
-    lifeBarSize = ((drawables[index]->spriteRect.width * (float)lives[index]->nbLives / lives[index]->maxLives) *
-                   (spriteInfos[index]->scaleFactor / screenRatio.x)) *
-                  2 / 3;
+    lifeBarSize = static_cast<float>(((drawables[index]->spriteRect.width * (float)lives[index]->nbLives / lives[index]->maxLives) *
+                   (spriteInfos[index]->scaleFactor / screenRatio.x)) * 2 / 3);
     if ((float)lives[index]->nbLives / (float)lives[index]->maxLives <= (float)1 / 3)
         lifeColor = RED;
     else if ((float)lives[index]->nbLives / (float)lives[index]->maxLives <= (float)2 / 3)
         lifeColor = ORANGE;
     if (lives[index]->isInvincible)
         lifeColor = PINK;
-    DrawRectangle((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x, positions[index]->y / screenRatio.y,
-                  lifeBarSize, LIVES_BAR_HEIGHT / screenRatio.y, lifeColor);
+    DrawRectangle(static_cast<int>((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x), static_cast<int>(positions[index]->y / screenRatio.y),
+                  static_cast<int>(lifeBarSize), static_cast<int>(LIVES_BAR_HEIGHT / screenRatio.y), lifeColor);
     if (LIVES_BAR_HEIGHT / screenRatio.y > 3)
-        DrawRectangleLines((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x,
-                           positions[index]->y / screenRatio.y,
-                           (drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3,
-                           (LIVES_BAR_HEIGHT + 1) / screenRatio.y, lifeColor);
+        DrawRectangleLines(static_cast<int>((positions[index]->x + drawables[index]->spriteRect.width / 2) / screenRatio.x),
+                           static_cast<int>(positions[index]->y / screenRatio.y),
+                           static_cast<int>((drawables[index]->spriteRect.width * (spriteInfos[index]->scaleFactor / screenRatio.x) + 1) * 2 / 3),
+                           static_cast<int>((LIVES_BAR_HEIGHT + 1) / screenRatio.y), lifeColor);
 }

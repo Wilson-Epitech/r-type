@@ -65,8 +65,8 @@ void ecs::system::CollisionSystem::retrieveSpritesSizes(SparseArray<component::S
             spritePath.read((char *)&tmpHeight, LENGTH_IN_BYTES);
             tmpWidth = ntohl(tmpWidth);
             tmpHeight = ntohl(tmpHeight);
-            spritesInfos[i]->spriteWidth = (tmpWidth / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor;
-            spritesInfos[i]->spriteHeight = tmpHeight * spritesInfos[i]->scaleFactor;
+            spritesInfos[i]->spriteWidth = static_cast<std::size_t>((tmpWidth / spritesInfos[i]->patternNb) * spritesInfos[i]->scaleFactor);
+            spritesInfos[i]->spriteHeight = static_cast<std::size_t>(tmpHeight * spritesInfos[i]->scaleFactor);
         }
     }
 }

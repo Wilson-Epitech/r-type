@@ -38,7 +38,6 @@ namespace network {
         static void handleCtrlC(const int signal) {
             if (signal == SIGINT)
                 _isSigInt = true;
-                exit(0);
         }
 
         inline static bool _isSigInt; ///< Indicates if SIGINT signal has been catch.
