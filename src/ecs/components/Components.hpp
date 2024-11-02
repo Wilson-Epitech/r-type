@@ -124,7 +124,8 @@ namespace ecs {
         LEVEL1,      ///< First level
         LEVEL1_BOSS, ///< First level after the boss was triggered
         LEVEL2,      ///< Second level
-        LEVEL2_BOSS  ///< Second level after the boss was triggered
+        LEVEL2_BOSS,  ///< Second level after the boss was triggered
+        LEVEL3,      ///< Final level
     };
 
     namespace component {
