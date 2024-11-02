@@ -29,6 +29,8 @@
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
 #define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"    ///< The background music path.
 #define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
+#define BACK_WEAPON_PATH "assets/back_weapon.png"             ///< The back weapon sprite path.
+#define FRONT_WEAPON_PATH "assets/front_weapon.png"           ///< The front weapon sprite path.
 
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.
@@ -50,5 +52,7 @@
 #define LEVEL1_BOSS_SCALE_FACTOR 10    ///< The scale factor for the level 1 boss sprite.
 #define BACKGROUND_SCALE_FACTOR 0.625  ///< The scale factor for the background sprite.
 #define POWERUP_SCALE_FACTOR 0.5       ///< The scale factor for the powerup sprite.
+#define FRONT_WEAPON_SCALE_FACTOR 0.5  ///< The scale factor for the front weapon sprite.
+#define BACK_WEAPON_SCALE_FACTOR 0.5   ///< The scale factor for the back weapon sprite.
 
 #endif /* !ASSETS_HPP_ */

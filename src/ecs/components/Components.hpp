@@ -70,7 +70,10 @@ namespace ecs {
         TEXT,                 ///< Text entity
         POWERUP,              ///< Powerup entity
         POWERUP_TEMPLATE,     ///< Powerup template entity
-        BOSS_LEVEL1           ///< Level1 Boss' entity
+        BOSS_LEVEL1,          ///< Level1 Boss' entity
+        WEAPON,              ///< Weapon entity
+        WEAPON_TEMPLATE,     ///< Weapon template entity
+        WEAPON_SPRITES       ///< Weapon sprites entity
     };
 
     /**
@@ -90,7 +93,8 @@ namespace ecs {
         SCORE,          ///< Score component
         TEXTINFOS,      ///< Text component
         ACTIVEPOWERUP,  ///< Activated powerup component
-        MOVEMENTPATTERN ///< Movement pattern component
+        MOVEMENTPATTERN,///< Movement pattern component
+        PLAYERWEAPON    ///< Player weapon component
     };
 
     /**
@@ -125,6 +129,17 @@ namespace ecs {
         LEVEL1_BOSS, ///< First level after the boss was triggered
         LEVEL2,      ///< Second level
         LEVEL2_BOSS  ///< Second level after the boss was triggered
+    };
+
+    /**
+     * @enum WeaponType
+     * @brief Enum representing different player weapon types.
+     */
+    enum WeaponType {
+        NO_WEAPON,      ///< No weapon
+        FRONT_WEAPON,   ///< Weapon at the front of the player
+        BACK_WEAPON,    ///< Weapon at the back of the player
+        END_WEAPON      ///< End of the weapon type enum
     };
 
     namespace component {
@@ -366,6 +381,24 @@ namespace ecs {
                         movementPatternType == other.movementPatternType);
             }
         };
+
+        /**
+         * @struct Weapon
+         * @brief Component for the player weapon information
+        */
+        struct Weapon {
+            WeaponType weaponType = WeaponType::NO_WEAPON; ///< Type of the powerup
+            std::size_t spawnRate = 5; ///< 1 chance of spawn in spawnRate (1 / spawnRate)
+            float activeTime = 5;       ///< How much time a plyer can have a weapon since he get it
+            bool hasBeenTaken = false;  ///< Indicates if the weapon has been taken by the player
+            std::size_t playerIndex = 0;    ///< Entity of the player that have activated the weapon
+            bool isActivated = false;   ///< Indicates if the weapon is activated
+            std::chrono::steady_clock::time_point spawnTime = std::chrono::steady_clock::now(); ///< The time when the weapon as been activated by the player
+
+            bool operator==(const Weapon &other) const {
+                return (weaponType == other.weaponType && playerIndex == other.playerIndex);
+            }
+        };
     }
 }
 
@@ -393,8 +426,8 @@ struct EntityData {
                 areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
                 areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component) ||
-                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component,
-                                                                     other.component));
+                areComponentsEquals<ecs::component::MovementPattern>(name, ecs::ComponentName::MOVEMENTPATTERN, component, other.component) ||
+                areComponentsEquals<ecs::component::Weapon>(name, ecs::ComponentName::PLAYERWEAPON, component, other.component));
         }
         return false;
     }
@@ -441,10 +474,12 @@ void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textIn
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern);
+void operator<<(std::ostringstream &oss, const ecs::component::Weapon &weapons);
 void operator<<(std::ostringstream &oss, const EntityData &entityData);
 
 void operator>>(std::istringstream &iss, ecs::EntityType &type);
 void operator>>(std::istringstream &iss, ecs::MovementType &movementType);
+void operator>>(std::istringstream &iss, ecs::WeaponType &weaponType);
 void operator>>(std::istringstream &iss, ecs::ComponentName &name);
 void operator>>(std::istringstream &iss, ecs::component::Position &position);
 void operator>>(std::istringstream &iss, ecs::component::Velocity &velocity);
@@ -458,6 +493,7 @@ void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern);
+void operator>>(std::istringstream &iss, ecs::component::Weapon &weapons);
 void operator>>(std::istringstream &iss, EntityData &entityData);
 
 #endif /* !COMPONENTS_HPP_ */

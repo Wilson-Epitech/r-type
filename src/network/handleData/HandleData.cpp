@@ -36,6 +36,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
     std::vector<EntityData> activePowerupInfosData =
         retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
+    std::vector<EntityData> weaponData = retrieveComponentUpdates<ecs::component::Weapon>(reg, ecs::ComponentName::PLAYERWEAPON);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -45,6 +46,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     network::HandleData::addEntityDataToSend(scoresData, data);
     network::HandleData::addEntityDataToSend(textInfosData, data);
     network::HandleData::addEntityDataToSend(activePowerupInfosData, data);
+    network::HandleData::addEntityDataToSend(weaponData, data);
 
     if (isServer)
         sendEntitiesDataForNewLevel(reg, data);
@@ -62,6 +64,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
         fillEntityComponentData<ecs::component::TextInfos>(reg, newEntity, data, ecs::ComponentName::TEXTINFOS);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, newEntity, data, ecs::ComponentName::ACTIVEPOWERUP);
         fillEntityComponentData<ecs::component::MovementPattern>(reg, newEntity, data, ecs::ComponentName::MOVEMENTPATTERN);
+        fillEntityComponentData<ecs::component::Weapon>(reg, newEntity, data, ecs::ComponentName::PLAYERWEAPON);
     }
     return data;
 }
@@ -89,6 +92,7 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::TextInfos>(reg, i, data, ecs::ComponentName::TEXTINFOS);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, i, data, ecs::ComponentName::ACTIVEPOWERUP);
         fillEntityComponentData<ecs::component::MovementPattern>(reg, i, data, ecs::ComponentName::MOVEMENTPATTERN);
+        fillEntityComponentData<ecs::component::Weapon>(reg, i, data, ecs::ComponentName::PLAYERWEAPON);
     }
     return data;
 }
@@ -108,6 +112,7 @@ std::unordered_map<ecs::ComponentName, std::any> network::HandleData::getCompone
     componentCorrespondence.insert({ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}});
     componentCorrespondence.insert({ecs::ComponentName::ACTIVEPOWERUP, ecs::component::ActivePowerup{}});
     componentCorrespondence.insert({ecs::ComponentName::MOVEMENTPATTERN, ecs::component::MovementPattern{}});
+    componentCorrespondence.insert({ecs::ComponentName::PLAYERWEAPON, ecs::component::Weapon{}});
     return componentCorrespondence;
 }
 
@@ -168,6 +173,7 @@ void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::TextInfos>(reg, data, ecs::ComponentName::TEXTINFOS);
     insertComponent<ecs::component::ActivePowerup>(reg, data, ecs::ComponentName::ACTIVEPOWERUP);
     insertComponent<ecs::component::MovementPattern>(reg, data, ecs::ComponentName::MOVEMENTPATTERN);
+    insertComponent<ecs::component::Weapon>(reg, data, ecs::ComponentName::PLAYERWEAPON);
 }
 
 void network::HandleData::updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg) {
