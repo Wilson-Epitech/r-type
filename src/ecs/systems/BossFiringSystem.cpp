@@ -62,7 +62,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
                     Level3BossShotLoaded = true;
                 }
                 addExplodingShot(i, reg);
-                // makeShootExplode(reg);
+                makeShootExplode(reg);
             }
             for (std::size_t j = 0; j < timer.size(); j++) {
                 if (timer[j].first == i) {
@@ -156,20 +156,20 @@ std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg)
     return 0;
 }
 
-std::size_t ecs::system::BossFiringSystem::makeShootExplode(Registry &reg)
+void ecs::system::BossFiringSystem::makeShootExplode(Registry &reg)
 {
     SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::ShootExplosion> &shootExplosions = reg.getComponents<component::ShootExplosion>();
 
-    for (std::size_t i = 0; i < enemyShootVelocities.size() && i < types.size(); ++i) {
-        if (enemyShootVelocities[i] && types[i]) {
+    for (std::size_t i = 0; i < enemyShootVelocities.size() && i < types.size() && i < shootExplosions.size() && i < positions.size(); ++i) {
+        if (enemyShootVelocities[i] && types[i] && shootExplosions[i] && positions[i]) {
             if (types[i]->entityType == ecs::EntityType::BOSS_SHOT_1) {
-                // std::cout << "Pos to explode -> " << shootExplosions[i]->positionToExplode << "\nActual pos ->" << positions[i]->x << std::endl;
-                // if (shootExplosions[i]->positionToExplode >= positions[i]->x) {
-                    // enemyShootVelocities[i]->vx = 0;
-                // }
+                std::cout << "Pos to explode -> " << shootExplosions[i]->positionToExplode << "\nActual pos ->" << positions[i]->x << std::endl;
+                if (shootExplosions[i]->positionToExplode >= positions[i]->x) {
+                    enemyShootVelocities[i]->vx = 0;
+                }
             }
         }
     }

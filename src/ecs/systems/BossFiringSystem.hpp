@@ -56,7 +56,7 @@ namespace ecs {
             float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
             std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
             void addExplodingShot(const std::size_t &bossIndex, Registry &reg);
-            std::size_t makeShootExplode(Registry &reg);
+            void makeShootExplode(Registry &reg);
         };
     }
 }
