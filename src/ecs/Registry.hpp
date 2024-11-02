@@ -47,7 +47,7 @@ namespace ecs {
          * @brief Constructs a `Registry` class instance.
          * It sets the spaceships available colors and the spaceships colors to positions correspondence.
          */
-        Registry() : _availableSpaceshipColors({CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR}) {
+        Registry() : _availableSpaceshipColors({CYAN_COLOR, BEIGE_COLOR, GOLD_COLOR, PINK_COLOR}), _isFriendlyFireActivated(false) {
             initSpaceshipColorPositionCorrespondence();
         }
 
@@ -358,6 +358,22 @@ namespace ecs {
             }
         }
 
+        /**
+         * @brief Retrieves the variable containing the friendly fire status
+         * @return true if the friendly fire is activated
+         * @return false otherwise
+         */
+        bool getIsFriendlyFireActivated() {
+            return _isFriendlyFireActivated;
+        };
+
+        /**
+         * @brief Updates the isFriendlyFireActivated variable to the new status passed in parameter.
+         */
+        void setIsFriendlyFireActivated(const bool &value) {
+            _isFriendlyFireActivated = value;
+        };
+
       private:
         std::map<std::size_t, entity_t> _players;                        ///< A map of client IDs to player entity IDs.
         std::function<void(Registry &)> _initPlayerSystem;               ///< The player initialization system function.
@@ -376,6 +392,7 @@ namespace ecs {
         std::vector<std::pair<ecs::CustomColor, ecs::component::Position>>
             _spaceshipColorPositionCorrespondence; ///< A vector associating the spaceship color to the position the corresponding spaceship
                                                    ///< should be at level start.
+        bool _isFriendlyFireActivated; /// A boolean containing the friendly fire state.
     };
 }
 
