@@ -35,7 +35,6 @@ void ecs::system::WeaponSystem::desactivateWeapon(Registry &reg, const std::size
 
     if (!weapons[index]->isActivated)
         return;
-
     if (Lib::isTimeElapsed(weapons[index]->spawnTime, weapons[index]->activeTime))
         reg.killEntity(index);
 }
