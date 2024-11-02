@@ -45,7 +45,8 @@ void ecs::system::FiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::FiringSystem::addEveryShoot(Registry &reg, const std::size_t &playerIndex, const std::size_t &shootPower, const float &shootSize) {
+void ecs::system::FiringSystem::addEveryShoot(Registry &reg, const std::size_t &playerIndex, const std::size_t &shootPower,
+                                              const float &shootSize) {
     SparseArray<component::Weapon> &weapons = reg.getComponents<component::Weapon>();
     std::size_t playerShootIndex = getPlayerShootIndex(reg);
     ecs::WeaponType weaponType = ecs::WeaponType::NO_WEAPON;
@@ -65,7 +66,8 @@ void ecs::system::FiringSystem::addEveryShoot(Registry &reg, const std::size_t &
     addShot(playerIndex, reg, shootPower, shootSize, weaponType);
 }
 
-void ecs::system::FiringSystem::addShot(const std::size_t &playerIndex, Registry &reg, const std::size_t &shootPower, const float &shootSize, const ecs::WeaponType &weaponType) {
+void ecs::system::FiringSystem::addShot(const std::size_t &playerIndex, Registry &reg, const std::size_t &shootPower,
+                                        const float &shootSize, const ecs::WeaponType &weaponType) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -94,7 +96,8 @@ void ecs::system::FiringSystem::addShot(const std::size_t &playerIndex, Registry
     }
 
     positions.insertAt(entity, ecs::component::Position{shotX, shotY});
-    velocities.insertAt(entity, ecs::component::Velocity{shotVelocity.first, shotVelocity.second, velocities[playerShootIndex]->possibleVelocity});
+    velocities.insertAt(entity,
+                        ecs::component::Velocity{shotVelocity.first, shotVelocity.second, velocities[playerShootIndex]->possibleVelocity});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{
                                      spriteInfos[playerShootIndex]->spritePath, spriteInfos[playerShootIndex]->patternNb,
                                      spriteInfos[playerShootIndex]->firstPattern, spriteInfos[playerShootIndex]->scaleFactor * shootSize});

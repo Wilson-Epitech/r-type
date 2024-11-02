@@ -52,15 +52,15 @@ void ecs::system::WeaponSystem::activateWeapon(Registry &reg, const std::size_t 
             continue;
         if (i == index)
             continue;
-        if (weapons[i]->playerIndex == weapons[index]->playerIndex && weapons[i]->weaponType == weapons[index]->weaponType && weapons[i]->isActivated) {
+        if (weapons[i]->playerIndex == weapons[index]->playerIndex && weapons[i]->weaponType == weapons[index]->weaponType &&
+            weapons[i]->isActivated) {
             weapons[i]->spawnTime = std::chrono::steady_clock::now();
             reg.killEntity(index);
         }
     }
 }
 
-void ecs::system::WeaponSystem::summonWeapon(Registry &reg, const std::size_t &index)
-{
+void ecs::system::WeaponSystem::summonWeapon(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
