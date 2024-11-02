@@ -34,8 +34,8 @@
 #include "SpriteAnimationSystem.hpp"
 
 #define INVALID_ARGUMENTS_MESSAGE                                                                                                          \
-    "Usage: ./server [port] --difficulty [difficultyMode]\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by "   \
-    "default)" ///< The message to display when arguments passed in parameter are invalid
+    "Usage: ./server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]\n\tdifficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by "   \
+    "default)\n\tfriendlyFireState can be 'true' or 'false' (it is set to false by default)" ///< The message to display when arguments passed in parameter are invalid
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30   ///< Minimum spawn height for enemies.

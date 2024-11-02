@@ -44,6 +44,8 @@ void game::RtypeGameServer::handleArguments(std::vector<std::string> &arguments)
         _difficultyMode = MEDIUM;
     if (_friendlyFireState == DEFAULT_FRIENDLY_FIRE)
         _friendlyFireState = WITHOUT_FRIENDLY_FIRE;
+    if (_friendlyFireState == WITH_FRIENDLY_FIRE)
+        _reg.setIsFriendlyFireActivated(true);
 }
 
 void game::RtypeGameServer::spawnEntities() {
