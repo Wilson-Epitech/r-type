@@ -144,7 +144,7 @@ float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const st
     else
         speed += velocities[shootIndex]->vx;
 
-    angle = atan2f(positions[playerEntity]->y - positions[enemyIndex]->y, positions[playerEntity]->x - positions[enemyIndex]->x);
+    angle = atan2f(positions[playerEntity]->y - positions[shootIndex]->y, positions[playerEntity]->x - positions[shootIndex]->x);
     velocities[shootIndex]->vx = speed * cosf(angle);
     velocities[shootIndex]->vy = speed * sinf(angle);
     return (angle * 180 / M_PI) + 180;
