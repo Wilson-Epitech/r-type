@@ -20,6 +20,7 @@ set(SRC
     ecs/systems/SpriteAnimationSystem.cpp
     ecs/systems/MusicSystem.cpp
     ecs/systems/ScoreSystem.cpp
+    ecs/systems/GameOverSystem.cpp
     ecs/systems/PowerupSystem.cpp
     ecs/systems/ResetForNextLevel.cpp
     runGame/RunGame.cpp
