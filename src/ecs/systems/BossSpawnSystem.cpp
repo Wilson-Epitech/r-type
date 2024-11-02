@@ -17,7 +17,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
-    static bool finalLevelBoss = false;
+    static std::size_t finalLevelBoss = 0;
     std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
@@ -50,20 +50,26 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                             spriteInfos[bossEntity]->patternNb = LEVEL2_BOSS_NB_PATTERN;
                             spriteInfos[bossEntity]->scaleFactor = LEVEL2_BOSS_SCALE_FACTOR;
                         }
-                        createNewBoss(reg, types, bossEntity);
+                        createNewBoss(reg, types, bossEntity, LEVEL1_BOSS_SPAWN_X, LEVEL1_BOSS_SPAWN_Y);
                         bossSpawned = true;
                         isTimerSet = false;
                     }
                 }
             }
         }
-        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL3 && !finalLevelBoss) {
-            spriteInfos[bossEntity]->spritePath = "assets/r-typesheet40.png";
+        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL3 && finalLevelBoss < 4) {
+            if (finalLevelBoss == 0) {
+                positions[bossEntity]->x = 1200;
+                positions[bossEntity]->y = 200;
+            } else {
+                positions[bossEntity]->y += 200;
+            }
+            spriteInfos[bossEntity]->spritePath = "assets/bossLevel3.png";
             spriteInfos[bossEntity]->isLoaded = false;
-            spriteInfos[bossEntity]->patternNb = 4;
-            spriteInfos[bossEntity]->scaleFactor = 10;
-            createNewBoss(reg, types, bossEntity);
-            finalLevelBoss = true;
+            spriteInfos[bossEntity]->patternNb = 1;
+            spriteInfos[bossEntity]->scaleFactor = 1.2;
+            createNewBoss(reg, types, bossEntity, positions[bossEntity]->x, positions[bossEntity]->y);
+            finalLevelBoss += 1;
         }
         if (!positions[i])
             continue;
@@ -74,7 +80,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i) {
+void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i, const float &x, const float &y) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -84,7 +90,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
 
     entity_t entity = reg.spawnEntity();
 
-    positions.insertAt(entity, ecs::component::Position{LEVEL1_BOSS_SPAWN_X, LEVEL1_BOSS_SPAWN_Y});
+    positions.insertAt(entity, ecs::component::Position{x, y});
     velocities.insertAt(entity, ecs::component::Velocity{LEVEL1_BOSS_VELOCITY, 0, 0});
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});

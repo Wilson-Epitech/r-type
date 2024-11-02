@@ -55,7 +55,7 @@ namespace ecs {
              * @param types Array of types components for entities.
              * @param i Index of the boss entity.
              */
-            void createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i);
+            void createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i, const float &x, const float &y);
 
             /**
              * @brief Find the index of the Level1 Boss entity.
