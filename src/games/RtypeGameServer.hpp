@@ -111,9 +111,9 @@
 #define TITLE_TEXT_Y 50               ///< The text y position for the title entity.
 #define TITLE_TEXT_SIZE 20            ///< The text size for the title entity.
 
-#define WEAPON_NAME "weapon_template"       ///< Defines the name of the weapon entity.
-#define WEAPON_SPAWN_RATE 5                 ///< The spawn rate of weapon
-#define WEAPON_ACTIVE_TIME 10               ///< How long a weapon will last
+#define WEAPON_NAME "weapon_template" ///< Defines the name of the weapon entity.
+#define WEAPON_SPAWN_RATE 5           ///< The spawn rate of weapon
+#define WEAPON_ACTIVE_TIME 10         ///< How long a weapon will last
 
 #define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
 
