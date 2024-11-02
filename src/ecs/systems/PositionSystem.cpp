@@ -55,14 +55,17 @@ bool ecs::system::PositionSystem::handleWeaponPosition(const std::size_t &weapon
     if (!positions[weapons[weaponIndex]->playerIndex] || !spriteInfos[weapons[weaponIndex]->playerIndex])
         return false;
     if (weapons[weaponIndex]->weaponType == ecs::WeaponType::FRONT_WEAPON) {
-        x += (float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteWidth / spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
+        x += (float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteWidth /
+             spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
         x += spriteInfos[weaponIndex]->spriteWidth / 2;
     }
     if (weapons[weaponIndex]->weaponType == ecs::WeaponType::BACK_WEAPON) {
-        x -= (float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteWidth / spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
+        x -= (float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteWidth /
+             spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
         x -= spriteInfos[weaponIndex]->spriteWidth / 2;
     }
-    y += ((float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteHeight / 2) / spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
+    y += ((float)spriteInfos[weapons[weaponIndex]->playerIndex]->spriteHeight / 2) /
+         spriteInfos[weapons[weaponIndex]->playerIndex]->scaleFactor;
     positions[weaponIndex]->x = positions[weapons[weaponIndex]->playerIndex]->x + x;
     positions[weaponIndex]->y = positions[weapons[weaponIndex]->playerIndex]->y + y;
     return true;

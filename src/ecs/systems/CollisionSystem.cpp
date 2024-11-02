@@ -101,12 +101,13 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
 
 bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
-            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) && !isEnemyAndPowerup(firstType, secondType) &&
-            !isEnemyShotAndPowerup(firstType, secondType) && !isPlayerShotAndPowerup(firstType, secondType) &&
-            !isBossLevel1AndBossLevel1Shot(firstType, secondType) && !isBossLevel1AndEnemyShot(firstType, secondType) &&
-            !isBossLevel1AndEnemy(firstType, secondType) && !isBossLevel1ShotAndPowerUp(firstType, secondType) &&
-            !isBossLevel1ShotAndPlayerShot(firstType, secondType) && !isEnemyAndWeapon(firstType, secondType) &&
-            !isEnemyShotAndWeapon(firstType, secondType) && !isPlayerShotAndWeapon(firstType, secondType) && !isPowerupAndWeapon(firstType, secondType));
+            !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) &&
+            !isEnemyAndPowerup(firstType, secondType) && !isEnemyShotAndPowerup(firstType, secondType) &&
+            !isPlayerShotAndPowerup(firstType, secondType) && !isBossLevel1AndBossLevel1Shot(firstType, secondType) &&
+            !isBossLevel1AndEnemyShot(firstType, secondType) && !isBossLevel1AndEnemy(firstType, secondType) &&
+            !isBossLevel1ShotAndPowerUp(firstType, secondType) && !isBossLevel1ShotAndPlayerShot(firstType, secondType) &&
+            !isEnemyAndWeapon(firstType, secondType) && !isEnemyShotAndWeapon(firstType, secondType) &&
+            !isPlayerShotAndWeapon(firstType, secondType) && !isPowerupAndWeapon(firstType, secondType));
 }
 
 bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
@@ -183,10 +184,9 @@ bool ecs::system::CollisionSystem::isBossLevel1ShotAndPlayerShot(const ecs::Enti
             (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::BOSS_SHOT_1));
 }
 
-bool ecs::system::CollisionSystem::isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType)
-{
+bool ecs::system::CollisionSystem::isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
     return ((firstType == ecs::EntityType::WEAPON && secondType == ecs::EntityType::POWERUP) ||
-        (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::WEAPON));
+            (firstType == ecs::EntityType::POWERUP && secondType == ecs::EntityType::WEAPON));
 }
 
 bool ecs::system::CollisionSystem::enablePlayerWeapon(Registry &reg, const std::size_t &i, const std::size_t &j) {

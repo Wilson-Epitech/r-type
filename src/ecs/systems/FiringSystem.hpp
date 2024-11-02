@@ -53,7 +53,8 @@ namespace ecs {
              * @param shootSize The size of the shoot.
              * @param weaponType The type of weapon that shot.
              */
-            void addShot(const std::size_t &index, Registry &reg, const std::size_t &shootPower, const float &shootSize, const ecs::WeaponType &weaponType);
+            void addShot(const std::size_t &index, Registry &reg, const std::size_t &shootPower, const float &shootSize,
+                         const ecs::WeaponType &weaponType);
 
             /**
              * @brief Retrieves the index of the player shot component.

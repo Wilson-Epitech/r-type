@@ -115,9 +115,9 @@
 #define WEAPON_SPAWN_RATE 5                 ///< The spawn rate of weapon
 #define WEAPON_ACTIVE_TIME 10               ///< How long a weapon will last
 
-#define FRONT_WEAPON_NAME "front_weapon_sprite"     ///< Defines the name of the weapon front sprite entity.
+#define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
 
-#define BACK_WEAPON_NAME "back_weapon_sprite"       ///< Defines the name of the weapon back sprite entity.
+#define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
 
 namespace game {
 

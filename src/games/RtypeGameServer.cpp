@@ -173,7 +173,8 @@ void game::RtypeGameServer::addComponentsToEntities() {
     textInfos.insertAt(_stringToEntity[POWER_UP_TEMPLATE_NAME],
                        ecs::component::TextInfos{POWERUP_TEMPLATE_TEXT_CONTENT, 0, 0, POWERUP_TEMPLATE_TEXT_SIZE, FONT_PATH, ORANGE_COLOR});
 
-    weapons.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, WEAPON_SPAWN_RATE, WEAPON_ACTIVE_TIME});
+    weapons.insertAt(_stringToEntity[WEAPON_NAME],
+                     ecs::component::Weapon{ecs::WeaponType::NO_WEAPON, WEAPON_SPAWN_RATE, WEAPON_ACTIVE_TIME});
     types.insertAt(_stringToEntity[WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_TEMPLATE});
 
     weapons.insertAt(_stringToEntity[BACK_WEAPON_NAME], ecs::component::Weapon{ecs::WeaponType::BACK_WEAPON});
