@@ -39,6 +39,13 @@ void RunGame::runServer() {
             _networkInstance->sendUpdatedData(_reg, dataReceivedList);
             _reg.clearActualTurnNewEntities();
             _reg.clearActualTurnDeadEntities();
+            if (_gameState(_reg) == game::GameStatus::LOOSE) {
+                _reg.runSystems();
+                _networkInstance->sendUpdatedData(_reg, dataReceivedList);
+                break;
+            }
+        } else {
+            continue;
         }
         _reg.runSystems();
         disconnectedPlayerEntity = _networkInstance->manageConnection();
