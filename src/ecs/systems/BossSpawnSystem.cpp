@@ -16,7 +16,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
-    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
+    std::size_t bossEntity = findChosenEntity(types, ecs::EntityType::BOSS);
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
         if (!types[i])
@@ -76,7 +76,7 @@ void ecs::system::BossSpawnSystem::spawnBossLevel3(Registry &reg, SparseArray<co
 void ecs::system::BossSpawnSystem::updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types)
 {
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
-    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
+    std::size_t bossEntity = findChosenEntity(types, ecs::EntityType::BOSS);
 
     if (bossEntity < bossSpawns.size()) {
         if (bossSpawns[bossEntity]) {
@@ -92,7 +92,7 @@ void ecs::system::BossSpawnSystem::changeSpriteLevel2Boss(Registry &reg, SparseA
 {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
-    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
+    std::size_t bossEntity = findChosenEntity(types, ecs::EntityType::BOSS);
 
     if (bossEntity < bossSpawns.size() && bossEntity < spriteInfos.size()) {
         if (!bossSpawns[bossEntity] || !spriteInfos[bossEntity])
@@ -134,7 +134,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     movementPatterns[i]->movementPatternType = ecs::MovementType::STRAIGHT;
 }
 
-std::size_t ecs::system::BossSpawnSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
+std::size_t ecs::system::BossSpawnSystem::findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
 {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == entityToFind)

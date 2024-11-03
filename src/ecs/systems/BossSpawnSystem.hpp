@@ -50,7 +50,7 @@ namespace ecs {
 
           private:
             /**
-             * @brief Creates the boss for level 1 according to desired characteristic.
+             * @brief Creates the boss according to desired characteristic.
              * @param reg The ECS registry containing entities and their components.
              * @param types Array of types components for entities.
              * @param i Index of the boss entity.
@@ -58,11 +58,11 @@ namespace ecs {
             void createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i);
 
             /**
-             * @brief Find the index of the Level1 Boss entity.
+             * @brief Find the index of the chosen entity.
              * @param types Array of types components for entities.
-             * @return The index of the boss' entity.
+             * @return The index of the chosen entity.
              */
-            std::size_t findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
+            std::size_t findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
 
             /**
              * @brief Changes the current level depending on which boss was slayed.
