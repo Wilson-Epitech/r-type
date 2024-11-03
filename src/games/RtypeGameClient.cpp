@@ -31,6 +31,7 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::TextFont>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
+    _reg.registerComponent<ecs::component::Weapon>();
     _reg.registerComponent<ecs::component::GameOver>();
 }
 
