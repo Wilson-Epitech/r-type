@@ -103,8 +103,7 @@ void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, Spars
     }
 }
 
-std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg)
-{
+std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
     for (std::size_t i = 0; i < types.size(); i++) {

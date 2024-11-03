@@ -15,6 +15,7 @@
 #ifndef BOSSSPAWNSYSTEM_HPP_
 #define BOSSSPAWNSYSTEM_HPP_
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
 
@@ -84,7 +85,6 @@ namespace ecs {
              * @param bossEntity Index corresponding to the entity of the boss.
              */
             void spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity);
-
         };
     }
 }
