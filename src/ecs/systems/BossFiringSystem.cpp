@@ -7,8 +7,6 @@
 
 #include "BossFiringSystem.hpp"
 
-#define PI_VALUE 3.14 ///< Value of the mathematical constant pi
-
 void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();

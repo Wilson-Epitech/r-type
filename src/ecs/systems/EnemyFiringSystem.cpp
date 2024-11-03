@@ -7,8 +7,6 @@
 
 #include "EnemyFiringSystem.hpp"
 
-#define PI_VALUE 3.14 ///< Value of the mathematical constant pi
-
 void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
