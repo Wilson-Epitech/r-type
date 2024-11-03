@@ -17,6 +17,8 @@ void ecs::system::ControlSystem::operator()(Registry &reg) {
         return;
     entity_t playerEntity = player[0];
     if (shootings[playerEntity] && velocities[playerEntity]) {
+        if (shootings[playerEntity]->isShooting)
+            shootings[playerEntity]->isShooting = false;
         if (IsKeyDown(KEY_SPACE) || IsGamepadTriggerButtonDown(gamepad))
             shootings[playerEntity]->isShooting = true;
         if (IsKeyDown(KEY_UP)) {
