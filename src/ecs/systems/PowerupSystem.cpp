@@ -18,7 +18,7 @@ void ecs::system::PowerupSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (lives[i] && types[i]) {
             if (lives[i]->nbLives == 0) {
-                if (lives[i]->hasToSummonPowerup)
+                if (lives[i]->hasToSummonPowerupAndWeapon)
                     summonPowerUp(reg, i);
                 if (types[i]->entityType == ecs::EntityType::POWERUP)
                     usedPowerup = usePowerup(reg, i, lives);

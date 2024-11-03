@@ -21,6 +21,7 @@
 #include "DrawSpriteSystem.hpp"
 #include "DrawTextSystem.hpp"
 #include "FiringSystem.hpp"
+#include "GameOverSystem.hpp"
 #include "MusicSystem.hpp"
 #include "PositionSystem.hpp"
 #include "SoundSystem.hpp"
@@ -84,6 +85,14 @@ namespace game {
          * manage the game's logic.
          */
         void addSystemsToRegistry() override;
+
+        /**
+         * @brief Checks if the game has reached a game-over state.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return true if all player entities are dead, meaning the game has ended.
+         * @return false if there are still active players, meaning the game continues.
+         */
+        bool checkGameOver(ecs::Registry &reg);
     };
 }
 

@@ -15,15 +15,35 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
 void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data) {
     std::vector<EntityData> positionData = retrieveComponentUpdates<ecs::component::Position>(reg, ecs::ComponentName::POSITION);
     std::vector<EntityData> spriteInfoData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
-
+    ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
+    static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point actualTime = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(actualTime - time0);
+    int timeRequired = 2;
+
     for (std::size_t i = 0; i < bossSlayed.size(); i++) {
-        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
             network::HandleData::addEntityDataToSend(positionData, data);
             network::HandleData::addEntityDataToSend(spriteInfoData, data);
             bossSlayed[i]->hasBeenSlayed = false;
         }
+    }
+    if (timeElapsed.count() >= timeRequired) {
+        std::vector<EntityData> playersShootingData;
+        std::map<std::size_t, entity_t> clientsToPlayers = reg.getPlayers();
+        for (auto &clientToPlayer : clientsToPlayers) {
+            if (shootings[clientToPlayer.second]) {
+                EntityData playerShootingData;
+                playerShootingData.name = ecs::ComponentName::SHOOTING;
+                playerShootingData.entityID = clientToPlayer.second;
+                playerShootingData.component = shootings[clientToPlayer.second].value();
+                playersShootingData.push_back(playerShootingData);
+            }
+        }
+        time0 = std::chrono::steady_clock::now();
+        network::HandleData::addEntityDataToSend(playersShootingData, data);
     }
 }
 
@@ -34,8 +54,11 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     std::vector<EntityData> livesData = retrieveComponentUpdates<ecs::component::Life>(reg, ecs::ComponentName::LIFE);
     std::vector<EntityData> scoresData = retrieveComponentUpdates<ecs::component::Score>(reg, ecs::ComponentName::SCORE);
     std::vector<EntityData> textInfosData = retrieveComponentUpdates<ecs::component::TextInfos>(reg, ecs::ComponentName::TEXTINFOS);
+    std::vector<EntityData> gameOverData = retrieveComponentUpdates<ecs::component::GameOver>(reg, ecs::ComponentName::GAMEOVER);
     std::vector<EntityData> activePowerupInfosData =
         retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
+    std::vector<EntityData> weaponData = retrieveComponentUpdates<ecs::component::Weapon>(reg, ecs::ComponentName::PLAYERWEAPON);
+    std::vector<EntityData> musicData = retrieveComponentUpdates<ecs::component::BackgroundMusicInfos>(reg, ecs::ComponentName::MUSIC);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -44,7 +67,10 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     network::HandleData::addEntityDataToSend(livesData, data);
     network::HandleData::addEntityDataToSend(scoresData, data);
     network::HandleData::addEntityDataToSend(textInfosData, data);
+    network::HandleData::addEntityDataToSend(gameOverData, data);
     network::HandleData::addEntityDataToSend(activePowerupInfosData, data);
+    network::HandleData::addEntityDataToSend(weaponData, data);
+    network::HandleData::addEntityDataToSend(musicData, data);
 
     if (isServer)
         sendEntitiesDataForNewLevel(reg, data);
@@ -60,8 +86,10 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
         fillEntityComponentData<ecs::component::BackgroundMusicInfos>(reg, newEntity, data, ecs::ComponentName::MUSIC);
         fillEntityComponentData<ecs::component::Score>(reg, newEntity, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, newEntity, data, ecs::ComponentName::TEXTINFOS);
+        fillEntityComponentData<ecs::component::GameOver>(reg, newEntity, data, ecs::ComponentName::GAMEOVER);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, newEntity, data, ecs::ComponentName::ACTIVEPOWERUP);
         fillEntityComponentData<ecs::component::MovementPattern>(reg, newEntity, data, ecs::ComponentName::MOVEMENTPATTERN);
+        fillEntityComponentData<ecs::component::Weapon>(reg, newEntity, data, ecs::ComponentName::PLAYERWEAPON);
     }
     return data;
 }
@@ -72,10 +100,12 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::Life> &lives = reg.getComponents<ecs::component::Life>();
     ecs::SparseArray<ecs::component::TextInfos> &textInfos = reg.getComponents<ecs::component::TextInfos>();
+    ecs::SparseArray<ecs::component::GameOver> &gameOverInfos = reg.getComponents<ecs::component::GameOver>();
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
-    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size();
+    for (std::size_t i = 0; i < positions.size() || i < velocities.size() || i < types.size() || i < lives.size() || i < textInfos.size() ||
+                            i < gameOverInfos.size();
          i++) {
         fillEntityComponentData<ecs::component::Position>(reg, i, data, ecs::ComponentName::POSITION);
         fillEntityComponentData<ecs::component::Velocity>(reg, i, data, ecs::ComponentName::VELOCITY);
@@ -87,8 +117,10 @@ DataToSend network::HandleData::fillAllEntitiesDataToSend(ecs::Registry &reg) {
         fillEntityComponentData<ecs::component::BackgroundMusicInfos>(reg, i, data, ecs::ComponentName::MUSIC);
         fillEntityComponentData<ecs::component::Score>(reg, i, data, ecs::ComponentName::SCORE);
         fillEntityComponentData<ecs::component::TextInfos>(reg, i, data, ecs::ComponentName::TEXTINFOS);
+        fillEntityComponentData<ecs::component::GameOver>(reg, i, data, ecs::ComponentName::GAMEOVER);
         fillEntityComponentData<ecs::component::ActivePowerup>(reg, i, data, ecs::ComponentName::ACTIVEPOWERUP);
         fillEntityComponentData<ecs::component::MovementPattern>(reg, i, data, ecs::ComponentName::MOVEMENTPATTERN);
+        fillEntityComponentData<ecs::component::Weapon>(reg, i, data, ecs::ComponentName::PLAYERWEAPON);
     }
     return data;
 }
@@ -106,8 +138,10 @@ std::unordered_map<ecs::ComponentName, std::any> network::HandleData::getCompone
     componentCorrespondence.insert({ecs::ComponentName::MUSIC, ecs::component::BackgroundMusicInfos{}});
     componentCorrespondence.insert({ecs::ComponentName::SCORE, ecs::component::Score{}});
     componentCorrespondence.insert({ecs::ComponentName::TEXTINFOS, ecs::component::TextInfos{}});
+    componentCorrespondence.insert({ecs::ComponentName::GAMEOVER, ecs::component::GameOver{}});
     componentCorrespondence.insert({ecs::ComponentName::ACTIVEPOWERUP, ecs::component::ActivePowerup{}});
     componentCorrespondence.insert({ecs::ComponentName::MOVEMENTPATTERN, ecs::component::MovementPattern{}});
+    componentCorrespondence.insert({ecs::ComponentName::PLAYERWEAPON, ecs::component::Weapon{}});
     return componentCorrespondence;
 }
 
@@ -166,8 +200,10 @@ void network::HandleData::updateEntity(ecs::Registry &reg, EntityData &data) {
     insertComponent<ecs::component::BackgroundMusicInfos>(reg, data, ecs::ComponentName::MUSIC);
     insertComponent<ecs::component::Score>(reg, data, ecs::ComponentName::SCORE);
     insertComponent<ecs::component::TextInfos>(reg, data, ecs::ComponentName::TEXTINFOS);
+    insertComponent<ecs::component::GameOver>(reg, data, ecs::ComponentName::GAMEOVER);
     insertComponent<ecs::component::ActivePowerup>(reg, data, ecs::ComponentName::ACTIVEPOWERUP);
     insertComponent<ecs::component::MovementPattern>(reg, data, ecs::ComponentName::MOVEMENTPATTERN);
+    insertComponent<ecs::component::Weapon>(reg, data, ecs::ComponentName::PLAYERWEAPON);
 }
 
 void network::HandleData::updateDeadEntities(DataToSend &dataReceived, ecs::Registry &reg) {

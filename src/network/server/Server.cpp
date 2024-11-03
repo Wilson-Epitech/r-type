@@ -74,29 +74,17 @@ std::size_t network::Server::getStillAliveClientNumber() {
 
 void network::Server::startReceiving() {
     _socket.async_receive_from(asio::buffer(_receiveBuffer), _remoteEndpoint,
-                               std::bind(&network::Server::handleReceive, this, std::placeholders::_1, std::placeholders::_2));
+                               std::bind(&network::Server::handleReceive, this, std::placeholders::_1));
 }
 
-void network::Server::handleReceive(const std::error_code &error, const std::size_t &byteTransfered) {
+void network::Server::handleReceive(const std::error_code &error) {
     if (!error) {
         std::memcpy(&_receivedMagicNbr, _receiveBuffer.data(), sizeof(_receivedMagicNbr));
-
-        if (_receivedMagicNbr != _magicNumber) {
-            std::cerr << "Invalid magic number" << std::endl;
-            startReceiving();
-            return;
-        }
 
         std::memcpy(&_messageType, _receiveBuffer.data() + sizeof(_receivedMagicNbr), sizeof(_messageType));
         std::memcpy(&_messageId, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType), sizeof(_messageId));
         std::memcpy(&_messageLen, _receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId),
                     sizeof(_messageLen));
-
-        if (byteTransfered != sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) + sizeof(_messageLen) + _messageLen) {
-            std::cerr << "Incomplete message received" << std::endl;
-            startReceiving();
-            return;
-        }
 
         std::string message(_receiveBuffer.data() + sizeof(_receivedMagicNbr) + sizeof(_messageType) + sizeof(_messageId) +
                                 sizeof(_messageLen),

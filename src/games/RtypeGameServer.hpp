@@ -24,6 +24,7 @@
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "FiringSystem.hpp"
+#include "GameOverSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
 #include "PlayerSpawnSystem.hpp"
@@ -32,6 +33,13 @@
 #include "ResetForNextLevel.hpp"
 #include "ScoreSystem.hpp"
 #include "SpriteAnimationSystem.hpp"
+#include "WeaponSystem.hpp"
+
+#define INVALID_ARGUMENTS_MESSAGE                                                                                                          \
+    "Usage: ./server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]\n\tdifficultyMode can be 'easy', 'medium', "  \
+    "or 'hard' (it is set to medium by "                                                                                                   \
+    "default)\n\tfriendlyFireState can be 'true' or 'false' (it is set to false by default)" ///< The message to display when arguments
+                                                                                             ///< passed in parameter are invalid
 
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30   ///< Minimum spawn height for enemies.
@@ -83,9 +91,21 @@
 #define LEVEL1_BOSS_NB_LIVES 100             ///< The number of lives for the level 1 boss.
 #define LEVEL1_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 1 boss.
 
+#define SPAWN_LEVEL2_BOSS_NAME "level2_boss" ///< Defines the name of the boss of level 2 spawn entity.
+#define LEVEL2_BOSS_NB_LIVES 100             ///< The number of lives for the level 2 boss.
+#define LEVEL2_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 2 boss.
+
+#define SPAWN_LEVEL3_BOSS_NAME "level3_boss" ///< Defines the name of the boss of level 3 spawn entity.
+#define LEVEL3_BOSS_NB_LIVES 100             ///< The number of lives for the level 3 boss.
+#define LEVEL3_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 3 boss.
+
 #define LEVEL1_BOSS_SHOT_NAME "level1_boss_shot" ///< Defines the name of the level 1 boss shot entity.
 #define LEVEL1_BOSS_SHOT_VX -10                  ///< The horizontal velocity for the boss shot.
 #define LEVEL1_BOSS_SHOT_VY 0.0                  ///< The vertical velocity for the boss shot.
+
+#define LEVEL2_BOSS_SHOT_NAME "level2_boss_shot" ///< Defines the name of the level 1 boss shot entity.
+#define LEVEL2_BOSS_SHOT_VX -10                  ///< The horizontal velocity for the boss shot.
+#define LEVEL2_BOSS_SHOT_VY 0.0                  ///< The vertical velocity for the boss shot.
 
 #define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_CONTENT "null"      ///< The text content for the powerup template entity.
@@ -98,17 +118,47 @@
 #define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define MUSIC_VOLUME 0.5   ///< The volume of the background music.
 
+#define MUSIC_BOSS1_NAME "music_boss1" ///< Defines the name of the boss 1 background music entity.
+#define MUSIC_BOSS1_VOLUME 1           ///< The volume of the boss 1 background music.
+
+#define MUSIC_BOSS2_NAME "music_boss2" ///< Defines the name of the boss 2 background music entity.
+#define MUSIC_BOSS2_VOLUME 1           ///< The volume of the boss 2 background music.
+
+#define MUSIC_BOSS3_NAME "music_boss3" ///< Defines the name of the boss 3 background music entity.
+#define MUSIC_BOSS3_VOLUME 1           ///< The volume of the boss 3 background music.
+
+#define MUSIC_LEVEL2_NAME "music_level2" ///< Defines the name of the level 2 background music entity.
+#define MUSIC_LEVEL2_VOLUME 1            ///< The volume of the level 2 background music.
+
+#define MUSIC_LEVEL3_NAME "music_level3" ///< Defines the name of the level 3 background music entity.
+#define MUSIC_LEVEL3_VOLUME 1            ///< The volume of the level 3 background music.
+
+#define DONT_PLAY_THE_MUSIC false ///< Define if the music has to be played at the begining of the game
+
 #define TEAM_SCORE_NAME "team_score"          ///< Defines the name of the team score entity.
 #define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
 #define TEAM_SCORE_TEXT_X 50                  ///< The text x position for the team score entity.
 #define TEAM_SCORE_TEXT_Y 100                 ///< The text y position for the team score entity.
 #define TEAM_SCORE_TEXT_SIZE 20               ///< The text size for the team score entity.
 
+#define GAME_OVER_NAME "gameover"      ///< Defines the name of the gameover entity.
+#define GAME_OVER_CONTENT "Game Over:" ///< The text content for the gameover entity.
+
 #define TITLE_NAME "title"            ///< Defines the name of the title entity.
 #define TITLE_TEXT_CONTENT "RType:"   ///< The text content for the title entity.
 #define TITLE_TEXT_X SCREEN_WIDTH / 2 ///< The text x position for the title entity.
 #define TITLE_TEXT_Y 50               ///< The text y position for the title entity.
 #define TITLE_TEXT_SIZE 20            ///< The text size for the title entity.
+
+#define WEAPON_NAME "weapon_template" ///< Defines the name of the weapon entity.
+#define WEAPON_SPAWN_RATE 5           ///< The spawn rate of weapon
+#define WEAPON_ACTIVE_TIME 10         ///< How long a weapon will last
+
+#define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
+
+#define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
+
+#define BOSS_NOT_REVERSIBLE false ///< The inability for the boss to reverse.
 
 namespace game {
 
@@ -117,10 +167,20 @@ namespace game {
      * @brief Enum representing the differents difficulty modes of the game.
      */
     enum DifficultyMode {
-        NO_MODE, ///< No mode
-        EASY,    ///< Easy mode
-        MEDIUM,  ///< Medium mode
-        HARD     ///< Hard mode
+        DEFAULT_DIFFICULTY, ///< Default initialization value
+        EASY,               ///< Easy mode
+        MEDIUM,             ///< Medium mode
+        HARD                ///< Hard mode
+    };
+
+    /**
+     * @enum FriendlyFireState
+     * @brief Enum representing the two possibles states for friendlyfire in the game.
+     */
+    enum FriendlyFireState {
+        DEFAULT_FRIENDLY_FIRE, ///< Default initialization value
+        WITHOUT_FRIENDLY_FIRE, ///< Without friendly fire
+        WITH_FRIENDLY_FIRE,    ///< With friendly fire
     };
 
     /**
@@ -137,29 +197,27 @@ namespace game {
          * @param gameName The name of the game, used for server-side management.
          *
          */
-        RtypeGameServer(const std::string difficultyMode = "medium", const std::string gameName = "R-Type");
+        RtypeGameServer(std::vector<std::string> arguments = {}, const std::string gameName = "R-Type");
         ~RtypeGameServer() = default;
-
-        /** @brief Updates the difficulty mode of the game.
-         *  @param difficultyMode  The mode of difficulty chosen.
-         */
-        void setGameDifficulty(const std::string &difficultyMode) {
-            auto it = _stringToDifficultyMode.find(difficultyMode);
-            if (it == _stringToDifficultyMode.end()) {
-                throw Error("Invalid difficulty mode");
-            }
-            _mode = it->second;
-        }
 
       private:
         /**
-         * @brief Manages the game state and updates the registry accordingly.
-         * This method is responsible for controlling the flow of the game and ensuring the
-         * game state remains in sync with server-side operations.
-         * @param reg The ECS registry that contains all entities and components.
-         * @return The current game status.
+         * @brief Initialize the arguments to difficulty mode map.
+         * It links the easy, medium, and hard difficulty mode enum values to correspondent arguments.
          */
-        GameStatus gameState(ecs::Registry &reg) override;
+        void initArgsToDifficultyMode();
+
+        /**
+         * @brief Initialize the arguments to difficulty mode map.
+         * It links the two friendly fire state enum values to correspondent arguments.
+         */
+        void initArgsToFriendlyFireState();
+
+        /**
+         * @brief Update the difficulty mode or/and the friendly fire state of the game based on the provided arguments.
+         * @param arguments The vector of strings containing all game arguments.
+         */
+        void handleArguments(std::vector<std::string> &arguments);
 
         /**
          * @brief Spawns the necessary entities for the R-Type game.
@@ -189,18 +247,28 @@ namespace game {
         void addSystemsToRegistry() override;
 
         /**
-         * @brief Initialize the string to difficulty mode map.
-         * It links the easy, medium, and hard difficulty mode enum values to correspondent strings.
+         * @brief Checks if all player entities in the game are marked as dead.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return true if all player entities are dead, meaning no active players remain.
+         * @return false if there is at least one active player, meaning the game is still ongoing.
          */
-        void initStringToDifficultyMode() {
-            _stringToDifficultyMode.insert({"easy", game::DifficultyMode::EASY});
-            _stringToDifficultyMode.insert({"medium", game::DifficultyMode::MEDIUM});
-            _stringToDifficultyMode.insert({"hard", game::DifficultyMode::HARD});
-        }
+        bool allPlayersDead(ecs::Registry &reg);
 
-        DifficultyMode _mode; ///< The mode of difficulty of the current game instance.
-        std::unordered_map<std::string, DifficultyMode>
-            _stringToDifficultyMode; ///< An unordered map linking a string to a difficulty mode.
+        /**
+         * @brief Manages the game state and updates the registry accordingly.
+         * This method is responsible for controlling the flow of the game and ensuring the
+         * game state remains in sync with server-side operations.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return The current game status.
+         */
+        GameStatus gameState(ecs::Registry &reg) override;
+
+        DifficultyMode _difficultyMode;       ///< The mode of difficulty of the current game instance.
+        FriendlyFireState _friendlyFireState; ///< The friendly fire state of the current game instance.
+        std::map<std::pair<std::string, std::string>, DifficultyMode>
+            _argsToDifficultyMode; ///< A map linking two arguments to a difficulty mode.
+        std::map<std::pair<std::string, std::string>, FriendlyFireState>
+            _argsToFriendlyFireState; ///< A  map linking two arguments to a friendly fire state.
     };
 }
 
