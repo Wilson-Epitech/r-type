@@ -24,7 +24,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
         if (scores[i]) {
             if (types[i]->entityType == ecs::EntityType::TEXT &&
                 ((scores[i]->score >= SCORE_FINAL_BOSS_LEVEL1 && bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1) ||
-                 (scores[i]->score >= SCORE_FINAL_BOSS_LEVEL2 && bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2)) &&
+                 (scores[i]->score == SCORE_FINAL_BOSS_LEVEL2 && bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2)) &&
                 !isTimerSet) {
                 if (!isTimerSet) {
                     time0 = std::chrono::steady_clock::now();
