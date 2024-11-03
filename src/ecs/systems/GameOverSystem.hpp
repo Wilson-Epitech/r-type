@@ -17,7 +17,6 @@
 #define GAME_OVER_TEXT "GAME_OVER"        ///< Text displayed when the game is over.
 #define FINAL_SCORE_TEXT "Final_Score:"   ///< Text label for displaying the final score.
 #define EXIT_PROMPT "Press_[ESC]_to_Exit" ///< Text prompt instructing the player to press [ESC] to exit.
-#define FONT_PATH "assets/ARCADE_N.TTF"   ///< File path for the font used in the game-over screen.
 #define GAME_OVER_TEXT_SIZE 80            ///< Font size for the "Game Over" text.
 #define WIDTH_GAME_OVER 3                 ///< Width divisor for centering the "Game Over" text on the screen.
 #define HEIGHT_GAME_OVER 3                ///< Height divisor for positioning the "Game Over" text on the screen.
@@ -34,6 +33,7 @@
 #define GREY_GAMEOVER                                                                                                                      \
     { 211, 211, 211, 255 } ///< Color definition for the exit prompt text (grey).
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
 

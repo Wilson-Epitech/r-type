@@ -41,6 +41,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                         createNewBoss(reg, types, bossEntity);
                         bossSpawned = true;
                         isTimerSet = false;
+                        changeMusic(reg, bossSpawns[bossEntity]->ongoingLevel);
                     }
                 }
             }
@@ -142,6 +143,47 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
 std::size_t ecs::system::BossSpawnSystem::findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind) {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == entityToFind)
+            return i;
+    }
+    return 0;
+}
+
+void ecs::system::BossSpawnSystem::changeMusic(Registry &reg, const ecs::CurrentLevel &level) {
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
+    std::size_t musicIndex = findBackgroundMusic(reg, level);
+    std::size_t currentlyPlayedMusicIndex = findCurrentBackgroundMusic(reg);
+
+    if (musicIndex == 0)
+        return;
+    if (currentlyPlayedMusicIndex != 0) {
+        musics[currentlyPlayedMusicIndex]->hasToBePlayed = false;
+        musics[currentlyPlayedMusicIndex]->isCurrentlyPlayed = false;
+    }
+
+    musics[musicIndex]->isCurrentlyPlayed = false;
+    musics[musicIndex]->hasToBePlayed = true;
+}
+
+std::size_t ecs::system::BossSpawnSystem::findBackgroundMusic(Registry &reg, const ecs::CurrentLevel &level) {
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
+    SparseArray<component::BossType> &bossType = reg.getComponents<component::BossType>();
+
+    for (std::size_t i = 0; i < musics.size() && i < bossType.size(); i++) {
+        if (!musics[i] || !bossType[i])
+            continue;
+        if (bossType[i]->currentLevel == level)
+            return i;
+    }
+    return 0;
+}
+
+std::size_t ecs::system::BossSpawnSystem::findCurrentBackgroundMusic(Registry &reg) {
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
+
+    for (std::size_t i = 0; i < musics.size(); i++) {
+        if (!musics[i])
+            continue;
+        if (musics[i]->hasToBePlayed == true)
             return i;
     }
     return 0;
