@@ -76,21 +76,23 @@ namespace ecs {
             /**
              * @brief Determines if two entities are enemies.
              * This method checks if two entities, based on their types, should be considered enemies.
+             * @param reg The ECS registry containing entities and components.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
              * @return true If the entities are enemies.
              * @return false Otherwise.
              */
-            bool areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool areEntitiesEnemies(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
              * @brief Checks if the collision is between a player and a player shot.
+             * @param reg The ECS registry containing entities and components.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
              * @return true If it's a collision between a player and their shot.
              * @return false Otherwise.
              */
-            bool isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isPlayerAndPlayerShot(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
              * @brief Checks if the collision is between an enemy and an enemy shot.
