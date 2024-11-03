@@ -19,8 +19,8 @@
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 
-#include <winsock2.h>
 #include <windows.h>
+#include <winsock2.h>
 
 #undef Rectangle
 #undef CloseWindow

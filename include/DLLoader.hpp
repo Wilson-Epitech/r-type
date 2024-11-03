@@ -22,8 +22,8 @@
 #include <asio.hpp>
 
 #ifdef _WIN32
-#include <winsock2.h>
 #include <windows.h>
+#include <winsock2.h>
 #else
 #include <dlfcn.h>
 #endif
