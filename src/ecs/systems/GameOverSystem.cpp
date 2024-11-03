@@ -50,7 +50,7 @@ void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
     types.insertAt(scoreTextEntity, component::Type{ecs::EntityType::TEXT});
 
     textInfo.insertAt(exitTextEntity,
-                      component::TextInfos{EXIT_PROMPT, static_cast<int>(screenWidth * WIDTH_EXIT_TEXT), static_cast<int>(screenHeight * HEIGHT_EXIT_TEXT),
-                                           EXIT_TEXT_SIZE, FONT_PATH, GREY_GAMEOVER});
+                      component::TextInfos{EXIT_PROMPT, static_cast<int>(screenWidth * WIDTH_EXIT_TEXT),
+                                           static_cast<int>(screenHeight * HEIGHT_EXIT_TEXT), EXIT_TEXT_SIZE, FONT_PATH, GREY_GAMEOVER});
     types.insertAt(exitTextEntity, component::Type{ecs::EntityType::TEXT});
 }

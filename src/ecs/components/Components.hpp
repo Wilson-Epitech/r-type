@@ -82,21 +82,21 @@ namespace ecs {
      * @brief Enum representing different component types in the ECS.
      */
     enum ComponentName {
-        NONE,             ///< No component
-        POSITION,         ///< Position component
-        VELOCITY,         ///< Velocity component
-        TYPE,             ///< Type component
-        LIFE,             ///< Life component
-        SHOOTING,         ///< Shooting component
-        SPRITEINFOS,      ///< Sprite information component
-        SOUNDEFFECT,      ///< Sound effect component
-        MUSIC,            ///< Background music component
-        SCORE,            ///< Score component
-        TEXTINFOS,        ///< Text component
-        ACTIVEPOWERUP,    ///< Activated powerup component
-        MOVEMENTPATTERN,  ///< Movement pattern component
-        GAMEOVER,         ///< Gameover component
-        PLAYERWEAPON      ///< Player weapon component
+        NONE,            ///< No component
+        POSITION,        ///< Position component
+        VELOCITY,        ///< Velocity component
+        TYPE,            ///< Type component
+        LIFE,            ///< Life component
+        SHOOTING,        ///< Shooting component
+        SPRITEINFOS,     ///< Sprite information component
+        SOUNDEFFECT,     ///< Sound effect component
+        MUSIC,           ///< Background music component
+        SCORE,           ///< Score component
+        TEXTINFOS,       ///< Text component
+        ACTIVEPOWERUP,   ///< Activated powerup component
+        MOVEMENTPATTERN, ///< Movement pattern component
+        GAMEOVER,        ///< Gameover component
+        PLAYERWEAPON     ///< Player weapon component
     };
 
     /**
