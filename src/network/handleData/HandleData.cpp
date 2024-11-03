@@ -21,7 +21,7 @@ void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataTo
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point actualTime = std::chrono::steady_clock::now();
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(actualTime - time0);
-    std::size_t timeRequired = 2;
+    int timeRequired = 2;
 
     for (std::size_t i = 0; i < bossSlayed.size(); i++) {
         if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
