@@ -217,7 +217,6 @@ void game::RtypeGameServer::addComponentsToEntities() {
     movementPattern.insertAt(_stringToEntity[SPAWN_LEVEL3_BOSS_NAME],
                              ecs::component::MovementPattern{0, BOSS_NOT_REVERSIBLE, ecs::MovementType::STRAIGHT});
 
-
     velocities.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME], ecs::component::Velocity{LEVEL1_BOSS_SHOT_VX, LEVEL1_BOSS_SHOT_VY});
     spriteInfos.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME],
                          ecs::component::SpriteInfos{LEVEL1_BOSS_SHOT_PATH, LEVEL1_BOSS_SHOT_PATTERN});
