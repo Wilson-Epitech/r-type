@@ -7,8 +7,6 @@
 
 #include "EnemySpawnSystem.hpp"
 
-#include <iostream>
-
 void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::EnemySpawn> &enemySpawn = reg.getComponents<component::EnemySpawn>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();

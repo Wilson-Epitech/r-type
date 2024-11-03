@@ -46,7 +46,6 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::Powerup>();
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
-    _reg.registerComponent<ecs::component::ShootExplosion>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {

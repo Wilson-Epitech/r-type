@@ -7,19 +7,15 @@
 
 #include "BossSpawnSystem.hpp"
 
-#include <iostream>
-
 void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::Score> &scores = reg.getComponents<component::Score>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
-    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
-    static std::size_t finalLevelBoss = 0;
     std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
 
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
@@ -30,28 +26,15 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                 bossSpawned = false;
                 time0 = std::chrono::steady_clock::now();
                 isTimerSet = true;
-                if (bossEntity < bossSpawns.size()) {
-                    if (bossSpawns[bossEntity]) {
-                        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1)
-                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
-                        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2)
-                            bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL2_BOSS;
-                    }
-                }
+                updateOngoingLevelStatus(reg, types);
             }
         }
         if (isTimerSet && !bossSpawned) {
             if (Lib::isTimeElapsed(time0, TIME_WAIT_LEVEL1_BOSS)) {
-                std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
                 if (bossEntity != 0) {
                     if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1_BOSS ||
                         bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2_BOSS) {
-                        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2_BOSS) {
-                            spriteInfos[bossEntity]->spritePath = LEVEL2_BOSS_PATH;
-                            spriteInfos[bossEntity]->isLoaded = false;
-                            spriteInfos[bossEntity]->patternNb = LEVEL2_BOSS_NB_PATTERN;
-                            spriteInfos[bossEntity]->scaleFactor = LEVEL2_BOSS_SCALE_FACTOR;
-                        }
+                        changeSpriteLevel2Boss(reg, types);
                         createNewBoss(reg, types, bossEntity);
                         bossSpawned = true;
                         isTimerSet = false;
@@ -59,19 +42,66 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                 }
             }
         }
-        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL3 && !finalLevelBoss) {
-                spriteInfos[bossEntity]->spritePath = "assets/bossLevel3.png";
-                spriteInfos[bossEntity]->isLoaded = false;
-                spriteInfos[bossEntity]->patternNb = 1;
-                spriteInfos[bossEntity]->scaleFactor = 3;
-                createNewBoss(reg, types, bossEntity);
-                finalLevelBoss = true;
-            }
+        spawnBossLevel3(reg, types, bossEntity);
         if (!positions[i])
             continue;
         if (bossSpawned && types[i]->entityType == ecs::EntityType::BOSS && positions[i]->x <= LEVEL1_BOSS_STOP) {
             if (velocities[i])
                 velocities[i]->vx = 0;
+        }
+    }
+}
+
+void ecs::system::BossSpawnSystem::spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity)
+{
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
+    static bool finalLevelBoss = false;
+
+    if (bossEntity < bossSpawns.size() && bossEntity < spriteInfos.size()) {
+        if (!bossSpawns[bossEntity] || !spriteInfos[bossEntity])
+            return;
+        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL3 && !finalLevelBoss) {
+            spriteInfos[bossEntity]->spritePath = LEVEL3_BOSS_PATH;
+            spriteInfos[bossEntity]->isLoaded = false;
+            spriteInfos[bossEntity]->patternNb = LEVEL3_BOSS_NB_PATTERN;
+            spriteInfos[bossEntity]->scaleFactor = LEVEL3_BOSS_SCALE_FACTOR;
+            createNewBoss(reg, types, bossEntity);
+            finalLevelBoss = true;
+            bossSpawns[bossEntity]->hasBeenSlayed = false;
+        }
+    }
+}
+
+void ecs::system::BossSpawnSystem::updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types)
+{
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
+    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
+
+    if (bossEntity < bossSpawns.size()) {
+        if (bossSpawns[bossEntity]) {
+            if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL1)
+                bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+            if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2)
+                bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL2_BOSS;
+        }
+    }
+}
+
+void ecs::system::BossSpawnSystem::changeSpriteLevel2Boss(Registry &reg, SparseArray<component::Type> &types)
+{
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
+    std::size_t bossEntity = findChosenBossEntity(types, ecs::EntityType::BOSS);
+
+    if (bossEntity < bossSpawns.size() && bossEntity < spriteInfos.size()) {
+        if (!bossSpawns[bossEntity] || !spriteInfos[bossEntity])
+            return;
+        if (bossSpawns[bossEntity]->ongoingLevel == CurrentLevel::LEVEL2_BOSS) {
+            spriteInfos[bossEntity]->spritePath = LEVEL2_BOSS_PATH;
+            spriteInfos[bossEntity]->isLoaded = false;
+            spriteInfos[bossEntity]->patternNb = LEVEL2_BOSS_NB_PATTERN;
+            spriteInfos[bossEntity]->scaleFactor = LEVEL2_BOSS_SCALE_FACTOR;
         }
     }
 }

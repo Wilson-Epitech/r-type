@@ -124,8 +124,8 @@ namespace ecs {
         LEVEL1,      ///< First level
         LEVEL1_BOSS, ///< First level after the boss was triggered
         LEVEL2,      ///< Second level
-        LEVEL2_BOSS,  ///< Second level after the boss was triggered
-        LEVEL3,      ///< Final level
+        LEVEL2_BOSS, ///< Second level after the boss was triggered
+        LEVEL3       ///< Final level
     };
 
     namespace component {
@@ -366,10 +366,6 @@ namespace ecs {
                 return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible &&
                         movementPatternType == other.movementPatternType);
             }
-        };
-
-        struct ShootExplosion {
-            int positionToExplode;
         };
     }
 }

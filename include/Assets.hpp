@@ -24,12 +24,16 @@
 #define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"        ///< The level 1 boss shot path.
 #define LEVEL1_BACKGROUND_PATH "assets/background.png"        ///< The level 1 background sprite path.
 #define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< The level 2 background sprite path.
+#define LEVEL3_BACKGROUND_PATH "assets/backgroundLevel3.png"  ///< The level 3 background sprite path.
 #define LEVEL2_BOSS_PATH "assets/level2_final_boss.png"       ///< The level 2 boss sprite path.
 #define POWERUP_PATH "assets/powerup.png"                     ///< The powerup sprite path.
 #define SHOOT_SOUND_PATH "assets/shoot.wav"                   ///< The shoot sound path.
 #define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
 #define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"    ///< The background music path.
 #define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
+#define LEVEL2_BOSS_SHOT_PATH "assets/r-typesheet23.png"      ///< The level 2 boss shot path.
+#define LEVEL3_BOSS_PATH "assets/bossLevel3.png"              ///< The level 3 boss sprite path.
+
 
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.
@@ -41,6 +45,8 @@
 #define LEVEL2_BOSS_NB_PATTERN 3           ///< The level 2 boss sprite pattern number.
 #define BACKGROUND_SPRITE_NB_PATTERN 1     ///< The background sprite pattern number.
 #define POWERUP_SPRITE_NB_PATTERN 10       ///< The powerup sprite pattern number.
+#define LEVEL2_BOSS_SHOT_NB_PATTERN 8      ///< The boss shot sprite pattern number.
+#define LEVEL3_BOSS_NB_PATTERN 1           ///< The level 3 boss sprite pattern number.
 
 #define PLAYER_SPRITE_FIRST_PATTERN 8  ///< The first pattern to display for the player sprite.
 #define POWERUP_SPRITE_FIRST_PATTERN 1 ///< The first pattern to display for the powerup sprite.
@@ -51,6 +57,7 @@
 #define STRONGER_ENEMY_SCALE_FACTOR 5  ///< The scale factor for the stronger enemy sprite.
 #define LEVEL1_BOSS_SCALE_FACTOR 10    ///< The scale factor for the level 1 boss sprite.
 #define LEVEL2_BOSS_SCALE_FACTOR 4     ///< The scale factor for the level 2 boss sprite.
+#define LEVEL3_BOSS_SCALE_FACTOR 3     ///< The scale factor for the level 3 boss sprite.
 #define BACKGROUND_SCALE_FACTOR 0.625  ///< The scale factor for the background sprite.
 #define POWERUP_SCALE_FACTOR 0.5       ///< The scale factor for the powerup sprite.
 

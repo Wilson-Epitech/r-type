@@ -10,6 +10,8 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include "Assets.hpp"
+#include <math.h>
 
 #define SHOT_POS_X 1200 ///< start position of the shoot in x
 #define MAX_SHOT_Y 800  ///< maximum starting position of the shoot in y
@@ -52,9 +54,47 @@ namespace ecs {
              */
             std::size_t getBossShootIndex(Registry &reg);
 
+             /**
+             * @brief Finds the index of the chosen entity.
+             * This method retrieves the index of the entity passed as parameter.
+             * @param types Array of types components for entities.
+             * @return std::size_t The index of the chosen entity.
+             */
             std::size_t findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
-            float changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex);
+
+            /**
+             * @brief Change the velocity of the enemy shoot.
+             * This method change the velocity of the boss shoot if the enemy pattern is 'FOLLOW'
+             * The shoot will go in the direction of the player
+             * @param reg The ECS registry containing entities and components.
+             * @param bossIndex The index of the boss entity firing the shot.
+             * @param shootIndex The index of the boss shoot entity.
+             * @return float the angle of the shoot.
+             */
+            float changeShootVelocity(Registry &reg, const std::size_t &bossIndex, const std::size_t &shootIndex);
+
+            /**
+             * @brief Finds boss's nearest player.
+             * @param reg The ECS registry containing entities and components.
+             * @param index The index of the boss entity.
+             * @return std::size_t The index of the boss's nearest player.
+             */
             std::size_t findClosestPlayer(Registry &reg, const std::size_t &index);
+
+            /**
+             * @brief Set the second following shot for the final boss.
+             * @param reg The ECS registry containing entities and components.
+             * @param types Array of types components for entities.
+             * @param index The index of the boss entity.
+             */
+            void additionalShotFinalLevel(Registry &reg, SparseArray<component::Type> types, const std::size_t &index);
+
+            /**
+             * @brief Change the texture used for the level2 boss shot.
+             * @param reg The ECS registry containing entities and components.
+             * @param types Array of types components for entities.
+             */
+            void changeShootSprite(Registry &reg, SparseArray<component::Type> types);
         };
     }
 }

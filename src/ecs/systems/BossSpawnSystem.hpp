@@ -64,6 +64,28 @@ namespace ecs {
              */
             std::size_t findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
 
+            /**
+             * @brief Changes the current level depending on which boss was slayed.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types);
+
+            /**
+             * @brief Changes the sprite for the level 2 boss.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void changeSpriteLevel2Boss(Registry &reg, SparseArray<component::Type> &types);
+
+            /**
+             * @brief Handles the logic for the spawning of the Level 3 boss.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             * @param bossEntity Index corresponding to the entity of the boss.
+             */
+            void spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity);
+
         };
     }
 }

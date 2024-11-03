@@ -26,7 +26,7 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
                     bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL3;
                     resetPlayerPosition(reg, types);
                     killAllRemainingEnemies(reg, types);
-                    setNewLevelBackground(reg, types, "assets/backgroundLevel3.png");
+                    setNewLevelBackground(reg, types, LEVEL3_BACKGROUND_PATH);
                 }
             }
         }
@@ -103,7 +103,8 @@ void ecs::system::ResetForNextLevel::changeSpriteForEnemies(Registry &reg, Spars
     }
 }
 
-std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) {
+std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg)
+{
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
     for (std::size_t i = 0; i < types.size(); i++) {

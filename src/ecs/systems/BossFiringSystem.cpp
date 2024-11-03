@@ -7,23 +7,17 @@
 
 #include "BossFiringSystem.hpp"
 
-#include <math.h>
-#include <iostream>
-
-void ecs::system::BossFiringSystem::operator()(Registry &reg) {
+void ecs::system::BossFiringSystem::operator()(Registry &reg)
+{
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
-    SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
-    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
-    SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
 
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     std::chrono::steady_clock::time_point time1 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
     std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
     bool isTimerSet = false;
-    static bool Level2BossShotLoaded = false;
 
     for (std::size_t i = 0; i < types.size() && i < shootingRate.size() && positions.size(); ++i) {
         if (!types[i] || !shootingRate[i] || !positions[i])
@@ -44,14 +38,9 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
         }
         timeElapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time1 - time0);
         if (timeElapsed.count() >= Lib::toMilliseconds(shootingRate[i]->shootRate) && positions[i]->x <= SHOT_POS_X) {
-            if (bossSpawn[findChosenBossEntity(types, ecs::EntityType::BOSS)]->ongoingLevel == CurrentLevel::LEVEL2_BOSS && !Level2BossShotLoaded) {
-                spriteInfos[getBossShootIndex(reg)]->spritePath = "assets/r-typesheet23.png";
-                spriteInfos[getBossShootIndex(reg)]->isLoaded = false;
-                spriteInfos[getBossShootIndex(reg)]->patternNb = 8;
-                movements[findChosenBossEntity(types, ecs::EntityType::BOSS)]->movementPatternType = ecs::MovementType::FOLLOW;
-                Level2BossShotLoaded = true;
-            }
+            changeShootSprite(reg, types);
             addShot(i, reg);
+            additionalShotFinalLevel(reg, types, i);
             for (std::size_t j = 0; j < timer.size(); j++) {
                 if (timer[j].first == i) {
                     timer[j].second = std::chrono::steady_clock::now();
@@ -62,7 +51,48 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Registry &reg) {
+void ecs::system::BossFiringSystem::changeShootSprite(Registry &reg, SparseArray<component::Type> types)
+{
+    SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
+    SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
+    std::size_t bossIndex = findChosenBossEntity(types, ecs::EntityType::BOSS);
+    std::size_t bossShotIndex = getBossShootIndex(reg);
+    static bool Level2BossShotLoaded = false;
+
+    if (bossIndex < bossSpawn.size() && bossIndex < movements.size() && bossShotIndex < spriteInfos.size()) {
+        if (!bossSpawn[bossIndex] || !spriteInfos[bossShotIndex] || !movements[bossIndex])
+            return;
+        if (bossSpawn[bossIndex]->ongoingLevel == CurrentLevel::LEVEL2_BOSS && !Level2BossShotLoaded) {
+            spriteInfos[bossShotIndex]->spritePath = LEVEL2_BOSS_SHOT_PATH;
+            spriteInfos[bossShotIndex]->isLoaded = false;
+            spriteInfos[bossShotIndex]->patternNb = LEVEL2_BOSS_SHOT_NB_PATTERN;
+            movements[bossIndex]->movementPatternType = ecs::MovementType::FOLLOW;
+            Level2BossShotLoaded = true;
+        }
+    }
+}
+
+void ecs::system::BossFiringSystem::additionalShotFinalLevel(Registry &reg, SparseArray<component::Type> types, const std::size_t &i)
+{
+    SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
+    SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
+
+    std::size_t bossIndex = findChosenBossEntity(types, ecs::EntityType::BOSS);
+
+    if (bossIndex < bossSpawn.size() && bossIndex < movements.size()) {
+        if (!bossSpawn[bossIndex] || !movements[bossIndex])
+            return;
+        if (bossSpawn[bossIndex]->ongoingLevel == CurrentLevel::LEVEL3) {
+            movements[bossIndex]->movementPatternType = ecs::MovementType::FOLLOW;
+            addShot(i, reg);
+            movements[bossIndex]->movementPatternType = ecs::MovementType::STRAIGHT;
+        }
+    }
+}
+
+void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Registry &reg)
+{
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -121,19 +151,20 @@ std::size_t ecs::system::BossFiringSystem::findChosenBossEntity(SparseArray<comp
     return 0;
 }
 
-float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &enemyIndex, const std::size_t &shootIndex) {
+float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &bossIndex, const std::size_t &shootIndex)
+{
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
-    std::size_t playerEntity = findClosestPlayer(reg, enemyIndex);
+    std::size_t playerEntity = findClosestPlayer(reg, bossIndex);
     float speed = 0;
     float angle = 0;
 
-    if (movementPattern.size() < enemyIndex || playerEntity == 0)
+    if (movementPattern.size() < bossIndex || playerEntity == 0)
         return 0;
-    if (!movementPattern[enemyIndex])
+    if (!movementPattern[bossIndex])
         return 0;
-    if (movementPattern[enemyIndex]->movementPatternType != ecs::MovementType::FOLLOW)
+    if (movementPattern[bossIndex]->movementPatternType != ecs::MovementType::FOLLOW)
         return 0;
 
     if (velocities[shootIndex]->vy < 0)
@@ -151,7 +182,8 @@ float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const st
     return (angle * 180 / M_PI) + 180;
 }
 
-std::size_t ecs::system::BossFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {
+std::size_t ecs::system::BossFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index)
+{
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     float tmpRes = 0;
