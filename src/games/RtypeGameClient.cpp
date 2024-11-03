@@ -32,6 +32,7 @@ void game::RtypeGameClient::registerComponents() {
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
     _reg.registerComponent<ecs::component::Weapon>();
+    _reg.registerComponent<ecs::component::GameOver>();
 }
 
 void game::RtypeGameClient::addComponentsToEntities() {}
@@ -47,6 +48,23 @@ void game::RtypeGameClient::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::MusicSystem());
 }
 
-game::GameStatus game::RtypeGameClient::gameState(ecs::Registry &) {
+game::GameStatus game::RtypeGameClient::gameState(ecs::Registry &reg) {
+    if (checkGameOver(reg))
+        return game::GameStatus::LOOSE;
     return game::GameStatus::PLAYING;
+}
+
+bool game::RtypeGameClient::checkGameOver(ecs::Registry &reg) {
+    auto &lives = reg.getComponents<ecs::component::Life>();
+    auto &types = reg.getComponents<ecs::component::Type>();
+
+    for (std::size_t i = 0; i < lives.size(); i++) {
+        if (!lives[i] || !types[i])
+            continue;
+
+        if (types[i]->entityType == ecs::EntityType::PLAYER && lives[i]->nbLives > 0) {
+            return false;
+        }
+    }
+    return true;
 }

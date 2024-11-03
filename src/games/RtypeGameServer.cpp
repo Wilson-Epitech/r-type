@@ -66,6 +66,7 @@ void game::RtypeGameServer::spawnEntities() {
     _stringToEntity[WEAPON_NAME] = _reg.spawnEntity();
     _stringToEntity[FRONT_WEAPON_NAME] = _reg.spawnEntity();
     _stringToEntity[BACK_WEAPON_NAME] = _reg.spawnEntity();
+    _stringToEntity[GAME_OVER_NAME] = _reg.spawnEntity();
 }
 
 void game::RtypeGameServer::registerComponents() {
@@ -87,6 +88,7 @@ void game::RtypeGameServer::registerComponents() {
     _reg.registerComponent<ecs::component::ActivePowerup>();
     _reg.registerComponent<ecs::component::MovementPattern>();
     _reg.registerComponent<ecs::component::Weapon>();
+    _reg.registerComponent<ecs::component::GameOver>();
 }
 
 void game::RtypeGameServer::addComponentsToEntities() {
@@ -107,6 +109,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
     ecs::SparseArray<ecs::component::ActivePowerup> &activePowerups = _reg.getComponents<ecs::component::ActivePowerup>();
     ecs::SparseArray<ecs::component::MovementPattern> &movementPattern = _reg.getComponents<ecs::component::MovementPattern>();
     ecs::SparseArray<ecs::component::Weapon> &weapons = _reg.getComponents<ecs::component::Weapon>();
+    ecs::SparseArray<ecs::component::GameOver> &gameover = _reg.getComponents<ecs::component::GameOver>();
 
     const float timeBeforeSpawnEnemy = (TIME_BEFORE_SPAWN_ENEMY + static_cast<int>(_difficultyMode)) / static_cast<int>(_difficultyMode);
     const float timeBeforeSpawnStrongerEnemy =
@@ -224,6 +227,9 @@ void game::RtypeGameServer::addComponentsToEntities() {
     types.insertAt(_stringToEntity[FRONT_WEAPON_NAME], ecs::component::Type{ecs::EntityType::WEAPON_SPRITES});
     spriteInfos.insertAt(_stringToEntity[FRONT_WEAPON_NAME],
                          ecs::component::SpriteInfos{FRONT_WEAPON_PATH, FRONT_WEAPON_SPRITE_NB_PATTERN, 0, FRONT_WEAPON_SCALE_FACTOR});
+
+    types.insertAt(_stringToEntity[GAME_OVER_NAME], ecs::component::Type{ecs::EntityType::GAME_OVER});
+    gameover.insertAt(_stringToEntity[GAME_OVER_NAME], ecs::component::GameOver{false});
 }
 
 void game::RtypeGameServer::addSystemsToRegistry() {
@@ -241,8 +247,35 @@ void game::RtypeGameServer::addSystemsToRegistry() {
     _reg.addSystem(ecs::system::BossFiringSystem());
     _reg.addSystem(ecs::system::KillOffscreenEntitiesSystem());
     _reg.addSystem(ecs::system::ResetForNextLevel());
+    _reg.addSystem(ecs::system::GameOverSystem());
 }
 
-game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &) {
+game::GameStatus game::RtypeGameServer::gameState(ecs::Registry &reg) {
+    auto &gameover = reg.getComponents<ecs::component::GameOver>();
+    auto entity = _stringToEntity[GAME_OVER_NAME];
+    if (gameover[entity])
+        gameover[entity]->isGameOver = false;
+
+    if (allPlayersDead(reg)) {
+        if (gameover[entity]) {
+            gameover[entity]->isGameOver = true;
+        }
+        return game::GameStatus::LOOSE;
+    }
     return game::GameStatus::PLAYING;
+}
+
+bool game::RtypeGameServer::allPlayersDead(ecs::Registry &reg) {
+    auto &lives = reg.getComponents<ecs::component::Life>();
+    auto &types = reg.getComponents<ecs::component::Type>();
+
+    for (std::size_t i = 0; i < lives.size(); i++) {
+        if (!lives[i] || !types[i])
+            continue;
+
+        if (types[i]->entityType == ecs::EntityType::PLAYER && lives[i]->nbLives > 0) {
+            return false;
+        }
+    }
+    return true;
 }
