@@ -6,7 +6,13 @@
 */
 
 #include "Client.hpp"
+
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOGDI
+#endif
 #include <asio.hpp>
+
 #include <iostream>
 
 network::Client::Client(const std::string &host, const std::string &port) : network::ANetwork(), _socket(_ioContext), _playerId(0) {

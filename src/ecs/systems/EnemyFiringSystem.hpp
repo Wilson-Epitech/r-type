@@ -20,6 +20,8 @@
 #include "ISystem.hpp"
 #include <math.h>
 
+#define PI_VALUE 3.14 ///< Value of the mathematical constant pi
+
 namespace ecs {
     namespace system {
 

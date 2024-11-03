@@ -174,7 +174,7 @@ float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const st
     angle = atan2f(positions[playerEntity]->y - positions[shootIndex]->y, positions[playerEntity]->x - positions[shootIndex]->x);
     velocities[shootIndex]->vx = speed * cosf(angle);
     velocities[shootIndex]->vy = speed * sinf(angle);
-    return (angle * 180 / M_PI) + 180;
+    return (angle * 180 / PI_VALUE) + 180;
 }
 
 std::size_t ecs::system::BossFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {
