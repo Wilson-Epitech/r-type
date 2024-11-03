@@ -33,9 +33,9 @@
 #define GREY_GAMEOVER                                                                                                                      \
     { 211, 211, 211, 255 } ///< Color definition for the exit prompt text (grey).
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 
 namespace ecs {
     namespace system {

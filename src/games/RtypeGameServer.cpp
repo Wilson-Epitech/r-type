@@ -139,7 +139,8 @@ void game::RtypeGameServer::addComponentsToEntities() {
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
     shootings.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Shooting{});
     types.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
-    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES + 1000, PLAYER_TEMPLATE_DISPLAY_LIFE});
+    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME],
+                   ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES + 1000, PLAYER_TEMPLATE_DISPLAY_LIFE});
     soundEffectInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     shootingRate.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::ShootingRate{PLAYER_TEMPLATE_SHOOTING_RATE});
     score.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Score{PLAYER_TEMPLATE_SCORE_INCREMENTATION});
@@ -238,21 +239,25 @@ void game::RtypeGameServer::addComponentsToEntities() {
 
     backgroundMusic.insertAt(_stringToEntity[MUSIC_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH, MUSIC_VOLUME});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS1_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS1, MUSIC_BOSS1_VOLUME, false});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS1_NAME],
+                             ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS1, MUSIC_BOSS1_VOLUME, false});
     bossTypes.insertAt(_stringToEntity[MUSIC_BOSS1_NAME], ecs::component::BossType{ecs::CurrentLevel::LEVEL1_BOSS});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS2_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS2, MUSIC_BOSS2_VOLUME, false});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS2_NAME],
+                             ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS2, MUSIC_BOSS2_VOLUME, false});
     bossTypes.insertAt(_stringToEntity[MUSIC_BOSS2_NAME], ecs::component::BossType{ecs::CurrentLevel::LEVEL2_BOSS});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS3_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS3, MUSIC_BOSS3_VOLUME, false});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_BOSS3_NAME],
+                             ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_BOSS3, MUSIC_BOSS3_VOLUME, false});
     bossTypes.insertAt(_stringToEntity[MUSIC_BOSS3_NAME], ecs::component::BossType{ecs::CurrentLevel::LEVEL3});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_LEVEL2_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_LVL2, MUSIC_LEVEL2_VOLUME, false});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_LEVEL2_NAME],
+                             ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_LVL2, MUSIC_LEVEL2_VOLUME, false});
     bossTypes.insertAt(_stringToEntity[MUSIC_LEVEL2_NAME], ecs::component::BossType{ecs::CurrentLevel::LEVEL2});
 
-    backgroundMusic.insertAt(_stringToEntity[MUSIC_LEVEL3_NAME], ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_LVL3, MUSIC_LEVEL3_VOLUME, false});
+    backgroundMusic.insertAt(_stringToEntity[MUSIC_LEVEL3_NAME],
+                             ecs::component::BackgroundMusicInfos{BACKGROUND_MUSIC_PATH_LVL3, MUSIC_LEVEL3_VOLUME, false});
     bossTypes.insertAt(_stringToEntity[MUSIC_LEVEL3_NAME], ecs::component::BossType{ecs::CurrentLevel::LEVEL3});
-
 
     types.insertAt(_stringToEntity[TEAM_SCORE_NAME], ecs::component::Type{ecs::EntityType::TEXT});
     textInfos.insertAt(_stringToEntity[TEAM_SCORE_NAME],
