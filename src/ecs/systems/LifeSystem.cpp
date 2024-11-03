@@ -16,6 +16,8 @@ void ecs::system::LifeSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < lives.size() && i < types.size(); ++i) {
         if (!lives[i] || !types[i])
             continue;
+        if (types[i]->entityType == ecs::EntityType::BOSS)
+            std::cout << "";
         if (lives[i]->nbLives > lives[i]->maxLives)
             lives[i]->maxLives = lives[i]->nbLives;
         if (i < soundEffectInfos.size()) {
