@@ -71,6 +71,4 @@
 #define FRONT_WEAPON_SCALE_FACTOR 0.5  ///< The scale factor for the front weapon sprite.
 #define BACK_WEAPON_SCALE_FACTOR 0.5   ///< The scale factor for the back weapon sprite.
 
-#define BOSS_NOT_REVERSIBLE false ///< The inability for the boss to reverse.
-
 #endif /* !ASSETS_HPP_ */

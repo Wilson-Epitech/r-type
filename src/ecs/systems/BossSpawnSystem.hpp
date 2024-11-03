@@ -18,7 +18,6 @@
 #include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 
 #define LEVEL1_BOSS_STOP 1200    ///< Set the stop position for the boss' entering.
 #define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.

@@ -22,7 +22,8 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
         if (!types[i])
             continue;
         if (scores[i]) {
-            if (types[i]->entityType == ecs::EntityType::TEXT && (scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 || (scores[i]->score == SCORE_FINAL_BOSS_LEVEL2)) && !isTimerSet) {
+            if (types[i]->entityType == ecs::EntityType::TEXT &&
+                (scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 || (scores[i]->score == SCORE_FINAL_BOSS_LEVEL2)) && !isTimerSet) {
                 if (!isTimerSet) {
                     time0 = std::chrono::steady_clock::now();
                     isTimerSet = true;
@@ -55,8 +56,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     }
 }
 
-void ecs::system::BossSpawnSystem::spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity)
-{
+void ecs::system::BossSpawnSystem::spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     std::size_t bossLevel2Index = findChosenEntity(types, ecs::EntityType::BOSS_LEVEL3_TEMPLATE);
@@ -77,8 +77,7 @@ void ecs::system::BossSpawnSystem::spawnBossLevel3(Registry &reg, SparseArray<co
     }
 }
 
-void ecs::system::BossSpawnSystem::updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::BossSpawnSystem::updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types) {
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     std::size_t bossEntity = findChosenEntity(types, ecs::EntityType::BOSS);
 
@@ -92,8 +91,7 @@ void ecs::system::BossSpawnSystem::updateOngoingLevelStatus(Registry &reg, Spars
     }
 }
 
-void ecs::system::BossSpawnSystem::changeSpriteLevel2Boss(Registry &reg, SparseArray<component::Type> &types)
-{
+void ecs::system::BossSpawnSystem::changeSpriteLevel2Boss(Registry &reg, SparseArray<component::Type> &types) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     std::size_t bossEntity = findChosenEntity(types, ecs::EntityType::BOSS);
@@ -142,8 +140,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     movementPatterns[i]->movementPatternType = ecs::MovementType::STRAIGHT;
 }
 
-std::size_t ecs::system::BossSpawnSystem::findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
-{
+std::size_t ecs::system::BossSpawnSystem::findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind) {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == entityToFind)
             return i;

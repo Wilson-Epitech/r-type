@@ -24,6 +24,7 @@
 #include "EnemyFiringSystem.hpp"
 #include "EnemySpawnSystem.hpp"
 #include "FiringSystem.hpp"
+#include "GameOverSystem.hpp"
 #include "KillOffscreenEntitiesSystem.hpp"
 #include "LifeSystem.hpp"
 #include "PlayerSpawnSystem.hpp"
@@ -138,6 +139,9 @@
 #define TEAM_SCORE_TEXT_Y 100                 ///< The text y position for the team score entity.
 #define TEAM_SCORE_TEXT_SIZE 20               ///< The text size for the team score entity.
 
+#define GAME_OVER_NAME "gameover"      ///< Defines the name of the gameover entity.
+#define GAME_OVER_CONTENT "Game Over:" ///< The text content for the gameover entity.
+
 #define TITLE_NAME "title"            ///< Defines the name of the title entity.
 #define TITLE_TEXT_CONTENT "RType:"   ///< The text content for the title entity.
 #define TITLE_TEXT_X SCREEN_WIDTH / 2 ///< The text x position for the title entity.
@@ -151,6 +155,8 @@
 #define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
 
 #define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
+
+#define BOSS_NOT_REVERSIBLE false ///< The inability for the boss to reverse.
 
 namespace game {
 
@@ -237,6 +243,14 @@ namespace game {
          * spawning enemies, shooting, and other game mechanics.
          */
         void addSystemsToRegistry() override;
+
+        /**
+         * @brief Checks if all player entities in the game are marked as dead.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return true if all player entities are dead, meaning no active players remain.
+         * @return false if there is at least one active player, meaning the game is still ongoing.
+         */
+        bool allPlayersDead(ecs::Registry &reg);
 
         /**
          * @brief Manages the game state and updates the registry accordingly.
