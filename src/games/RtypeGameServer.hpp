@@ -133,7 +133,7 @@
 #define MUSIC_LEVEL3_NAME "music_level3" ///< Defines the name of the level 3 background music entity.
 #define MUSIC_LEVEL3_VOLUME 1            ///< The volume of the level 3 background music.
 
-#define DONT_PLAY_THE_MUSIC false
+#define DONT_PLAY_THE_MUSIC false       ///< Define if the music has to be played at the begining of the game
 
 #define TEAM_SCORE_NAME "team_score"          ///< Defines the name of the team score entity.
 #define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
