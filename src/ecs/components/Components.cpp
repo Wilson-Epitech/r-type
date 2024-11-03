@@ -46,6 +46,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::Score &score) {
     oss << score.score << ' ' << score.scoreIncrementation;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::GameOver &gameover) {
+    oss << gameover.isGameOver;
+}
+
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo) {
     oss << textInfo.textToDisplay << ' ' << textInfo.x << ' ' << textInfo.y << ' ' << textInfo.size << ' ' << textInfo.fontPath << ' '
         << textInfo.color.a << ' ' << textInfo.color.r << ' ' << textInfo.color.g << ' ' << textInfo.color.b;
@@ -93,6 +97,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityComponent<ecs::component::MovementPattern>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::PLAYERWEAPON)
         network::HandleData::serializeEntityComponent<ecs::component::Weapon>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::GAMEOVER)
+        network::HandleData::serializeEntityComponent<ecs::component::GameOver>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -162,6 +168,10 @@ void operator>>(std::istringstream &iss, ecs::component::Score &score) {
     iss >> score.score >> score.scoreIncrementation;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::GameOver &gameover) {
+    iss >> gameover.isGameOver;
+}
+
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo) {
     iss >> textInfo.textToDisplay >> textInfo.x >> textInfo.y >> textInfo.size >> textInfo.fontPath >> textInfo.color.a >>
         textInfo.color.r >> textInfo.color.g >> textInfo.color.b;
@@ -212,4 +222,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityComponent<ecs::component::MovementPattern>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::PLAYERWEAPON)
         network::HandleData::deserializeEntityComponent<ecs::component::Weapon>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::GAMEOVER)
+        network::HandleData::deserializeEntityComponent<ecs::component::GameOver>(iss, entityData.name, entityData.component);
 }

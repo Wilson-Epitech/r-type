@@ -37,7 +37,7 @@ void ecs::system::CollisionSystem::operator()(Registry &reg) {
             rec2 = spriteHitbox(positions, spritesInfos, j);
             if (rec2.width == 0 || rec2.height == 0)
                 continue;
-            if (areEntitiesEnemies(types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
+            if (areEntitiesEnemies(reg, types[i]->entityType, types[j]->entityType) && positions[i]->x > 0 &&
                 positions[i]->x < Lib::getScreenWidth() && positions[j]->x > 0 && positions[j]->x < Lib::getScreenWidth()) {
                 if (areEntitiesInCollision(rec1, rec2) && lives[i]->nbLives > 0 && lives[j]->nbLives > 0) {
                     if (enablePlayerWeapon(reg, i, j))
@@ -99,8 +99,8 @@ void ecs::system::CollisionSystem::powerUpLives(Registry &reg, const std::size_t
     }
 }
 
-bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
-    return (!isPlayerAndPlayerShot(firstType, secondType) && !isBackground(firstType, secondType) &&
+bool ecs::system::CollisionSystem::areEntitiesEnemies(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+    return (!isPlayerAndPlayerShot(reg, firstType, secondType) && !isBackground(firstType, secondType) &&
             !isEnemyAndEnemyShot(firstType, secondType) && !isPlayerShotAndEnemyShot(firstType, secondType) &&
             !isEnemyAndPowerup(firstType, secondType) && !isEnemyShotAndPowerup(firstType, secondType) &&
             !isPlayerShotAndPowerup(firstType, secondType) && !isBossLevel1AndBossLevel1Shot(firstType, secondType) &&
@@ -110,7 +110,10 @@ bool ecs::system::CollisionSystem::areEntitiesEnemies(const ecs::EntityType &fir
             !isPlayerShotAndWeapon(firstType, secondType) && !isPowerupAndWeapon(firstType, secondType));
 }
 
-bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType) {
+bool ecs::system::CollisionSystem::isPlayerAndPlayerShot(Registry &reg, const ecs::EntityType &firstType,
+                                                         const ecs::EntityType &secondType) {
+    if (reg.getIsFriendlyFireActivated())
+        return false;
     return ((firstType == ecs::EntityType::PLAYER && secondType == ecs::EntityType::PLAYERSHOT) ||
             (firstType == ecs::EntityType::PLAYERSHOT && secondType == ecs::EntityType::PLAYER));
 }

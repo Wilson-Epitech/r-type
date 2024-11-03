@@ -76,7 +76,8 @@ namespace ecs {
         BOSS_LEVEL3_TEMPLATE, ///< Level 3 boss template.
         WEAPON,               ///< Weapon entity.
         WEAPON_TEMPLATE,      ///< Weapon template entity.
-        WEAPON_SPRITES        ///< Weapon sprites entity.
+        WEAPON_SPRITES,       ///< Weapon sprites entity.
+        GAME_OVER             ///< gameover entity
     };
 
     /**
@@ -97,6 +98,7 @@ namespace ecs {
         TEXTINFOS,       ///< Text component.
         ACTIVEPOWERUP,   ///< Activated powerup component.
         MOVEMENTPATTERN, ///< Movement pattern component.
+        GAMEOVER,        ///< Gameover component
         PLAYERWEAPON     ///< Player weapon component.
     };
 
@@ -325,6 +327,19 @@ namespace ecs {
         };
 
         /**
+         * @struct GameOver
+         * @brief Component that stores game-over state information.
+         */
+        struct GameOver {
+            bool isGameOver = false;         ///< Flag indicating whether the game is over.
+            bool displayInitialized = false; ///< Flag to check if the display is initialized
+
+            bool operator==(const GameOver &other) const {
+                return (isGameOver == other.isGameOver && displayInitialized == other.displayInitialized);
+            }
+        };
+
+        /**
          * @struct TextInfos
          * @brief Component for text informations of an entity.
          */
@@ -428,6 +443,7 @@ struct EntityData {
                 areComponentsEquals<ecs::component::SpriteInfos>(name, ecs::ComponentName::SPRITEINFOS, component, other.component) ||
                 areComponentsEquals<ecs::component::SoundEffectInfos>(name, ecs::ComponentName::SOUNDEFFECT, component, other.component) ||
                 areComponentsEquals<ecs::component::TextInfos>(name, ecs::ComponentName::TEXTINFOS, component, other.component) ||
+                areComponentsEquals<ecs::component::GameOver>(name, ecs::ComponentName::GAMEOVER, component, other.component) ||
                 areComponentsEquals<ecs::component::ActivePowerup>(name, ecs::ComponentName::ACTIVEPOWERUP, component, other.component) ||
                 areComponentsEquals<ecs::component::BackgroundMusicInfos>(name, ecs::ComponentName::MUSIC, component, other.component) ||
                 areComponentsEquals<ecs::component::Score>(name, ecs::ComponentName::SCORE, component, other.component) ||
@@ -477,6 +493,7 @@ void operator<<(std::ostringstream &oss, const ecs::component::Life &life);
 void operator<<(std::ostringstream &oss, const ecs::component::SoundEffectInfos &soundEffectInfos);
 void operator<<(std::ostringstream &oss, const ecs::component::BackgroundMusicInfos &music);
 void operator<<(std::ostringstream &oss, const ecs::component::TextInfos &textInfo);
+void operator<<(std::ostringstream &oss, const ecs::component::GameOver &gameover);
 void operator<<(std::ostringstream &oss, const ecs::component::Score &score);
 void operator<<(std::ostringstream &oss, const ecs::component::ActivePowerup &activePowerup);
 void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &movementPattern);
@@ -496,6 +513,7 @@ void operator>>(std::istringstream &iss, ecs::component::Life &life);
 void operator>>(std::istringstream &iss, ecs::component::SoundEffectInfos &soundEffectInfos);
 void operator>>(std::istringstream &iss, ecs::component::BackgroundMusicInfos &music);
 void operator>>(std::istringstream &iss, ecs::component::TextInfos &textInfo);
+void operator>>(std::istringstream &iss, ecs::component::GameOver &gameover);
 void operator>>(std::istringstream &iss, ecs::component::Score &score);
 void operator>>(std::istringstream &iss, ecs::component::ActivePowerup &activePowerup);
 void operator>>(std::istringstream &iss, ecs::component::MovementPattern &movementPattern);

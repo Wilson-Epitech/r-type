@@ -44,10 +44,13 @@ cmake -P build/clean.cmake
 **Launch the Server**
 
 ```sh
-./rtype_server [port] --difficulty [difficultyMode]
+./rtype_server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]
 ```
 > [!NOTE]
 > difficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by default)
+
+> [!NOTE]
+> friendlyFireState can be 'true' or 'false' (it is set to false by default)
 
 **Launch Clients**
 
