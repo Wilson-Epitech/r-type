@@ -63,8 +63,9 @@ namespace ecs {
              * @brief Changes the path of the background sprite used.
              * @param reg The ECS registry containing entities and their components.
              * @param types Array of types components for entities.
+             * @param pathToSprite Path to the new background sprite.
              */
-            void setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types, std::string pathToSprite);
+            void setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types, const std::string &pathToSprite);
 
             /**
              * @brief Changes the path of the ennemy sprite used.

@@ -55,17 +55,19 @@ void ecs::system::BossFiringSystem::changeShootSprite(Registry &reg, SparseArray
     SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
     SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
     std::size_t bossIndex = findChosenBossEntity(types, ecs::EntityType::BOSS);
-    std::size_t bossShotIndex = getBossShootIndex(reg);
+    std::size_t bossShotTemplateIndex = findChosenBossEntity(types, ecs::EntityType::BOSS_SHOT_2_TEMPLATE);
+    std::size_t bossLevel2TemplateIndex = findChosenBossEntity(types, ecs::EntityType::BOSS_LEVEL2_TEMPLATE);
+    std::size_t bossShotIndex = findChosenBossEntity(types, ecs::EntityType::BOSS_SHOT_1);
     static bool Level2BossShotLoaded = false;
 
     if (bossIndex < bossSpawn.size() && bossIndex < movements.size() && bossShotIndex < spriteInfos.size()) {
         if (!bossSpawn[bossIndex] || !spriteInfos[bossShotIndex] || !movements[bossIndex])
             return;
         if (bossSpawn[bossIndex]->ongoingLevel == CurrentLevel::LEVEL2_BOSS && !Level2BossShotLoaded) {
-            spriteInfos[bossShotIndex]->spritePath = LEVEL2_BOSS_SHOT_PATH;
-            spriteInfos[bossShotIndex]->isLoaded = false;
-            spriteInfos[bossShotIndex]->patternNb = LEVEL2_BOSS_SHOT_NB_PATTERN;
-            movements[bossIndex]->movementPatternType = ecs::MovementType::FOLLOW;
+            spriteInfos[bossShotIndex]->spritePath = spriteInfos[bossShotTemplateIndex]->spritePath;
+            spriteInfos[bossShotIndex]->isLoaded = spriteInfos[bossShotTemplateIndex]->isLoaded;
+            spriteInfos[bossShotIndex]->patternNb = spriteInfos[bossShotTemplateIndex]->patternNb;
+            movements[bossIndex]->movementPatternType = movements[bossLevel2TemplateIndex]->movementPatternType;
             Level2BossShotLoaded = true;
         }
     }

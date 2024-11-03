@@ -68,7 +68,7 @@ void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, Spar
     }
 }
 
-void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types, std::string pathToSprite) {
+void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types, const std::string &pathToSprite) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
 
     for (std::size_t i = 0; i < types.size(); i++) {
