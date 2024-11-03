@@ -59,6 +59,10 @@ void operator<<(std::ostringstream &oss, const ecs::component::MovementPattern &
     oss << movementPattern.patternAmplitude << ' ' << movementPattern.isReversible << ' ' << movementPattern.movementPatternType;
 }
 
+void operator<<(std::ostringstream &oss, const ecs::component::Weapon &weapons) {
+    oss << weapons.weaponType << ' ' << weapons.playerIndex;
+}
+
 void operator<<(std::ostringstream &oss, const EntityData &entityData) {
 
     oss << entityData.entityID << ' ';
@@ -87,6 +91,8 @@ void operator<<(std::ostringstream &oss, const EntityData &entityData) {
         network::HandleData::serializeEntityComponent<ecs::component::ActivePowerup>(oss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
         network::HandleData::serializeEntityComponent<ecs::component::MovementPattern>(oss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::PLAYERWEAPON)
+        network::HandleData::serializeEntityComponent<ecs::component::Weapon>(oss, entityData.name, entityData.component);
     oss << '\n';
 }
 
@@ -102,6 +108,13 @@ void operator>>(std::istringstream &iss, ecs::MovementType &movementType) {
 
     iss >> tmpType;
     movementType = static_cast<ecs::MovementType>(tmpType);
+}
+
+void operator>>(std::istringstream &iss, ecs::WeaponType &weaponType) {
+    int tmpType = 0;
+
+    iss >> tmpType;
+    weaponType = static_cast<ecs::WeaponType>(tmpType);
 }
 
 void operator>>(std::istringstream &iss, ecs::ComponentName &name) {
@@ -164,6 +177,11 @@ void operator>>(std::istringstream &iss, ecs::component::MovementPattern &moveme
     iss >> movementPattern.movementPatternType;
 }
 
+void operator>>(std::istringstream &iss, ecs::component::Weapon &weapons) {
+    iss >> weapons.weaponType;
+    iss >> weapons.playerIndex;
+}
+
 void operator>>(std::istringstream &iss, EntityData &entityData) {
 
     iss >> entityData.entityID;
@@ -192,4 +210,6 @@ void operator>>(std::istringstream &iss, EntityData &entityData) {
         network::HandleData::deserializeEntityComponent<ecs::component::ActivePowerup>(iss, entityData.name, entityData.component);
     if (entityData.name == ecs::ComponentName::MOVEMENTPATTERN)
         network::HandleData::deserializeEntityComponent<ecs::component::MovementPattern>(iss, entityData.name, entityData.component);
+    if (entityData.name == ecs::ComponentName::PLAYERWEAPON)
+        network::HandleData::deserializeEntityComponent<ecs::component::Weapon>(iss, entityData.name, entityData.component);
 }

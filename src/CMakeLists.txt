@@ -22,6 +22,7 @@ set(SRC
     ecs/systems/ScoreSystem.cpp
     ecs/systems/PowerupSystem.cpp
     ecs/systems/ResetForNextLevel.cpp
+    ecs/systems/WeaponSystem.cpp
     runGame/RunGame.cpp
     network/handleData/HandleData.cpp
     ../lib/Lib.cpp

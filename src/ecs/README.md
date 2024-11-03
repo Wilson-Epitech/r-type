@@ -130,7 +130,7 @@ enum CurrentLevel {
    struct Life {
       std::size_t nbLives = 1;
       bool displayLife = false;
-      bool hasToSummonPowerup = false;
+      bool hasToSummonPowerupAndWeapon = false;
       std::size_t maxLives = 0;
       bool isInvincible = false;
 
@@ -327,6 +327,23 @@ enum CurrentLevel {
             bool hasBeenSlayed = false;
             CurrentLevel ongoingLevel = CurrentLevel::LEVEL1;
      };
+   ```
+21.   **Weapon**
+   - Store the informations about weapon
+   ```c++
+   struct Weapon {
+      WeaponType weaponType = WeaponType::NO_WEAPON;
+      std::size_t spawnRate = 5;
+      float activeTime = 5;
+      bool hasBeenTaken = false;
+      std::size_t playerIndex = 0;
+      bool isActivated = false;
+      std::chrono::steady_clock::time_point spawnTime = std::chrono::steady_clock::now();
+
+      bool operator==(const Weapon &other) const {
+         return (weaponType == other.weaponType && playerIndex == other.playerIndex);
+      }
+   };
    ```
 
 <div id='AddComponents'/>

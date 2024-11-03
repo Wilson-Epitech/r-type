@@ -122,7 +122,7 @@ void ecs::system::BossSpawnSystem::createNewBoss(Registry &reg, SparseArray<comp
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::BOSS});
-    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerup});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerupAndWeapon});
     if (shootingRate.size() > i) {
         if (shootingRate[i])
             shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
