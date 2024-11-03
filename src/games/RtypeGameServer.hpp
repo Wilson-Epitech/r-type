@@ -105,6 +105,21 @@
 #define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define MUSIC_VOLUME 0.5   ///< The volume of the background music.
 
+#define MUSIC_BOSS1_NAME "music_boss1"  ///< Defines the name of the boss 1 background music entity.
+#define MUSIC_BOSS1_VOLUME 1            ///< The volume of the boss 1 background music.
+
+#define MUSIC_BOSS2_NAME "music_boss2"  ///< Defines the name of the boss 2 background music entity.
+#define MUSIC_BOSS2_VOLUME 1            ///< The volume of the boss 2 background music.
+
+#define MUSIC_BOSS3_NAME "music_boss3"  ///< Defines the name of the boss 3 background music entity.
+#define MUSIC_BOSS3_VOLUME 1            ///< The volume of the boss 3 background music.
+
+#define MUSIC_LEVEL2_NAME "music_level2"    ///< Defines the name of the level 2 background music entity.
+#define MUSIC_LEVEL2_VOLUME 1               ///< The volume of the level 2 background music.
+
+#define MUSIC_LEVEL3_NAME "music_level3"    ///< Defines the name of the level 3 background music entity.
+#define MUSIC_LEVEL3_VOLUME 1               ///< The volume of the level 3 background music.
+
 #define TEAM_SCORE_NAME "team_score"          ///< Defines the name of the team score entity.
 #define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
 #define TEAM_SCORE_TEXT_X 50                  ///< The text x position for the team score entity.

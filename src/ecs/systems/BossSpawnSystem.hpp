@@ -92,7 +92,16 @@ namespace ecs {
              * @param reg The ECS registry containing entities and their components.
              * @return The index of the background music.
              */
-            std::size_t findBackgroundMusic(Registry &reg);
+            std::size_t findBackgroundMusic(Registry &reg, const ecs::CurrentLevel &level);
+
+            /**
+             * @brief Find the index of the background music entity that currently play music.
+             * @param reg The ECS registry containing entities and their components.
+             * @return The index of the background music that currently play music.
+             */
+            std::size_t findCurrentBackgroundMusic(Registry &reg);
+
+            void changeMusic(Registry &reg, const ecs::CurrentLevel &level);
         };
     }
 }

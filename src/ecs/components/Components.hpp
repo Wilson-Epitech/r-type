@@ -276,6 +276,14 @@ namespace ecs {
         };
 
         /**
+         * @struct BossType
+         * @brief Component representing the current part of the game we are on.
+         */
+        struct BossType {
+            CurrentLevel currentLevel = CurrentLevel::LEVEL1; ///< Current part of the game we are on
+        };
+
+        /**
          * @struct ShootingRate
          * @brief Component representing the shooting rate of an entity.
          */
