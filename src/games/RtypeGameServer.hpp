@@ -35,6 +35,12 @@
 #include "SpriteAnimationSystem.hpp"
 #include "WeaponSystem.hpp"
 
+#define INVALID_ARGUMENTS_MESSAGE                                                                                                          \
+    "Usage: ./server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]\n\tdifficultyMode can be 'easy', 'medium', "  \
+    "or 'hard' (it is set to medium by "                                                                                                   \
+    "default)\n\tfriendlyFireState can be 'true' or 'false' (it is set to false by default)" ///< The message to display when arguments
+                                                                                             ///< passed in parameter are invalid
+
 #define MAX_SPAWN_HEIGHT 1040 ///< Maximum spawn height for enemies.
 #define MIN_SPAWN_HEIGHT 30   ///< Minimum spawn height for enemies.
 #define MAX_SPAWN_WIDTH 2420  ///< Maximum spawn width for enemies.
@@ -130,10 +136,20 @@ namespace game {
      * @brief Enum representing the differents difficulty modes of the game.
      */
     enum DifficultyMode {
-        NO_MODE, ///< No mode
-        EASY,    ///< Easy mode
-        MEDIUM,  ///< Medium mode
-        HARD     ///< Hard mode
+        DEFAULT_DIFFICULTY, ///< Default initialization value
+        EASY,               ///< Easy mode
+        MEDIUM,             ///< Medium mode
+        HARD                ///< Hard mode
+    };
+
+    /**
+     * @enum FriendlyFireState
+     * @brief Enum representing the two possibles states for friendlyfire in the game.
+     */
+    enum FriendlyFireState {
+        DEFAULT_FRIENDLY_FIRE, ///< Default initialization value
+        WITHOUT_FRIENDLY_FIRE, ///< Without friendly fire
+        WITH_FRIENDLY_FIRE,    ///< With friendly fire
     };
 
     /**
@@ -150,29 +166,27 @@ namespace game {
          * @param gameName The name of the game, used for server-side management.
          *
          */
-        RtypeGameServer(const std::string difficultyMode = "medium", const std::string gameName = "R-Type");
+        RtypeGameServer(std::vector<std::string> arguments = {}, const std::string gameName = "R-Type");
         ~RtypeGameServer() = default;
-
-        /** @brief Updates the difficulty mode of the game.
-         *  @param difficultyMode  The mode of difficulty chosen.
-         */
-        void setGameDifficulty(const std::string &difficultyMode) {
-            auto it = _stringToDifficultyMode.find(difficultyMode);
-            if (it == _stringToDifficultyMode.end()) {
-                throw Error("Invalid difficulty mode");
-            }
-            _mode = it->second;
-        }
 
       private:
         /**
-         * @brief Manages the game state and updates the registry accordingly.
-         * This method is responsible for controlling the flow of the game and ensuring the
-         * game state remains in sync with server-side operations.
-         * @param reg The ECS registry that contains all entities and components.
-         * @return The current game status.
+         * @brief Initialize the arguments to difficulty mode map.
+         * It links the easy, medium, and hard difficulty mode enum values to correspondent arguments.
          */
-        GameStatus gameState(ecs::Registry &reg) override;
+        void initArgsToDifficultyMode();
+
+        /**
+         * @brief Initialize the arguments to difficulty mode map.
+         * It links the two friendly fire state enum values to correspondent arguments.
+         */
+        void initArgsToFriendlyFireState();
+
+        /**
+         * @brief Update the difficulty mode or/and the friendly fire state of the game based on the provided arguments.
+         * @param arguments The vector of strings containing all game arguments.
+         */
+        void handleArguments(std::vector<std::string> &arguments);
 
         /**
          * @brief Spawns the necessary entities for the R-Type game.
@@ -219,9 +233,21 @@ namespace game {
          */
         bool allPlayersDead(ecs::Registry &reg);
 
-        DifficultyMode _mode; ///< The mode of difficulty of the current game instance.
-        std::unordered_map<std::string, DifficultyMode>
-            _stringToDifficultyMode; ///< An unordered map linking a string to a difficulty mode.
+        /**
+         * @brief Manages the game state and updates the registry accordingly.
+         * This method is responsible for controlling the flow of the game and ensuring the
+         * game state remains in sync with server-side operations.
+         * @param reg The ECS registry that contains all entities and components.
+         * @return The current game status.
+         */
+        GameStatus gameState(ecs::Registry &reg) override;
+
+        DifficultyMode _difficultyMode;       ///< The mode of difficulty of the current game instance.
+        FriendlyFireState _friendlyFireState; ///< The friendly fire state of the current game instance.
+        std::map<std::pair<std::string, std::string>, DifficultyMode>
+            _argsToDifficultyMode; ///< A map linking two arguments to a difficulty mode.
+        std::map<std::pair<std::string, std::string>, FriendlyFireState>
+            _argsToFriendlyFireState; ///< A  map linking two arguments to a friendly fire state.
     };
 }
 
