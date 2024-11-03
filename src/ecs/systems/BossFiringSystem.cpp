@@ -7,8 +7,7 @@
 
 #include "BossFiringSystem.hpp"
 
-void ecs::system::BossFiringSystem::operator()(Registry &reg)
-{
+void ecs::system::BossFiringSystem::operator()(Registry &reg) {
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     SparseArray<component::ShootingRate> &shootingRate = reg.getComponents<component::ShootingRate>();
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
@@ -51,8 +50,7 @@ void ecs::system::BossFiringSystem::operator()(Registry &reg)
     }
 }
 
-void ecs::system::BossFiringSystem::changeShootSprite(Registry &reg, SparseArray<component::Type> types)
-{
+void ecs::system::BossFiringSystem::changeShootSprite(Registry &reg, SparseArray<component::Type> types) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
     SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
@@ -73,8 +71,7 @@ void ecs::system::BossFiringSystem::changeShootSprite(Registry &reg, SparseArray
     }
 }
 
-void ecs::system::BossFiringSystem::additionalShotFinalLevel(Registry &reg, SparseArray<component::Type> types, const std::size_t &i)
-{
+void ecs::system::BossFiringSystem::additionalShotFinalLevel(Registry &reg, SparseArray<component::Type> types, const std::size_t &i) {
     SparseArray<component::BossSpawn> &bossSpawn = reg.getComponents<component::BossSpawn>();
     SparseArray<component::MovementPattern> &movements = reg.getComponents<component::MovementPattern>();
 
@@ -91,8 +88,7 @@ void ecs::system::BossFiringSystem::additionalShotFinalLevel(Registry &reg, Spar
     }
 }
 
-void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Registry &reg)
-{
+void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
@@ -126,8 +122,7 @@ void ecs::system::BossFiringSystem::addShot(const std::size_t &bossIndex, Regist
         soundEffect.insertAt(entity, ecs::component::SoundEffectInfos{soundEffect[bossShootIndex]->soundPath, false, true});
 }
 
-std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg)
-{
+std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
     SparseArray<component::Velocity> &enemyShootVelocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
@@ -142,8 +137,7 @@ std::size_t ecs::system::BossFiringSystem::getBossShootIndex(Registry &reg)
     return 0;
 }
 
-std::size_t ecs::system::BossFiringSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind)
-{
+std::size_t ecs::system::BossFiringSystem::findChosenBossEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind) {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == entityToFind)
             return i;
@@ -151,8 +145,7 @@ std::size_t ecs::system::BossFiringSystem::findChosenBossEntity(SparseArray<comp
     return 0;
 }
 
-float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &bossIndex, const std::size_t &shootIndex)
-{
+float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const std::size_t &bossIndex, const std::size_t &shootIndex) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::MovementPattern> &movementPattern = reg.getComponents<component::MovementPattern>();
@@ -182,8 +175,7 @@ float ecs::system::BossFiringSystem::changeShootVelocity(Registry &reg, const st
     return (angle * 180 / M_PI) + 180;
 }
 
-std::size_t ecs::system::BossFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index)
-{
+std::size_t ecs::system::BossFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     float tmpRes = 0;

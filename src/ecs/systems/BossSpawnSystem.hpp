@@ -15,9 +15,9 @@
 #ifndef BOSSSPAWNSYSTEM_HPP_
 #define BOSSSPAWNSYSTEM_HPP_
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 
 #define LEVEL1_BOSS_STOP 1200    ///< Set the stop position for the boss' entering.
 #define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.
@@ -85,7 +85,6 @@ namespace ecs {
              * @param bossEntity Index corresponding to the entity of the boss.
              */
             void spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity);
-
         };
     }
 }

@@ -36,7 +36,6 @@
 #define LEVEL2_BOSS_SHOT_PATH "assets/r-typesheet23.png"      ///< The level 2 boss shot path.
 #define LEVEL3_BOSS_PATH "assets/bossLevel3.png"              ///< The level 3 boss sprite path.
 
-
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.
 #define ENEMY_SPRITE_NB_PATTERN 8          ///< The enemy sprite pattern number.

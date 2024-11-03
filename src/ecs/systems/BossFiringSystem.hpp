@@ -8,9 +8,9 @@
 #ifndef BOSSFIRINGSYSTEM_HPP_
 #define BOSSFIRINGSYSTEM_HPP_
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 #include <math.h>
 
 #define SHOT_POS_X 1200 ///< start position of the shoot in x
@@ -54,7 +54,7 @@ namespace ecs {
              */
             std::size_t getBossShootIndex(Registry &reg);
 
-             /**
+            /**
              * @brief Finds the index of the chosen entity.
              * This method retrieves the index of the entity passed as parameter.
              * @param types Array of types components for entities.
