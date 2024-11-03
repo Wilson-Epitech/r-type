@@ -12,6 +12,7 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::Life> &lives = reg.getComponents<component::Life>();
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
+    SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
 
     std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static std::vector<std::pair<std::size_t, std::chrono::steady_clock::time_point>> timer;
@@ -32,13 +33,19 @@ void ecs::system::EnemySpawnSystem::operator()(Registry &reg) {
                 time0 = std::chrono::steady_clock::now();
                 timer.push_back({i, time0});
             }
-            if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn) && checkCurrentScore(reg) < SCORE_FINAL_BOSS_LEVEL1)) ||
-                isFirstSpawn) {
-                for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
-                    std::srand(rand() % time(NULL));
-                    createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
+            std::size_t bossIndex = findLevel1BossEntity(reg);
+            if (bossIndex != 0) {
+                if (((Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn) &&
+                      (bossSpawns[bossIndex]->ongoingLevel != CurrentLevel::LEVEL1_BOSS &&
+                       bossSpawns[bossIndex]->ongoingLevel != CurrentLevel::LEVEL2_BOSS &&
+                       bossSpawns[bossIndex]->ongoingLevel != CurrentLevel::LEVEL3))) ||
+                    isFirstSpawn) {
+                    for (std::size_t j = 0; j < enemySpawn[i]->waveSize; j++) {
+                        std::srand(rand() % time(NULL));
+                        createNewEnemy(reg, enemySpawn, velocities, lives, spriteInfos, i);
+                    }
+                    isFirstSpawn = false;
                 }
-                isFirstSpawn = false;
             }
             if (Lib::isTimeElapsed(time0, enemySpawn[i]->timeBeforeSpawn)) {
                 for (std::size_t j = 0; j < timer.size(); j++) {
@@ -68,7 +75,7 @@ void ecs::system::EnemySpawnSystem::createNewEnemy(Registry &reg, SparseArray<co
     spriteInfos.insertAt(entity, ecs::component::SpriteInfos{spriteInfos[i]->spritePath, spriteInfos[i]->patternNb,
                                                              spriteInfos[i]->firstPattern, spriteInfos[i]->scaleFactor});
     types.insertAt(entity, ecs::component::Type{ecs::EntityType::ENEMY});
-    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerup});
+    lives.insertAt(entity, ecs::component::Life{lives[i]->nbLives, lives[i]->displayLife, lives[i]->hasToSummonPowerupAndWeapon});
     if (shootingRate.size() > i) {
         if (shootingRate[i])
             shootingRate.insertAt(entity, ecs::component::ShootingRate{shootingRate[i]->shootRate});
@@ -90,6 +97,16 @@ std::size_t ecs::system::EnemySpawnSystem::checkCurrentScore(Registry &reg) {
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == ecs::EntityType::TEXT && scores[i]->score != 0)
             return scores[i]->score;
+    }
+    return 0;
+}
+
+std::size_t ecs::system::EnemySpawnSystem::findLevel1BossEntity(Registry &reg) {
+    SparseArray<component::Type> &types = reg.getComponents<component::Type>();
+
+    for (std::size_t i = 0; i < types.size(); i++) {
+        if (types[i]->entityType == ecs::EntityType::BOSS)
+            return i;
     }
     return 0;
 }

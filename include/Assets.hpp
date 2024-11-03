@@ -14,38 +14,61 @@
 #ifndef ASSETS_HPP_
 #define ASSETS_HPP_
 
-#define PLAYER_PATH "assets/r-typesheet5.png"                 ///< The player sprite path.
-#define PLAYERSHOT_PATH "assets/r-typesheet30a.png"           ///< The playershot sprite path.
-#define ENEMY_PATH "assets/r-typesheet17.png"                 ///< The enemy sprite path.
-#define ENEMYSHOT_PATH "assets/enemy_bullet.png"              ///< The enemyshot sprite path.
-#define LEVEL1_BOSS_PATH "assets/r-typesheet41.png"           ///< The level 1 boss sprite path.
-#define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"        ///< The level 1 boss shot path.
-#define LEVEL1_BACKGROUND_PATH "assets/background.png"        ///< The level 1 background sprite path.
-#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< The level 2 background sprite path.
-#define POWERUP_PATH "assets/powerup.png"                     ///< The powerup sprite path.
-#define SHOOT_SOUND_PATH "assets/shoot.wav"                   ///< The shoot sound path.
-#define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
-#define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"    ///< The background music path.
-#define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
+#define PLAYER_PATH "assets/images/r-typesheet5.png"                 ///< The player sprite path.
+#define PLAYERSHOT_PATH "assets/images/r-typesheet30a.png"           ///< The playershot sprite path.
+#define ENEMY_PATH "assets/images/r-typesheet17.png"                 ///< The enemy sprite path.
+#define LEVEL2_ENEMY_PATH "assets/images/level2_ennemies.png"        ///< The level 2 enemy sprite path.
+#define ENEMYSHOT_PATH "assets/images/enemy_bullet.png"              ///< The enemyshot sprite path.
+#define LEVEL1_BOSS_PATH "assets/images/r-typesheet41.png"           ///< The level 1 boss sprite path.
+#define STRONGER_ENEMY_PATH "assets/images/small_boss.png"           ///< The stronger enemy sprite path.
+#define LEVEL1_BOSS_SHOT_PATH "assets/images/boss1_shoot.png"        ///< The level 1 boss shot path.
+#define LEVEL1_BACKGROUND_PATH "assets/images/background.png"        ///< The level 1 background sprite path.
+#define LEVEL2_BACKGROUND_PATH "assets/images/background_level2.png" ///< The level 2 background sprite path.
+#define LEVEL3_BACKGROUND_PATH "assets/images/backgroundLevel3.png"  ///< The level 3 background sprite path.
+#define LEVEL2_BOSS_PATH "assets/images/level2_final_boss.png"       ///< The level 2 boss sprite path.
+#define POWERUP_PATH "assets/images/powerup.png"                     ///< The powerup sprite path.
+#define SHOOT_SOUND_PATH "assets/musics/shoot.wav"                   ///< The shoot sound path.
+#define EXPLOSION_SOUND_PATH "assets/musics/explosion.wav"           ///< The explosion sound path.
+#define BACKGROUND_MUSIC_PATH "assets/musics/backgroundMusic.mp3"    ///< The background music path.
+#define FONT_PATH "assets/fonts/ARCADE_N.TTF"                        ///< The text font path.
+#define BACK_WEAPON_PATH "assets/images/back_weapon.png"             ///< The back weapon sprite path.
+#define FRONT_WEAPON_PATH "assets/images/front_weapon.png"           ///< The front weapon sprite path.
+#define BACKGROUND_MUSIC_PATH_BOSS1 "assets/musics/boss1.mp3"        ///< The background music path for the boss1.
+#define BACKGROUND_MUSIC_PATH_BOSS2 "assets/musics/boss2.mp3"        ///< The background music path for the boss2.
+#define BACKGROUND_MUSIC_PATH_LVL2 "assets/musics/lvl2.mp3"          ///< The background music path for the level 2.
+#define BACKGROUND_MUSIC_PATH_BOSS3 "assets/musics/boss3.mp3"        ///< The background music path for the boss3.
+#define BACKGROUND_MUSIC_PATH_LVL3 "assets/musics/lvl3.mp3"          ///< The background music path for the level 3.
+#define LEVEL2_BOSS_SHOT_PATH "assets/images/r-typesheet23.png"      ///< The level 2 boss shot path.
+#define LEVEL3_BOSS_PATH "assets/images/bossLevel3.png"              ///< The level 3 boss sprite path.
 
-#define PLAYER_SPRITE_NB_PATTERN 16    ///< The player sprite pattern number.
-#define PLAYERSHOT_SPRITE_NB_PATTERN 3 ///< The playershot sprite pattern number.
-#define ENEMY_SPRITE_NB_PATTERN 8      ///< The enemy sprite pattern number.
-#define ENEMYSHOT_SPRITE_NB_PATTERN 2  ///< The enemyshot sprite pattern number.
-#define LEVEL1_BOSS_NB_PATTERN 5       ///< The level 1 boss sprite pattern number.
-#define LEVEL1_BOSS_SHOT_PATTERN 4     ///< The level 1 boss shot sprite pattern number.
-#define BACKGROUND_SPRITE_NB_PATTERN 1 ///< The background sprite pattern number.
-#define POWERUP_SPRITE_NB_PATTERN 10   ///< The powerup sprite pattern number.
+#define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
+#define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.
+#define ENEMY_SPRITE_NB_PATTERN 8          ///< The enemy sprite pattern number.
+#define ENEMYSHOT_SPRITE_NB_PATTERN 2      ///< The enemyshot sprite pattern number.
+#define STRONGER_ENEMY_SPRITE_NB_PATTERN 4 ///< The stronger enemy sprites pattern number.
+#define LEVEL1_BOSS_NB_PATTERN 5           ///< The level 1 boss sprite pattern number.
+#define LEVEL1_BOSS_SHOT_PATTERN 4         ///< The level 1 boss shot sprite pattern number.
+#define LEVEL2_BOSS_NB_PATTERN 3           ///< The level 2 boss sprite pattern number.
+#define BACKGROUND_SPRITE_NB_PATTERN 1     ///< The background sprite pattern number.
+#define POWERUP_SPRITE_NB_PATTERN 10       ///< The powerup sprite pattern number.
+#define FRONT_WEAPON_SPRITE_NB_PATTERN 1   ///< The front weapon sprite pattern number.
+#define BACK_WEAPON_SPRITE_NB_PATTERN 1    ///< The back weapon sprite pattern number.
+#define LEVEL2_BOSS_SHOT_NB_PATTERN 8      ///< The boss shot sprite pattern number.
+#define LEVEL3_BOSS_NB_PATTERN 1           ///< The level 3 boss sprite pattern number.
 
 #define PLAYER_SPRITE_FIRST_PATTERN 8  ///< The first pattern to display for the player sprite.
 #define POWERUP_SPRITE_FIRST_PATTERN 1 ///< The first pattern to display for the powerup sprite.
 
-#define PLAYER_SPRITE_SCALE_FACTOR 2.3  ///< The scale factor for the player sprite.
-#define ENEMY_SCALE_FACTOR 1            ///< The scale factor for the enemy sprite.
-#define ENEMYSHOT_SCALE_FACTOR 2        ///< The scale factor for the enemyshot sprite.
-#define STRONGER_ENEMY_SCALE_FACTOR 1.5 ///< The scale factor for the stronger enemy sprite.
-#define LEVEL1_BOSS_SCALE_FACTOR 10     ///< The scale factor for the level 1 boss sprite.
-#define BACKGROUND_SCALE_FACTOR 0.625   ///< The scale factor for the background sprite.
-#define POWERUP_SCALE_FACTOR 0.5        ///< The scale factor for the powerup sprite.
+#define PLAYER_SPRITE_SCALE_FACTOR 2.3 ///< The scale factor for the player sprite.
+#define ENEMY_SCALE_FACTOR 1           ///< The scale factor for the enemy sprite.
+#define ENEMYSHOT_SCALE_FACTOR 2       ///< The scale factor for the enemyshot sprite.
+#define STRONGER_ENEMY_SCALE_FACTOR 5  ///< The scale factor for the stronger enemy sprite.
+#define LEVEL1_BOSS_SCALE_FACTOR 10    ///< The scale factor for the level 1 boss sprite.
+#define LEVEL2_BOSS_SCALE_FACTOR 4     ///< The scale factor for the level 2 boss sprite.
+#define LEVEL3_BOSS_SCALE_FACTOR 3     ///< The scale factor for the level 3 boss sprite.
+#define BACKGROUND_SCALE_FACTOR 0.625  ///< The scale factor for the background sprite.
+#define POWERUP_SCALE_FACTOR 0.5       ///< The scale factor for the powerup sprite.
+#define FRONT_WEAPON_SCALE_FACTOR 0.5  ///< The scale factor for the front weapon sprite.
+#define BACK_WEAPON_SCALE_FACTOR 0.5   ///< The scale factor for the back weapon sprite.
 
 #endif /* !ASSETS_HPP_ */

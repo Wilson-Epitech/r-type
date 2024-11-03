@@ -15,6 +15,7 @@
 #ifndef BOSSSPAWNSYSTEM_HPP_
 #define BOSSSPAWNSYSTEM_HPP_
 
+#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
 
@@ -22,6 +23,7 @@
 #define LEVEL1_BOSS_SPAWN_X 1940 ///< Sets the position in width for the appearance of the boss.
 #define LEVEL1_BOSS_SPAWN_Y 150  ///< Sets the position in height for the appearance of the boss.
 #define LEVEL1_BOSS_VELOCITY -1  ///< Sets the velocity for the appearance of the boss.
+#define TIME_WAIT_LEVEL1_BOSS 10 ///< Sets the time to wait before making the level1 boss appear.
 
 namespace ecs {
     namespace system {
@@ -56,13 +58,55 @@ namespace ecs {
             void createNewBoss(Registry &reg, SparseArray<component::Type> &types, const std::size_t &i);
 
             /**
-             * @brief Find the index of the Level1 Boss entity.
+             * @brief Find the index of the chosen entity.
              * @param types Array of types components for entities.
-             * @return The index of the boss' entity.
+             * @return The index of the chosen entity.
              */
-            int findLevel1BossEntity(SparseArray<component::Type> &types);
+            std::size_t findChosenEntity(SparseArray<component::Type> &types, const ecs::EntityType &entityToFind);
 
-            std::size_t checkCurrentScore(Registry &reg);
+            /**
+             * @brief Changes the current level depending on which boss was slayed.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void updateOngoingLevelStatus(Registry &reg, SparseArray<component::Type> &types);
+
+            /**
+             * @brief Changes the sprite for the level 2 boss.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             */
+            void changeSpriteLevel2Boss(Registry &reg, SparseArray<component::Type> &types);
+
+            /**
+             * @brief Handles the logic for the spawning of the Level 3 boss.
+             * @param reg The ECS registry containing entities and their components.
+             * @param types Array of types components for entities.
+             * @param bossEntity Index corresponding to the entity of the boss.
+             */
+            void spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity);
+
+            /**
+             * @brief Find the index of the background music entity of the level.
+             * @param reg The ECS registry containing entities and their components.
+             * @param level The level of the game.
+             * @return The index of the background music of the level.
+             */
+            std::size_t findBackgroundMusic(Registry &reg, const ecs::CurrentLevel &level);
+
+            /**
+             * @brief Find the index of the background music entity that currently play music.
+             * @param reg The ECS registry containing entities and their components.
+             * @return The index of the background music that currently play music.
+             */
+            std::size_t findCurrentBackgroundMusic(Registry &reg);
+
+            /**
+             * @brief Change the music when the level changed.
+             * @param reg The ECS registry containing entities and their components.
+             * @param level The level of the game.
+             */
+            void changeMusic(Registry &reg, const ecs::CurrentLevel &level);
         };
     }
 }

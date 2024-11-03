@@ -1,7 +1,7 @@
 
 ---
 
-# Binary Protocol
+# Binary Protocol - C/C++
 
 This document describes our implementaiton of binary protocol adapted to our needs
 

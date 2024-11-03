@@ -76,21 +76,23 @@ namespace ecs {
             /**
              * @brief Determines if two entities are enemies.
              * This method checks if two entities, based on their types, should be considered enemies.
+             * @param reg The ECS registry containing entities and components.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
              * @return true If the entities are enemies.
              * @return false Otherwise.
              */
-            bool areEntitiesEnemies(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool areEntitiesEnemies(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
              * @brief Checks if the collision is between a player and a player shot.
+             * @param reg The ECS registry containing entities and components.
              * @param firstType The type of the first entity.
              * @param secondType The type of the second entity.
              * @return true If it's a collision between a player and their shot.
              * @return false Otherwise.
              */
-            bool isPlayerAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+            bool isPlayerAndPlayerShot(Registry &reg, const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
              * @brief Checks if the collision is between an enemy and an enemy shot.
@@ -147,12 +149,40 @@ namespace ecs {
             bool isPlayerShotAndPowerup(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
-             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
-             * @param reg The ECS registry containing entities and components.
-             * @param i The index of the first entity.
-             * @param j The index of the second entity.
+             * @brief Checks if the collision is between an enemy and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy and a weapon.
+             * @return false Otherwise.
              */
-            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
+            bool isEnemyAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between an enemy shot and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between an enemy shot and a weapon.
+             * @return false Otherwise.
+             */
+            bool isEnemyShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between a player shot and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between a player shot and a weapon.
+             * @return false Otherwise.
+             */
+            bool isPlayerShotAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between a powerup and a weapon.
+             * @param firstType The type of the first entity.
+             * @param secondType The type of the second entity.
+             * @return true If it's a collision between a powerup and a weapon.
+             * @return false Otherwise.
+             */
+            bool isPowerupAndWeapon(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
 
             /**
              * @brief Checks if the collision is between the level 1 boss and a level1 boss' shot.
@@ -198,6 +228,25 @@ namespace ecs {
              * @return false Otherwise.
              */
             bool isBossLevel1ShotAndPlayerShot(const ecs::EntityType &firstType, const ecs::EntityType &secondType);
+
+            /**
+             * @brief Checks if the collision is between a player and a weapon.
+             * the hasBeenActivated weapon component variable will be set as true
+             * @param reg The ECS registry containing entities and components.
+             * @param i The index of the first entity.
+             * @param j The index of the second entity.
+             * @return true If the collision is between a player and a weapon.
+             * @return false Otherwise.
+             */
+            bool enablePlayerWeapon(Registry &reg, const std::size_t &i, const std::size_t &j);
+
+            /**
+             * @brief give one pv to the player when he hit a powerup and store the index of the player that hit a powerup.
+             * @param reg The ECS registry containing entities and components.
+             * @param i The index of the first entity.
+             * @param j The index of the second entity.
+             */
+            void powerUpLives(Registry &reg, const std::size_t &i, const std::size_t &j);
         };
     }
 }
