@@ -216,16 +216,6 @@ namespace game {
         void addSystemsToRegistry() override;
 
         /**
-         * @brief Initialize the string to difficulty mode map.
-         * It links the easy, medium, and hard difficulty mode enum values to correspondent strings.
-         */
-        void initStringToDifficultyMode() {
-            _stringToDifficultyMode.insert({"easy", game::DifficultyMode::EASY});
-            _stringToDifficultyMode.insert({"medium", game::DifficultyMode::MEDIUM});
-            _stringToDifficultyMode.insert({"hard", game::DifficultyMode::HARD});
-        }
-
-        /**
          * @brief Checks if all player entities in the game are marked as dead.
          * @param reg The ECS registry that contains all entities and components.
          * @return true if all player entities are dead, meaning no active players remain.
