@@ -40,8 +40,15 @@ add_custom_command(TARGET rtype_server POST_BUILD
     $<TARGET_FILE:rtype_server> ${CMAKE_SOURCE_DIR}/rtype_server
 )
 elseif(WIN32)
+    set(RAYLIB_DLL_PATH "${CMAKE_SOURCE_DIR}/build/src/network/server/raylib.dll")
+    set(GLFW3_DLL_PATH "${CMAKE_SOURCE_DIR}/build/src/network/server/glfw3.dll")
+
     add_custom_command(TARGET rtype_server POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy
+    ${RAYLIB_DLL_PATH} ${CMAKE_SOURCE_DIR}/raylib.dll
+    COMMAND ${CMAKE_COMMAND} -E copy
+    ${GLFW3_DLL_PATH} ${CMAKE_SOURCE_DIR}/glfw3.dll
+    COMMAND ${CMAKE_COMMAND} -E copy
     $<TARGET_FILE:rtype_server> ${CMAKE_SOURCE_DIR}/rtype_server.exe
-)
+    )
 endif()
