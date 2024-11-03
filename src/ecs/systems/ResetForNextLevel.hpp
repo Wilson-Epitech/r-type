@@ -82,9 +82,10 @@ namespace ecs {
             std::size_t findLevel1BossEntity(Registry &reg);
 
             /**
-             * @brief Find the index of the background music entity.
+             * @brief Find the index of the background music entity of the level.
              * @param reg The ECS registry containing entities and their components.
-             * @return The index of the background music.
+             * @param level The level of the game.
+             * @return The index of the background music of the level.
              */
             std::size_t findBackgroundMusic(Registry &reg, const ecs::CurrentLevel &level);
 
@@ -95,6 +96,11 @@ namespace ecs {
              */
             std::size_t findCurrentBackgroundMusic(Registry &reg);
 
+            /**
+             * @brief Change the music when the level changed.
+             * @param reg The ECS registry containing entities and their components.
+             * @param level The level of the game.
+             */
             void changeMusic(Registry &reg, const ecs::CurrentLevel &level);
         };
     }
