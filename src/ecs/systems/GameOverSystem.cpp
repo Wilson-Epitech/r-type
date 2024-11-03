@@ -12,8 +12,8 @@ void ecs::system::GameOverSystem::operator()(Registry &reg) {
     SparseArray<component::GameOver> &gameOverComponents = reg.getComponents<component::GameOver>();
 
     for (std::size_t i = 0; i < gameOverComponents.size(); ++i) {
-        if (gameOverComponents[i] && gameOverComponents[i]->isGameOver) {
-            if (!gameOverComponents[i]->displayInitialized) {
+        if (gameOverComponents[i]) {
+            if (gameOverComponents[i]->isGameOver && !gameOverComponents[i]->displayInitialized) {
                 displayGameOverScreen(reg);
                 gameOverComponents[i]->displayInitialized = true;
             }
@@ -28,8 +28,10 @@ void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
     int score = 0;
 
     for (std::size_t i = 0; i < types.size(); ++i) {
-        if (scoreinfo[i] && types[i]->entityType != ecs::EntityType::PLAYER)
-            score = scoreinfo[i]->score;
+        if (scoreinfo[i] && types[i]) {
+            if (types[i]->entityType != ecs::EntityType::PLAYER)
+                score = scoreinfo[i]->score;
+        }
         if (types[i] && textInfo[i])
             reg.killEntity(i);
     }
