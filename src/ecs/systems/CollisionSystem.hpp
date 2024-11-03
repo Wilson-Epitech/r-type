@@ -15,10 +15,13 @@
 #ifndef COLLISIONSYSTEM_HPP_
 #define COLLISIONSYSTEM_HPP_
 
+#ifdef _WIN32
+
 #define NOGDI
 #define WIN32_LEAN_AND_MEAN
 #undef DrawText
 #undef LoadImage
+#endif
 
 #include "Components.hpp"
 #include "ISystem.hpp"
@@ -26,7 +29,6 @@
 
 #if _WIN32
 #include <winsock2.h>
-// #include <winsock.h>
 #else
 #include <arpa/inet.h>
 #endif
