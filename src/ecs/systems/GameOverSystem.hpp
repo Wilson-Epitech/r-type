@@ -36,7 +36,6 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include <string>
 
 namespace ecs {
     namespace system {
