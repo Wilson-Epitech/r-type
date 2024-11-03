@@ -14,12 +14,20 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
 
     if (bossIndex != 0) {
         for (std::size_t i = 0; i < bossSpawns.size() && i < types.size(); i++) {
-            if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
-                bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL2;
-                resetPlayerPosition(reg, types);
-                killAllRemainingEnemies(reg, types);
-                setNewLevelBackground(reg, types);
-                changeSpriteForEnemies(reg, types);
+            if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
+                if (bossSpawns[bossIndex]->ongoingLevel == CurrentLevel::LEVEL1_BOSS) {
+                    bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL2;
+                    resetPlayerPosition(reg, types);
+                    killAllRemainingEnemies(reg, types);
+                    setNewLevelBackground(reg, types, LEVEL2_BACKGROUND_PATH);
+                    changeSpriteForEnemies(reg, types);
+                }
+                if (bossSpawns[bossIndex]->ongoingLevel == CurrentLevel::LEVEL2_BOSS) {
+                    bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL3;
+                    resetPlayerPosition(reg, types);
+                    killAllRemainingEnemies(reg, types);
+                    setNewLevelBackground(reg, types, LEVEL3_BACKGROUND_PATH);
+                }
             }
         }
     }
@@ -58,14 +66,14 @@ void ecs::system::ResetForNextLevel::killAllRemainingEnemies(Registry &reg, Spar
     }
 }
 
-void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types) {
+void ecs::system::ResetForNextLevel::setNewLevelBackground(Registry &reg, SparseArray<component::Type> &types, const std::string &pathToSprite) {
     SparseArray<component::SpriteInfos> &spriteInfos = reg.getComponents<component::SpriteInfos>();
 
     for (std::size_t i = 0; i < types.size(); i++) {
         if (!types[i])
             continue;
         if (types[i]->entityType == ecs::EntityType::BACKGROUND) {
-            spriteInfos[i]->spritePath = LEVEL2_BACKGROUND_PATH;
+            spriteInfos[i]->spritePath = pathToSprite;
             spriteInfos[i]->isLoaded = false;
         }
     }
@@ -99,7 +107,7 @@ std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) 
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
 
     for (std::size_t i = 0; i < types.size(); i++) {
-        if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
+        if (types[i]->entityType == ecs::EntityType::BOSS)
             return i;
     }
     return 0;
