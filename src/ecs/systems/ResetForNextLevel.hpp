@@ -79,6 +79,8 @@ namespace ecs {
              * @return The index of the boss' entity.
              */
             std::size_t findLevel1BossEntity(Registry &reg);
+
+            std::size_t findBackgroundMusic(Registry &reg);
         };
     }
 }

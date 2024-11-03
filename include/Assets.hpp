@@ -31,6 +31,10 @@
 #define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
 #define BACK_WEAPON_PATH "assets/back_weapon.png"             ///< The back weapon sprite path.
 #define FRONT_WEAPON_PATH "assets/front_weapon.png"           ///< The front weapon sprite path.
+#define BACKGROUND_MUSIC_PATH_BOSS1 "assets/boss1.mp3"        ///< The background music path for the boss1.
+#define BACKGROUND_MUSIC_PATH_LVL2 "assets/lvl2.mp3"          ///< The background music path for the level 2.
+#define BACKGROUND_MUSIC_PATH_BOSSE2 "assets/boss2.mp3"       ///< The background music path for the boss2.
+#define BACKGROUND_MUSIC_PATH_BOSSE3 "assets/boss3.mp3"       ///< The background music path for the boss3.
 
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.

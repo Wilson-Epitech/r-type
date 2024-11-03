@@ -13,6 +13,7 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     SparseArray<component::Position> &positions = reg.getComponents<component::Position>();
     SparseArray<component::Velocity> &velocities = reg.getComponents<component::Velocity>();
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
     static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
     static bool isTimerSet = false;
     static bool bossSpawned = false;
@@ -33,8 +34,12 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
                     createNewBoss(reg, types, bossEntity);
                     bossSpawned = true;
                     if (bossEntity < bossSpawns.size()) {
-                        if (bossSpawns[bossEntity])
+                        if (bossSpawns[bossEntity]) {
                             bossSpawns[bossEntity]->ongoingLevel = CurrentLevel::LEVEL1_BOSS;
+                            musics[findBackgroundMusic(reg)]->isLoaded = false;
+                            musics[findBackgroundMusic(reg)]->musicPath = BACKGROUND_MUSIC_PATH_BOSS1;
+                            musics[findBackgroundMusic(reg)]->isCurrentlyPlayed = false;
+                        }
                     }
                 }
             }
@@ -78,6 +83,17 @@ std::size_t ecs::system::BossSpawnSystem::findLevel1BossEntity(SparseArray<compo
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
             return i;
+    }
+    return 0;
+}
+
+std::size_t ecs::system::BossSpawnSystem::findBackgroundMusic(Registry &reg) {
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
+
+    for (std::size_t i = 0; i < musics.size(); i++) {
+        if (!musics[i])
+            continue;
+        return i;
     }
     return 0;
 }

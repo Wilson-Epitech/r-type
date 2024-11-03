@@ -11,11 +11,15 @@ void ecs::system::ResetForNextLevel::operator()(Registry &reg) {
     SparseArray<component::BossSpawn> &bossSpawns = reg.getComponents<component::BossSpawn>();
     SparseArray<component::Type> &types = reg.getComponents<component::Type>();
     std::size_t bossIndex = findLevel1BossEntity(reg);
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
 
     if (bossIndex != 0) {
         for (std::size_t i = 0; i < bossSpawns.size() && i < types.size(); i++) {
             if (bossSpawns[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
                 bossSpawns[bossIndex]->ongoingLevel = CurrentLevel::LEVEL2;
+                musics[findBackgroundMusic(reg)]->isLoaded = false;
+                musics[findBackgroundMusic(reg)]->musicPath = BACKGROUND_MUSIC_PATH_LVL2;
+                musics[findBackgroundMusic(reg)]->isCurrentlyPlayed = false;
                 resetPlayerPosition(reg, types);
                 killAllRemainingEnemies(reg, types);
                 setNewLevelBackground(reg, types);
@@ -101,6 +105,17 @@ std::size_t ecs::system::ResetForNextLevel::findLevel1BossEntity(Registry &reg) 
     for (std::size_t i = 0; i < types.size(); i++) {
         if (types[i]->entityType == ecs::EntityType::BOSS_LEVEL1)
             return i;
+    }
+    return 0;
+}
+
+std::size_t ecs::system::ResetForNextLevel::findBackgroundMusic(Registry &reg) {
+    SparseArray<component::BackgroundMusicInfos> &musics = reg.getComponents<component::BackgroundMusicInfos>();
+
+    for (std::size_t i = 0; i < musics.size(); i++) {
+        if (!musics[i])
+            continue;
+        return i;
     }
     return 0;
 }

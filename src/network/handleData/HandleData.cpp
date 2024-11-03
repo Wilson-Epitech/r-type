@@ -37,6 +37,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     std::vector<EntityData> activePowerupInfosData =
         retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
     std::vector<EntityData> weaponData = retrieveComponentUpdates<ecs::component::Weapon>(reg, ecs::ComponentName::PLAYERWEAPON);
+    std::vector<EntityData> musicData = retrieveComponentUpdates<ecs::component::BackgroundMusicInfos>(reg, ecs::ComponentName::MUSIC);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -47,6 +48,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     network::HandleData::addEntityDataToSend(textInfosData, data);
     network::HandleData::addEntityDataToSend(activePowerupInfosData, data);
     network::HandleData::addEntityDataToSend(weaponData, data);
+    network::HandleData::addEntityDataToSend(musicData, data);
 
     if (isServer)
         sendEntitiesDataForNewLevel(reg, data);
