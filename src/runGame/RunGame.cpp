@@ -44,8 +44,6 @@ void RunGame::runServer() {
                 _networkInstance->sendUpdatedData(_reg, dataReceivedList);
                 break;
             }
-        } else {
-            continue;
         }
         _reg.runSystems();
         disconnectedPlayerEntity = _networkInstance->manageConnection();
