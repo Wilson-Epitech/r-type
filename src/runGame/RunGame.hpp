@@ -13,8 +13,25 @@
 #include "IGame.hpp"
 #include "INetwork.hpp"
 #include <functional>
-#include <raylib.h>
 
+#ifdef _WIN32
+
+#define WIN32_LEAN_AND_MEAN
+#define NOGDI
+
+#include <winsock2.h>
+#include <windows.h>
+
+#undef Rectangle
+#undef CloseWindow
+#undef ShowCursor
+#undef LoadImage
+#undef DrawText
+#undef DrawTextEx
+
+#endif
+
+#include <raylib.h>
 #define UPDATE_TIME 0.02 ///< Set the time to update the game.
 
 #if __linux__
