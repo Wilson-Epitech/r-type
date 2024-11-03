@@ -70,7 +70,7 @@ namespace ecs {
         TEXT,                 ///< Text entity
         POWERUP,              ///< Powerup entity
         POWERUP_TEMPLATE,     ///< Powerup template entity
-        BOSS_LEVEL1,          ///< Level1 Boss' entity
+        BOSS,                 ///< Boss' entity
         WEAPON,               ///< Weapon entity
         WEAPON_TEMPLATE,      ///< Weapon template entity
         WEAPON_SPRITES        ///< Weapon sprites entity
@@ -128,7 +128,8 @@ namespace ecs {
         LEVEL1,      ///< First level
         LEVEL1_BOSS, ///< First level after the boss was triggered
         LEVEL2,      ///< Second level
-        LEVEL2_BOSS  ///< Second level after the boss was triggered
+        LEVEL2_BOSS, ///< Second level after the boss was triggered
+        LEVEL3       ///< Final level
     };
 
     /**

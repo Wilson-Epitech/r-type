@@ -126,7 +126,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
     shootings.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Shooting{});
     types.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
-    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES, PLAYER_TEMPLATE_DISPLAY_LIFE});
+    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES + 1000, PLAYER_TEMPLATE_DISPLAY_LIFE});
     soundEffectInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     shootingRate.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::ShootingRate{PLAYER_TEMPLATE_SHOOTING_RATE});
     score.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Score{PLAYER_TEMPLATE_SCORE_INCREMENTATION});
@@ -183,7 +183,9 @@ void game::RtypeGameServer::addComponentsToEntities() {
     lives.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::Life{LEVEL1_BOSS_NB_LIVES});
     shootingRate.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::ShootingRate{LEVEL1_BOSS_SHOOTING_RATE});
     soundEffectInfos.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
-    types.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::Type{ecs::EntityType::BOSS_LEVEL1});
+    types.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME], ecs::component::Type{ecs::EntityType::BOSS});
+    movementPattern.insertAt(_stringToEntity[SPAWN_LEVEL1_BOSS_NAME],
+                             ecs::component::MovementPattern{0, false, ecs::MovementType::STRAIGHT});
 
     velocities.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME], ecs::component::Velocity{LEVEL1_BOSS_SHOT_VX, LEVEL1_BOSS_SHOT_VY});
     spriteInfos.insertAt(_stringToEntity[LEVEL1_BOSS_SHOT_NAME],
