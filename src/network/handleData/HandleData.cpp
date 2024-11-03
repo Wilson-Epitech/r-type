@@ -33,7 +33,7 @@ void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataTo
     if (timeElapsed.count() >= timeRequired) {
         std::vector<EntityData> playersShootingData;
         std::map<std::size_t, entity_t> clientsToPlayers = reg.getPlayers();
-        for (auto &clientToPlayer: clientsToPlayers) {
+        for (auto &clientToPlayer : clientsToPlayers) {
             if (shootings[clientToPlayer.second]) {
                 EntityData playerShootingData;
                 playerShootingData.name = ecs::ComponentName::SHOOTING;
