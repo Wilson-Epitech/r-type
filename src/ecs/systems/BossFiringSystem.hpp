@@ -8,7 +8,6 @@
 #ifndef BOSSFIRINGSYSTEM_HPP_
 #define BOSSFIRINGSYSTEM_HPP_
 
-#include "Assets.hpp"
 #include "Components.hpp"
 #include "ISystem.hpp"
 #include <math.h>

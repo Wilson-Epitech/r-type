@@ -141,6 +141,8 @@
 
 #define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
 
+#define BOSS_NOT_REVERSIBLE false ///< The inability for the boss to reverse.
+
 namespace game {
 
     /**
