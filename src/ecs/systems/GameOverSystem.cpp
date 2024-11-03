@@ -30,6 +30,7 @@ void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
     entity_t gameOverTextEntity = reg.spawnEntity();
     entity_t scoreTextEntity = reg.spawnEntity();
     entity_t exitTextEntity = reg.spawnEntity();
+    std::string finalScoreText = FINAL_SCORE_TEXT + std::to_string(score);
 
     for (std::size_t i = 0; i < types.size(); ++i) {
         if (scoreinfo[i] && types[i]) {
@@ -45,7 +46,6 @@ void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
                                            GAME_OVER_TEXT_SIZE, FONT_PATH, RED_GAMEOVER});
     types.insertAt(gameOverTextEntity, component::Type{ecs::EntityType::TEXT});
 
-    std::string finalScoreText = FINAL_SCORE_TEXT + std::to_string(score);
     textInfo.insertAt(scoreTextEntity, component::TextInfos{finalScoreText, static_cast<int>(screenWidth * WIDTH_SCORE_TEXT),
                                                             static_cast<int>(screenHeight * HEIGHT_SCORE_TEXT), SCORE_TEXT_SIZE, FONT_PATH,
                                                             ORANGE_GAMEOVER});
