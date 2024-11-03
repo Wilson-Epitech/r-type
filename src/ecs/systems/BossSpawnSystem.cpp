@@ -21,12 +21,14 @@ void ecs::system::BossSpawnSystem::operator()(Registry &reg) {
     for (std::size_t i = 0; i < types.size() && i < scores.size() && i < positions.size() && i < velocities.size(); ++i) {
         if (!types[i])
             continue;
-        if (types[i]->entityType == ecs::EntityType::TEXT && (scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 || (scores[i]->score >= SCORE_FINAL_BOSS_LEVEL2 && !bossSpawned)) && !isTimerSet) {
-            if (!isTimerSet) {
-                bossSpawned = false;
-                time0 = std::chrono::steady_clock::now();
-                isTimerSet = true;
-                updateOngoingLevelStatus(reg, types);
+        if (scores[i]) {
+            if (types[i]->entityType == ecs::EntityType::TEXT && (scores[i]->score == SCORE_FINAL_BOSS_LEVEL1 || (scores[i]->score == SCORE_FINAL_BOSS_LEVEL2)) && !isTimerSet) {
+                if (!isTimerSet) {
+                    time0 = std::chrono::steady_clock::now();
+                    isTimerSet = true;
+                    updateOngoingLevelStatus(reg, types);
+                    bossSpawned = false;
+                }
             }
         }
         if (isTimerSet && !bossSpawned) {
