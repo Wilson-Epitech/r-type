@@ -87,6 +87,11 @@ namespace ecs {
              */
             void spawnBossLevel3(Registry &reg, SparseArray<component::Type> &types, const std::size_t &bossEntity);
 
+            /**
+             * @brief Find the index of the background music entity.
+             * @param reg The ECS registry containing entities and their components.
+             * @return The index of the background music.
+             */
             std::size_t findBackgroundMusic(Registry &reg);
         };
     }

@@ -14,32 +14,32 @@
 #ifndef ASSETS_HPP_
 #define ASSETS_HPP_
 
-#define PLAYER_PATH "assets/r-typesheet5.png"                 ///< The player sprite path.
-#define PLAYERSHOT_PATH "assets/r-typesheet30a.png"           ///< The playershot sprite path.
-#define ENEMY_PATH "assets/r-typesheet17.png"                 ///< The enemy sprite path.
-#define LEVEL2_ENEMY_PATH "assets/level2_ennemies.png"        ///< The level 2 enemy sprite path.
-#define ENEMYSHOT_PATH "assets/enemy_bullet.png"              ///< The enemyshot sprite path.
-#define LEVEL1_BOSS_PATH "assets/r-typesheet41.png"           ///< The level 1 boss sprite path.
-#define STRONGER_ENEMY_PATH "assets/small_boss.png"           ///< The stronger enemy sprite path.
-#define LEVEL1_BOSS_SHOT_PATH "assets/boss1_shoot.png"        ///< The level 1 boss shot path.
-#define LEVEL1_BACKGROUND_PATH "assets/background.png"        ///< The level 1 background sprite path.
-#define LEVEL2_BACKGROUND_PATH "assets/background_level2.png" ///< The level 2 background sprite path.
-#define LEVEL3_BACKGROUND_PATH "assets/backgroundLevel3.png"  ///< The level 3 background sprite path.
-#define LEVEL2_BOSS_PATH "assets/level2_final_boss.png"       ///< The level 2 boss sprite path.
-#define POWERUP_PATH "assets/powerup.png"                     ///< The powerup sprite path.
-#define SHOOT_SOUND_PATH "assets/shoot.wav"                   ///< The shoot sound path.
-#define EXPLOSION_SOUND_PATH "assets/explosion.wav"           ///< The explosion sound path.
-#define BACKGROUND_MUSIC_PATH "assets/backgroundMusic.mp3"    ///< The background music path.
-#define FONT_PATH "assets/ARCADE_N.TTF"                       ///< The text font path.
-#define BACK_WEAPON_PATH "assets/back_weapon.png"             ///< The back weapon sprite path.
-#define FRONT_WEAPON_PATH "assets/front_weapon.png"           ///< The front weapon sprite path.
-#define BACKGROUND_MUSIC_PATH_BOSS1 "assets/boss1.mp3"        ///< The background music path for the boss1.
-#define BACKGROUND_MUSIC_PATH_BOSS2 "assets/boss2.mp3"        ///< The background music path for the boss2.
-#define BACKGROUND_MUSIC_PATH_LVL2 "assets/lvl2.mp3"          ///< The background music path for the level 2.
-#define BACKGROUND_MUSIC_PATH_BOSS3 "assets/boss3.mp3"        ///< The background music path for the boss3.
-#define BACKGROUND_MUSIC_PATH_LVL3 "assets/lvl3.mp3"          ///< The background music path for the level 3.
-#define LEVEL2_BOSS_SHOT_PATH "assets/r-typesheet23.png"      ///< The level 2 boss shot path.
-#define LEVEL3_BOSS_PATH "assets/bossLevel3.png"              ///< The level 3 boss sprite path.
+#define PLAYER_PATH "assets/image/r-typesheet5.png"                 ///< The player sprite path.
+#define PLAYERSHOT_PATH "assets/image/r-typesheet30a.png"           ///< The playershot sprite path.
+#define ENEMY_PATH "assets/image/r-typesheet17.png"                 ///< The enemy sprite path.
+#define LEVEL2_ENEMY_PATH "assets/image/level2_ennemies.png"        ///< The level 2 enemy sprite path.
+#define ENEMYSHOT_PATH "assets/image/enemy_bullet.png"              ///< The enemyshot sprite path.
+#define LEVEL1_BOSS_PATH "assets/image/r-typesheet41.png"           ///< The level 1 boss sprite path.
+#define STRONGER_ENEMY_PATH "assets/image/small_boss.png"           ///< The stronger enemy sprite path.
+#define LEVEL1_BOSS_SHOT_PATH "assets/image/boss1_shoot.png"        ///< The level 1 boss shot path.
+#define LEVEL1_BACKGROUND_PATH "assets/image/background.png"        ///< The level 1 background sprite path.
+#define LEVEL2_BACKGROUND_PATH "assets/image/background_level2.png" ///< The level 2 background sprite path.
+#define LEVEL3_BACKGROUND_PATH "assets/image/backgroundLevel3.png"  ///< The level 3 background sprite path.
+#define LEVEL2_BOSS_PATH "assets/image/level2_final_boss.png"       ///< The level 2 boss sprite path.
+#define POWERUP_PATH "assets/image/powerup.png"                     ///< The powerup sprite path.
+#define SHOOT_SOUND_PATH "assets/music/shoot.wav"                   ///< The shoot sound path.
+#define EXPLOSION_SOUND_PATH "assets/music/explosion.wav"           ///< The explosion sound path.
+#define BACKGROUND_MUSIC_PATH "assets/music/backgroundMusic.mp3"    ///< The background music path.
+#define FONT_PATH "assets/fonts/ARCADE_N.TTF"                       ///< The text font path.
+#define BACK_WEAPON_PATH "assets/image/back_weapon.png"             ///< The back weapon sprite path.
+#define FRONT_WEAPON_PATH "assets/image/front_weapon.png"           ///< The front weapon sprite path.
+#define BACKGROUND_MUSIC_PATH_BOSS1 "assets/music/boss1.mp3"        ///< The background music path for the boss1.
+#define BACKGROUND_MUSIC_PATH_BOSS2 "assets/music/boss2.mp3"        ///< The background music path for the boss2.
+#define BACKGROUND_MUSIC_PATH_LVL2 "assets/music/lvl2.mp3"          ///< The background music path for the level 2.
+#define BACKGROUND_MUSIC_PATH_BOSS3 "assets/music/boss3.mp3"        ///< The background music path for the boss3.
+#define BACKGROUND_MUSIC_PATH_LVL3 "assets/music/lvl3.mp3"          ///< The background music path for the level 3.
+#define LEVEL2_BOSS_SHOT_PATH "assets/image/r-typesheet23.png"      ///< The level 2 boss shot path.
+#define LEVEL3_BOSS_PATH "assets/image/bossLevel3.png"              ///< The level 3 boss sprite path.
 
 #define PLAYER_SPRITE_NB_PATTERN 16        ///< The player sprite pattern number.
 #define PLAYERSHOT_SPRITE_NB_PATTERN 3     ///< The playershot sprite pattern number.
