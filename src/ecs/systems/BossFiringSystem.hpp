@@ -15,7 +15,7 @@
 #define SHOT_POS_X 1200 ///< start position of the shoot in x
 #define MAX_SHOT_Y 800  ///< maximum starting position of the shoot in y
 #define MIN_SHOT_Y 200  ///< minimum starting position of the shoot in y
-#define PI_VALUE 3.14 ///< Value of the mathematical constant pi
+#define PI_VALUE 3.14   ///< Value of the mathematical constant pi
 
 namespace ecs {
     namespace system {
