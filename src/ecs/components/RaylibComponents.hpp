@@ -44,7 +44,6 @@
 #undef ShowCursor
 #undef LoadImage
 #undef DrawText
-// #undef DrawTextEx
 
 #undef WIN32_LEAN_AND_MEAN
 #undef NOGDI
