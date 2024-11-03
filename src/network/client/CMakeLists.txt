@@ -4,7 +4,11 @@ set(CLIENT_SRC
 
 add_executable(rtype_client ${CLIENT_SRC})
 
+if(WIN32)
 target_link_libraries(rtype_client PRIVATE rtype_lib ws2_32)
+elseif(UNIX)
+target_link_libraries(rtype_client PRIVATE rtype_lib)
+endif()
 
 add_library(client SHARED
     ./Client.cpp
@@ -21,7 +25,9 @@ target_include_directories(client PRIVATE
     ../../../include
 )
 
+if(WIN32)
 target_link_libraries(client PRIVATE ws2_32)
+endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     target_link_libraries(rtype_client

@@ -16,6 +16,8 @@
 #ifndef RAYLIBCOMPONENTS_HPP_
 #define RAYLIBCOMPONENTS_HPP_
 
+#ifdef _WIN32
+
 #define WIN32_LEAN_AND_MEAN
 #define NOGDI
 
@@ -32,9 +34,11 @@
 #define ShowCursor ShowCursorWinAPI
 #define LoadImage LoadImageWinAPI
 #define DrawText DrawTextWinAPI
-// #define DrawTextEx DrawTextExWinAPI
+#endif
 
 #include <raylib.h>
+
+#ifdef _WIN32
 
 #undef CloseWindow
 #undef ShowCursor
@@ -44,6 +48,7 @@
 
 #undef WIN32_LEAN_AND_MEAN
 #undef NOGDI
+#endif
 
 namespace ecs {
     namespace component {
