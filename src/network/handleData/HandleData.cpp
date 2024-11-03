@@ -15,15 +15,35 @@ void network::HandleData::addEntityDataToSend(std::vector<EntityData> entityData
 void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataToSend &data) {
     std::vector<EntityData> positionData = retrieveComponentUpdates<ecs::component::Position>(reg, ecs::ComponentName::POSITION);
     std::vector<EntityData> spriteInfoData = retrieveComponentUpdates<ecs::component::SpriteInfos>(reg, ecs::ComponentName::SPRITEINFOS);
-
+    ecs::SparseArray<ecs::component::Shooting> &shootings = reg.getComponents<ecs::component::Shooting>();
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
+    static std::chrono::steady_clock::time_point time0 = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::time_point actualTime = std::chrono::steady_clock::now();
+    std::chrono::milliseconds timeElapsed = std::chrono::duration_cast<std::chrono::seconds>(actualTime - time0);
+    std::size_t timeRequired = 2;
+
     for (std::size_t i = 0; i < bossSlayed.size(); i++) {
         if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
             network::HandleData::addEntityDataToSend(positionData, data);
             network::HandleData::addEntityDataToSend(spriteInfoData, data);
             bossSlayed[i]->hasBeenSlayed = false;
         }
+    }
+    if (timeElapsed.count() >= timeRequired) {
+        std::vector<EntityData> playersShootingData;
+        std::map<std::size_t, entity_t> clientsToPlayers = reg.getPlayers();
+        for (auto &clientToPlayer: clientsToPlayers) {
+            if (shootings[clientToPlayer.second]) {
+                EntityData playerShootingData;
+                playerShootingData.name = ecs::ComponentName::SHOOTING;
+                playerShootingData.entityID = clientToPlayer.second;
+                playerShootingData.component = shootings[clientToPlayer.second].value();
+                playersShootingData.push_back(playerShootingData);
+            }
+        }
+        time0 = std::chrono::steady_clock::now();
+        network::HandleData::addEntityDataToSend(playersShootingData, data);
     }
 }
 
