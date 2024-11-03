@@ -23,6 +23,14 @@ We also aim for our game to soon be Cross-Plateform. For now, the program lauche
 
 ## Installation
 
+Required tools:
+
+- **Git**
+- **CMake**
+- **MinGW** (Windows only)
+- **PowerShell 7** (Windows only)
+- **7-Zip** (Windows only)
+
 Run these two commands in order from the project root to compile it:
 
 ```bash
