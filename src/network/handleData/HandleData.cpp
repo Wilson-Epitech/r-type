@@ -19,7 +19,7 @@ void network::HandleData::sendEntitiesDataForNewLevel(ecs::Registry &reg, DataTo
     ecs::SparseArray<ecs::component::Type> &types = reg.getComponents<ecs::component::Type>();
     ecs::SparseArray<ecs::component::BossSpawn> &bossSlayed = reg.getComponents<ecs::component::BossSpawn>();
     for (std::size_t i = 0; i < bossSlayed.size(); i++) {
-        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS_LEVEL1) {
+        if (bossSlayed[i]->hasBeenSlayed && types[i]->entityType == ecs::EntityType::BOSS) {
             network::HandleData::addEntityDataToSend(positionData, data);
             network::HandleData::addEntityDataToSend(spriteInfoData, data);
             bossSlayed[i]->hasBeenSlayed = false;
@@ -38,6 +38,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     std::vector<EntityData> activePowerupInfosData =
         retrieveComponentUpdates<ecs::component::ActivePowerup>(reg, ecs::ComponentName::ACTIVEPOWERUP);
     std::vector<EntityData> weaponData = retrieveComponentUpdates<ecs::component::Weapon>(reg, ecs::ComponentName::PLAYERWEAPON);
+    std::vector<EntityData> musicData = retrieveComponentUpdates<ecs::component::BackgroundMusicInfos>(reg, ecs::ComponentName::MUSIC);
     DataToSend data;
 
     data.deadEntities = reg.getActualTurnDeadEntities();
@@ -49,6 +50,7 @@ DataToSend network::HandleData::fillNewEntitiesDataToSend(ecs::Registry &reg, co
     network::HandleData::addEntityDataToSend(gameOverData, data);
     network::HandleData::addEntityDataToSend(activePowerupInfosData, data);
     network::HandleData::addEntityDataToSend(weaponData, data);
+    network::HandleData::addEntityDataToSend(musicData, data);
 
     if (isServer)
         sendEntitiesDataForNewLevel(reg, data);

@@ -55,25 +55,28 @@ namespace ecs {
      * @brief Enum representing different types of entities in the game.
      */
     enum EntityType {
-        NOTYPE,               ///< No type entity
-        PLAYER,               ///< Player entity
-        PLAYER_TEMPLATE,      ///< Player template entity
-        PLAYERSHOT,           ///< Player's shot entity
-        PLAYERSHOT_TEMPLATE,  ///< Player's shot template entity
-        ENEMY,                ///< Enemy entity
-        ENEMY_TEMPLATE,       ///< Enemy template entity
-        ENEMYSHOT,            ///< Enemy's shot entity
-        ENEMYSHOT_TEMPLATE,   ///< Enemy's shot template entity
-        BOSS_SHOT_1,          ///< Level 1 boss's shot entity
-        BOSS_SHOT_1_TEMPLATE, ///< Level 1 boss's shot template entity
-        BACKGROUND,           ///< Background entity
-        TEXT,                 ///< Text entity
-        POWERUP,              ///< Powerup entity
-        POWERUP_TEMPLATE,     ///< Powerup template entity
-        BOSS_LEVEL1,          ///< Level1 Boss' entity
-        WEAPON,               ///< Weapon entity
-        WEAPON_TEMPLATE,      ///< Weapon template entity
-        WEAPON_SPRITES,       ///< Weapon sprites entity
+        NOTYPE,               ///< No type entity.
+        PLAYER,               ///< Player entity.
+        PLAYER_TEMPLATE,      ///< Player template entity.
+        PLAYERSHOT,           ///< Player's shot entity.
+        PLAYERSHOT_TEMPLATE,  ///< Player's shot template entity.
+        ENEMY,                ///< Enemy entity.
+        ENEMY_TEMPLATE,       ///< Enemy template entity.
+        ENEMYSHOT,            ///< Enemy's shot entity.
+        ENEMYSHOT_TEMPLATE,   ///< Enemy's shot template entity.
+        BOSS_SHOT_1,          ///< Level 1 boss's shot entity.
+        BOSS_SHOT_1_TEMPLATE, ///< Level 1 boss's shot template entity.
+        BOSS_SHOT_2_TEMPLATE, ///< Level 2 boss's shot template entity.
+        BACKGROUND,           ///< Background entity.
+        TEXT,                 ///< Text entity.
+        POWERUP,              ///< Powerup entity.
+        POWERUP_TEMPLATE,     ///< Powerup template entity.
+        BOSS,                 ///< Boss' entity.
+        BOSS_LEVEL2_TEMPLATE, ///< Level 2 boss template.
+        BOSS_LEVEL3_TEMPLATE, ///< Level 3 boss template.
+        WEAPON,               ///< Weapon entity.
+        WEAPON_TEMPLATE,      ///< Weapon template entity.
+        WEAPON_SPRITES,       ///< Weapon sprites entity.
         GAME_OVER             ///< gameover entity
     };
 
@@ -82,21 +85,21 @@ namespace ecs {
      * @brief Enum representing different component types in the ECS.
      */
     enum ComponentName {
-        NONE,            ///< No component
-        POSITION,        ///< Position component
-        VELOCITY,        ///< Velocity component
-        TYPE,            ///< Type component
-        LIFE,            ///< Life component
-        SHOOTING,        ///< Shooting component
-        SPRITEINFOS,     ///< Sprite information component
-        SOUNDEFFECT,     ///< Sound effect component
-        MUSIC,           ///< Background music component
-        SCORE,           ///< Score component
-        TEXTINFOS,       ///< Text component
-        ACTIVEPOWERUP,   ///< Activated powerup component
-        MOVEMENTPATTERN, ///< Movement pattern component
+        NONE,            ///< No component.
+        POSITION,        ///< Position component.
+        VELOCITY,        ///< Velocity component.
+        TYPE,            ///< Type component.
+        LIFE,            ///< Life component.
+        SHOOTING,        ///< Shooting component.
+        SPRITEINFOS,     ///< Sprite information component.
+        SOUNDEFFECT,     ///< Sound effect component.
+        MUSIC,           ///< Background music component.
+        SCORE,           ///< Score component.
+        TEXTINFOS,       ///< Text component.
+        ACTIVEPOWERUP,   ///< Activated powerup component.
+        MOVEMENTPATTERN, ///< Movement pattern component.
         GAMEOVER,        ///< Gameover component
-        PLAYERWEAPON     ///< Player weapon component
+        PLAYERWEAPON     ///< Player weapon component.
     };
 
     /**
@@ -104,12 +107,12 @@ namespace ecs {
      * @brief Enum representing different powerup types.
      */
     enum Poweruptype {
-        NOPOWERUP,          ///< No powerup
-        LIFE_POWERUP,       ///< Powerup type, give one pv to the player
-        POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull
-        INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible
-        MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size
-        END_POWERUP_TYPE    ///< End of the powerup type enum
+        NOPOWERUP,          ///< No powerup.
+        LIFE_POWERUP,       ///< Powerup type, give one pv to the player.
+        POWERSHOOT_POWERUP, ///< Powerup type, player shoot are more powerfull.
+        INVINCIBLE_POWERUP, ///< Powerup type, make the player invincible.
+        MEGASHOOT_POWERUP,  ///< Powerup type, make the player shoot twice it normal size.
+        END_POWERUP_TYPE    ///< End of the powerup type enum.
     };
 
     /**
@@ -117,9 +120,9 @@ namespace ecs {
      * @brief Enum representing different movement pattern types.
      */
     enum MovementType {
-        STRAIGHT, ///< Straight movement
-        SNAKE,    ///< Snake movement
-        FOLLOW    ///< Follow the player
+        STRAIGHT, ///< Straight movement.
+        SNAKE,    ///< Snake movement.
+        FOLLOW    ///< Follow the player.
     };
 
     /**
@@ -127,10 +130,11 @@ namespace ecs {
      * @brief Enum representing different key part of the game.
      */
     enum CurrentLevel {
-        LEVEL1,      ///< First level
-        LEVEL1_BOSS, ///< First level after the boss was triggered
-        LEVEL2,      ///< Second level
-        LEVEL2_BOSS  ///< Second level after the boss was triggered
+        LEVEL1,      ///< First level.
+        LEVEL1_BOSS, ///< First level after the boss was triggered.
+        LEVEL2,      ///< Second level.
+        LEVEL2_BOSS, ///< Second level after the boss was triggered.
+        LEVEL3       ///< Final level.
     };
 
     /**
@@ -138,10 +142,10 @@ namespace ecs {
      * @brief Enum representing different player weapon types.
      */
     enum WeaponType {
-        NO_WEAPON,    ///< No weapon
-        FRONT_WEAPON, ///< Weapon at the front of the player
-        BACK_WEAPON,  ///< Weapon at the back of the player
-        END_WEAPON    ///< End of the weapon type enum
+        NO_WEAPON,    ///< No weapon.
+        FRONT_WEAPON, ///< Weapon at the front of the player.
+        BACK_WEAPON,  ///< Weapon at the back of the player.
+        END_WEAPON    ///< End of the weapon type enum.
     };
 
     namespace component {
@@ -151,8 +155,8 @@ namespace ecs {
          * @brief Component for the position of an entity in 2D space.
          */
         struct Position {
-            float x = 0, y = 0;           ///< X and Y coordinates of the entity
-            float startX = 0, startY = 0; ///< X and Y coordinates of the entity before every movement
+            float x = 0, y = 0;           ///< X and Y coordinates of the entity.
+            float startX = 0, startY = 0; ///< X and Y coordinates of the entity before every movement.
 
             bool operator==(const Position &other) const {
                 return x == other.x && y == other.y && startX == other.startX && startY == other.startY;
@@ -164,7 +168,7 @@ namespace ecs {
          * @brief Component representing the velocity of an entity.
          */
         struct Velocity {
-            float vx = 0, vy = 0, possibleVelocity = 0; ///< Velocity in the X and Y directions, and possible max velocity
+            float vx = 0, vy = 0, possibleVelocity = 0; ///< Velocity in the X and Y directions, and possible max velocity.
 
             bool operator==(const Velocity &other) const {
                 return (vx == other.vx && vy == other.vy && possibleVelocity == other.possibleVelocity);
@@ -176,7 +180,7 @@ namespace ecs {
          * @brief Component representing the type of the entity.
          */
         struct Type {
-            ecs::EntityType entityType = ecs::EntityType::NOTYPE; ///< The type of the entity
+            ecs::EntityType entityType = ecs::EntityType::NOTYPE; ///< The type of the entity.
 
             bool operator==(const Type &other) const {
                 return (entityType == other.entityType);
@@ -188,11 +192,11 @@ namespace ecs {
          * @brief Component representing the life count of an entity.
          */
         struct Life {
-            std::size_t nbLives = 1;                  ///< Number of lives the entity has
-            bool displayLife = false;                 ///< Indicates if the life has to be displayed
-            bool hasToSummonPowerupAndWeapon = false; ///< Indicates if a powerup has a chance to spawn after death
-            std::size_t maxLives = 0;                 ///< Max number of lives an entity has, takes the nbLives value when the entity spawn
-            bool isInvincible = false;                ///< Indicates if the entity is invincible
+            std::size_t nbLives = 1;                  ///< Number of lives the entity has.
+            bool displayLife = false;                 ///< Indicates if the life has to be displayed.
+            bool hasToSummonPowerupAndWeapon = false; ///< Indicates if a powerup has a chance to spawn after death.
+            std::size_t maxLives = 0;                 ///< Max number of lives an entity has, takes the nbLives value when the entity spawn.
+            bool isInvincible = false;                ///< Indicates if the entity is invincible.
 
             bool operator==(const Life &other) const {
                 return (nbLives == other.nbLives && displayLife == other.displayLife && maxLives == other.maxLives &&
@@ -205,9 +209,9 @@ namespace ecs {
          * @brief Component that determines whether the entity is currently shooting.
          */
         struct Shooting {
-            bool isShooting = false;    ///< Boolean indicating if the entity is shooting
-            std::size_t shootPower = 1; ///< How much damage do the shoot
-            float shootSize = 1;        ///< Size of the shoot
+            bool isShooting = false;    ///< Boolean indicating if the entity is shooting.
+            std::size_t shootPower = 1; ///< How much damage do the shoot.
+            float shootSize = 1;        ///< Size of the shoot.
 
             bool operator==(const Shooting &other) const {
                 return (isShooting == other.isShooting && shootPower == other.shootPower && shootSize == other.shootSize);
@@ -219,14 +223,14 @@ namespace ecs {
          * @brief Component for sprite information of an entity.
          */
         struct SpriteInfos {
-            std::string spritePath;                        ///< Path to the sprite file
-            std::size_t patternNb = 1;                     ///< Number of patterns in the sprite
-            std::size_t firstPattern = 0;                  ///< First pattern in the sprite
-            float scaleFactor = 1.0;                       ///< Scale factor for the sprite
-            CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default
-            std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite
-            float rotationAngle = 0;                       ///< Rotation angle of the sprite
-            bool isLoaded = false;                         ///< Indicates if the texture is loaded
+            std::string spritePath;                        ///< Path to the sprite file.
+            std::size_t patternNb = 1;                     ///< Number of patterns in the sprite.
+            std::size_t firstPattern = 0;                  ///< First pattern in the sprite.
+            float scaleFactor = 1.0;                       ///< Scale factor for the sprite.
+            CustomColor color = WHITE_COLOR;               ///< Color applied to the sprite, white by default.
+            std::size_t spriteWidth = 0, spriteHeight = 0; ///< Width and height of the sprite.
+            float rotationAngle = 0;                       ///< Rotation angle of the sprite.
+            bool isLoaded = false;                         ///< Indicates if the texture is loaded.
 
             bool operator==(const SpriteInfos &other) const {
                 return (spritePath == other.spritePath && patternNb == other.patternNb && firstPattern == other.firstPattern &&
@@ -241,9 +245,9 @@ namespace ecs {
          * @brief Component for sound effects informations related to an entity.
          */
         struct SoundEffectInfos {
-            std::string soundPath;      ///< Path to the sound file
-            bool isLoaded = false;      ///< Boolean indicating if the sound is loaded
-            bool hasToBePlayed = false; ///< Boolean indicating if the sound should be played
+            std::string soundPath;      ///< Path to the sound file.
+            bool isLoaded = false;      ///< Boolean indicating if the sound is loaded.
+            bool hasToBePlayed = false; ///< Boolean indicating if the sound should be played.
 
             bool operator==(const SoundEffectInfos &other) const {
                 return (soundPath == other.soundPath && isLoaded == other.isLoaded && hasToBePlayed == other.hasToBePlayed);
@@ -255,12 +259,12 @@ namespace ecs {
          * @brief Component representing the enemy spawn information.
          */
         struct EnemySpawn {
-            float timeBeforeSpawn;                       ///< Time before the next spawn
-            std::size_t waveSize;                        ///< Size of the enemy wave to spawn
-            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width
-            int minSpawnWidth = 0;                       ///< Minimum spawn width
-            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height
-            int minSpawnHeight = 0;                      ///< Minimum spawn height
+            float timeBeforeSpawn;                       ///< Time before the next spawn.
+            std::size_t waveSize;                        ///< Size of the enemy wave to spawn.
+            int maxSpawnWidth = Lib::getScreenWidth();   ///< Maximum spawn width.
+            int minSpawnWidth = 0;                       ///< Minimum spawn width.
+            int maxSpawnHeight = Lib::getScreenHeight(); ///< Maximum spawn height.
+            int minSpawnHeight = 0;                      ///< Minimum spawn height.
         };
 
         /**
@@ -268,12 +272,20 @@ namespace ecs {
          * @brief Component representing the boss spawn information.
          */
         struct BossSpawn {
-            int maxSpawnWidth = Lib::getScreenWidth();        ///< Maximum spawn width
-            int minSpawnWidth = 0;                            ///< Minimum spawn width
-            int maxSpawnHeight = Lib::getScreenHeight();      ///< Maximum spawn height
-            int minSpawnHeight = 0;                           ///< Minimum spawn height
-            bool hasBeenSlayed = false;                       ///< To know if the boss has been defeated
-            CurrentLevel ongoingLevel = CurrentLevel::LEVEL1; ///< Current part of the game we are on
+            int maxSpawnWidth = Lib::getScreenWidth();        ///< Maximum spawn width.
+            int minSpawnWidth = 0;                            ///< Minimum spawn width.
+            int maxSpawnHeight = Lib::getScreenHeight();      ///< Maximum spawn height.
+            int minSpawnHeight = 0;                           ///< Minimum spawn height.
+            bool hasBeenSlayed = false;                       ///< To know if the boss has been defeated.
+            CurrentLevel ongoingLevel = CurrentLevel::LEVEL1; ///< Current part of the game we are on.
+        };
+
+        /**
+         * @struct BossType
+         * @brief Component representing the current part of the game we are on.
+         */
+        struct BossType {
+            CurrentLevel currentLevel = CurrentLevel::LEVEL1; ///< Current part of the game we are on
         };
 
         /**
@@ -281,15 +293,15 @@ namespace ecs {
          * @brief Component representing the shooting rate of an entity.
          */
         struct ShootingRate {
-            float shootRate = 0; ///< Rate of shooting
+            float shootRate = 0; ///< Rate of shooting.
         };
 
         /**
          * @struct ShootPlayerIndex
-         * @brief Component representing the index of the player that shot
+         * @brief Component representing the index of the player that shot.
          */
         struct ShootPlayerIndex {
-            std::size_t playerIndex; ///< Index of the player that shot
+            std::size_t playerIndex; ///< Index of the player that shot.
         };
 
         /**
@@ -297,11 +309,11 @@ namespace ecs {
          * @brief Component for background music informations of an entity.
          */
         struct BackgroundMusicInfos {
-            std::string musicPath;          ///< Path to the music file
-            float volume;                   ///< Volume level of the music
-            bool hasToBePlayed = true;      ///< Indicates if the music should be played
-            bool isLoaded = false;          ///< Indicates if the music is loaded
-            bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing
+            std::string musicPath;          ///< Path to the music file.
+            float volume;                   ///< Volume level of the music.
+            bool hasToBePlayed = true;      ///< Indicates if the music should be played.
+            bool isLoaded = false;          ///< Indicates if the music is loaded.
+            bool isCurrentlyPlayed = false; ///< Indicates if the music is currently playing.
 
             bool operator==(const BackgroundMusicInfos &other) const {
                 return (musicPath == other.musicPath && volume == other.volume && isLoaded == other.isLoaded &&
@@ -311,11 +323,11 @@ namespace ecs {
 
         /**
          * @struct Score
-         * @brief Component for the score of an entity
+         * @brief Component for the score of an entity.
          */
         struct Score {
-            std::size_t scoreIncrementation = 0; ///< Incrementation value for score
-            int score = 0;                       /// < Score of the entity
+            std::size_t scoreIncrementation = 0; ///< Incrementation value for score.
+            int score = 0;                       /// < Score of the entity.
 
             bool operator==(const Score &other) const {
                 return (score == other.score && scoreIncrementation == other.scoreIncrementation);
@@ -337,17 +349,17 @@ namespace ecs {
 
         /**
          * @struct TextInfos
-         * @brief Component for text informations of an entity
+         * @brief Component for text informations of an entity.
          */
         struct TextInfos {
-            std::string textToDisplay;                ///< Text to display
-            int x;                                    ///< X coordinates of the text
-            int y;                                    ///< Y coordinates of the text
-            int size;                                 ///< Size of the text
-            std::string fontPath;                     ///< Path of the font used to draw the text
-            CustomColor color = {245, 245, 245, 255}; ///< Color of the text, white by default
-            bool hasChanged = false;                  ///< Indicates if the textToDisplay string has changed
-            bool fontIsLoaded = false;                ///< Indicates if font has been loaded
+            std::string textToDisplay;                ///< Text to display.
+            int x;                                    ///< X coordinates of the text.
+            int y;                                    ///< Y coordinates of the text.
+            int size;                                 ///< Size of the text.
+            std::string fontPath;                     ///< Path of the font used to draw the text.
+            CustomColor color = {245, 245, 245, 255}; ///< Color of the text, white by default.
+            bool hasChanged = false;                  ///< Indicates if the textToDisplay string has changed.
+            bool fontIsLoaded = false;                ///< Indicates if font has been loaded.
 
             bool operator==(const TextInfos &other) const {
                 return (textToDisplay == other.textToDisplay && x == other.x && y == other.y && size == other.size &&
@@ -358,23 +370,23 @@ namespace ecs {
 
         /**
          * @struct Powerup
-         * @brief Component for the powerup information a powerup
+         * @brief Component for the powerup information a powerup.
          */
         struct Powerup {
-            Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup
-            std::size_t spawnRate = 3;                           ///< 1 chance of spawn in spawnRate (1 / spawnRate)
-            bool hasBeenActivated = false;                       ///< Indicates if the powerup is activated
-            std::size_t playerIndex = 0;                         ///< Entity of the player that have activated the powerup
+            Poweruptype powerupType = Poweruptype::LIFE_POWERUP; ///< Type of the powerup.
+            std::size_t spawnRate = 3;                           ///< 1 chance of spawn in spawnRate (1 / spawnRate).
+            bool hasBeenActivated = false;                       ///< Indicates if the powerup is activated.
+            std::size_t playerIndex = 0;                         ///< Entity of the player that have activated the powerup.
         };
 
         /**
          * @struct ActivePowerup
-         * @brief Component for the powerup that has been used by a player
+         * @brief Component for the powerup that has been used by a player.
          */
         struct ActivePowerup {
-            bool isPowershootActive = false; ///< Indicates if the powerup Powershoot is activated
-            bool isInvincibleActive = false; ///< Indicates if the powerup Invincible is activated
-            bool isMegaShootActive = false;  ///< Indicates if the powerup MegaShoot is activated
+            bool isPowershootActive = false; ///< Indicates if the powerup Powershoot is activated.
+            bool isInvincibleActive = false; ///< Indicates if the powerup Invincible is activated.
+            bool isMegaShootActive = false;  ///< Indicates if the powerup MegaShoot is activated.
 
             bool operator==(const ActivePowerup &other) const {
                 return (isPowershootActive == other.isPowershootActive && isInvincibleActive == other.isInvincibleActive &&
@@ -384,12 +396,12 @@ namespace ecs {
 
         /**
          * @struct MovementPattern
-         * @brief Component for the movement pattern of an entity
+         * @brief Component for the movement pattern of an entity.
          */
         struct MovementPattern {
-            std::size_t patternAmplitude = 0; ///< The amplitude of the pattern (usfull for snake pattern)
-            bool isReversible = false;        ///< Indicates if the entity has to go backward when it goes out of the screen
-            ecs::MovementType movementPatternType = MovementType::STRAIGHT; ///< The type of pattern to use
+            std::size_t patternAmplitude = 0; ///< The amplitude of the pattern (usfull for snake pattern).
+            bool isReversible = false;        ///< Indicates if the entity has to go backward when it goes out of the screen.
+            ecs::MovementType movementPatternType = MovementType::STRAIGHT; ///< The type of pattern to use.
 
             bool operator==(const MovementPattern &other) const {
                 return (patternAmplitude == other.patternAmplitude && isReversible == other.isReversible &&
@@ -399,17 +411,17 @@ namespace ecs {
 
         /**
          * @struct Weapon
-         * @brief Component for the player weapon information
+         * @brief Component for the player weapon information.
          */
         struct Weapon {
-            WeaponType weaponType = WeaponType::NO_WEAPON; ///< Type of the powerup
-            std::size_t spawnRate = 5;                     ///< 1 chance of spawn in spawnRate (1 / spawnRate)
-            float activeTime = 5;                          ///< How much time a plyer can have a weapon since he get it
-            bool hasBeenTaken = false;                     ///< Indicates if the weapon has been taken by the player
-            std::size_t playerIndex = 0;                   ///< Entity of the player that have activated the weapon
-            bool isActivated = false;                      ///< Indicates if the weapon is activated
+            WeaponType weaponType = WeaponType::NO_WEAPON; ///< Type of the powerup.
+            std::size_t spawnRate = 5;                     ///< 1 chance of spawn in spawnRate (1 / spawnRate).
+            float activeTime = 5;                          ///< How much time a plyer can have a weapon since he get it.
+            bool hasBeenTaken = false;                     ///< Indicates if the weapon has been taken by the player.
+            std::size_t playerIndex = 0;                   ///< Entity of the player that have activated the weapon.
+            bool isActivated = false;                      ///< Indicates if the weapon is activated.
             std::chrono::steady_clock::time_point spawnTime =
-                std::chrono::steady_clock::now(); ///< The time when the weapon as been activated by the player
+                std::chrono::steady_clock::now(); ///< The time when the weapon as been activated by the player.
 
             bool operator==(const Weapon &other) const {
                 return (weaponType == other.weaponType && playerIndex == other.playerIndex);
@@ -424,9 +436,9 @@ namespace ecs {
  */
 struct EntityData {
   public:
-    size_t entityID = 0;     ///< Unique ID of the entity
-    ecs::ComponentName name; ///< The name of the component
-    std::any component;      ///< The component data stored as std::any
+    size_t entityID = 0;     ///< Unique ID of the entity.
+    ecs::ComponentName name; ///< The name of the component.
+    std::any component;      ///< The component data stored as std::any.
 
     bool operator==(const EntityData &other) const {
         if (entityID == other.entityID && name == other.name) {
@@ -469,8 +481,8 @@ struct EntityData {
  * @brief Structure for holding data to send between systems.
  */
 struct DataToSend {
-    std::list<std::size_t> deadEntities = {};  ///< List of dead entities to be removed
-    std::vector<EntityData> entitiesData = {}; ///< List of entities' data
+    std::list<std::size_t> deadEntities = {};  ///< List of dead entities to be removed.
+    std::vector<EntityData> entitiesData = {}; ///< List of entities' data.
 
     bool empty() {
         return (deadEntities.empty() && entitiesData.empty());

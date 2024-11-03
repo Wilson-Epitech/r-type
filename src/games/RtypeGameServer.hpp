@@ -91,9 +91,21 @@
 #define LEVEL1_BOSS_NB_LIVES 100             ///< The number of lives for the level 1 boss.
 #define LEVEL1_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 1 boss.
 
+#define SPAWN_LEVEL2_BOSS_NAME "level2_boss" ///< Defines the name of the boss of level 2 spawn entity.
+#define LEVEL2_BOSS_NB_LIVES 100             ///< The number of lives for the level 2 boss.
+#define LEVEL2_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 2 boss.
+
+#define SPAWN_LEVEL3_BOSS_NAME "level3_boss" ///< Defines the name of the boss of level 3 spawn entity.
+#define LEVEL3_BOSS_NB_LIVES 100             ///< The number of lives for the level 3 boss.
+#define LEVEL3_BOSS_SHOOTING_RATE 0.5        ///< The shooting rate for the level 3 boss.
+
 #define LEVEL1_BOSS_SHOT_NAME "level1_boss_shot" ///< Defines the name of the level 1 boss shot entity.
 #define LEVEL1_BOSS_SHOT_VX -10                  ///< The horizontal velocity for the boss shot.
 #define LEVEL1_BOSS_SHOT_VY 0.0                  ///< The vertical velocity for the boss shot.
+
+#define LEVEL2_BOSS_SHOT_NAME "level2_boss_shot" ///< Defines the name of the level 1 boss shot entity.
+#define LEVEL2_BOSS_SHOT_VX -10                  ///< The horizontal velocity for the boss shot.
+#define LEVEL2_BOSS_SHOT_VY 0.0                  ///< The vertical velocity for the boss shot.
 
 #define POWER_UP_TEMPLATE_NAME "powerup_template" ///< Defines the name of the powerup template entity.
 #define POWERUP_TEMPLATE_TEXT_CONTENT "null"      ///< The text content for the powerup template entity.
@@ -105,6 +117,23 @@
 
 #define MUSIC_NAME "music" ///< Defines the name of the background music entity.
 #define MUSIC_VOLUME 0.5   ///< The volume of the background music.
+
+#define MUSIC_BOSS1_NAME "music_boss1" ///< Defines the name of the boss 1 background music entity.
+#define MUSIC_BOSS1_VOLUME 1           ///< The volume of the boss 1 background music.
+
+#define MUSIC_BOSS2_NAME "music_boss2" ///< Defines the name of the boss 2 background music entity.
+#define MUSIC_BOSS2_VOLUME 1           ///< The volume of the boss 2 background music.
+
+#define MUSIC_BOSS3_NAME "music_boss3" ///< Defines the name of the boss 3 background music entity.
+#define MUSIC_BOSS3_VOLUME 1           ///< The volume of the boss 3 background music.
+
+#define MUSIC_LEVEL2_NAME "music_level2" ///< Defines the name of the level 2 background music entity.
+#define MUSIC_LEVEL2_VOLUME 1            ///< The volume of the level 2 background music.
+
+#define MUSIC_LEVEL3_NAME "music_level3" ///< Defines the name of the level 3 background music entity.
+#define MUSIC_LEVEL3_VOLUME 1            ///< The volume of the level 3 background music.
+
+#define DONT_PLAY_THE_MUSIC false ///< Define if the music has to be played at the begining of the game
 
 #define TEAM_SCORE_NAME "team_score"          ///< Defines the name of the team score entity.
 #define TEAM_SCORE_TEXT_CONTENT "Team_score:" ///< The text content for the team score entity.
@@ -128,6 +157,8 @@
 #define FRONT_WEAPON_NAME "front_weapon_sprite" ///< Defines the name of the weapon front sprite entity.
 
 #define BACK_WEAPON_NAME "back_weapon_sprite" ///< Defines the name of the weapon back sprite entity.
+
+#define BOSS_NOT_REVERSIBLE false ///< The inability for the boss to reverse.
 
 namespace game {
 
