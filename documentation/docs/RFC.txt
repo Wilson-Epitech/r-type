@@ -1,0 +1,149 @@
+RTYPE DOCUMENTATION                                          W. Bordichon
+Category: Informational                                    November 2024
+
+                        Binary Protocol Specification
+
+   This document describes the Binary Protocol, a protocol designed for
+   efficient communication between client and server in the context of
+   real-time gaming. This protocol is a cornerstone of our network
+   architecture, guaranteeing both performance and security.
+
+1. Introduction
+
+   In our R-Type project, we use a binary protocol to manage
+   communications between client and server. This ensures fast data
+   exchange, which is essential for real-time gaming. By structuring
+   messages compactly, we reduce latency and optimize bandwidth
+   utilization. Furthermore, this protocol imposes a strict structure,
+   preventing the sending of non-compliant messages and limiting the
+   risk of intrusion.
+
+2. Message Structure
+
+   The message structure used to communicate between server and client
+   is designed to be both compact and complete for our needs,
+   guaranteeing efficient and secure communication. Each message
+   consists of the following elements:
+
+   Magic Number | Message Type | Message ID | Message Size | Message
+
+   2.1 Magic Number
+
+      The magic number is a unique identifier in hexadecimal to ensure
+      that the message received belongs to our protocol. This
+      differentiates valid messages from messages from external sources
+      or potentially corrupted messages.
+
+      Example:
+      ```
+      MAGIC_NUMBER = 0x9B3D; // 2 bytes
+      ```
+
+      Note: 2 bytes (16 bits) can store values from 0 to 65,535.
+
+   2.2 Message Type
+
+      The message type is represented by a unique identifier that
+      indicates the nature of the message. This can include categories
+      such as errors, information transmissions, or other specific types
+      of communication.
+
+      Example:
+      ```
+      messageType // 1 byte
+      ```
+
+      Note: 1 byte (8 bits) can store values from 0 to 255, allowing for
+      up to 256 different message types.
+
+   2.3 Message ID
+
+      The message identifier is a unique number assigned to each message
+      to ensure its precise identification. This allows duplicate
+      messages to be detected and avoided.
+
+      Example:
+      ```
+      messageId // 1 byte
+      ```
+
+      Note: 1 byte (8 bits) can store values from 0 to 255, sufficient
+      to define up to 256 unique messages in a short interval.
+
+   2.4 Message Size
+
+      Message size is a value indicating the total length of the message
+      in bytes. It is essential for checking that the message has been
+      received completely and without corruption.
+
+      Example:
+      ```
+      messageSize // 2 bytes
+      ```
+
+      Note: 2 bytes (16 bits) can represent message sizes of up to
+      65,535 bytes, which is useful for managing large messages.
+
+   2.5 Message
+
+      The message content itself, which can vary in size and format
+      depending on the message type and ID.
+
+3. Message Types
+
+   | Type          | Id | Description                        |
+   |---------------|----|------------------------------------|
+   | Connection    | 1  | New client connection              |
+   | Disconnection | 2  | Client Disconnection               |
+   | Communication | 3  | Send of data packet                |
+   | Repeat        | 4  | Send of repeat packet              |
+   | Error         | 5  | Send of Error                      |
+
+4. Error Management
+
+   4.1 Magic Number Check
+
+      When a message is received, the first step is to check the magic
+      number. This ensures that the message conforms to our protocol:
+
+   4.2 Message Size Check
+
+      Next, we check whether the message has been fully received. This
+      ensures that all expected data is present:
+
+5. Security
+
+   This protocol is secured by the magic number. This unique number
+   verifies the origin of the message. If a message does not respect our
+   protocol, it will be automatically rejected, ensuring that only
+   legitimate communications are accepted.
+
+6. Performance and Optimization
+
+   Performance optimization has been crucial in ensuring a smooth and
+   responsive gaming experience. Our binary protocol has been designed
+   to be lightweight and efficient, which is essential when handling
+   large numbers of packets in a real-time gaming environment.
+
+   6.1 Efficiency
+
+      Compared with standard communication protocols, our message
+      structure is optimized to minimize the size of the data
+      transmitted. For example, by using compact data types, we save
+      space compared with a conventional protocol.
+
+   6.2 Advantages
+
+      - Reduced message size: Our message header uses just 6 bytes,
+        which is significantly smaller than the 12-20 byte headers often
+        found in conventional protocols.
+      - Increased speed: By reducing message size, latency is reduced,
+        enabling faster, more responsive data exchanges.
+      - Bandwidth optimization: By minimizing message size, we optimize
+        bandwidth utilization, enabling us to handle a greater number of
+        simultaneous connections without compromising performance.
+
+Author's Address
+
+   W. Bordichon
+   Email: wilson.bordichon@epitech.eu
