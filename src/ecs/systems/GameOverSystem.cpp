@@ -39,19 +39,20 @@ void ecs::system::GameOverSystem::displayGameOverScreen(Registry &reg) {
     int screenHeight = Lib::getScreenHeight();
 
     entity_t gameOverTextEntity = reg.spawnEntity();
-    textInfo.insertAt(gameOverTextEntity, component::TextInfos{GAME_OVER_TEXT, screenWidth / WIDTH_GAME_OVER, screenHeight / HEIGHT_GAME_OVER, GAME_OVER_TEXT_SIZE,
-                                                               FONT_PATH, RED_GAMEOVER});
+    textInfo.insertAt(gameOverTextEntity,
+                      component::TextInfos{GAME_OVER_TEXT, screenWidth / WIDTH_GAME_OVER, screenHeight / HEIGHT_GAME_OVER,
+                                           GAME_OVER_TEXT_SIZE, FONT_PATH, RED_GAMEOVER});
     types.insertAt(gameOverTextEntity, component::Type{ecs::EntityType::TEXT});
 
     entity_t scoreTextEntity = reg.spawnEntity();
     std::string finalScoreText = FINAL_SCORE_TEXT + std::to_string(score);
-    textInfo.insertAt(scoreTextEntity, component::TextInfos{finalScoreText, screenWidth / WIDTH_GAME_OVER, screenHeight / HEIGHT_SCORE, SCORE_TEXT_SIZE, FONT_PATH,
-                                                            ORANGE_GAMEOVER});
+    textInfo.insertAt(scoreTextEntity, component::TextInfos{finalScoreText, screenWidth / WIDTH_GAME_OVER, screenHeight / HEIGHT_SCORE,
+                                                            SCORE_TEXT_SIZE, FONT_PATH, ORANGE_GAMEOVER});
     types.insertAt(scoreTextEntity, component::Type{ecs::EntityType::TEXT});
 
     entity_t exitTextEntity = reg.spawnEntity();
     textInfo.insertAt(exitTextEntity,
-                      component::TextInfos{EXIT_PROMPT, static_cast<int>(screenWidth * WIDTH_EXIT_TEXT), static_cast<int>(screenHeight * HEIGHT_EXIT_TEXT),
-                                           EXIT_TEXT_SIZE, FONT_PATH, GREY_GAMEOVER});
+                      component::TextInfos{EXIT_PROMPT, static_cast<int>(screenWidth * WIDTH_EXIT_TEXT),
+                                           static_cast<int>(screenHeight * HEIGHT_EXIT_TEXT), EXIT_TEXT_SIZE, FONT_PATH, GREY_GAMEOVER});
     types.insertAt(exitTextEntity, component::Type{ecs::EntityType::TEXT});
 }
