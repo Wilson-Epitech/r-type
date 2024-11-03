@@ -78,9 +78,8 @@ namespace network {
         /**
          * @brief Handles data reception from a client.
          * @param error The error code from the receive operation.
-         * @param bytesTransferred The number of bytes transferred in the operation.
          */
-        void handleReceive(const std::error_code &error, const std::size_t &bytesTransferred);
+        void handleReceive(const std::error_code &error);
 
         /**
          * @brief Handles the sending of data to a client.
