@@ -52,17 +52,17 @@ void network::Client::msgFromServer() {
             break;
         }
 
-        if (len < sizeof(_magicNumber) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint16_t)) {
-            std::cerr << "Incomplete message received" << std::endl;
-            continue;
-        }
+        // if (len < sizeof(_magicNumber) + sizeof(uint8_t) + sizeof(uint8_t) + sizeof(uint16_t)) {
+        //     std::cerr << "Incomplete message received" << std::endl;
+        //     continue;
+        // }
 
         std::memcpy(&receivedMagicNbr, receiveBuffer.data(), sizeof(receivedMagicNbr));
 
-        if (receivedMagicNbr != _magicNumber) {
-            std::cerr << "Invalid magic number" << std::endl;
-            continue;
-        }
+        // if (receivedMagicNbr != _magicNumber) {
+        //     std::cerr << "Invalid magic number" << std::endl;
+        //     continue;
+        // }
 
         std::memcpy(&messageType, receiveBuffer.data() + sizeof(receivedMagicNbr), sizeof(messageType));
         std::memcpy(&messageId, receiveBuffer.data() + sizeof(receivedMagicNbr) + sizeof(messageType), sizeof(messageId));
@@ -137,8 +137,8 @@ void network::Client::updateData(ecs::Registry &reg) {
 void network::Client::sendUpdatedData(ecs::Registry &reg, std::list<DataToSend> &lastDataReceivedList) {
     DataToSend data = network::HandleData::fillNewEntitiesDataToSend(reg, false);
 
-    for (auto lastDataReceived : lastDataReceivedList)
-        network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
+    // for (auto lastDataReceived : lastDataReceivedList)
+    //     network::HandleData::deleteSimilarDataLines(data, lastDataReceived);
     if (!data.empty()) {
         std::string serialized = network::HandleData::serializeEntityDataVector(data);
         sendMessage(serialized, 3);
