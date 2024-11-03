@@ -10,7 +10,6 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
-#include "Assets.hpp"
 #include <math.h>
 
 #define SHOT_POS_X 1200 ///< start position of the shoot in x
