@@ -139,8 +139,7 @@ void game::RtypeGameServer::addComponentsToEntities() {
         ecs::component::SpriteInfos{PLAYER_PATH, PLAYER_SPRITE_NB_PATTERN, PLAYER_SPRITE_FIRST_PATTERN, PLAYER_SPRITE_SCALE_FACTOR});
     shootings.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Shooting{});
     types.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Type{ecs::EntityType::PLAYER_TEMPLATE});
-    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME],
-                   ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES, PLAYER_TEMPLATE_DISPLAY_LIFE});
+    lives.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Life{PLAYER_TEMPLATE_NB_LIVES, PLAYER_TEMPLATE_DISPLAY_LIFE});
     soundEffectInfos.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::SoundEffectInfos{EXPLOSION_SOUND_PATH});
     shootingRate.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::ShootingRate{PLAYER_TEMPLATE_SHOOTING_RATE});
     score.insertAt(_stringToEntity[PLAYER_TEMPLATE_NAME], ecs::component::Score{PLAYER_TEMPLATE_SCORE_INCREMENTATION});
