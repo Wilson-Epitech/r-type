@@ -17,6 +17,7 @@
 
 #include "Components.hpp"
 #include "ISystem.hpp"
+#include <iostream>
 
 namespace ecs {
     namespace system {
