@@ -7,7 +7,7 @@
 
 #include "EnemyFiringSystem.hpp"
 
-#define PI 3.14
+#define PI_VALUE 3.14 ///< Value of the mathematical constant pi
 
 void ecs::system::EnemyFiringSystem::operator()(Registry &reg) {
     SparseArray<component::ShootingRate> &enemyShootingRate = reg.getComponents<component::ShootingRate>();
@@ -131,7 +131,7 @@ float ecs::system::EnemyFiringSystem::changeShootVelocity(Registry &reg, const s
     angle = atan2f(positions[playerEntity]->y - positions[enemyIndex]->y, positions[playerEntity]->x - positions[enemyIndex]->x);
     velocities[shootIndex]->vx = speed * cosf(angle);
     velocities[shootIndex]->vy = speed * sinf(angle);
-    return (angle * 180 / PI) + 180;
+    return (angle * 180 / PI_VALUE) + 180;
 }
 
 std::size_t ecs::system::EnemyFiringSystem::findClosestPlayer(Registry &reg, const std::size_t &index) {
