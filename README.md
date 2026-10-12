@@ -14,7 +14,7 @@
 
 <p align="center"><img src=".github/assets/r-type.gif" alt="R-Type" width="820"/></p>
 
-## En deux mots
+## Le projet en quelques mots
 
 On a recréé *R-Type* à cinq, en partant de zéro. Le gros du travail, c'est le **moteur** : une architecture ECS générique et une couche réseau client / serveur, sur lesquelles le jeu est construit. Jusqu'à 4 joueurs jouent ensemble contre des vagues d'ennemis et des boss.
 
@@ -29,22 +29,6 @@ On a recréé *R-Type* à cinq, en partant de zéro. Le gros du travail, c'est l
 
 <p align="center"><img src=".github/assets/r-type-still.png" alt="Une vague d'ennemis, avec le score d'équipe" width="760"/></p>
 <p align="center"><sub>Une vague d'ennemis, avec le score d'équipe</sub></p>
-
-## Sous le capot
-
-Le serveur fait autorité : il fait tourner la simulation et envoie l'état des entités aux clients, qui envoient leurs entrées et affichent le jeu avec raylib. Le même registry ECS tourne des deux côtés, seuls les systèmes branchés changent. Les dépendances (raylib, Asio, GLFW) sont gérées par vcpkg à travers un script CMake qui prépare tout au premier build.
-
-```mermaid
-flowchart LR
-    subgraph Serveur
-      R1[Registry ECS] --> SYS1[Systèmes<br/>mouvement · collisions · IA]
-    end
-    subgraph Client x4
-      R2[Registry ECS] --> SYS2[Systèmes<br/>rendu raylib · inputs]
-    end
-    SYS2 -- inputs UDP --> R1
-    SYS1 -- état des entités UDP --> R2
-```
 
 ## Lancer le projet
 
@@ -63,4 +47,4 @@ La documentation technique complète est dans [DOCUMENTATION.md](DOCUMENTATION.m
 
 Yanis Harkouk, Mathis Brehm, Eva Legrand, Wilson Bordichon, Edouard Bocquet
 
-**Ma part :** Je me suis occupé du **système de build multiplateforme** (CMake, intégration vcpkg, scripts de build Linux / macOS, build Windows avec MinGW) et de la **CI GitHub Actions**. J'ai aussi travaillé sur des composants ECS et sur le gameplay.
+**Ma partition :** Je me suis occupé du **système de build multiplateforme** (CMake, intégration vcpkg, scripts de build Linux / macOS, build Windows avec MinGW) et de la **CI GitHub Actions**. J'ai aussi travaillé sur des composants ECS et sur le gameplay.
