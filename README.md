@@ -1,98 +1,66 @@
-![Static Badge](https://img.shields.io/badge/graphic-raylib-blue)
-![Static Badge](https://img.shields.io/badge/engine-c%2B%2B-red)
-![Static Badge](https://img.shields.io/badge/network-asio-purple)
-![Static Badge](https://img.shields.io/badge/compilation-cmake-yellow)
-![Static Badge](https://img.shields.io/badge/package-vcpkg-green)
-
-![R-Type Logo](assets/R-type_logo.jpg)
+<div align="center">
 
 # R-Type
 
-R-type is an advanced C++ project. The goal of the project is to recreate the infamous arcade game of the same name, moreover, it must be a multiplayer game. Up to 4 players can join a party and beat ennemies and bosses together.
+**Le shoot'em up culte, en multijoueur réseau, sur un moteur de jeu maison.**
 
-## Project Description
+<img alt="C++" src="https://img.shields.io/badge/C%2B%2B-00599C?style=for-the-badge&logo=cplusplus&logoColor=white"/> <img alt="CMake" src="https://img.shields.io/badge/CMake-064F8C?style=for-the-badge&logo=cmake&logoColor=white"/> <img alt="raylib" src="https://img.shields.io/badge/raylib-1E1E1E?style=for-the-badge"/> <img alt="Asio" src="https://img.shields.io/badge/Asio-4B4B4B?style=for-the-badge"/> <img alt="vcpkg" src="https://img.shields.io/badge/vcpkg-4B4B4B?style=for-the-badge"/> <img alt="GitHub Actions" src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white"/>
 
-If we go deeper, the aim of the project is to create a server and a client, that communicates to create a fluid game. Our R-type is based on our own Game Engine, uses Asio for the netwroking and the Raylib for the graphical aspect. Clients as well as the server are multi-threaded, which create a smooth experience as different handling are done asynchronously.
+<sub>Projet à 5 · 2024</sub>
 
-For now, our server can only handle one lobby at a time, we long to implement a server that can handle multiple session at the same time. Moreover, we want to diversify our bestiary and create more accessibility features to allow our game to be playable by everyone.
+</div>
 
-We also aim for our game to soon be Cross-Plateform. For now, the program lauches on Linux and Mac and should be available to Windows in the upcoming weeks.
+<br/>
 
-> [!NOTE]
-> The game can already played through a game controler to fit for people with motor disabilities
+<p align="center"><img src=".github/assets/r-type.gif" alt="R-Type" width="820"/></p>
 
-## Installation
+## En deux mots
 
-Required tools:
+On a recréé *R-Type* à cinq, en partant de zéro. Le gros du travail, c'est le **moteur** : une architecture ECS générique et une couche réseau client / serveur, sur lesquelles le jeu est construit. Jusqu'à 4 joueurs jouent ensemble contre des vagues d'ennemis et des boss.
 
-- **Git**
-- **CMake**
-- **MinGW** (Windows only)
-- **PowerShell 7** (Windows only)
-- **7-Zip** (Windows only)
+## Ce que ça fait
 
-Run these two commands in order from the project root to compile it:
+- **Moteur ECS** (Entity Component System) : registry, composants et systèmes, indépendants du jeu
+- **Multijoueur** client / serveur en UDP avec Asio, jusqu'à 4 joueurs
+- Plusieurs niveaux, des boss, des power-ups, un score individuel et un score d'équipe
+- Difficulté et tir allié configurables au lancement du serveur
+- Build **multiplateforme** : Linux, macOS et Windows (MinGW)
+- CI qui compile le projet sur Linux et macOS à chaque push
 
-```bash
-cmake -P build.cmake
+<p align="center"><img src=".github/assets/r-type-still.png" alt="Une vague d'ennemis, avec le score d'équipe" width="760"/></p>
+<p align="center"><sub>Une vague d'ennemis, avec le score d'équipe</sub></p>
+
+## Sous le capot
+
+Le serveur fait autorité : il fait tourner la simulation et envoie l'état des entités aux clients, qui envoient leurs entrées et affichent le jeu avec raylib. Le même registry ECS tourne des deux côtés, seuls les systèmes branchés changent. Les dépendances (raylib, Asio, GLFW) sont gérées par vcpkg à travers un script CMake qui prépare tout au premier build.
+
+```mermaid
+flowchart LR
+    subgraph Serveur
+      R1[Registry ECS] --> SYS1[Systèmes<br/>mouvement · collisions · IA]
+    end
+    subgraph Client x4
+      R2[Registry ECS] --> SYS2[Systèmes<br/>rendu raylib · inputs]
+    end
+    SYS2 -- inputs UDP --> R1
+    SYS1 -- état des entités UDP --> R2
 ```
 
+## Lancer le projet
+
 ```bash
+cmake -P build.cmake            # installe vcpkg + raylib/asio/glfw puis configure
 cmake --build build
+./rtype_server 4242 --difficulty medium --friendlyfire false
+./rtype_client 127.0.0.1 4242   # ← flèches pour bouger, espace pour tirer
 ```
 
-If you want to clean the directory, run this command:
+La documentation technique complète est dans [DOCUMENTATION.md](DOCUMENTATION.md).
 
-```bash
-cmake -P build/clean.cmake
-```
+## L'équipe
 
-## Usage
+<a href="https://github.com/Wilson-Epitech/r-type/graphs/contributors"><img src="https://contrib.rocks/image?repo=Wilson-Epitech/r-type" alt="Contributeurs"/></a>
 
-**Launch the Server**
+Yanis Harkouk, Mathis Brehm, Eva Legrand, Wilson Bordichon, Edouard Bocquet
 
-```sh
-./rtype_server [port] --difficulty [difficultyMode] --friendlyfire [friendlyFireState]
-```
-> [!NOTE]
-> difficultyMode can be 'easy', 'medium', or 'hard' (it is set to medium by default)
-
-> [!NOTE]
-> friendlyFireState can be 'true' or 'false' (it is set to false by default)
-
-**Launch Clients**
-
-```sh
-./rtype_client [host ip] [port]
-```
-
-> [!NOTE]
-> The server and client must be launched on the same port
-
-### Controls
-
-Only the player can be controlled with the following keys
-
-Key         | Action
-------------|-----------
-Up Arrow    | Go Up
-Down Arrow  | Go Down
-Left Arrow  | Go Left
-Right Arrow | Go Right
-Space       | Shoot
-
-# Documentation
-
-[Server Documentation](src/network/README.md)<br>
-[Game Documentation](src/games/README.md)<br>
-[Game Engine Documentation](src/ecs/README.md)
-
-## Authors
-
-* **Yanis Harkouk** * - [@Yanis Harkouk](https://github.com/yanishk)
-* **Mathis Brehm** * - [@Mathis Brehm](https://github.com/mathisbdkr)
-* **Wilson Bordichon** * - [@Wilson Bordichon](https://github.com/Wilson-Epitech)
-* **Eva Legrand** * - [@Eva Legrand](https://github.com/Chaegnal)
-* **Edouard Bocquet** * - [@Edouard Bocquet](https://github.com/edouardclm)
-
-
+**Ma part :** Je me suis occupé du **système de build multiplateforme** (CMake, intégration vcpkg, scripts de build Linux / macOS, build Windows avec MinGW) et de la **CI GitHub Actions**. J'ai aussi travaillé sur des composants ECS et sur le gameplay.
