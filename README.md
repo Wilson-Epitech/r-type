@@ -47,4 +47,4 @@ La documentation technique complète est dans [DOCUMENTATION.md](DOCUMENTATION.m
 
 Yanis Harkouk, Mathis Brehm, Eva Legrand, Wilson Bordichon, Edouard Bocquet
 
-**Ma partition :** Je me suis occupé du **système de build multiplateforme** (CMake, intégration vcpkg, scripts de build Linux / macOS, build Windows avec MinGW) et de la **CI GitHub Actions**. J'ai aussi travaillé sur des composants ECS et sur le gameplay.
+**Ma partition :** Je me suis occupé du **système de build multiplateforme** (CMake, intégration vcpkg, scripts de build Linux / macOS, build Windows avec MinGW) et de la **CI GitHub Actions**. J'ai aussi contribué à quelques composants ECS, au chargeur de bibliothèques dynamiques et au serveur.
