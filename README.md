@@ -33,10 +33,10 @@ On a recréé *R-Type* à cinq, en partant de zéro. Le gros du travail, c'est l
 ## Lancer le projet
 
 ```bash
-cmake -P build.cmake            # installe vcpkg + raylib/asio/glfw puis configure
+cmake -P build.cmake
 cmake --build build
 ./rtype_server 4242 --difficulty medium --friendlyfire false
-./rtype_client 127.0.0.1 4242   # ← flèches pour bouger, espace pour tirer
+./rtype_client 127.0.0.1 4242
 ```
 
 La documentation technique complète est dans [DOCUMENTATION.md](DOCUMENTATION.md).
